@@ -1,14 +1,15 @@
 Type: Package
 Package: mrmfa
 Title: Add an adequate Title
-Version: 0.0.1
+Version: 0.0.2
 Date: 2025-10-01
-Authors@R:
-    person("Falk", "Benke, "falk.benke@pik-potsdam.de", role = c("aut", "cre"))
-Description: Add an adequate Description
+Authors@R: c(
+    person("Jakob", "Dürrwächter", , "jakobdu@pik-potsdam.de", role = c("aut", "cre"))
+  )
+Description: Add an adequate Description, formulated as a complete sentence.
 License: LGPL-3
 URL: https://github.com/pik-piam/mrmfa
 Suggests:
     testthat
 Encoding: UTF-8
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.3

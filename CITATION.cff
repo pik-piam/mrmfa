@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it using the metadata from this file.
+type: software
+title: 'mrmfa: Add an adequate Title'
+version: 0.0.2
+date-released: '2025-10-01'
+abstract: Add an adequate Description, formulated as a complete sentence.
+authors:
+- family-names: Dürrwächter
+  given-names: Jakob
+  email: jakobdu@pik-potsdam.de
+license: LGPL-3.0
+repository-code: https://github.com/pik-piam/mrmfa
+
