@@ -4,7 +4,7 @@
 toolRemoveNA <- function(x) {
   df <- as.data.frame(x, rev = 3)
   df_clean <- df[stats::complete.cases(df), ]
-  df_clean <- na.omit(df)
+  df_clean <- stats::na.omit(df)
   x_clean <- as.magpie(df_clean)
   return(x_clean)
 }
