@@ -29,6 +29,9 @@ Imports:
     magrittr,
     magpiesets,
     purrr,
+    comprehenr,
+    tibble,
+    zoo,
 Suggests:
     testthat
 Encoding: UTF-8
