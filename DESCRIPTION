@@ -26,6 +26,8 @@ Imports:
     readxl,
     tidyr,
     magrittr,
+    magpiesets,
+    purrr,
 Suggests:
     testthat
 Encoding: UTF-8

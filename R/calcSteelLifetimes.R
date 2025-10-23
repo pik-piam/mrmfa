@@ -1,16 +1,17 @@
 #' @author Merlin Jo Hosak
+#' @importFrom purrr is_empty
 #' @export
 calcSteelLifetimes <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     'Cooper2014' = function() {
       cooper <- readSource('Cooper2014', subtype='lifetimes')
-      
-      final <- list(x = cooper, 
+
+      final <- list(x = cooper,
                     weight = NULL,
                     unit=1,
                     description='Cooper 2014 Steel Lifetimes Mean & SD')
-      
+
       return(final)
     },
     NULL)
