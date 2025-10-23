@@ -1,14 +1,14 @@
 #' Calculates global clinker ratio by employing cement and clinker production from Andrew's 2019 paper.
 #'
 #' @author Bennet Weiss
-calcMCeClinkerRatio <- function() {
+calcCeClinkerRatio <- function() {
   ratio_GNR <- readSource("GNR", subtype = "clinker_ratio")
   # Production
-  prod_cement <- calcOutput("MCeBinderProduction", subtype = "cement", aggregate = FALSE)
-  prod_clinker <- calcOutput("MCeBinderProduction", subtype = "clinker", aggregate = FALSE)
+  prod_cement <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
+  prod_clinker <- calcOutput("CeBinderProduction", subtype = "clinker", aggregate = FALSE)
 
   # Trade
-  trade_clinker <- calcOutput("MCeMaterialTrade", subtype = "clinker", aggregate = FALSE)
+  trade_clinker <- calcOutput("CeMaterialTrade", subtype = "clinker", aggregate = FALSE)
 
   consum_clinker <- prod_clinker
   consum_clinker[, getYears(trade_clinker), ] <- consum_clinker[, getYears(trade_clinker), ] - trade_clinker

@@ -3,7 +3,7 @@
 #'
 #' @author Bennet Weiss
 #' @param subtype Material subtype. Can be "cement" or "clinker".
-calcMCeMaterialTrade <- function(subtype) {
+calcCeMaterialTrade <- function(subtype) {
   # collect trade data
   trade_chatham <- readSource("ChathamHouse", subtype = subtype)
   trade_comtrade <- readSource("UNComtrade", subtype = subtype)
@@ -22,7 +22,7 @@ calcMCeMaterialTrade <- function(subtype) {
   trade[is.na(trade)] <- 0
 
   # balance trade
-  production <- calcOutput("MCeBinderProduction", subtype = subtype, aggregate = FALSE)[, getYears(trade)]
+  production <- calcOutput("CeBinderProduction", subtype = subtype, aggregate = FALSE)[, getYears(trade)]
   total_production <- dimSums(production, dim = 1)
   trade_imbalance <- dimSums(trade, dim = 1)
   trade <- trade - trade_imbalance * production / total_production
