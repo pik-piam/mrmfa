@@ -4,9 +4,9 @@
 \name{mrmfa-package}
 \alias{mrmfa}
 \alias{mrmfa-package}
-\title{mrmfa: Add an adequate Title}
+\title{mrmfa: Input data generation for the REMIND MFA}
 \description{
-Add an adequate Description, formulated as a complete sentence.
+The mrmfa packages contains data preprocessing for the REMIND MFA.
 }
 \seealso{
 Useful links:
@@ -17,6 +17,12 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Jakob Dürrwächter \email{jakobdu@pik-potsdam.de}
+
+Authors:
+\itemize{
+  \item Bennet Weiss \email{bennet.weiss@pik-potsdam.de}
+  \item Leonie Schweiger \email{leonie.schweiger@pik-potsdam.de}
+}
 
 }
 \keyword{internal}
