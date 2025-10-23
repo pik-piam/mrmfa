@@ -2,7 +2,7 @@
 #'
 #' https://github.com/PhilippVerpoort/posted
 #' Data sources can be found in Posted.
-#' @importFrom dplyr %>% all_of select
+#' @importFrom dplyr all_of select
 #' @importFrom tidyr separate unnest
 #' @author Bennet Weiss
 readPostedBuiltLifespan <- function() {

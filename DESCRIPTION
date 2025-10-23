@@ -9,6 +9,7 @@ Authors@R: c(
     person("Leonie", "Schweiger", , "leonie.schweiger@pik-potsdam.de", role = "aut"),
     person("Falk", "Benke", , "benke@pik-potsdam.de", role = "aut"),
     person("Merlin Jo", "Hosak", , "merlinho@pik-potsdam.de", role = "aut")
+    person("Qianzhi", "Zhang", , "qianzhi.zhang@pik-potsdam.de", role = "aut")
   )
 Description: The mrmfa packages contains data preprocessing for the REMIND MFA.
 License: LGPL-3
