@@ -15,6 +15,7 @@
 #' }
 #'
 #' @importFrom readxl read_excel
+#' @importFrom readr read_csv
 #'
 readUNCTAD <- function() {
   # ---------------------------------------------------------------------------
@@ -22,7 +23,7 @@ readUNCTAD <- function() {
   # ---------------------------------------------------------------------------
   data <- read_csv("US_PlasticsTradebyPartner.csv") %>%
     select(1,3,5,7,9,13) %>%
-    rename(Region = "Economy Label", Flow = "Flow Label", Product = "Product Label") %>%
+    dplyr::rename(Region = "Economy Label", Flow = "Flow Label", Product = "Product Label") %>%
     filter(.data$`Partner Label`=="World") %>%
     select(-"Partner Label")
 
