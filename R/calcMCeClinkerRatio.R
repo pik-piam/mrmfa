@@ -1,14 +1,14 @@
 #' Calculates global clinker ratio by employing cement and clinker production from Andrew's 2019 paper.
 #'
 #' @author Bennet Weiss
-calcClinkerRatio <- function() {
+calcMCeClinkerRatio <- function() {
   ratio_GNR <- readSource("GNR", subtype = "clinker_ratio")
   # Production
-  prod_cement <- calcOutput("BinderProduction", subtype = "cement", aggregate = FALSE)
-  prod_clinker <- calcOutput("BinderProduction", subtype = "clinker", aggregate = FALSE)
+  prod_cement <- calcOutput("MCeBinderProduction", subtype = "cement", aggregate = FALSE)
+  prod_clinker <- calcOutput("MCeBinderProduction", subtype = "clinker", aggregate = FALSE)
 
   # Trade
-  trade_clinker <- calcOutput("MaterialTrade", subtype = "clinker", aggregate = FALSE)
+  trade_clinker <- calcOutput("MCeMaterialTrade", subtype = "clinker", aggregate = FALSE)
 
   consum_clinker <- prod_clinker
   consum_clinker[, getYears(trade_clinker), ] <- consum_clinker[, getYears(trade_clinker), ] - trade_clinker
@@ -58,6 +58,7 @@ calcClinkerRatio <- function() {
     "For data gaps, use GNR data. Before 1970, assume constant clinker ratio of 0.95.",
     "Remaining gaps filled by linear extrapolation."
   )
-  output <- list(x = ratio, weight = weight, unit = unit, description = description)
+  note <- "dimensions: (Historic Time,Region,value)"
+  output <- list(x = ratio, weight = weight, unit = unit, description = description, note = note)
   return(output)
 }

@@ -1,6 +1,6 @@
 #' Calculates the lifetimes of residential and non-residential buildings, as well as of civil engeneering.
 #' @author Bennet Weiss
-calcBuiltLifespan <- function() {
+calcMCeBuiltLifespan <- function() {
   data <- readSource("PostedBuiltLifespan")
   unit <- "years (a)"
   description <- paste(
@@ -8,13 +8,15 @@ calcBuiltLifespan <- function() {
     "Aggregated data from literature research.",
     "Documentation can be found in Posted (https://github.com/PhilippVerpoort/posted)"
   )
+  note <- "dimensions: (Historic Time,Region,Stock Type,value)"
   weight <- data
   weight[, , ] <- 1
   output <- list(
     x = data,
     weight = weight,
     unit = unit,
-    description = description
+    description = description,
+    note = note
   )
   return(output)
 }
