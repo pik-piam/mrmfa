@@ -1,6 +1,6 @@
 # Input data generation for the REMIND MFA
 
-R package **mrmfa**, version **0.1.0**
+R package **mrmfa**, version **0.2.0**
 
 [![CRAN status](https://www.r-pkg.org/badges/version/mrmfa)](https://cran.r-project.org/package=mrmfa) [![R build status](https://github.com/pik-piam/mrmfa/workflows/check/badge.svg)](https://github.com/pik-piam/mrmfa/actions) [![codecov](https://codecov.io/gh/pik-piam/mrmfa/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/mrmfa) 
 
@@ -38,17 +38,17 @@ In case of questions / problems please contact Jakob Dürrwächter <jakobdu@pik-
 
 To cite package **mrmfa** in publications use:
 
-Dürrwächter J, Weiss B, Schweiger L (2025). "mrmfa: Input data generation for the REMIND MFA." Version: 0.1.0, <https://github.com/pik-piam/mrmfa>.
+Dürrwächter J, Weiss B, Schweiger L, Benke F, Hosak M (2025). "mrmfa: Input data generation for the REMIND MFA." Version: 0.2.0, <https://github.com/pik-piam/mrmfa>.
 
 A BibTeX entry for LaTeX users is
 
  ```latex
 @Misc{,
   title = {mrmfa: Input data generation for the REMIND MFA},
-  author = {Jakob Dürrwächter and Bennet Weiss and Leonie Schweiger},
+  author = {Jakob Dürrwächter and Bennet Weiss and Leonie Schweiger and Falk Benke and Merlin Jo Hosak},
   date = {2025-10-23},
   year = {2025},
   url = {https://github.com/pik-piam/mrmfa},
-  note = {Version: 0.1.0},
+  note = {Version: 0.2.0},
 }
 ```

@@ -22,6 +22,8 @@ Authors:
 \itemize{
   \item Bennet Weiss \email{bennet.weiss@pik-potsdam.de}
   \item Leonie Schweiger \email{leonie.schweiger@pik-potsdam.de}
+  \item Falk Benke \email{benke@pik-potsdam.de}
+  \item Merlin Jo Hosak \email{merlinho@pik-potsdam.de}
 }
 
 }
