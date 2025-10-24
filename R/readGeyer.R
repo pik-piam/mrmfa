@@ -11,6 +11,7 @@
 #'
 #' @seealso [readSource()]
 #'
+#' @examples
 #' \dontrun{
 #' a <- readSource(type = "Geyer", subtype = "Prod_1950-2015")
 #' }

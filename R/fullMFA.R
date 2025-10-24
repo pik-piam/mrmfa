@@ -7,9 +7,13 @@
 #'
 #' @author Merlin HOSAK
 #' @author Bennet Weiss
+#' @param rev TODOMERLIN: document
+#' @param dev TODOMERLIN: document
+#' @param scenario TODOMERLIN: document
+#' @param gdp_per_capita TODOMERLIN: document
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
-#' \code{\link[madrat]{calcOutput}}, \code{\link[mrindustry]{calcSteelProduction}}
+#' \code{\link[madrat]{calcOutput}}
 #' @export
 #' @examples
 #' \dontrun{
@@ -38,27 +42,27 @@ fullMFA <- function(rev = 0, dev = "", scenario='SSP2', gdp_per_capita=FALSE, ru
 
   #  ------------- DRIVERS -------------
   if (runSection("drivers")) {
-    calcOutput("Population1900To2150", file = "co_population1900To2150.cs4r", scenario=scenario)
-    calcOutput("GDP1900To2150", file = "co_gdp1900To2150.cs4r", scenario=scenario, per_capita=gdp_per_capita)
+    calcOutput("CoPopulation1900To2150", file = "co_population1900To2150.cs4r", scenario=scenario)
+    calcOutput("CoGDP1900To2150", file = "co_gdp1900To2150.cs4r", scenario=scenario, per_capita=gdp_per_capita)
   }
 
   #  ------------- STEEL ----------------
   if (runSection("steel")) {
     # Production
-    calcOutput("SteelProduction", file = "st_steel_production.cs4r")
+    calcOutput("StProduction", file = "st_steel_production.cs4r")
     # Trade
-    calcOutput("SteelTrade", file = "st_steel_imports.cs4r", subtype='imports')
-    calcOutput("SteelTrade", file = "st_steel_exports.cs4r", subtype='exports')
-    calcOutput("SteelTrade", file = "st_steel_scrap_imports.cs4r", subtype='scrap_imports')
-    calcOutput("SteelTrade", file = "st_steel_scrap_exports.cs4r", subtype='scrap_exports')
-    calcOutput("SteelTrade", file = "st_steel_indirect_imports.cs4r", subtype='indirect_imports')
-    calcOutput("SteelTrade", file = "st_steel_indirect_exports.cs4r", subtype='indirect_exports')
+    calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype='imports')
+    calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype='exports')
+    calcOutput("StTrade", file = "st_steel_scrap_imports.cs4r", subtype='scrap_imports')
+    calcOutput("StTrade", file = "st_steel_scrap_exports.cs4r", subtype='scrap_exports')
+    calcOutput("StTrade", file = "st_steel_indirect_imports.cs4r", subtype='indirect_imports')
+    calcOutput("StTrade", file = "st_steel_indirect_exports.cs4r", subtype='indirect_exports')
     # Parameters
-    calcOutput("SteelStaticParameters", file = "st_steel_static_parameters.cs4r")
-    calcOutput("CullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate=FALSE)
-    calcOutput("SteelLifetimes", subtype='Cooper2014', file = "st_lifetimes.cs4r", aggregate=FALSE)
-    calcOutput("SteelRecoveryRate", subtype='WorldSteel', file = "st_recovery_rate.cs4r", aggregate=FALSE)
-    calcOutput("SteelSectorSplits", subtype='Pauliuk2013', file = "st_sector_splits.cs4r", aggregate=FALSE)
+    calcOutput("StStaticParameters", file = "st_steel_static_parameters.cs4r", aggregate=FALSE)
+    calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate=FALSE)
+    calcOutput("StLifetimes", subtype='Cooper2014', file = "st_lifetimes.cs4r", aggregate=FALSE)
+    calcOutput("StRecoveryRate", subtype='WorldSteel', file = "st_recovery_rate.cs4r", aggregate=FALSE)
+    calcOutput("StSectorSplits", subtype='Pauliuk2013', file = "st_sector_splits.cs4r", aggregate=FALSE)
   }
 
   #  ------------- CEMENT -----------

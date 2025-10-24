@@ -1,5 +1,7 @@
 #' Convert OECD GDP per capita data from 1500-2016
 #' @author Merlin Jo Hosak
+#' @param x TODOMERLIN: document
+#' @param subtype TODOMERLIN: document
 #' @export
 convertOECD_GDP <- function(x, subtype = 'gdppc') {
   # ---- list all available subtypes with functions doing all the work ----

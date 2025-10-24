@@ -39,6 +39,6 @@ mtab <- function(x){
   # but in a more readable format
   df <- as.data.frame(x)
   df <- df[,c('Region', 'Year', 'Value')]
-  df <- pivot_wider(df,names_from=Year,values_from=Value)
+  df <- pivot_wider(df,names_from=.data$Year,values_from=.data$Value)
   return(df)
 }

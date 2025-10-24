@@ -1,5 +1,6 @@
 #' Read OECD GDP per capita data from 1500-2016
 #' @author Merlin Jo Hosak
+#' @param subtype TODOMERLIN: document
 #' @export
 readOECD_GDP <- function(subtype = 'gdppc') {
   # ---- list all available subtypes with functions doing all the work ----

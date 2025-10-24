@@ -1,4 +1,7 @@
+#' TODOMERLIN: document
+#' 
 #' @author Merlin Jo Hosak
+#' @param subtype TODOMERLIN: document
 #' @export
 readCooper2014 <- function(subtype = 'lifetimes') {
   

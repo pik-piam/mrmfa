@@ -10,6 +10,7 @@
 #'
 #' @seealso [readSource()]
 #'
+#' @examples
 #' \dontrun{
 #' a <- readSource(type = "UNCTAD")
 #' }

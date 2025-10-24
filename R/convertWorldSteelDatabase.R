@@ -1,6 +1,7 @@
 #' Convert data from WorldSteelAssociation Database
 #' @author Merlin Jo Hosak
 #' @param x Magpie object
+#' @param subtype TODOMERLIN: document
 convertWorldSteelDatabase <- function(x, subtype="production") {
   # convert from kt to t
   x <- x * 1e3

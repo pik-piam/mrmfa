@@ -14,8 +14,8 @@
 #' @param extrapolate_method Extrapolation method to use (default: 'constant').
 #' Options: 'constant', 'ref'. # TODO add more methods. If 'ref', a reference 
 #' magpie object must be provided. In 'ref' extrapolation, the values are 
-#' extrapolated based on the shape of the reference data, see 
-#' \link[=toolExtrapolateRegion]{toolExtrapolateRegion}.
+#' extrapolated based on the shape of the reference data in the
+#' 'toolExtrapolateRegion' function.
 #' @param ref Reference magpie object for extrapolation (default: NA).
 #' @author Merlin Jo Hosak
 #' @export
@@ -113,7 +113,7 @@ extrapolate2D <- function(x, regions, extrapolate_method='constant', ref=NA) {
     }
     x[region,] <- toolExtrapolateRegion(row,
                                         method = extrapolate_method,
-                                        ref=ref_row)
+                                        ref_row=ref_row)
     
   }
   return(x)
@@ -171,7 +171,6 @@ toolExtrapolateRegion <- function(row,
   getItems(ref_row, dim=1) <- getItems(row, dim=1)  # ensure that ref_row has the same regions as row if row
   
   # Get the years and values
-  years <- colnames(row)
   values <- as.numeric(row[1, ])
   ref_values <- as.numeric(ref_row[1, ])
   
@@ -188,11 +187,8 @@ toolExtrapolateRegion <- function(row,
   first_valid_idx <- which(!is.na(values))[1]
   last_valid_idx <- tail(which(!is.na(values)), 1)
   
-  first_valid_ref_idx <- which(!is.na(ref_values))[1]
   last_valid_ref_idx <- tail(which(!is.na(ref_values)), 1)
-  
   last_idx <- length(values)
-  last_ref_idx <- length(ref_values)
   
   possible_n <- last_valid_idx-first_valid_idx + 1
   n <- min(possible_n, max_n)
@@ -296,13 +292,14 @@ toolExtrapolateRegionFuture <- function(row,
 }
 
 #' Interpolate data for a single region
+#' @param row TODOMERLIN: document
+#' @param method TODOMERLIN: document
 toolInterpolateRegion <- function(row, method = 'linear'){
   if (!is.magpie(row)) {
     stop("Input must be a magpie object.")
   }
   
   # Get the years and values
-  years <- colnames(row)
   values <- as.numeric(row[1, ])
   
   # calculate interpolation markers (valid indices where values are not NA),
@@ -326,7 +323,7 @@ toolInterpolateRegion <- function(row, method = 'linear'){
   }
   
   # loop through markers/interpolation areas and interpolate
-  for (i in 1:(length(markers))) {
+  for (i in seq_len(markers)) {
     start <- markers[i]
     end <- start + lengths[i]
     # sequence <- row[markers[1]:markers[1+1]]
@@ -354,7 +351,7 @@ toolLinearInterpolateRegion <- function(sequence) {
 
 #' Extrapolate (or Interpolate) 2D magclass objects.
 #' @description This function is a wrapper for \link[=toolInterpolate]{toolInterpolate}.
-#' #@param x magpie object with years as columns that has to be interpolated 
+#' @param x magpie object with years as columns that has to be interpolated 
 #' and/or extrapolated
 #' @param interpolate If TRUE, the function will interpolate missing values
 #' (default: TRUE).
@@ -369,8 +366,8 @@ toolLinearInterpolateRegion <- function(sequence) {
 #' @param extrapolate_method Extrapolation method to use (default: 'constant').
 #' Options: 'constant', 'ref'. # TODO add more methods. If 'ref', a reference 
 #' magpie object must be provided. In 'ref' extrapolation, the values are 
-#' extrapolated based on the shape of the reference data, see 
-#' \link[=toolExtrapolateRegion]{toolExtrapolateRegion}.
+#' extrapolated based on the shape of the reference data in the 
+#' 'toolExtrapolateRegion' function.
 #' @param ref Reference magpie object for extrapolation (default: NA).
 #' @author Merlin Jo Hosak
 #' @export
