@@ -1,7 +1,7 @@
 #' Calculate Country-Level Plastic Incineration Rate Trajectories
 #'
 #' Build time series of plastic incineration rates by sector and region
-#' using OECD EoL data and external sources, then aggregate to countries for 1990–2100.
+#' using OECD EoL data and external sources, then aggregate to countries for 1990-2100.
 #'
 #' @author Qianzhi Zhang
 #'
@@ -33,7 +33,7 @@ calcPlIncinRate <- function() {
   )
 
   # ---------------------------------------------------------------------------
-  # Compute historical share from external datasets (2005–2020)
+  # Compute historical share from external datasets (2005-2020)
   #    - Load EU, China, and US EoL CSVs, compute incineration share per region-year.
   # ---------------------------------------------------------------------------
   eu <- readSource("PlasticsEurope", subtype="PlasticEoL_EU", convert=FALSE) %>%
@@ -67,8 +67,8 @@ calcPlIncinRate <- function() {
     dplyr::select("Region", "Year", "Value")
 
   # ---------------------------------------------------------------------------
-  # Fill 1990–2000 for non-CHA regions and extend to 2100
-  #    - Copy Year 2000 value to 1990–1999; linearly interpolate from 2020 to 2100 to reach target 30%.
+  # Fill 1990-2000 for non-CHA regions and extend to 2100
+  #    - Copy Year 2000 value to 1990-1999; linearly interpolate from 2020 to 2100 to reach target 30%.
   # ---------------------------------------------------------------------------
   # Base 2000
   base2000 <- incin_hist %>%
@@ -121,7 +121,7 @@ calcPlIncinRate <- function() {
     x           = x,
     weight      = weight,
     unit        = "% Plastic incineration",
-    description = "Plastic incineration rate trajectories aggregated to country level for 1990–2100.",
+    description = "Plastic incineration rate trajectories aggregated to country level for 1990-2100.",
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }

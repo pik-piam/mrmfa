@@ -8,7 +8,7 @@ calcPlMechReRate()
 }
 \description{
 Generate time series of mechanical recycling rates by sector and region
-using OECD end-of-life (EoL) data and other sources, then aggregate to countries for 1990–2100.
+using OECD end-of-life (EoL) data and other sources, then aggregate to countries for 1990-2100.
 }
 \author{
 Qianzhi Zhang

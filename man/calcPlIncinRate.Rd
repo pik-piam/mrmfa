@@ -8,7 +8,7 @@ calcPlIncinRate()
 }
 \description{
 Build time series of plastic incineration rates by sector and region
-using OECD EoL data and external sources, then aggregate to countries for 1990–2100.
+using OECD EoL data and external sources, then aggregate to countries for 1990-2100.
 }
 \author{
 Qianzhi Zhang

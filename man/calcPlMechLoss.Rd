@@ -8,7 +8,7 @@ calcPlMechLoss()
 }
 \description{
 Generate time series of mechanical recycling loss trajectories by sector and region,
-then aggregate to countries for 1990–2100.
+then aggregate to countries for 1990-2100.
 }
 \author{
 Qianzhi Zhang

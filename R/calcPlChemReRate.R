@@ -1,9 +1,12 @@
 #' Calculate Country-Level Chemical Recycling Rate Trajectories
 #'
 #' Generate time series of chemical recycling share trajectories by sector and region,
-#' then aggregate to countries for 1990–2100.
+#' then aggregate to countries for 1990-2100.
 #'
 #' @author Qianzhi Zhang
+#' @param target Character string specifying the polymer
+#'        (for available types see structuremappingPlasticManu.csv)
+#'        if NULL, ChemReRate is calculated for all polymers
 #'
 calcPlChemReRate <- function(target = NULL) {
   # ---------------------------------------------------------------------------
@@ -18,7 +21,7 @@ calcPlChemReRate <- function(target = NULL) {
 
   # ---------------------------------------------------------------------------
   # Define time horizon and share bounds
-  #    - Years: 1990–2100
+  #    - Years: 1990-2100
   #    - Start share (pre-2020): 0%
   #    - End share (2050 & beyond): 10%
   # ---------------------------------------------------------------------------
@@ -32,7 +35,7 @@ calcPlChemReRate <- function(target = NULL) {
 
   # ---------------------------------------------------------------------------
   # Construct full dataset and interpolate
-  #    - Expand grid Year × Target × Region
+  #    - Expand grid Year x Target x Region
   #    - Merge share bounds and compute piecewise trajectories
   # ---------------------------------------------------------------------------
   traj_df <- expand.grid(
@@ -71,7 +74,7 @@ calcPlChemReRate <- function(target = NULL) {
     x           = x,
     weight      = weight,
     unit        = "% Chemical recycling",
-    description = "Chemical recycling rate trajectories aggregated to country level for 1990–2100.",
+    description = "Chemical recycling rate trajectories aggregated to country level for 1990-2100.",
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }

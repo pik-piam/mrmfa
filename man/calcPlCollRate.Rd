@@ -8,7 +8,7 @@ calcPlCollRate()
 }
 \description{
 Build time series of plastic collection rates by sector and region,
-apply fixed and interpolated values, then aggregate to countries for 1990–2100.
+apply fixed and interpolated values, then aggregate to countries for 1990-2100.
 }
 \author{
 Qianzhi Zhang

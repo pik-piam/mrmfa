@@ -1,7 +1,7 @@
 #'Calculate Country-Level Plastic Collection Rate Trajectories
 #'
 #' Build time series of plastic collection rates by sector and region,
-#' apply fixed and interpolated values, then aggregate to countries for 1990–2100.
+#' apply fixed and interpolated values, then aggregate to countries for 1990-2100.
 #'
 #' @author Qianzhi Zhang
 #' @importFrom tidyr crossing
@@ -44,8 +44,8 @@ calcPlCollRate <- function() {
   eol_df$collected[china_idx] <- interp_china
 
   # ---------------------------------------------------------------------------
-  # Fill 1990–2000 for other regions with 2000 level
-  #    - For non-CHA regions, assign 2000 value to 1990–2000 period.
+  # Fill 1990-2000 for other regions with 2000 level
+  #    - For non-CHA regions, assign 2000 value to 1990-2000 period.
   # ---------------------------------------------------------------------------
   non_cha <- dplyr::filter(eol_df, .data$Region != "CHA")
   value2000 <- non_cha %>%
@@ -126,7 +126,7 @@ calcPlCollRate <- function() {
     x           = x,
     weight      = weight,
     unit        = "% Collection rate",
-    description = "Plastic collection rate trajectories aggregated to country level for 1990–2100.",
+    description = "Plastic collection rate trajectories aggregated to country level for 1990-2100.",
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }

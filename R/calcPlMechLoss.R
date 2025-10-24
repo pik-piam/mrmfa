@@ -1,7 +1,7 @@
 #' Calculate Country-Level Mechanical Recycling Loss Trajectories
 #'
 #' Generate time series of mechanical recycling loss trajectories by sector and region,
-#' then aggregate to countries for 1990–2100.
+#' then aggregate to countries for 1990-2100.
 #'
 #' @author Qianzhi Zhang
 #'
@@ -21,7 +21,7 @@ calcPlMechLoss <- function() {
 
   # ---------------------------------------------------------------------------
   # Define time horizon and loss bounds
-  #    - Years: 1990–2100
+  #    - Years: 1990-2100
   #    - Start loss (pre-2020): 5%
   #    - End loss (2100): 5%
   # ---------------------------------------------------------------------------
@@ -35,7 +35,7 @@ calcPlMechLoss <- function() {
 
   # ---------------------------------------------------------------------------
   # Construct full dataset and compute loss trajectories
-  #    - Expand grid Year × Target × Region
+  #    - Expand grid Year x Target x Region
   #    - Merge bounds and interpolate values beyond 2020 to 2100
   # ---------------------------------------------------------------------------
   traj_df <- expand.grid(
@@ -71,7 +71,7 @@ calcPlMechLoss <- function() {
     x           = x,
     weight      = weight,
     unit        = "% Mechanical Recycling Loss",
-    description = "Mechanical recycling loss trajectories aggregated to country level for 1990–2100.",
+    description = "Mechanical recycling loss trajectories aggregated to country level for 1990-2100.",
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }

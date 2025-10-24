@@ -8,7 +8,7 @@ calcPlDACRate()
 }
 \description{
 Generate time series of Direct-Air-Capture-based plastic share trajectories by sector
-and aggregate from regions to countries for 1990–2100.
+and aggregate from regions to countries for 1990-2100.
 }
 \author{
 Qianzhi Zhang

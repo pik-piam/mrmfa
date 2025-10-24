@@ -49,7 +49,7 @@ calcPlTrade <- function(
     dplyr::select("Region","Year","Value")
 
   # ---------------------------------------------------------------------------
-  # Fill missing historical years (1990–2004) using 2005 values
+  # Fill missing historical years (1990-2004) using 2005 values
   # ---------------------------------------------------------------------------
   base_2005 <- flow_df %>%
     dplyr::filter(.data$Year == 2005) %>%
@@ -103,7 +103,7 @@ calcPlTrade <- function(
     weight      = NULL,
     unit        = "Mt Plastic",
     description = sprintf(
-      "Country-level %s plastics %s (1990–2100)", category, flow_label
+      "Country-level %s plastics %s (1990-2100)", category, flow_label
     ),
     note        = "dimensions: (Historic Time,Region,value)"
   )

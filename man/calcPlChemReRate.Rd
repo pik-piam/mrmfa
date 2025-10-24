@@ -6,9 +6,14 @@
 \usage{
 calcPlChemReRate(target = NULL)
 }
+\arguments{
+\item{target}{Character string specifying the polymer
+(for available types see structuremappingPlasticManu.csv)
+if NULL, ChemReRate is calculated for all polymers}
+}
 \description{
 Generate time series of chemical recycling share trajectories by sector and region,
-then aggregate to countries for 1990–2100.
+then aggregate to countries for 1990-2100.
 }
 \author{
 Qianzhi Zhang

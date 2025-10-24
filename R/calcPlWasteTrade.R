@@ -1,7 +1,7 @@
 #' Calculate Country-Level Plastic Waste Trade Shares
 #'
 #' Read UNCTAD regional plastic waste trade data (exports or imports),
-#' fill missing historical years 1990–2004 with 2005 values and
+#' fill missing historical years 1990-2004 with 2005 values and
 #' future years 2023-2100 with 2022 values, then aggregate to country level.
 #'
 #' @param subtype Character; flow to extract:
@@ -34,7 +34,7 @@ calcPlWasteTrade <- function(subtype) {
   }
 
   # ---------------------------------------------------------------------------
-  # Fill missing historical years (1990–2004) with 2005 values
+  # Fill missing historical years (1990-2004) with 2005 values
   # ---------------------------------------------------------------------------
   base_2005 <- flow_df %>% dplyr::filter(.data$Year == 2005) %>% dplyr::select(-"Year")
   hist_years <- 1990:2004
@@ -46,7 +46,7 @@ calcPlWasteTrade <- function(subtype) {
     dplyr::left_join(base_2005, by = c("Region", "Data2"))
 
   # ---------------------------------------------------------------------------
-  # Fill future years (2023–2100) with 2022 values
+  # Fill future years (2023-2100) with 2022 values
   # ---------------------------------------------------------------------------
   base_2022 <- flow_df %>% dplyr::filter(.data$Year == 2022) %>% dplyr::select(-"Year")
   future_years <- 2023:2100
@@ -85,7 +85,7 @@ calcPlWasteTrade <- function(subtype) {
     x           = x,
     weight      = NULL,
     unit        = "Mt Plastic",
-    description = "Country-level plastic waste trade flow aggregated for 1990–2100.",
+    description = "Country-level plastic waste trade flow aggregated for 1990-2100.",
     note        = "dimensions: (Time,Region,value)"
   ))
 }

@@ -1,7 +1,7 @@
 #' Calculate Country-Level Mechanical Recycling Rate Trajectories
 #'
 #' Generate time series of mechanical recycling rates by sector and region
-#' using OECD end-of-life (EoL) data and other sources, then aggregate to countries for 1990–2100.
+#' using OECD end-of-life (EoL) data and other sources, then aggregate to countries for 1990-2100.
 #'
 #' @author Qianzhi Zhang
 #'
@@ -32,7 +32,7 @@ calcPlMechReRate <- function() {
   )
 
   # ---------------------------------------------------------------------------
-  # Incorporate external EoL share data (2005–2020)
+  # Incorporate external EoL share data (2005-2020)
   #    - Load EU, CNBS, US EPA datasets, compute mechanical recycling share.
   # ---------------------------------------------------------------------------
   eu <- readSource("PlasticsEurope", subtype="PlasticEoL_EU", convert=FALSE) %>%
@@ -66,7 +66,7 @@ calcPlMechReRate <- function() {
 
   # ---------------------------------------------------------------------------
   # Fill 1990–1999 with Year-2000 values and extend to 2100
-  #    - Copy 2000 value back to 1990–1999; interpolate 2021–2100 to target 40% in 2050.
+  #    - Copy 2000 value back to 1990-1999; interpolate 2021–2100 to target 40% in 2050.
   # ---------------------------------------------------------------------------
   base2000 <- mech_hist %>% dplyr::filter(.data$Year==2000) %>% dplyr::select("Region", v2000="Value")
   hist_ext <- mech_hist %>%
@@ -107,7 +107,7 @@ calcPlMechReRate <- function() {
     x           = x,
     weight      = weight,
     unit        = "% Mechanical Recycling",
-    description = "Mechanical recycling rate trajectories aggregated to country level for 1990–2100.",
+    description = "Mechanical recycling rate trajectories aggregated to country level for 1990-2100.",
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }

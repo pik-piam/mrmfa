@@ -25,7 +25,7 @@ calcPlUNCTAD <- function(subtype) {
   data <- readSource("UNCTAD", convert=TRUE)
   data_regional <- readSource("UNCTAD", convert=FALSE)
   recode_regions <- c(
-    "European Union (2020 …)" = "EUR",
+    "European Union (2020 \u2026)" = "EUR",
     "China"                    = "CHA",
     "United States of America" = "USA"
   )

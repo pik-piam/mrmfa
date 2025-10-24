@@ -1,7 +1,7 @@
 #' Calculate Country-Level DAC-based Plastic Share Trajectories
 #'
 #' Generate time series of Direct-Air-Capture-based plastic share trajectories by sector
-#' and aggregate from regions to countries for 1990–2100.
+#' and aggregate from regions to countries for 1990-2100.
 #'
 #' @author Qianzhi Zhang
 #'
@@ -27,7 +27,7 @@ calcPlDACRate <- function() {
 
   # ---------------------------------------------------------------------------
   # Define time horizon and DAC-based share bounds
-  #    - Years: 1990–2100
+  #    - Years: 1990-2100
   #    - Starting share (2020): 0%
   #    - End share (2050): 1%
   # ---------------------------------------------------------------------------
@@ -40,7 +40,7 @@ calcPlDACRate <- function() {
 
   # ---------------------------------------------------------------------------
   # Build full data frame of trajectories
-  #    - Expand grid of Year × Sector × Region
+  #    - Expand grid of Year x Sector x Region
   #    - Merge with share bounds and interpolate linearly
   # ---------------------------------------------------------------------------
   traj_df <- expand.grid(
@@ -81,7 +81,7 @@ calcPlDACRate <- function() {
     x           = x,
     weight      = weight,
     unit        = "% DAC-based Plastic",
-    description = "Projected DAC-based plastic share by sector, aggregated to country level for 1990–2100.",
+    description = "Projected DAC-based plastic share by sector, aggregated to country level for 1990-2100.",
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }

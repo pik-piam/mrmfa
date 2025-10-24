@@ -1,7 +1,7 @@
 #' Calculate Country-Level Bio-based Plastic Share Trajectories
 #'
 #' Generate time series of bio-based plastic share trajectories by sector
-#' and aggregate from regions to countries for 1990–2100.
+#' and aggregate from regions to countries for 1990-2100.
 #'
 #' @author Qianzhi Zhang
 #'
@@ -27,7 +27,7 @@ calcPlBioRate <- function() {
 
   # ---------------------------------------------------------------------------
   # Define time horizon and bio-based share bounds
-  #    - Years: 1990–2100
+  #    - Years: 1990-2100
   #    - Starting share (2020): 0
   #    - End share (2050): 20%
   # ---------------------------------------------------------------------------
@@ -40,7 +40,7 @@ calcPlBioRate <- function() {
 
   # ---------------------------------------------------------------------------
   # Build full data frame of trajectories
-  #    - Expand grid of Year × Sector × Region
+  #    - Expand grid of Year x Sector x Region
   #    - Merge with share bounds and interpolate linearly
   # ---------------------------------------------------------------------------
   traj_df <- expand.grid(
@@ -81,7 +81,7 @@ calcPlBioRate <- function() {
     x           = x,
     weight      = weight,
     unit        = "% Bio-based Plastic",
-    description = "Projected bio-based plastic share by sector, aggregated to country level for 1990–2100.",
+    description = "Projected bio-based plastic share by sector, aggregated to country level for 1990-2100.",
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }
