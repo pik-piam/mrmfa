@@ -2,7 +2,7 @@
 #' 
 #' @author Merlin Jo Hosak
 #' @export
-calcBIRmaxScrapShare <- function() {
+calcStBIRmaxScrapShare <- function() {
   scrapShares <- readSource('BIR', convert=F)
 
   # Remove turkey as it is outlier

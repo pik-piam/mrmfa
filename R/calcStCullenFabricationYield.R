@@ -2,7 +2,7 @@
 #' 
 #' @author Merlin Jo Hosak
 #' @export
-calcCullenFabricationYield <- function() {
+calcStCullenFabricationYield <- function() {
   gi_matrix <- readSource('Cullen2012', subtype='gi_matrix', convert=F)
   
   parameters <- getItems(gi_matrix, dim = 3)

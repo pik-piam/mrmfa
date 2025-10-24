@@ -3,7 +3,7 @@
 #' @author Merlin Jo Hosak
 #' @param subtype TODOMERLIN: document
 #' @export
-calcSteelRecoveryRate <- function(subtype) {
+calcStRecoveryRate <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     'WorldSteel' = function() {

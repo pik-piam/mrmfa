@@ -11,7 +11,7 @@
 #' @return Steel Production across all regions from 1900-2022 as magpie within 
 #' list of metadata (in calcOutput format).
 #' @export
-calcSteelTrade <- function(subtype = 'imports') {
+calcStTrade <- function(subtype = 'imports') {
   indirect <- subtype %in% c('indirect_imports', 'indirect_exports')
   trade_data <- getSteelTradeData(subtype, indirect=indirect)
   
@@ -77,7 +77,7 @@ splitIndirectTrade <- function(trade, shares) {
 
 getSteelTradeData <- function(subtype='imports', indirect=FALSE) {
   # load data
-  production <- calcOutput('SteelProduction', aggregate=FALSE)
+  production <- calcOutput('StProduction', aggregate=FALSE)
   database <- readSource('WorldSteelDatabase', subtype=subtype)
   
   if (indirect) {

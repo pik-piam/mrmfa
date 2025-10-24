@@ -6,7 +6,7 @@
 #' \link[=calcGDP]{calcGDP} from mrdrivers for current and future GDP data
 #' according to a specific scenario (see \code{vignette("scenarios")} 
 #' for more information). Population data from 
-#' \link[=calcPopulation1900To2150]{calcPopulation1900To2150} is used to 
+#' \link[=calcCoPopulation1900To2150]{calcCoPopulation1900To2150} is used to 
 #' convert GDP per capita to total GDP.
 #' GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 #' GDP datasets that use a different base year, which however does not matter
@@ -17,7 +17,7 @@
 #' @param per_capita If TRUE, GDP is returned as per capita (default: FALSE).
 #' @return List with Magpie object of GDP and metadata in calcOutput format.
 #' @export
-calcGDP1900To2150 <- function(scenario='SSP2', per_capita=FALSE) {
+calcCoGDP1900To2150 <- function(scenario='SSP2', per_capita=FALSE) {
   # load data
   gdp_data <- getGDP1900To2150Data(scenario=scenario)
   
@@ -63,7 +63,7 @@ calcGDP1900To2150 <- function(scenario='SSP2', per_capita=FALSE) {
 
 getGDP1900To2150Data <- function(scenario){
   # load data
-  pop <- calcOutput('Population1900To2150', aggregate=F)
+  pop <- calcOutput('CoPopulation1900To2150', aggregate=F)
   gdp_pc_hist <- readSource('OECD_GDP', subtype='gdppc',convert=T)
   gdp_recent <- calcOutput('GDP', scenario=scenario, aggregate=F)
   

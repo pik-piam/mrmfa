@@ -4,7 +4,7 @@
 #' @param subtype TODOMERLIN: document
 #' @importFrom purrr is_empty
 #' @export
-calcSteelLifetimes <- function(subtype) {
+calcStLifetimes <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     'Cooper2014' = function() {

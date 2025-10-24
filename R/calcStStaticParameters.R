@@ -2,10 +2,10 @@
 #' 
 #' @author Merlin Jo Hosak
 #' @export
-calcSteelStaticParameters <- function() {
-  cullen <- calcOutput('CullenStaticParameters', aggregate=F)
+calcStStaticParameters <- function() {
+  cullen <- calcOutput('StCullenStaticParameters', aggregate=F)
   scrapInBOFRate <- readSource('WorldSteelParameters', subtype='scrapInBOFRate')
-  maxScrapShare <- calcOutput('BIRmaxScrapShare', aggregate=F)
+  maxScrapShare <- calcOutput('StBIRmaxScrapShare', aggregate=F)
   
   final <- mbind(cullen, scrapInBOFRate, maxScrapShare)
   

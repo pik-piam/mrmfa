@@ -13,7 +13,7 @@
 #' @return List with Magpie object of population and metadata in calcOutput 
 #' format.
 #' @export
-calcPopulation1900To2150 <- function(scenario='SSP2') {
+calcCoPopulation1900To2150 <- function(scenario='SSP2') {
   pop_data <- getPopulation1900To2150Data(scenario=scenario)
   
   # get yearly resolution for future

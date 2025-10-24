@@ -2,7 +2,7 @@
 #' 
 #' @author Merlin Jo Hosak
 #' @export
-calcCullenStaticParameters <- function() {
+calcStCullenStaticParameters <- function() {
   flows <- readSource('Cullen2012', subtype='flows')
   flowNames <- getItems(flows, dim = 3)
   lossFlows <- flows[,,grep('Loss', flowNames, fixed = TRUE)]
