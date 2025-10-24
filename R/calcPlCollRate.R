@@ -5,6 +5,7 @@
 #'
 #' @author Qianzhi Zhang
 #' @importFrom tidyr crossing
+#' @importFrom stats approx
 #'
 calcPlCollRate <- function() {
   # ---------------------------------------------------------------------------

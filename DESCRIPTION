@@ -34,6 +34,7 @@ Imports:
     comprehenr,
     tibble,
     zoo,
+    data.table,
 Suggests:
     testthat
 Encoding: UTF-8
