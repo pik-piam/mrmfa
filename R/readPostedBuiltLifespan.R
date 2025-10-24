@@ -7,7 +7,7 @@
 #' @author Bennet Weiss
 readPostedBuiltLifespan <- function() {
   path <- file.path("v1", "buildings_and_infrastructure_lifetime.csv")
-  data <- suppressMessages(readr::read_csv(path))
+  data <- suppressMessages(read_csv(path))
 
   # remove unnecessary colums
   cleaned_data <- data %>%

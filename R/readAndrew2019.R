@@ -16,7 +16,7 @@ readAndrew2019 <- function(subtype) {
   } else {
     stop("Invalid subtype. Choose either 'cement' or 'clinker'.")
   }
-  data <- suppressMessages(readr::read_csv(path))
+  data <- suppressMessages(read_csv(path))
   # clean up data such that the country row becomes a column, too
   data_extracted <- tidyr::pivot_longer(data, -"Year", names_to = "region", values_to = "value")
   x <- magclass::as.magpie(data_extracted, spatial = 2)

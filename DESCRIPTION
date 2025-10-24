@@ -1,14 +1,15 @@
 Type: Package
 Package: mrmfa
 Title: Input data generation for the REMIND MFA
-Version: 0.2.1
+Version: 0.3.0
 Date: 2025-10-24
 Authors@R: c(
     person("Jakob", "Dürrwächter", , "jakobdu@pik-potsdam.de", role = c("aut", "cre")),
     person("Bennet", "Weiss", , "bennet.weiss@pik-potsdam.de", role = "aut"),
     person("Leonie", "Schweiger", , "leonie.schweiger@pik-potsdam.de", role = "aut"),
     person("Falk", "Benke", , "benke@pik-potsdam.de", role = "aut"),
-    person("Merlin Jo", "Hosak", , "merlinho@pik-potsdam.de", role = "aut")
+    person("Merlin Jo", "Hosak", , "merlinho@pik-potsdam.de", role = "aut"),
+    person("Qianzhi", "Zhang", , "qianzhi.zhang@pik-potsdam.de", role = "aut")
   )
 Description: The mrmfa packages contains data preprocessing for the REMIND MFA.
 License: LGPL-3
@@ -27,6 +28,12 @@ Imports:
     rlang,
     stats,
     tidyr,
+    magpiesets,
+    purrr,    
+    comprehenr,
+    tibble,
+    zoo,
+    data.table,
 Suggests:
     testthat
 Encoding: UTF-8

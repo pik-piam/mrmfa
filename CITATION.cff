@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: If you use this software, please cite it using the metadata from this file.
 type: software
 title: 'mrmfa: Input data generation for the REMIND MFA'
-version: 0.2.1
+version: 0.3.0
 date-released: '2025-10-24'
 abstract: The mrmfa packages contains data preprocessing for the REMIND MFA.
 authors:
@@ -21,6 +21,9 @@ authors:
 - family-names: Hosak
   given-names: Merlin Jo
   email: merlinho@pik-potsdam.de
+- family-names: Zhang
+  given-names: Qianzhi
+  email: qianzhi.zhang@pik-potsdam.de
 license: LGPL-3.0
 repository-code: https://github.com/pik-piam/mrmfa
 
