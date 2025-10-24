@@ -2,7 +2,8 @@
 #' E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Yearbook-1982.pdf
 #' @author Merlin Jo Hosak
 #' @param subtype TODOMERLIN: document
-#' @importFrom rlang .data .
+#' @importFrom rlang .data
+#' @importFrom dplyr cur_data
 #' @export
 readWorldSteelDigitised <- function(subtype = 'world_production') {
   # ---- list all available subtypes with functions doing all the work ----
@@ -117,7 +118,7 @@ toolLoadIndirectTrade2013 <- function(subtype) {
                                         'WSA_', subtype,'_categories_2013.xlsx'))
   # delete unnecessary rows (total or other in the name or NA)
   x <- x %>%
-    filter(!grepl("total|other", .[[1]], ignore.case = TRUE))
+    filter(!grepl("total|other", cur_data()[[1]], ignore.case = TRUE))
   x <- x[!is.na(x$country_name), ]
   
   x <- as.magpie(x,spatial='country_name')
@@ -153,7 +154,7 @@ toolWSDecadeRead <- function(name) {
   
   # delete unnecessary rows (total or other in the name or NA)
   x <- x %>%
-    filter(!grepl("total|other", .[[1]], ignore.case = TRUE))
+    filter(!grepl("total|other", cur_data()[[1]], ignore.case = TRUE))
   x <- x[!is.na(x$country_name), ]
   
   # convert to magpie
