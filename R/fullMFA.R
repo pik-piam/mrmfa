@@ -9,7 +9,7 @@
 #' @author Bennet Weiss
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
-#' \code{\link[madrat]{calcOutput}}, \code{\link[mrindustry]{calcSteelProduction}}
+#' \code{\link[madrat]{calcOutput}}, \code{\link[mrmfa]{calcSteelProduction}}
 #' @export
 #' @examples
 #' \dontrun{

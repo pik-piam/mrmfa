@@ -29,7 +29,7 @@ fullMFA()
 }
 \seealso{
 \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
-\code{\link[madrat]{calcOutput}}, \code{\link[mrindustry]{calcSteelProduction}}
+\code{\link[madrat]{calcOutput}}, \code{\link[mrmfa]{calcSteelProduction}}
 }
 \author{
 Merlin HOSAK
