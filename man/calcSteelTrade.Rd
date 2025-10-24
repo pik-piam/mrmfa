@@ -6,6 +6,9 @@
 \usage{
 calcSteelTrade(subtype = "imports")
 }
+\arguments{
+\item{subtype}{TODOMERLIN: document}
+}
 \value{
 Steel Production across all regions from 1900-2022 as magpie within 
 list of metadata (in calcOutput format).
@@ -13,8 +16,8 @@ list of metadata (in calcOutput format).
 \description{
 Calc steel production from WorldSteel datasets. Can be aggregated to regions 
 via calcOutput aggregate parameter. Uses 
-\link[readWorldSteelDigitised]{WorldSteelDigitised} and 
-\link[readWorldSteelDatabase]{WorldSteelDatabase} datasets, the former for
+\link{readWorldSteelDigitised} and 
+\link{readWorldSteelDatabase} datasets, the former for
 historic, the latter for current data.
 }
 \author{

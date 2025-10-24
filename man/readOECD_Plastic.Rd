@@ -22,12 +22,13 @@ magpie object of the OECD Plastic data
 This function reads OECD plastic use or waste data from Excel files,
 based on a specified subtype, and returns a cleaned magpie object.
 }
-\seealso{
-[readSource()]
-
+\examples{
 \dontrun{
 a <- readSource(type = "OECD_Plastic", subtype = "Use_2019")
 }
+}
+\seealso{
+[readSource()]
 }
 \author{
 Qianzhi Zhang

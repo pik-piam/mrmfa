@@ -7,9 +7,13 @@
 #'
 #' @author Merlin HOSAK
 #' @author Bennet Weiss
+#' @param rev TODOMERLIN: document
+#' @param dev TODOMERLIN: document
+#' @param scenario TODOMERLIN: document
+#' @param gdp_per_capita TODOMERLIN: document
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
-#' \code{\link[madrat]{calcOutput}}, \code{\link[mrindustry]{calcSteelProduction}}
+#' \code{\link[madrat]{calcOutput}}
 #' @export
 #' @examples
 #' \dontrun{

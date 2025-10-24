@@ -13,12 +13,13 @@ magpie object of the US_EPA Data
 This function reads US EPA data on plastics EoL treatment in the US.
 Unit: thousands of U.S. tons
 }
-\seealso{
-[readSource()]
-
+\examples{
 \dontrun{
 a <- readSource(type = "US_EPA")
 }
+}
+\seealso{
+[readSource()]
 }
 \author{
 Leonie Schweiger

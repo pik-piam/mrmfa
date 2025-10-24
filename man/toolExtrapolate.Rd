@@ -16,6 +16,9 @@ toolExtrapolate(
 )
 }
 \arguments{
+\item{x}{magpie object with years as columns that has to be interpolated 
+and/or extrapolated}
+
 \item{interpolate}{If TRUE, the function will interpolate missing values
 (default: TRUE).}
 
@@ -34,15 +37,13 @@ which will be set to the last year in x).}
 \item{extrapolate_method}{Extrapolation method to use (default: 'constant').
 Options: 'constant', 'ref'. # TODO add more methods. If 'ref', a reference 
 magpie object must be provided. In 'ref' extrapolation, the values are 
-extrapolated based on the shape of the reference data, see 
-\link[=toolExtrapolateRegion]{toolExtrapolateRegion}.}
+extrapolated based on the shape of the reference data in the 
+'toolExtrapolateRegion' function.}
 
 \item{ref}{Reference magpie object for extrapolation (default: NA).}
 }
 \description{
 This function is a wrapper for \link[=toolInterpolate]{toolInterpolate}.
-#@param x magpie object with years as columns that has to be interpolated 
-and/or extrapolated
 }
 \author{
 Merlin Jo Hosak

@@ -9,6 +9,7 @@
 #'
 #' @seealso [readSource()]
 #'
+#' @examples
 #' \dontrun{
 #' a <- readSource(type = "US_EPA")
 #' }

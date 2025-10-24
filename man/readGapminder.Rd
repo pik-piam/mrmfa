@@ -6,6 +6,9 @@
 \usage{
 readGapminder(subtype = "population")
 }
+\arguments{
+\item{subtype}{TODOMERLIN: document}
+}
 \description{
 Read Gapminder population data from 1800-2100 in yearly resolution.
 }

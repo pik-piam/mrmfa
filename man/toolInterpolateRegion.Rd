@@ -6,6 +6,11 @@
 \usage{
 toolInterpolateRegion(row, method = "linear")
 }
+\arguments{
+\item{row}{TODOMERLIN: document}
+
+\item{method}{TODOMERLIN: document}
+}
 \description{
 Interpolate data for a single region
 }

@@ -6,6 +6,9 @@
 \usage{
 readOECD_GDP(subtype = "gdppc")
 }
+\arguments{
+\item{subtype}{TODOMERLIN: document}
+}
 \description{
 Read OECD GDP per capita data from 1500-2016
 }

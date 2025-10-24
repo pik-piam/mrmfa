@@ -6,6 +6,11 @@
 \usage{
 convertOECD_GDP(x, subtype = "gdppc")
 }
+\arguments{
+\item{x}{TODOMERLIN: document}
+
+\item{subtype}{TODOMERLIN: document}
+}
 \description{
 Convert OECD GDP per capita data from 1500-2016
 }

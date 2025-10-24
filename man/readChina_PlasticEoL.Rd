@@ -12,12 +12,14 @@ magpie object of the China Plastics EoL Data
 \description{
 This function reads data on plastics EoL treatment in China from different sources
 }
-\seealso{
-[readSource()]
-
+\examples{
 \dontrun{
 a <- readSource(type = "China_PlasticEoL")
 }
+
+}
+\seealso{
+[readSource()]
 }
 \author{
 Leonie Schweiger

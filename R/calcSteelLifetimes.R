@@ -1,4 +1,7 @@
+#' TODOMERLIN: document
+#' 
 #' @author Merlin Jo Hosak
+#' @param subtype TODOMERLIN: document
 #' @importFrom purrr is_empty
 #' @export
 calcSteelLifetimes <- function(subtype) {

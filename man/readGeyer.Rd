@@ -18,12 +18,13 @@ magpie object of the Geyer et al. Plastic data
 \description{
 Read Geyer et al. SI Global plastic production 1950-2015
 }
-\seealso{
-[readSource()]
-
+\examples{
 \dontrun{
 a <- readSource(type = "Geyer", subtype = "Prod_1950-2015")
 }
+}
+\seealso{
+[readSource()]
 }
 \author{
 Leonie Schweiger

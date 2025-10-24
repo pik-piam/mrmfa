@@ -14,12 +14,14 @@ Read-in US_PlasticsTradebyPartner file from the
 United Nations Conference on Trade and Development (UNCTAD).
 Data is filtered for Trading Partner == World, i.e. all trading partners aggregated.
 }
-\seealso{
-[readSource()]
-
+\examples{
 \dontrun{
 a <- readSource(type = "UNCTAD")
 }
+
+}
+\seealso{
+[readSource()]
 }
 \author{
 Qianzhi Zhang, Leonie Schweiger

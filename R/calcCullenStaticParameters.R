@@ -1,3 +1,5 @@
+#' TODOMERLIN: document
+#' 
 #' @author Merlin Jo Hosak
 #' @export
 calcCullenStaticParameters <- function() {

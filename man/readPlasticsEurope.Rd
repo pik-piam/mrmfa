@@ -21,12 +21,13 @@ This function reads Plastics Europe data on plastics production by region,
 demand shares by use category and EoL treatment from Excel files,
 based on a specified subtype, and returns a cleaned magpie object.
 }
-\seealso{
-[readSource()]
-
+\examples{
 \dontrun{
 a <- readSource(type = "PlasticsEurope", subtype = "PlasticProduction_region")
 }
+}
+\seealso{
+[readSource()]
 }
 \author{
 Leonie Schweiger

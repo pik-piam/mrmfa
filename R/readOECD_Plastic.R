@@ -17,6 +17,7 @@
 #'
 #' @seealso [readSource()]
 #'
+#' @examples
 #' \dontrun{
 #' a <- readSource(type = "OECD_Plastic", subtype = "Use_2019")
 #' }

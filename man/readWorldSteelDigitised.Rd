@@ -7,6 +7,9 @@ E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Year
 \usage{
 readWorldSteelDigitised(subtype = "world_production")
 }
+\arguments{
+\item{subtype}{TODOMERLIN: document}
+}
 \description{
 Read Data from World Steel Association 1978-2022 yearbooks digitized to Excel sheets
 E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Yearbook-1982.pdf

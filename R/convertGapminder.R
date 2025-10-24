@@ -1,5 +1,7 @@
 #' Convert Gapminder data to Magpie format
 #' @author Merlin Jo Hosak
+#' @param x TODOMERLIN: document
+#' @param subtype TODOMERLIN: document
 #' @export
 convertGapminder <- function(x, subtype = 'population') {
   # ---- list all available subtypes with functions doing all the work ----

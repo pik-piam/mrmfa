@@ -16,6 +16,7 @@
 #'
 #' @seealso [readSource()]
 #'
+#' @examples
 #' \dontrun{
 #' a <- readSource(type = "PlasticsEurope", subtype = "PlasticProduction_region")
 #' }

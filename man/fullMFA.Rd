@@ -13,6 +13,14 @@ fullMFA(
 )
 }
 \arguments{
+\item{rev}{TODOMERLIN: document}
+
+\item{dev}{TODOMERLIN: document}
+
+\item{scenario}{TODOMERLIN: document}
+
+\item{gdp_per_capita}{TODOMERLIN: document}
+
 \item{run_sections}{Character vector selecting which parts to run.
 Allowed: c("drivers","steel","cement"). NULL (default) runs all.}
 }
@@ -29,7 +37,7 @@ fullMFA()
 }
 \seealso{
 \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
-\code{\link[madrat]{calcOutput}}, \code{\link[mrindustry]{calcSteelProduction}}
+\code{\link[madrat]{calcOutput}}
 }
 \author{
 Merlin HOSAK

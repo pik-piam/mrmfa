@@ -8,6 +8,8 @@ convertWorldSteelDigitised(x, subtype = "production")
 }
 \arguments{
 \item{x}{Magpie object}
+
+\item{subtype}{TODOMERLIN: document}
 }
 \description{
 Convert data World Steel Association digitised 1978-2022 yearbooks.

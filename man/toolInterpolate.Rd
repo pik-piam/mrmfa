@@ -37,8 +37,8 @@ which will be set to the last year in sx).}
 \item{extrapolate_method}{Extrapolation method to use (default: 'constant').
 Options: 'constant', 'ref'. # TODO add more methods. If 'ref', a reference 
 magpie object must be provided. In 'ref' extrapolation, the values are 
-extrapolated based on the shape of the reference data, see 
-\link[=toolExtrapolateRegion]{toolExtrapolateRegion}.}
+extrapolated based on the shape of the reference data in the
+'toolExtrapolateRegion' function.}
 
 \item{ref}{Reference magpie object for extrapolation (default: NA).}
 }

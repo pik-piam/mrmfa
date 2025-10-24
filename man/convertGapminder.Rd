@@ -6,6 +6,11 @@
 \usage{
 convertGapminder(x, subtype = "population")
 }
+\arguments{
+\item{x}{TODOMERLIN: document}
+
+\item{subtype}{TODOMERLIN: document}
+}
 \description{
 Convert Gapminder data to Magpie format
 }

@@ -6,8 +6,8 @@
 #' \link[=calcGDP]{calcGDP} from mrdrivers for current and future GDP data
 #' according to a specific scenario (see \code{vignette("scenarios")} 
 #' for more information). Population data from 
-#' \link[=calcPopulation200]{calcPopulation200} is used to convert 
-#' GDP per capita to total GDP.
+#' \link[=calcPopulation1900To2150]{calcPopulation1900To2150} is used to 
+#' convert GDP per capita to total GDP.
 #' GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 #' GDP datasets that use a different base year, which however does not matter
 #' as only the relative values are used 

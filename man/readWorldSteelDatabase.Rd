@@ -10,6 +10,9 @@ on a yearly resolution.}
 \usage{
 readWorldSteelDatabase(subtype = "production")
 }
+\arguments{
+\item{subtype}{TODOMERLIN: document}
+}
 \description{
 Read Data from World Steel Association online Database,
 downloaded to Excel files in the ./v1.0 directory. 

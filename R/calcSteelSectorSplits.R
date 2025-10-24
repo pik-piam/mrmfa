@@ -1,4 +1,7 @@
+#' TODOMERLIN: document
+#' 
 #' @author Merlin Jo Hosak
+#' @param subtype TODOMERLIN: document
 #' @export
 calcSteelSectorSplits <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----

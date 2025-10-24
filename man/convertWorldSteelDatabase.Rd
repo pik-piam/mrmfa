@@ -8,6 +8,8 @@ convertWorldSteelDatabase(x, subtype = "production")
 }
 \arguments{
 \item{x}{Magpie object}
+
+\item{subtype}{TODOMERLIN: document}
 }
 \description{
 Convert data from WorldSteelAssociation Database

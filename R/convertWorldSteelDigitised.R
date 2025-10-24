@@ -2,6 +2,7 @@
 #' @author Merlin Jo Hosak
 #' @importFrom utils read.csv2
 #' @param x Magpie object
+#' @param subtype TODOMERLIN: document
 convertWorldSteelDigitised <- function(x, subtype="production") {
   # ---- list all available subtypes with functions doing all the work ----
   normalWSDigitisedConvert <- function(x) {
