@@ -23,6 +23,7 @@
 #' @importFrom readxl read_excel
 #' @importFrom dplyr select filter
 #' @importFrom magclass as.magpie getComment<-
+#' @importFrom utils data tail
 #'
 readOECD_Plastic <- function(subtype) {
   # ---------------------------------------------------------------------------

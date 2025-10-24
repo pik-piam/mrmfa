@@ -35,7 +35,7 @@ calcSteelTrade <- function(subtype = 'imports') {
   
   if (indirect) {
     # Split indirect trade into direct trade
-    shares <- data$digitised
+    shares <- trade_data$digitised
     trade <- splitIndirectTrade(trade, shares)
   }
   
@@ -61,8 +61,6 @@ extendTradeWithDigitisedWSData <- function(trade_data) {
 
 splitIndirectTrade <- function(trade, shares) {
   # Multiply by shares
-  
-  shares <- data$digitised
   
   intersecting_countries <- intersect(getItems(trade, 1), getItems(shares, 1))
   trade <- trade[intersecting_countries, ]

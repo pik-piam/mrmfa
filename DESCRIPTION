@@ -28,7 +28,10 @@ Imports:
     tidyr,
     magrittr,
     magpiesets,
-    purrr,
+    purrr,    
+    comprehenr,
+    tibble,
+    zoo,
 Suggests:
     testthat
 Encoding: UTF-8
