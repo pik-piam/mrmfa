@@ -29,18 +29,11 @@ Imports:
     stats,
     tidyr,
     magpiesets,
-<<<<<<< HEAD
-    purrr,
-    comprehenr,
-    tibble,
-    zoo,
-=======
     purrr,    
     comprehenr,
     tibble,
     zoo,
     data.table,
->>>>>>> 33402dc843c890cd932d800f4e14767199b9eafc
 Suggests:
     testthat
 Encoding: UTF-8
