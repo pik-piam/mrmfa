@@ -139,7 +139,7 @@ toolLoadIndirectTrade2013 <- function(subtype) {
   x <- x[, , c('Construction', 'Machinery', 'Products', 'Transport')]
   
   countries <- getItems(x, dim=1)
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrindustry"))$IgnoredRegions
+  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
   getItems(x, dim=1) <- toolCountry2isocode(countries,ignoreCountries = ignore)
   
   # remove rows with NA in country_name column
@@ -163,7 +163,7 @@ toolWSDecadeRead <- function(name) {
   countries <- getItems(x,dim=1)
   countries <- gsub('_', '.', countries)  # replace underscores with dots as magclass sometimes does the opposite
   
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrindustry"))$IgnoredRegions
+  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
   getItems(x, dim=1) <- toolCountry2isocode(countries,ignoreCountries = ignore)
   
   # remove new rows with NA in country_name column (that were ignored)
