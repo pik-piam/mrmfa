@@ -9,3 +9,4 @@
 ^.*CITATION.cff$
 ^.lintr$
 ^tests/.lintr$
+^\.venv$
