@@ -10,15 +10,15 @@ calcCoPopulation1900To2150(scenario = "SSP2")
 \item{scenario}{Scenario to use for future population data (default: SSP2).}
 }
 \value{
-List with Magpie object of population and metadata in calcOutput 
+List with Magpie object of population and metadata in calcOutput
 format.
 }
 \description{
-Calc population from 1900-2100 yearly for the REMIND-MFA format on a country 
+Calc population from 1900-2100 yearly for the REMIND-MFA format on a country
 level. Can be aggregated to regions via calcOutput aggregate parameter.
-Uses \link[=readGapminder]{Gapminder} and \link[=readUN_PopDiv]{UN_PopDiv} 
-datasets for historical population data as well as calcPopulation from 
-mrdrivers for current and future population data according to a specific 
+Uses \link[=readGapminder]{Gapminder} and \link[mrdrivers]{readUN_PopDiv}
+datasets for historical population data as well as \link[mrdrivers]{calcPopulation} from
+mrdrivers for current and future population data according to a specific
 scenario (see \code{vignette("scenarios")} for more information).
 }
 \author{

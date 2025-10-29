@@ -15,17 +15,17 @@ calcCoGDP1900To2150(scenario = "SSP2", per_capita = FALSE)
 List with Magpie object of GDP and metadata in calcOutput format.
 }
 \description{
-Calc GDP (PPP) from 1900-2150 yearly for the REMIND-MFA format on a country 
+Calc GDP (PPP) from 1900-2150 yearly for the REMIND-MFA format on a country
 level. Can be aggregated to regions via calcOutput aggregate parameter.
 Uses \link[=readOECD_GDP]{OECD_GDP} for historical GDP data as well as
-\link[=calcGDP]{calcGDP} from mrdrivers for current and future GDP data
-according to a specific scenario (see \code{vignette("scenarios")} 
-for more information). Population data from 
-\link[=calcCoPopulation1900To2150]{calcCoPopulation1900To2150} is used to 
+\link[mrdrivers]{calcGDP} from mrdrivers for current and future GDP data
+according to a specific scenario (see \code{vignette("scenarios")}
+for more information). Population data from
+\link[=calcCoPopulation1900To2150]{calcCoPopulation1900To2150} is used to
 convert GDP per capita to total GDP.
 GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 GDP datasets that use a different base year, which however does not matter
-as only the relative values are used 
+as only the relative values are used
 (see \link[=toolInterpolate]{toolInterpolate}).
 }
 \author{
