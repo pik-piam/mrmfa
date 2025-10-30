@@ -2,7 +2,8 @@
 #'
 #' Read UNCTAD regional plastic waste trade data (exports or imports),
 #' backcast missing historical years 1990-2004 and fill
-#' future years 2024-2100 with 2023 values, then aggregate to country level.
+#' future years 2024-2100 assuming a linear decline to 0 in 2030,
+#' then aggregate to country level.
 #'
 #' @param subtype Character; flow to extract:
 #'   \itemize{
@@ -36,12 +37,28 @@ calcPlWasteTrade <- function(subtype) {
   # Fill future years (2024-2100) with 2023 values
   # ---------------------------------------------------------------------------
   base_2023 <- hist_df %>% dplyr::filter(.data$Year == 2023) %>% dplyr::select(-"Year")
-  future_years <- 2023:2100
+  future_years <- 2024:2100
   future_df <- tidyr::expand_grid(
     Region = unique(hist_df$Region),
     Year   = future_years
   ) %>%
-    dplyr::left_join(base_2022, by = c("Region"))
+    # attach the 2023 baseline values for each Region
+    dplyr::left_join(base_2023, by = c("Region")) %>%
+    # scale factor: linear decline from 1 (at 2022) to 0 at 2030; 0 afterwards
+    dplyr::mutate(
+      .scale = dplyr::case_when(
+        Year <= 2030 ~ (2030 - Year) / (2030 - 2023),  # 2024→6/7, …, 2030→0
+        TRUE ~ 0
+      )
+    ) %>%
+    # multiply all numeric value columns by .scale (leave keys intact)
+    dplyr::mutate(
+      dplyr::across(
+        .cols = dplyr::where(is.numeric) & !dplyr::any_of(c("Year", ".scale")),
+        .fns  = ~ .x * .scale
+      )
+    ) %>%
+    dplyr::select(-.scale)              # drop helper column
   full_df <- dplyr::bind_rows(hist_df, future_df) %>%
     dplyr::arrange(.data$Region, .data$Year)
 
