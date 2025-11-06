@@ -4,33 +4,36 @@
 #' @param subtype Specific dataset used by that source
 #' @param version Version of the dataset to read
 #' @export
-readOECD_GDP <- function(subtype = 'gdpPC') {
+readOECD_GDP <- function(subtype = "gdpPC") {
   # ---- list all available subtypes with functions doing all the work ----
-  version <- 'v1.1'
+  version <- "v1.1"
   switchboard <- list(
-    'gdpPC' = function() {
-      path <- paste0('./', version, '/GDPperCapita_Broad.xlsx')
-      x <- readxl::read_excel(path = path,
-                              range = 'A1:SY208')
-      
+    "gdpPC" = function() {
+      path <- paste0("./", version, "/GDPperCapita_Broad.xlsx")
+      x <- readxl::read_excel(
+        path = path,
+        range = "A1:SY208"
+      )
+
       # delete duplicate rows where no data is available
-      x <- x[-which(x$`country name` == 'Canada' & is.na(x$`ccode`)),]
-      x <- x[-which(x$`country name` == 'Morocco' & is.na(x$`ccode`)),]
-      x <- x[-which(x$`country name` == 'Sudan' & !is.na(x$`ccode`)),]
+      x <- x[-which(x$`country name` == "Canada" & is.na(x$`ccode`)), ]
+      x <- x[-which(x$`country name` == "Morocco" & is.na(x$`ccode`)), ]
+      x <- x[-which(x$`country name` == "Sudan" & !is.na(x$`ccode`)), ]
       # remove ccode column
       x$ccode <- NULL
-      x <- as.magpie(x, spatial="country name")
+      x <- as.magpie(x, spatial = "country name")
       return(x)
     },
-    
-    NULL)
+    NULL
+  )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste('Invalid subtype -- supported subtypes are:',
-               names(switchboard)))
+    stop(paste(
+      "Invalid subtype -- supported subtypes are:",
+      names(switchboard)
+    ))
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())
   }
 }
-

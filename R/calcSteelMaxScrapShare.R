@@ -7,36 +7,41 @@
 #' International Recycling).
 #' @author Merlin Jo Hosak
 #' @export
-calcSteelMaxScrapShare <- function(subtype='BIR') {
+calcSteelMaxScrapShare <- function(subtype = "BIR") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
-    'BIR' = function() {
-      scrapShares <- readSource('BIR', subtype='scrapShare', convert=F)
-      
+    "BIR" = function() {
+      scrapShares <- readSource("BIR", subtype = "scrapShare", convert = F)
+
       # Remove turkey as it is an outlier
       scrapShares <- scrapShares[!getRegions(scrapShares) == "Turkey", , ]
-      
+
       # Assume the max to be the 95th percentile of remaining data.
-      maxScrapShare <- magpply(X=scrapShares, MARGIN=3, FUN=function(x) quantile(x, 0.95, na.rm = TRUE))
-      
+      maxScrapShare <- magpply(X = scrapShares, MARGIN = 3, FUN = function(x) quantile(x, 0.95, na.rm = TRUE))
+
       # Finalize
-      
+
       getSets(maxScrapShare) <- c("Region", "Year", "Parameter")
-      getItems(maxScrapShare, dim=1) <- 'GLO'
-      getNames(maxScrapShare)<-'Max steel scrap share'
-      
-      final <- list(x = maxScrapShare, 
-                    weight = NULL,
-                    unit=1,
-                    description='Maximum scrap share in production')
-      
+      getItems(maxScrapShare, dim = 1) <- "GLO"
+      getNames(maxScrapShare) <- "Max steel scrap share"
+
+      final <- list(
+        x = maxScrapShare,
+        weight = NULL,
+        unit = 1,
+        description = "Maximum scrap share in production"
+      )
+
       return(final)
     },
-    NULL)
+    NULL
+  )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste('Invalid subtype -- supported subtypes are:',
-               names(switchboard)))
+    stop(paste(
+      "Invalid subtype -- supported subtypes are:",
+      names(switchboard)
+    ))
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())

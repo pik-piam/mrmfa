@@ -23,9 +23,9 @@ readUNCTAD <- function() {
   # Read Data from Excel
   # ---------------------------------------------------------------------------
   data <- read_csv("US_PlasticsTradebyPartner.csv") %>%
-    select(1,3,5,7,9,13) %>%
+    select(1, 3, 5, 7, 9, 13) %>%
     dplyr::rename(Region = "Economy Label", Flow = "Flow Label", Product = "Product Label") %>%
-    filter(.data$`Partner Label`=="World") %>%
+    filter(.data$`Partner Label` == "World") %>%
     select(-"Partner Label")
 
   data <- as.magpie(data, temporal = 1, spatial = 2)

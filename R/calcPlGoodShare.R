@@ -12,7 +12,8 @@ calcPlGoodShare <- function() {
   # - Exclude total categories and compute sectoral sums (summarise over all polymers) and shares.
   # ---------------------------------------------------------------------------
   regional_df <- calcOutput(
-    "PlOECD", subtype = "Use_2019_region", aggregate = TRUE
+    "PlOECD",
+    subtype = "Use_2019_region", aggregate = TRUE
   ) %>%
     as.data.frame() %>%
     dplyr::filter(.data$Data1 != "Total", .data$Data2 != "Total") %>%
@@ -27,17 +28,19 @@ calcPlGoodShare <- function() {
   # - Read PlasticEurope shares
   # - Map sectors of EU shares to sectors of OECD shares, for mapping "Agriculture" and "Others" to "Others" and "Textiles" use weights from OECD data
   # ---------------------------------------------------------------------------
-  eu_share <- readSource("PlasticsEurope", subtype="PlasticShare_EU", convert=FALSE)
+  eu_share <- readSource("PlasticsEurope", subtype = "PlasticShare_EU", convert = FALSE)
 
   sector_map <- toolGetMapping(
-    "structuremappingPlasticShare.csv", type = "sectoral", where = "mrmfa"
+    "structuremappingPlasticShare.csv",
+    type = "sectoral", where = "mrmfa"
   )
   weights_eu <- as.magpie(
     regional_df[c("Region", "Year", "Data2", "Value_sum")],
     spatial = 1, temporal = 2
   )
   eu_share_agg <- toolAggregate(
-    eu_share/100, rel = sector_map, dim = 3,
+    eu_share / 100,
+    rel = sector_map, dim = 3,
     weight = weights_eu["EUR", "y2019", ],
     from = "Source", to = "Target"
   )
@@ -52,10 +55,12 @@ calcPlGoodShare <- function() {
   # Aggregate shares to country level
   # ---------------------------------------------------------------------------
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   country_share <- toolAggregate(
-    regional_share, rel = region_map, dim = 1,
+    regional_share,
+    rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode"
   )
 
@@ -64,7 +69,7 @@ calcPlGoodShare <- function() {
   #    - Set all aggregation weights to 1.
   # ---------------------------------------------------------------------------
   weight <- country_share
-  weight[,] <- 1
+  weight[, ] <- 1
 
   return(list(
     x = country_share,
@@ -73,5 +78,3 @@ calcPlGoodShare <- function() {
     description = "Sectoral plastic use shares aggregated to country level for 2019."
   ))
 }
-
-
