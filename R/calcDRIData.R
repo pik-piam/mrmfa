@@ -13,7 +13,7 @@
 calcDRIData <- function(subtype) {
   driSubtype <- paste("dri", tools::toTitleCase(subtype), sep = "")
   driData <- readSource("WorldSteelDatabase", subtype = driSubtype)
-  steelProduction <- calcOutput("SteelProduction", aggregate = F)
+  steelProduction <- calcOutput("SteelProduction", aggregate = FALSE)
 
   # Backcast DRI production based on steel production
   final <- toolBackcastByReference2D(driData, steelProduction)

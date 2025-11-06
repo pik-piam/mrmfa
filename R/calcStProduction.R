@@ -36,7 +36,7 @@ calcStProduction <- function() {
 
 getSteelProductionData <- function() {
   # load data
-  prodHist <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = F)
+  prodHist <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
   prodRecent <- readSource("WorldSteelDigitised", subtype = "production")
   prodCurrent <- readSource("WorldSteelDatabase", subtype = "production")
 
@@ -77,8 +77,8 @@ getWorldSteelProductionTrend <- function(prod, prodHist) {
 
   worldRef <- toolBackcastByReference2D(prodHist,
     ref = sumNonNaRegions,
-    doForecast = T,
-    doInterpolate = F
+    doForecast = TRUE,
+    doInterpolate = FALSE
   )
 
   return(worldRef)

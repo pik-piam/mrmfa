@@ -41,7 +41,7 @@ calcPigIronPreliminaryData <- function(subtype) {
 fillIEDCdata <- function(iedc) {
   noNACountries <- getItems(iedc, dim = 1)[rowSums(is.na(iedc)) == 0]
   globalTrend <- colSums(iedc[noNACountries, ])
-  iedc <- toolBackcastByReference2D(iedc, globalTrend, doForecast = T)
+  iedc <- toolBackcastByReference2D(iedc, globalTrend, doForecast = TRUE)
   iedc <- toolBackcastByReference2D(iedc, globalTrend)
 
   return(iedc)
@@ -80,7 +80,7 @@ splitHistPigIronData <- function(data) {
 
 readPigIronData <- function(subtype) {
   pigIronSubtype <- paste("pigIron", tools::toTitleCase(subtype), sep = "")
-  iedc <- readSource("IEDC", subtype = pigIronSubtype, convert = F)
+  iedc <- readSource("IEDC", subtype = pigIronSubtype, convert = FALSE)
   ws <- readSource("WorldSteelDatabase", subtype = pigIronSubtype)
 
   return(list(

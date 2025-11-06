@@ -48,7 +48,8 @@ calcPlConsumptionByGood <- function() {
   # Convert to MagPIE and aggregate to country level
   #    - Map regions to countries using GDP weights.
   # ---------------------------------------------------------------------------
-  x <- as.magpie(combined, spatial = 1, temporal = 2)[, paste0("y", 1960:2019), ] # use only data back to 1960 because no GDP weights available before
+  # use only data back to 1960 because no GDP weights available before
+  x <- as.magpie(combined, spatial = 1, temporal = 2)[, paste0("y", 1960:2019), ]
 
   region_map <- toolGetMapping(
     "regionmappingH12.csv",

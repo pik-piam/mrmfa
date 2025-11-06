@@ -6,7 +6,7 @@
 #' @export
 calcStCullenFabricationYield <- function() {
   # Read data
-  giMatrix <- readSource("Cullen2012", subtype = "giMatrix", convert = F)
+  giMatrix <- readSource("Cullen2012", subtype = "giMatrix", convert = FALSE)
 
   # Extract relevant cells from matrix and bind do one magpie
 

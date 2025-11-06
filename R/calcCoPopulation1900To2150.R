@@ -58,13 +58,13 @@ getPopulation1900To2150Data <- function(scenario) {
   # The UN_PopDiv dataset reaches from 1900 to 2150, in 5 year steps and is
   # therefore interpolated to 1 year resolution. It is used to extrapolate
   # 20th century data for the remaining regions.
-  worldHist <- readSource("UN_PopDiv", subtype = "pop", subset = "1900-2150", convert = F)
+  worldHist <- readSource("UN_PopDiv", subtype = "pop", subset = "1900-2150", convert = FALSE)
   worldHist <- time_interpolate(worldHist, 1900:2150)
   getItems(worldHist, dim = 3) <- "value"
   worldHist <- worldHist * 1e3 # convert from thousands to inhabitants
 
   # The mrdrivers calcPopulation function provides population data from 1960 on
-  current <- calcOutput("Population", scenario = scenario, aggregate = F)
+  current <- calcOutput("Population", scenario = scenario, aggregate = FALSE)
   current <- current * 1e6 # convert from millions to inhabitants
 
   return(list(

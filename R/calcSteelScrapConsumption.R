@@ -34,7 +34,8 @@ calcSteelScrapConsumption <- function(subtype, aggregate = NULL, regionmapping =
     "assumptions" = function() {
       # Assume backcast with production and forecast with BIR data
 
-      scAssumptions <- toolBackcastByReference2D(scLinear, consumptionData$production, doMakeZeroNA = T) # Backcast recent data with production (basically assumes constant production share)
+      # Backcast recent data with production (basically assumes constant production share)
+      scAssumptions <- toolBackcastByReference2D(scLinear, consumptionData$production, doMakeZeroNA = TRUE)
 
       scAssumptions <- forecastEUwithEUdata(scAssumptions, consumptionData$birEU)
 
@@ -49,7 +50,8 @@ calcSteelScrapConsumption <- function(subtype, aggregate = NULL, regionmapping =
         x = scAssumptions,
         weights = NULL,
         unit = "Tonnes",
-        description = paste("Worldsteel data on steel scrap consumption with assumptions aggregated to", context, "level")
+        description = paste("Worldsteel data on steel scrap consumption with assumptions aggregated to",
+                            context, "level")
       )
 
       return(result)
@@ -83,7 +85,8 @@ calcSteelScrapConsumption <- function(subtype, aggregate = NULL, regionmapping =
         x = result,
         weights = NULL,
         unit = "Tonnes",
-        description = paste("Worldsteel data on steel scrap consumption with limited assumptions aggregated to", context, "level")
+        description = paste("Worldsteel data on steel scrap consumption with limited assumptions aggregated to",
+                            context, "level")
       )
 
       return(result)
@@ -146,7 +149,6 @@ calcNoAssumptionsRegional <- function(scLinear, euConsumptionH12 = NULL) {
   refCountries <- h12[h12$RegionCode == "REF", ]$CountryCode
 
   copy[refCountries, ] <- 1 # never set REF countries to zero
-  # return(copy)
 
   # Get copy of scLinear where NAs are set to 0
   scLinearNoNA <- scLinear
@@ -178,7 +180,7 @@ forecastEUwithEUdata <- function(scAssumptions, euCurrent) {
 
   getItems(euCurrent, dim = 1) <- "GLO"
 
-  scAssumptionsEU <- toolBackcastByReference2D(scAssumptionsEU, euCurrent, doForecast = TRUE, doMakeZeroNA = T)
+  scAssumptionsEU <- toolBackcastByReference2D(scAssumptionsEU, euCurrent, doForecast = TRUE, doMakeZeroNA = TRUE)
   scAssumptions[euCountries, ] <- scAssumptionsEU[euCountries, ]
 
   return(scAssumptions)
@@ -198,7 +200,7 @@ forecastRestWithWorldData <- function(scAssumptions, globalSum, birGlobalSum) {
   sumSCnoNA <- colSums(scAssumptionsNoNA, na.rm = TRUE)
 
   # Get assumption of world consumption
-  worldCurrent <- toolBackcastByReference2D(globalSum, birGlobalSum, doForecast = T, doMakeZeroNA = T)
+  worldCurrent <- toolBackcastByReference2D(globalSum, birGlobalSum, doForecast = TRUE, doMakeZeroNA = TRUE)
   worldSC <- toolBackcastByReference2D(worldCurrent, sumSCnoNA[, 1:109])
 
   # Calculate assumption for rest of world
@@ -209,8 +211,10 @@ forecastRestWithWorldData <- function(scAssumptions, globalSum, birGlobalSum) {
   restWorldCountries <- setdiff(getItems(scAssumptions, dim = 1), noNAcountries)
 
   scAssumptionsRest <- scAssumptions[restWorldCountries, ]
-  scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest, restWorldSC, doForecast = TRUE, doMakeZeroNA = T) # Forecast
-  scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest, restWorldSC[, 1:109]) # Backcast
+  # Forecast
+  scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest, restWorldSC, doForecast = TRUE, doMakeZeroNA = TRUE)
+  # Backcast
+  scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest, restWorldSC[, 1:109])
 
   # Update scAssumptions
   scAssumptions[restWorldCountries, ] <- scAssumptionsRest
@@ -317,22 +321,22 @@ getHistoricConsumption <- function(historicShare, prodHist, prodHistGlobal) {
 loadSteelScrapConsumptionData <- function() {
   # Load World Steel Data
 
-  recent <- readSource("WorldSteelDigitised", subtype = "scrapConsumptionYearbooks", convert = F)
-  current <- readSource("WorldSteelDigitised", subtype = "scrapConsumptionFigures", convert = F)
-  historicShare <- readSource("WorldSteelDigitised", subtype = "specificScrapConsumption70s", convert = F)
-  global <- readSource("WorldSteelDigitised", subtype = "worldScrapConsumption", convert = F)
-  prodHistGlobal <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = F)
-  prodHist <- readSource("WorldSteelDigitised", subtype = "production", convert = F)
+  recent <- readSource("WorldSteelDigitised", subtype = "scrapConsumptionYearbooks", convert = FALSE)
+  current <- readSource("WorldSteelDigitised", subtype = "scrapConsumptionFigures", convert = FALSE)
+  historicShare <- readSource("WorldSteelDigitised", subtype = "specificScrapConsumption70s", convert = FALSE)
+  global <- readSource("WorldSteelDigitised", subtype = "worldScrapConsumption", convert = FALSE)
+  prodHistGlobal <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
+  prodHist <- readSource("WorldSteelDigitised", subtype = "production", convert = FALSE)
 
   # Load BIR data
 
-  bir <- readSource("BIR", subtype = "scrapConsumption", convert = F)
-  birEU <- readSource("BIR", subtype = "scrapConsumptionEU", convert = F)
-  birWorld <- readSource("BIR", subtype = "scrapConsumptionWorld", convert = F)
+  bir <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)
+  birEU <- readSource("BIR", subtype = "scrapConsumptionEU", convert = FALSE)
+  birWorld <- readSource("BIR", subtype = "scrapConsumptionWorld", convert = FALSE)
 
   # Load other data
 
-  production <- calcOutput("SteelProduction", aggregate = F)
+  production <- calcOutput("SteelProduction", aggregate = FALSE)
 
   # adapt current BLXdata
   current <- adaptBLXdata(current, recent)

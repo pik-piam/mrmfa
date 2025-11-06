@@ -49,10 +49,10 @@ calcPercentagesPerProcess <- function(data, assumedPastPercentages) {
 
   # Overwrite years with no data with global average percentage
 
-  togetherSum <- colSums(data$together, na.rm = T)
+  togetherSum <- colSums(data$together, na.rm = TRUE)
   togetherSumProcesses <- togetherSum[, , 1] + togetherSum[, , 2] + togetherSum[, , 3]
   togetherSumPct <- togetherSum / togetherSumProcesses
-  rowTotal <- rowSums(data$together, na.rm = T) # get countries without any data
+  rowTotal <- rowSums(data$together, na.rm = TRUE) # get countries without any data
 
   pct[rowTotal == 0, , ] <- togetherSumPct
 
@@ -64,7 +64,8 @@ calcPercentagesPerProcess <- function(data, assumedPastPercentages) {
       pct[, year, idx] <- assumedPastPercentages[[year]][idx]
     }
     pct[, , idx] <- toolInterpolate2D(pct[, , idx], method = "linear")
-    pct[, , idx] <- toolInterpolate2D(pct[, , idx], method = "constant") # constant percentage towards future (last observation carried forwards/locf)
+    # constant percentage towards future (last observation carried forwards/locf)
+    pct[, , idx] <- toolInterpolate2D(pct[, , idx], method = "constant")
   }
 
   # Final check to make sure everything sums up to production values
@@ -91,7 +92,8 @@ createCombinedProcessData <- function(data) {
 
   data$bof <- data$bof * data$factor
   data$eaf <- data$eaf * data$factor
-  data$other <- data$production[, getYears(data$bofEaf)] - (data$bof + data$eaf) # new addition is necessary as data might have been scaled doewn
+  # new addition is necessary as data might have been scaled down
+  data$other <- data$production[, getYears(data$bofEaf)] - (data$bof + data$eaf)
 
   together <- mbind(data$bof, data$eaf, data$other)
 
@@ -131,12 +133,12 @@ splitHistoricalSteelProductionData <- function(productionByProcess, isoHistorica
 }
 
 loadSteelProductionByProcessData <- function() {
-  production <- calcOutput("SteelProduction", aggregate = F)
-  bofRecent <- readSource("WorldSteelDigitised", subtype = "bofProduction", convert = F)
-  eafRecent <- readSource("WorldSteelDigitised", subtype = "eafProduction", convert = F)
+  production <- calcOutput("SteelProduction", aggregate = FALSE)
+  bofRecent <- readSource("WorldSteelDigitised", subtype = "bofProduction", convert = FALSE)
+  eafRecent <- readSource("WorldSteelDigitised", subtype = "eafProduction", convert = FALSE)
   bofCurrent <- readSource("WorldSteelDatabase", subtype = "bofProduction")
   eafCurrent <- readSource("WorldSteelDatabase", subtype = "eafProduction")
-  byProcess <- readSource("WorldSteelDigitised", subtype = "productionByProcess", convert = F)
+  byProcess <- readSource("WorldSteelDigitised", subtype = "productionByProcess", convert = FALSE)
 
   return(list(
     production = production,

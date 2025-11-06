@@ -20,7 +20,9 @@ calcStTrade <- function(subtype = "imports") {
   if (indirect) {
     trade <- tradeData$database
   } else { # indirect trade isn't given in digitised yearbooks, only digitised 2013 shares
-    tradeData$digitised[tradeData$digitised < 1] <- NA # if values are too small, they are not fit for extrapolation by reference (potentially creating infinite/unrealistic values)
+    # if values are too small, they are not fit for extrapolation by reference
+    # (potentially creating infinite/unrealistic values)
+    tradeData$digitised[tradeData$digitised < 1] <- NA
     trade <- toolBackcastByReference2D(tradeData$database,
       ref = tradeData$digitised
     )
@@ -61,7 +63,8 @@ splitIndirectTrade <- function(trade, shares) {
   tradeIntersecting <- trade[intersectingCountries, ] * shares[intersectingCountries, ]
 
   # For non-intersecting countries, use global average shares
-  averageShare <- colSums(shares) / nregions(shares) # assuming all countries with data have same weight. Calculation works because rows sum to 1
+  # assuming all countries with data have same weight. Calculation works because rows sum to 1
+  averageShare <- colSums(shares) / nregions(shares)
   nonIntersectingCountries <- setdiff(getItems(trade, 1), intersectingCountries)
   tradeNonIntersecting <- trade[nonIntersectingCountries, ] * averageShare
 

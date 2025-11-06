@@ -25,7 +25,8 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
   gdpData <- interpolateGDP1900To2150(gdpData)
 
   # convert historic data from per capita to total
-  gdpData$histPC <- gdpData$histPC[, 1900:2016] # data before 1900 irrelevant (don't cut off before because it helps for interpolation)
+  # data before 1900 irrelevant (don't cut off before because it helps for interpolation)
+  gdpData$histPC <- gdpData$histPC[, 1900:2016]
   gdpData$hist <- gdpData$pop[, 1:117] * gdpData$histPC
 
   # extrapolate
@@ -62,9 +63,9 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
 
 getGDP1900To2150Data <- function(scenario) {
   # load data
-  pop <- calcOutput("Population1900To2150", aggregate = F)
-  gdpHistPC <- readSource("OECD_GDP", subtype = "gdpPC", convert = T)
-  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = F)
+  pop <- calcOutput("Population1900To2150", aggregate = FALSE)
+  gdpHistPC <- readSource("OECD_GDP", subtype = "gdpPC", convert = TRUE)
+  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE)
 
   # convert format
   gdpRecent <- gdpRecent * 1e6 # convert to million USD
@@ -86,7 +87,7 @@ interpolateGDP1900To2150 <- function(gdpData) {
 
 extrapolateGDP1900To2150 <- function(gdpData) {
   # Extrapolate data with OECD data as reference where data is available
-  gdp <- toolBackcastByReference2D(gdpData$recent, ref = gdpData$hist, doInterpolate = F) # Interpolation already done
+  gdp <- toolBackcastByReference2D(gdpData$recent, ref = gdpData$hist, doInterpolate = FALSE) # Interpolation already done
 
 
   # Extrapolate GDP data by global total for regions without OECD data

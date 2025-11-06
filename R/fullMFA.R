@@ -17,16 +17,16 @@
 #' fullMFA()
 #' }
 #'
-fullMFA <- function(rev = 0, dev = "", scenario='SSP2', gdp_per_capita=FALSE, run_sections=NULL) {
+fullMFA <- function(rev = 0, dev = "", scenario = 'SSP2', gdp_per_capita = FALSE, run_sections = NULL) {
 
   # prepare section selector
-  validSections <- c("drivers","steel","cement","plastic")
+  validSections <- c("drivers", "steel", "cement", "plastic")
 
   if (is.null(run_sections)) {
     run_sections <- validSections
   } else {
     bad <- setdiff(run_sections, validSections)
-    if (length(bad)) stop("Invalid sections: ", paste(bad, collapse=", "))
+    if (length(bad)) stop("Invalid sections: ", paste(bad, collapse = ", "))
   }
 
   runSection <- function(name) name %in% run_sections

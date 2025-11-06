@@ -26,7 +26,8 @@ calcPlGoodShare <- function() {
   # ---------------------------------------------------------------------------
   # Replace shares for EU with EU plastic share reference data
   # - Read PlasticEurope shares
-  # - Map sectors of EU shares to sectors of OECD shares, for mapping "Agriculture" and "Others" to "Others" and "Textiles" use weights from OECD data
+  # - Map sectors of EU shares to sectors of OECD shares,
+  #   for mapping "Agriculture" and "Others" to "Others" and "Textiles" use weights from OECD data
   # ---------------------------------------------------------------------------
   eu_share <- readSource("PlasticsEurope", subtype = "PlasticShare_EU", convert = FALSE)
 

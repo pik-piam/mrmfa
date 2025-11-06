@@ -8,7 +8,7 @@
 #'
 #' @export
 calcPigIronProduction <- function() {
-  data <- calcOutput("PigIronPreliminaryData", subtype = "production", aggregate = F)
+  data <- calcOutput("PigIronPreliminaryData", subtype = "production", aggregate = FALSE)
 
   # Pig Iron production Data doesn't need any more processing, wrapper function just there for completeness.
 

@@ -11,8 +11,8 @@
 #'
 #' @export
 calcPigIronTrade <- function(subtype) {
-  tradeData <- calcOutput("PigIronPreliminaryData", subtype = subtype, aggregate = F)
-  production <- calcOutput("PigIronPreliminaryData", subtype = "production", aggregate = F)
+  tradeData <- calcOutput("PigIronPreliminaryData", subtype = subtype, aggregate = FALSE)
+  production <- calcOutput("PigIronPreliminaryData", subtype = "production", aggregate = FALSE)
 
   final <- toolBackcastByReference2D(tradeData, production)
 
