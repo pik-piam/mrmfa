@@ -34,6 +34,7 @@ Imports:
     tibble,
     zoo,
     data.table,
+    ggplot2,
 Suggests:
     testthat
 Encoding: UTF-8
