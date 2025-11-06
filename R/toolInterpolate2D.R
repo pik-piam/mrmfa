@@ -1,11 +1,14 @@
-#' @importFrom tidyr pivot_wider
 #' Interpolate missing values in a 2D magpie object
 #' @description
 #' This function interpolates missing values (NAs) in a 2D magpie
 #' object along the time dimension (years).
 #'
+#' @param x A 2D magpie object (regions x years) with missing values to interpolate
 #' @param method 3 interpolation methods are supported: 'linear', 'spline', and 'constant' (last observation carried forward).
+#' @param ... Additional arguments passed to interpolation functions
+#' @return A 2D magpie object with interpolated values
 #' @author Merlin Jo Hosak
+#' @importFrom tidyr pivot_wider
 #' @export
 toolInterpolate2D <- function(x, method = "linear", ...) {
   regions <- getItems(x, dim = 1)

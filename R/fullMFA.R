@@ -5,6 +5,8 @@
 #'
 #' @author Merlin HOSAK
 #' @author Bennet Weiss
+#' @param rev Revision number for the data version
+#' @param dev Development version string
 #' @param scenario SSP scenario used for population and GDP drivers
 #' @param gdp_per_capita bool if GDP driver should be returned as per capita values
 #' @param run_sections Character vector selecting which parts to run.

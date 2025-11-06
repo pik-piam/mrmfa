@@ -3,7 +3,7 @@
 #' Calc static (singular) steel parameters based on supplemnetar information of
 #' Cullen et al. (2012) paper
 #' 'Mapping the global flow of steel: from steelmaking to end‐use goods'. See
-#' \link[readCullen2012]{readCullen2012} and the folder Cullen2012 in sources
+#' \link{readCullen2012} and the folder Cullen2012 in sources
 #' for details on the preprocessing.
 #' @param subtype Subtype of static parameter to calculate. Currently supported
 #' subtypes are:

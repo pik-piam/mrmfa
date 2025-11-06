@@ -1,6 +1,10 @@
-#' TODOMERLIN: document
+#' Read BIR (Bureau of International Recycling) data
+#' @description
+#' Reads BIR data on steel scrap shares and consumption.
 #'
 #' @author Merlin Jo Hosak
+#' @param subtype Type of data to read. Options: "scrapShare", "scrapConsumption", 
+#' "scrapConsumptionEU", "scrapConsumptionWorld"
 #' @export
 readBIR <- function(subtype = "scrapShare") {
   # ---- list all available subtypes with functions doing all the work ----

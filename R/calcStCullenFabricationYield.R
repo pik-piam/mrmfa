@@ -1,7 +1,7 @@
 #' Load Cullen 2012 fabrication yield
 #' @description
 #' Function to load fabrication yield data from Cullen et al. (2012).
-#' Using the function \link[readCullen2012]{readCullen2012}.
+#' Using the function \link{readCullen2012}.
 #' @author Merlin Jo Hosak
 #' @export
 calcStCullenFabricationYield <- function() {

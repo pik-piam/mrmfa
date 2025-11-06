@@ -9,8 +9,6 @@
 #'
 #' @param x A 2D Magpie object (region × time).
 #' @param title Optional plot title.
-#' @param ylab Optional y-axis label.
-#' @param xlab Optional x-axis label.
 #' @return A ggplot object showing the time series for all regions.
 #'
 #' @author Merlin Jo Hosak

@@ -3,6 +3,9 @@
 #' Perform an outer merge on two 2D magpie objects (regions x years).
 #'
 #' @author Merlin Jo Hosak
+#' @param a First magpie object to merge
+#' @param b Second magpie object to merge
+#' @param fill Value to use for cells not present in either input (default: NA)
 #' @export
 toolMerge2D <- function(a, b, fill = NA) {
   if (!(is.magpie(a) && is.magpie(b))) {
