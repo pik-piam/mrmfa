@@ -17,7 +17,8 @@ readIEDC <- function(subtype = "pigIronProduction") {
     },
     "pigIronImports" = function() {
       x <- readNormalIEDC("1_F_steel_200R_F_21_2_pig_iron_import.xlsx", version,
-                          region_col = "aspect 6 : destination_region")
+        region_col = "aspect 6 : destination_region"
+      )
       return(x)
     },
     "pigIronExports" = function() {

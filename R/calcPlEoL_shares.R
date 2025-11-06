@@ -76,8 +76,10 @@ calcPlEoL_shares <- function(subtype) {
     group_by(.data$Region, .data$Year) %>%
     mutate(
       Total_collected = sum(.data$share[.data$Data1 != "Uncollected"]),
-      share_new = case_when(.data$Data1 != "Uncollected" ~ .data$share / .data$Total_collected,
-                            TRUE ~ (1 - .data$share)),
+      share_new = case_when(
+        .data$Data1 != "Uncollected" ~ .data$share / .data$Total_collected,
+        TRUE ~ (1 - .data$share)
+      ),
       Data1 = case_when(.data$Data1 == "Uncollected" ~ "Collected", TRUE ~ .data$Data1)
     ) %>%
     select("Region", "Year", "Data1", "share_new")

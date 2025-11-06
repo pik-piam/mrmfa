@@ -50,8 +50,10 @@ calcSteelScrapConsumption <- function(subtype, aggregate = NULL, regionmapping =
         x = scAssumptions,
         weights = NULL,
         unit = "Tonnes",
-        description = paste("Worldsteel data on steel scrap consumption with assumptions aggregated to",
-                            context, "level")
+        description = paste(
+          "Worldsteel data on steel scrap consumption with assumptions aggregated to",
+          context, "level"
+        )
       )
 
       return(result)
@@ -85,8 +87,10 @@ calcSteelScrapConsumption <- function(subtype, aggregate = NULL, regionmapping =
         x = result,
         weights = NULL,
         unit = "Tonnes",
-        description = paste("Worldsteel data on steel scrap consumption with limited assumptions aggregated to",
-                            context, "level")
+        description = paste(
+          "Worldsteel data on steel scrap consumption with limited assumptions aggregated to",
+          context, "level"
+        )
       )
 
       return(result)

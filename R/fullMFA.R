@@ -17,8 +17,7 @@
 #' fullMFA()
 #' }
 #'
-fullMFA <- function(rev = 0, dev = "", scenario = 'SSP2', gdp_per_capita = FALSE, run_sections = NULL) {
-
+fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdp_per_capita = FALSE, run_sections = NULL) {
   # prepare section selector
   validSections <- c("drivers", "steel", "cement", "plastic")
 
