@@ -5,8 +5,10 @@
 #'
 #' @author Merlin HOSAK
 #' @author Bennet Weiss
-#' @param scenario TODOMERLIN: document
-#' @param gdp_per_capita TODOMERLIN: document
+#' @param scenario SSP scenario used for population and GDP drivers
+#' @param gdp_per_capita bool if GDP driver should be returned as per capita values
+#' @param run_sections Character vector selecting which parts to run.
+#' Allowed see validSections: c("drivers", "steel", "cement", plastic). NULL (default) runs all.
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
 #' \code{\link[madrat]{calcOutput}}
