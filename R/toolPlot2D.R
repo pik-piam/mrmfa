@@ -1,7 +1,7 @@
 #' Plot a 2D Magpie Object
 #'
 #' @description
-#' This function visualizes a 2-dimensional Magpie object (regions × time)
+#' This function visualizes a 2-dimensional Magpie object (regions x time)
 #' as a line plot with time on the x-axis, values on the y-axis, and one line
 #' per region.
 #'
@@ -21,7 +21,7 @@ toolPlot2D <- function(x, title = "2D Plot") {
     stop("Input x must be a Magpie object.")
   }
   if (magclass::ndata(x) != 1) {
-    stop("Input x must be a 2D Magpie object (regions × time).")
+    stop("Input x must be a 2D Magpie object (regions x time).")
   }
 
   # --- Convert Magpie to Data Frame ---
