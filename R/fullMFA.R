@@ -5,8 +5,6 @@
 #'
 #' @author Merlin HOSAK
 #' @author Bennet Weiss
-#' @param rev TODOMERLIN: document
-#' @param dev TODOMERLIN: document
 #' @param scenario TODOMERLIN: document
 #' @param gdp_per_capita TODOMERLIN: document
 #' @seealso
@@ -19,7 +17,25 @@
 #' fullMFA()
 #' }
 #'
-fullMFA <- function(scenario = "SSP2", gdpPerCapita = FALSE) {
+fullMFA <- function(rev = 0, dev = "", scenario='SSP2', gdp_per_capita=FALSE, run_sections=NULL) {
+
+  # prepare section selector
+  validSections <- c("drivers","steel","cement","plastic")
+
+  if (is.null(run_sections)) {
+    run_sections <- validSections
+  } else {
+    bad <- setdiff(run_sections, validSections)
+    if (length(bad)) stop("Invalid sections: ", paste(bad, collapse=", "))
+  }
+
+  runSection <- function(name) name %in% run_sections
+
+  if (!length(run_sections)) {
+    message("fullMFA: no sections selected; nothing done.")
+    return(invisible(NULL))
+  }
+
   #  ------------- DRIVERS -------------
   if (runSection("drivers")) {
     calcOutput("CoPopulation1900To2150", file = "co_population1900To2150.cs4r", scenario = scenario)
@@ -27,48 +43,40 @@ fullMFA <- function(scenario = "SSP2", gdpPerCapita = FALSE) {
   }
 
   #  ------------- STEEL ----------------
-
-  # Production
-  calcOutput("StProduction", file = "st_steel_production.cs4r")
-  # Trade
-  calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports")
-  calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports")
-  calcOutput("StTrade", file = "st_steel_scrap_imports.cs4r", subtype = "scrap_imports")
-  calcOutput("StTrade", file = "st_steel_scrap_exports.cs4r", subtype = "scrap_exports")
-  calcOutput("StTrade", file = "st_steel_indirect_imports.cs4r", subtype = "indirect_imports")
-  calcOutput("StTrade", file = "st_steel_indirect_exports.cs4r", subtype = "indirect_exports")
-  # Parameters
-
-  calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
-  calcOutput("StLifetimes", subtype = "Cooper2014", file = "st_lifetimes.cs4r", aggregate = FALSE)
-  calcOutput("StRecoveryRate", subtype = "WorldSteel", file = "st_recovery_rate.cs4r", aggregate = FALSE)
-  calcOutput("StSectorSplits", subtype = "Pauliuk2013", file = "st_sector_splits.cs4r", aggregate = FALSE)
-
-  # Static Parameters
-
-  calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
-  calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_BOF_rate.cs4r", aggregate = FALSE)
-  calcOutput("StCullenStaticParameters", subtype = "productionLossRate", file = "st_production_loss_rate.cs4r", aggregate = FALSE)
-  calcOutput("StCullenStaticParameters", subtype = "formingLossRate", file = "st_forming_loss_rate.cs4r", aggregate = FALSE)
-  calcOutput("StCullenStaticParameters", subtype = "formingYield", file = "st_forming_yield.cs4r", aggregate = FALSE)
-  calcOutput("StCullenStaticParameters", subtype = "fabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
-
-  # Scrap consumption
-
-  calcOutput("StScrapConsumption", file = "st_scrap_consumption.cs4r", subtype = "assumptions")
-  calcOutput("StScrapConsumption", file = "st_scrap_consumption_no_assumptions.cs4r", subtype = "noAssumptions", warnNA = FALSE)
-
-  # Pig Iron
-
-  calcOutput("StPigIronProduction", file = "st_pig_iron_production.cs4r")
-  calcOutput("StPigIronTrade", file = "st_pig_iron_imports.cs4r", subtype = "imports")
-  calcOutput("StPigIronTrade", file = "st_pig_iron_exports.cs4r", subtype = "exports")
-
-  # Direct reduced Iron
-
-  calcOutput("StDRIData", file = "st_dri_production.cs4r", subtype = "production")
-  calcOutput("StDRIData", file = "st_dri_imports.cs4r", subtype = "imports")
-  calcOutput("StDRIData", file = "st_dri_exports.cs4r", subtype = "exports")
+  if (runSection("steel")) {
+    # Production
+    calcOutput("StProduction", file = "st_steel_production.cs4r")
+    # Trade
+    calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports")
+    calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports")
+    calcOutput("StTrade", file = "st_steel_scrap_imports.cs4r", subtype = "scrap_imports")
+    calcOutput("StTrade", file = "st_steel_scrap_exports.cs4r", subtype = "scrap_exports")
+    calcOutput("StTrade", file = "st_steel_indirect_imports.cs4r", subtype = "indirect_imports")
+    calcOutput("StTrade", file = "st_steel_indirect_exports.cs4r", subtype = "indirect_exports")
+    # Parameters
+    calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
+    calcOutput("StLifetimes", subtype = "Cooper2014", file = "st_lifetimes.cs4r", aggregate = FALSE)
+    calcOutput("StRecoveryRate", subtype = "WorldSteel", file = "st_recovery_rate.cs4r", aggregate = FALSE)
+    calcOutput("StSectorSplits", subtype = "Pauliuk2013", file = "st_sector_splits.cs4r", aggregate = FALSE)
+    # Static Parameters
+    calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
+    calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_BOF_rate.cs4r", aggregate = FALSE)
+    calcOutput("StCullenStaticParameters", subtype = "productionLossRate", file = "st_production_loss_rate.cs4r", aggregate = FALSE)
+    calcOutput("StCullenStaticParameters", subtype = "formingLossRate", file = "st_forming_loss_rate.cs4r", aggregate = FALSE)
+    calcOutput("StCullenStaticParameters", subtype = "formingYield", file = "st_forming_yield.cs4r", aggregate = FALSE)
+    calcOutput("StCullenStaticParameters", subtype = "fabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
+    # Scrap consumption
+    calcOutput("StScrapConsumption", file = "st_scrap_consumption.cs4r", subtype = "assumptions")
+    calcOutput("StScrapConsumption", file = "st_scrap_consumption_no_assumptions.cs4r", subtype = "noAssumptions", warnNA = FALSE)
+    # Pig Iron
+    calcOutput("StPigIronProduction", file = "st_pig_iron_production.cs4r")
+    calcOutput("StPigIronTrade", file = "st_pig_iron_imports.cs4r", subtype = "imports")
+    calcOutput("StPigIronTrade", file = "st_pig_iron_exports.cs4r", subtype = "exports")
+    # Direct reduced Iron
+    calcOutput("StDRIData", file = "st_dri_production.cs4r", subtype = "production")
+    calcOutput("StDRIData", file = "st_dri_imports.cs4r", subtype = "imports")
+    calcOutput("StDRIData", file = "st_dri_exports.cs4r", subtype = "exports")
+  }
 
   #  ------------- CEMENT -----------
   if (runSection("cement")) {
