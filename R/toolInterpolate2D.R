@@ -1,3 +1,11 @@
+#' Interpolate missing values in a 2D magpie object
+#' @description 
+#' This function interpolates missing values (NAs) in a 2D magpie 
+#' object along the time dimension (years).
+#' 
+#' @param method 3 interpolation methods are supported: 'linear', 'spline', and 'constant' (last observation carried forward).
+#' @author Merlin Jo Hosak
+#' @export
 toolInterpolate2D <- function(x, method='linear',...) {
   regions <- getItems(x, dim=1)
   # turn into data frame with same index

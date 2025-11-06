@@ -1,6 +1,6 @@
 #' Get GDP from 1900-2150
 #' @description
-#' Calc GDP (PPP) from 1900-2150 yearly for the REMIND-MFA format on a country 
+#' Calc GDP (PPP) from 1900-2150 yearly for the SIMSON format on a country 
 #' level. Can be aggregated to regions via calcOutput aggregate parameter.
 #' Uses \link[=readOECD_GDP]{OECD_GDP} for historical GDP data as well as
 #' \link[=calcGDP]{calcGDP} from mrdrivers for current and future GDP data
@@ -14,43 +14,40 @@
 #' (see \link[=toolInterpolate]{toolInterpolate}).
 #' @author Merlin Jo Hosak
 #' @param scenario Scenario to use for future GDP data (default: SSP2).
-#' @param per_capita If TRUE, GDP is returned as per capita (default: FALSE).
-#' @return List with Magpie object of GDP and metadata in calcOutput format.
+#' @param perCapita If TRUE, GDP is returned as per capita (default: FALSE).
+#' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
 #' @export
-calcGDP1900To2150 <- function(scenario='SSP2', per_capita=FALSE) {
+calcGDP1900To2150 <- function(scenario='SSP2', perCapita=FALSE) {
   # load data
-  gdp_data <- getGDP1900To2150Data(scenario=scenario)
+  gdpData <- getGDP1900To2150Data(scenario=scenario)
   
   # interpolate
-  gdp_data <- interpolateGDP1900To2150(gdp_data)
+  gdpData <- interpolateGDP1900To2150(gdpData)
   
   # convert historic data from per capita to total
-  gdp_data$hist_pc <- gdp_data$hist_pc[,1900:2016]  # data before 1900 irrelevant (don't cut off before because it helps for interpolation)
-  gdp_data$hist <- gdp_data$pop[,1:117] * gdp_data$hist_pc
+  gdpData$histPC <- gdpData$histPC[,1900:2016]  # data before 1900 irrelevant (don't cut off before because it helps for interpolation)
+  gdpData$hist <- gdpData$pop[,1:117] * gdpData$histPC
   
   # extrapolate
-  gdp <- extrapolateGDP1900To2150(gdp_data)
-  
-  # finalize for calcOutput
-  
-  unit <- '2005 USD$PPP'
-  description='GDP from 1900-2150 yearly for the REMIND-MFA format'
-  weight<-NULL
-  
-  # convert to per capita if requested
-  if (per_capita) {
-    gdp <- gdp / gdp_data$pop
-    unit <- '2005 USD$PPP per capita'
-    description='GDP per capita from 1900-2150 yearly for the REMIND-MFA format'
-    weight <- gdp_data$pop
-  } 
+  gdp <- extrapolateGDP1900To2150(gdpData)
   
   # check if there are any NA left in gdp
   if (any(is.na(gdp))) {
     warning("There are still NA values in the GDP data.")
   }
-
-  description <- paste(description, "\ndimensions: (Time,Region,value)")
+  
+  # finalize for calcOutput
+  unit <- '2005 USD$PPP' # unit is that of calcGDP data as OECD data is just used for backcasting
+  description='GDP from 1900-2150 yearly for the SIMSON format'
+  weight<-NULL
+  
+  # convert to per capita if requested
+  if (perCapita) {
+    gdp <- gdp / gdpData$pop
+    unit <- paste0(unit, ' per capita')
+    description='GDP per capita from 1900-2150 yearly for the SIMSON format'
+    weight <- gdpData$pop
+  } 
   
   result <- list(x = gdp, 
                  weight = weight,  # TODO adapt weight for per capita data
@@ -64,44 +61,44 @@ calcGDP1900To2150 <- function(scenario='SSP2', per_capita=FALSE) {
 getGDP1900To2150Data <- function(scenario){
   # load data
   pop <- calcOutput('Population1900To2150', aggregate=F)
-  gdp_pc_hist <- readSource('OECD_GDP', subtype='gdppc',convert=T)
-  gdp_recent <- calcOutput('GDP', scenario=scenario, aggregate=F)
+  gdpHistPC <- readSource('OECD_GDP', subtype='gdpPC',convert=T)
+  gdpRecent <- calcOutput('GDP', scenario=scenario, aggregate=F)
   
   # convert format
-  gdp_recent <- gdp_recent * 1e6  # convert to million USD  
-  getItems(gdp_recent,dim=3) <- 'value'
+  gdpRecent <- gdpRecent * 1e6  # convert to million USD  
+  getItems(gdpRecent,dim=3) <- 'value'
   
   return(list(pop=pop, 
-              hist_pc=gdp_pc_hist,
-              recent=gdp_recent))
+              histPC=gdpHistPC,
+              recent=gdpRecent))
 }
 
-interpolateGDP1900To2150 <- function(gdp_data) {
-  gdp_data$recent <- time_interpolate(gdp_data$recent, 1965:2150)
-  gdp_data$hist_pc <- toolInterpolate2D(gdp_data$hist_pc, method = 'linear')
+interpolateGDP1900To2150 <- function(gdpData) {
+  gdpData$recent <- time_interpolate(gdpData$recent, 1965:2150)
+  gdpData$histPC <- toolInterpolate2D(gdpData$histPC, method = 'linear')
   
-  return(gdp_data)
+  return(gdpData)
 }
 
-extrapolateGDP1900To2150 <- function(gdp_data) {
+extrapolateGDP1900To2150 <- function(gdpData) {
   # Extrapolate data with OECD data as reference where data is available
-  gdp <- toolBackcastByReference2D(gdp_data$recent, ref=gdp_data$hist, do_interpolate=F)  # Interpolation already done
+  gdp <- toolBackcastByReference2D(gdpData$recent, ref=gdpData$hist, doInterpolate=F)  # Interpolation already done
   
   
   # Extrapolate GDP data by global total for regions without OECD data
   
   ## get GDP of regions that have data up to 1900
   regions <- getRegions(gdp)
-  regions_not_na <- regions[!is.na(gdp[,1])]
-  gdp_from_1900 <-gdp[regions_not_na,]
+  regionsNotNA <- regions[!is.na(gdp[,1])]
+  gdpFrom1900 <-gdp[regionsNotNA,]
   
   ## sum over these regions
-  mapping <- data.frame(from = regions_not_na, global = 'GLO')
-  sum_gdp_from_1900 <- toolAggregate(gdp_from_1900, rel = mapping)
+  mapping <- data.frame(from = regionsNotNA, global = 'GLO')
+  sumGDPfrom1900 <- toolAggregate(gdpFrom1900, rel = mapping)
   
   
   # Extrapolate missing regions with the global average
-  gdp <- toolBackcastByReference2D(gdp, ref = sum_gdp_from_1900)
+  gdp <- toolBackcastByReference2D(gdp, ref = sumGDPfrom1900)
   
   return(gdp)
 }

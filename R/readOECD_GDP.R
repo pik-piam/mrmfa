@@ -1,11 +1,16 @@
-#' Read OECD GDP per capita data from 1500-2016
+#' Read OECD GDP
+#' @description Read OECD GDP per capita data from 1500-2016, given in 2011 USD.
 #' @author Merlin Jo Hosak
+#' @param subtype Specific dataset used by that source
+#' @param version Version of the dataset to read
 #' @export
-readOECD_GDP <- function(subtype = 'gdppc') {
+readOECD_GDP <- function(subtype = 'gdpPC') {
   # ---- list all available subtypes with functions doing all the work ----
+  version <- 'v1.1'
   switchboard <- list(
-    'gdppc' = function() {
-      x <- readxl::read_excel(path = './v1.1/GDPperCapita_Broad.xlsx',
+    'gdpPC' = function() {
+      path <- paste0('./', version, '/GDPperCapita_Broad.xlsx')
+      x <- readxl::read_excel(path = path,
                               range = 'A1:SY208')
       
       # delete duplicate rows where no data is available

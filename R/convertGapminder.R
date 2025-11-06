@@ -5,15 +5,6 @@ convertGapminder <- function(x, subtype = 'population') {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     'population' = function(x) {
-      # Rename sets for unified format.
-      getSets(x) <- c('Region', 'Year', 'value')
-      
-      # Rename Vatican Iso3 code (HOS to VAT)
-      getItems(x,dim=1)[getItems(x,dim=1)=='HOS']<-'VAT'
-      
-      # Rename value dimension for unified format.
-      getItems(x, dim=3) <- 'value'
-      
       x <- toolCountryFill(x, verbosity=2)
       
       return(x)

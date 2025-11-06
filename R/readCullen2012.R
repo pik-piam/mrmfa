@@ -1,10 +1,17 @@
+#' Read data from Cullen et al. (2012)
+#' @description
+#' Read data from supplementary material of Cullen et al. 2012 paper
+#' 'Mapping the global flow of steel: from steelmaking to end‐use goods'.
+#' Files were digitalized from pdf to Excel.
+#' @param subtype Subtype of Cullen et al. (2012) data to load. Currently
+#' supported subtypes are flows & giMatrix.
 #' @author Merlin Jo Hosak
 #' @export
 readCullen2012 <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
+  version <- 'v1.0'
   switchboard <- list(
     'flows' = function() {
-      version<-"v1.0"
       path <- paste0('./',version,'/Cullen_2012_Flows.xlsx')
       df <- readxl::read_excel(path=path,
                                sheet='Data')
@@ -17,8 +24,7 @@ readCullen2012 <- function(subtype) {
       return(flows)
     },
     
-    'gi_matrix' = function() {
-      version<-"v1.0"
+    'giMatrix' = function() {
       path <- paste0('./',version,'/Cullen_2012_GI_Matrix.xlsx')
       df <- readxl::read_excel(path=path,
                                sheet='Data')
@@ -29,9 +35,9 @@ readCullen2012 <- function(subtype) {
         values_to = "value"          # cell values here
       )
       
-      gi_matrix <- as.magpie(df_long)
+      giMatrix <- as.magpie(df_long)
       
-      return(gi_matrix)
+      return(giMatrix)
     },
     
     NULL)

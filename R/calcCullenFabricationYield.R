@@ -1,18 +1,27 @@
+#' Load Cullen 2012 fabrication yield
+#' @description 
+#' Function to load fabrication yield data from Cullen et al. (2012). 
+#' Using the function \link[readCullen2012]{readCullen2012}.
 #' @author Merlin Jo Hosak
 #' @export
 calcCullenFabricationYield <- function() {
-  gi_matrix <- readSource('Cullen2012', subtype='gi_matrix', convert=F)
+  # Read data
+  giMatrix <- readSource('Cullen2012', subtype='giMatrix', convert=F)
   
-  parameters <- getItems(gi_matrix, dim = 3)
-  endUseGoods <- gi_matrix[,,grep('End Use Goods - End Use Goods', parameters, fixed = TRUE)]
+  # Extract relevant cells from matrix and bind do one magpie
+  
+  parameters <- getItems(giMatrix, dim = 3)
+  endUseGoods <- giMatrix[,,grep('End Use Goods - End Use Goods', parameters, fixed = TRUE)]
   endUseGoodsParameters <- getItems(endUseGoods, dim = 3)
   
-  constructionYield <- endUseGoods[,,grep('Construction %', endUseGoodsParameters, fixed = TRUE)]
-  machineryYield <- endUseGoods[,,grep('Machinery %', endUseGoodsParameters, fixed = TRUE)]
-  productsYield <- endUseGoods[,,grep('Products %', endUseGoodsParameters, fixed = TRUE)]
-  transportYield <- endUseGoods[,,grep('Transport %', endUseGoodsParameters, fixed = TRUE)]
+  patterns <- c("Construction %", "Machinery %", "Products %", "Transport %")
+  final <- do.call(
+    mbind,
+    lapply(patterns, function(p) endUseGoods[,,grep(p, endUseGoodsParameters, fixed = TRUE)])
+  )
   
-  final <- mbind(constructionYield, machineryYield, productsYield, transportYield)
+  # Finalize
+  
   getSets(final)<-c('region','year','parameter')
   getItems(final, dim=3) <- c('Construction Yield',
                               'Machinery Yield',

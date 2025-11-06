@@ -1,3 +1,12 @@
+#' Read Pauliuk et al. (2013)
+#' @description
+#' Read data from Pauliuk et al. (2013) papers 'Steel all over the world:
+#' Estimating in-use stocks of iron for 200 countries' and 'The steel scrap
+#' age'
+#' @param subtype Subtype of Pauliuk 2013 data to load. Currently only
+#' 'sectorSplits' is available, other potentially relevant data is
+#' estimated stock saturation levels and times for various world regions
+#' as well as stock sector splits.
 #' @author Merlin Jo Hosak
 #' @export
 readPauliuk2013 <- function(subtype='sectorSplits') {

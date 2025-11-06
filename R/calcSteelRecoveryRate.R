@@ -1,3 +1,10 @@
+#' Calc steel recovery rate
+#' @description
+#' Function to load steel recovery rate data in the four main end-use sectors
+#' (construction, machinery, products, transport).
+#' @param subtype Subtype of steel recovery rate data to load. Currently only
+#' 'WorldSteel' is available, see 
+#' \link[readWorldSteelParameters]{readWorldSteelParameters} for details.
 #' @author Merlin Jo Hosak
 #' @export
 calcSteelRecoveryRate <- function(subtype) {

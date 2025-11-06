@@ -1,10 +1,13 @@
-#' Convert OECD GDP per capita data from 1500-2016
+#' Conver OECD GDP
+#' @description Convert OECD GDP per capita data from 1500-2016
 #' @author Merlin Jo Hosak
+#' @param x Magpie object as read by readOECD_GDP
+#' @param subtype Specific dataset used by that source
 #' @export
-convertOECD_GDP <- function(x, subtype = 'gdppc') {
+convertOECD_GDP <- function(x, subtype = 'gdpPC') {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
-    'gdppc' = function(x) {
+    'gdpPC' = function(x) {
       countries <- getItems(x, dim=1)
       getItems(x, dim=1) <- toolCountry2isocode(countries,ignoreCountries=c('Others'))
       x <- x[!is.na(getItems(x, dim=1)), ]  # remove rows without index (empty)

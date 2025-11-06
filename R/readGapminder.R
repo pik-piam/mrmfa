@@ -3,20 +3,24 @@
 #' @author Merlin Jo Hosak
 #' @export
 readGapminder <- function(subtype = 'population') {
+  version <- 'v1.0'
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     'population' = function() {
-      x <- readxl::read_excel(path = './v1.0/GM-Population - Dataset - v8.xlsx',
+      path <- paste('./', version, '/GM-Population - Dataset - v8.xlsx', sep='')
+      x <- readxl::read_excel(path = path,
                               sheet = 'Unpivot-countries-year')
       
       # delete irrelevant columns
       x <- x[, -which(names(x) == 'Income levels')]
       x <- x[, -which(names(x) == 'name')]
       
-      # make all iso3 letter codes in geo column upper case
+      # make all iso3 letter codes in geo column upper case and make this Magpie spatial dimension
       x$geo <- toupper(x$geo)
-      
       x <- as.magpie(x, spatial='geo')
+      
+      getSets(x) <- c('Region', 'Year', 'value')  # Rename sets for unified format.
+      getItems(x,dim=1)[getItems(x,dim=1)=='HOS']<-'VAT'  # Rename Vatican Iso3 code (HOS [Holy See] to VAT)
       
       return(x)
     },

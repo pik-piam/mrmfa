@@ -1,3 +1,11 @@
+#' Read Cooper et al. (2014) data
+#' @description
+#' Read data based on the paper 'Component level strategies for exploiting 
+#' the lifespan of steel in products'. See notes file in the Cooper 2014 
+#' folder (notes_on_cooper_lifetime_mean_sd.pdf).
+#' 
+#' @param subtype Subtype of Cooper 2014 data to load. Currently only 
+#' 'lifetimes' is available.
 #' @author Merlin Jo Hosak
 #' @export
 readCooper2014 <- function(subtype = 'lifetimes') {
