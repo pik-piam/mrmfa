@@ -22,7 +22,7 @@ fullMFA(
 \item{gdp_per_capita}{bool if GDP driver should be returned as per capita values}
 
 \item{run_sections}{Character vector selecting which parts to run.
-Allowed see validSections: c("drivers", "steel", "cement", plastic). NULL (default) runs all.}
+Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.}
 }
 \description{
 Function that produces the complete regional data sets required for the

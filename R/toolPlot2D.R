@@ -5,8 +5,6 @@
 #' as a line plot with time on the x-axis, values on the y-axis, and one line
 #' per region.
 #'
-#' TODO Finalize
-#'
 #' @param x A 2D Magpie object (region × time).
 #' @param title Optional plot title.
 #' @return A ggplot object showing the time series for all regions.

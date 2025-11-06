@@ -18,8 +18,6 @@ A ggplot object showing the time series for all regions.
 This function visualizes a 2-dimensional Magpie object (regions x time)
 as a line plot with time on the x-axis, values on the y-axis, and one line
 per region.
-
-TODO Finalize
 }
 \author{
 Merlin Jo Hosak
