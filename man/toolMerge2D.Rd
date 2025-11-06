@@ -13,6 +13,9 @@ toolMerge2D(a, b, fill = NA)
 
 \item{fill}{Value to use for cells not present in either input (default: NA)}
 }
+\value{
+A 2D magpie object containing the union of regions and years from both inputs
+}
 \description{
 Perform an outer merge on two 2D magpie objects (regions x years).
 }
