@@ -1,6 +1,7 @@
 #' Read Gapminder population data.
 #' @description Read Gapminder population data from 1800-2100 in yearly resolution.
 #' @author Merlin Jo Hosak
+#' @param subtype TODOMERLIN: document
 #' @export
 readGapminder <- function(subtype = 'population') {
   version <- 'v1.0'

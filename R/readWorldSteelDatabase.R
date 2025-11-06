@@ -5,6 +5,7 @@
 #' Most datasets are available between around 2002 and 2022 
 #' on a yearly resolution.
 #' @author Merlin Jo Hosak
+#' @param subtype TODOMERLIN: document
 #' @export
 readWorldSteelDatabase <- function(subtype = 'production') {
   # ---- list all available subtypes with functions doing all the work ----

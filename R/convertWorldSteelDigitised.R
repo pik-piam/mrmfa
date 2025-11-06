@@ -1,6 +1,7 @@
 #' Convert World Steel Digitised
 #' @description Convert data World Steel Association digitised 1978-2022 yearbooks.
 #' @author Merlin Jo Hosak
+#' @importFrom utils read.csv2
 #' @param x Magpie object
 convertWorldSteelDigitised <- function(x) {
   # Append missing regions

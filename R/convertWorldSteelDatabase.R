@@ -2,6 +2,7 @@
 #' @description Convert data from WorldSteelAssociation Database
 #' @author Merlin Jo Hosak
 #' @param x Magpie object
+#' @param subtype TODOMERLIN: document
 convertWorldSteelDatabase <- function(x, subtype="production") {
   x <- toolSplitYugBlx(x)
   x <- x[!is.na(getItems(x, dim=1)), ] # remove rows with NA in country_name column

@@ -10,6 +10,9 @@
 #' 'specificScrapConsumption_70s', 'worldScrapConsumption',
 #' 'indirectImportsByCategory_2013', 'indirectExportsByCategory_2013'
 #' @author Merlin Jo Hosak
+#' @param subtype TODOMERLIN: document
+#' @importFrom rlang .data
+#' @importFrom dplyr cur_data
 #' @export
 readWorldSteelDigitised <- function(subtype = 'worldProduction') {
   version <- 'v1.0'
@@ -241,7 +244,7 @@ toolWSDecadeRead <- function(name) {
   
   # delete unnecessary rows (total or other in the name or NA)
   x <- x %>%
-    filter(!grepl("total|other", .[[1]], ignore.case = TRUE))
+    filter(!grepl("total|other", cur_data()[[1]], ignore.case = TRUE))
   x <- x[!is.na(x$country_name), ]
   
   # convert to magpie
@@ -251,7 +254,7 @@ toolWSDecadeRead <- function(name) {
   countries <- getItems(x,dim=1)
   countries <- gsub('_', '.', countries)  # replace underscores with dots as magclass sometimes does the opposite
   
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrindustry"))$IgnoredRegions
+  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
   getItems(x, dim=1) <- toolCountry2isocode(countries,ignoreCountries = ignore)
   
   # remove new rows with NA in country_name column (that were ignored)

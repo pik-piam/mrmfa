@@ -1,14 +1,29 @@
 cff-version: 1.2.0
 message: If you use this software, please cite it using the metadata from this file.
 type: software
-title: 'mrmfa: Add an adequate Title'
-version: 0.0.2
-date-released: '2025-10-01'
-abstract: Add an adequate Description, formulated as a complete sentence.
+title: 'mrmfa: Input data generation for the REMIND MFA'
+version: 0.3.0
+date-released: '2025-10-24'
+abstract: The mrmfa packages contains data preprocessing for the REMIND MFA.
 authors:
 - family-names: Dürrwächter
   given-names: Jakob
   email: jakobdu@pik-potsdam.de
+- family-names: Weiss
+  given-names: Bennet
+  email: bennet.weiss@pik-potsdam.de
+- family-names: Schweiger
+  given-names: Leonie
+  email: leonie.schweiger@pik-potsdam.de
+- family-names: Benke
+  given-names: Falk
+  email: benke@pik-potsdam.de
+- family-names: Hosak
+  given-names: Merlin Jo
+  email: merlinho@pik-potsdam.de
+- family-names: Zhang
+  given-names: Qianzhi
+  email: qianzhi.zhang@pik-potsdam.de
 license: LGPL-3.0
 repository-code: https://github.com/pik-piam/mrmfa
 

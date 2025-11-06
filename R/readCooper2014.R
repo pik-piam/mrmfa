@@ -7,6 +7,7 @@
 #' @param subtype Subtype of Cooper 2014 data to load. Currently only 
 #' 'lifetimes' is available.
 #' @author Merlin Jo Hosak
+#' @param subtype TODOMERLIN: document
 #' @export
 readCooper2014 <- function(subtype = 'lifetimes') {
   

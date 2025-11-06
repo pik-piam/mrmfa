@@ -1,11 +1,13 @@
 #' Read Data as prepared by Posted
-#' 
+#'
 #' https://github.com/PhilippVerpoort/posted
 #' Data sources can be found in Posted.
+#' @importFrom dplyr all_of select
+#' @importFrom tidyr separate unnest
 #' @author Bennet Weiss
 readPostedBuiltLifespan <- function() {
   path <- file.path("v1", "buildings_and_infrastructure_lifetime.csv")
-  data <- suppressMessages(readr::read_csv(path))
+  data <- suppressMessages(read_csv(path))
 
   # remove unnecessary colums
   cleaned_data <- data %>%
