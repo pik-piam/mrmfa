@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcStLifetimes.R
 \name{calcStLifetimes}
 \alias{calcStLifetimes}
-\title{TODOMERLIN: document}
+\title{Calc Steel Lifetimes}
 \usage{
 calcStLifetimes(subtype)
 }
@@ -10,7 +10,7 @@ calcStLifetimes(subtype)
 \item{subtype}{TODOMERLIN: document}
 }
 \description{
-TODOMERLIN: document
+Function to load steel lifetimes data in years.
 }
 \author{
 Merlin Jo Hosak

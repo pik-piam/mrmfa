@@ -13,16 +13,16 @@ fullMFA(
 )
 }
 \arguments{
-\item{rev}{TODOMERLIN: document}
+\item{rev}{Revision number for the data version}
 
-\item{dev}{TODOMERLIN: document}
+\item{dev}{Development version string}
 
-\item{scenario}{TODOMERLIN: document}
+\item{scenario}{SSP scenario used for population and GDP drivers}
 
-\item{gdp_per_capita}{TODOMERLIN: document}
+\item{gdp_per_capita}{bool if GDP driver should be returned as per capita values}
 
 \item{run_sections}{Character vector selecting which parts to run.
-Allowed: c("drivers","steel","cement"). NULL (default) runs all.}
+Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.}
 }
 \description{
 Function that produces the complete regional data sets required for the
@@ -30,7 +30,7 @@ MFA model.
 }
 \examples{
 \dontrun{
-retrieveData('MFA')
+retrieveData("MFA")
 fullMFA()
 }
 
