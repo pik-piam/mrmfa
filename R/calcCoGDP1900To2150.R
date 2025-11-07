@@ -11,7 +11,7 @@
 #' GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 #' GDP datasets that use a different base year, which however does not matter
 #' as only the relative values are used
-#' (see \link[=toolInterpolate]{toolInterpolate}).
+#' (see \link{toolInterpolate2D}).
 #' @author Merlin Jo Hosak
 #' @param scenario Scenario to use for future GDP data (default: SSP2).
 #' @param perCapita If TRUE, GDP is returned as per capita (default: FALSE).
