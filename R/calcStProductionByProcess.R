@@ -37,7 +37,7 @@ calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(
     x = productionByProcess,
     weight = NULL,
     unit = "Tonnes",
-    description = "Steel production by processfrom 1900-2022 yearly for the SIMSON format"
+    description = "Steel production by process from 1900-2022 yearly for the SIMSON format"
   )
 
   return(final)

@@ -1,4 +1,4 @@
-#' Conver OECD GDP
+#' Convert OECD GDP
 #' @description Convert OECD GDP per capita data from 1500-2016
 #' @author Merlin Jo Hosak
 #' @param x Magpie object as read by readOECD_GDP

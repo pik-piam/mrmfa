@@ -12,7 +12,7 @@ subtypes are:
 'productionLossRate', 'formingLossRate', 'formingYield', 'fabricationYield'.}
 }
 \description{
-Calc static (singular) steel parameters based on supplemnetar information of
+Calc static (singular) steel parameters based on supplementary information of
 Cullen et al. (2012) paper
 'Mapping the global flow of steel: from steelmaking to end‐use goods'. See
 \link{readCullen2012} and the folder Cullen2012 in sources

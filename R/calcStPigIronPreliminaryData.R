@@ -23,7 +23,7 @@ calcStPigIronPreliminaryData <- function(subtype) {
   # Backcast World Steel data with IEDC data
   final <- toolBackcastByReference2D(data$ws, data$iedc, doMakeZeroNA = TRUE)
 
-  # Finalite
+  # Finalize
 
   final[is.na(final)] <- 0 # assume 0 pig iron data in remaining cells
 
@@ -66,7 +66,7 @@ splitHistPigIronData <- function(data) {
   histMap$lastYear <- "y2009"
   histMap[histMap$toISO == "SCG", ]$toISO <- "SRB"
 
-  # Spit the regions and recreate the historical data
+  # Split the regions and recreate the historical data
 
   split <- toolISOhistorical(merged, mapping = histMap) %>% suppressWarnings()
   split <- split[, getYears(split) <= "y2008", ]

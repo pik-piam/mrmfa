@@ -12,11 +12,11 @@ calcStProduction <- function() {
   prod_data <- getSteelProductionData()
 
   # Interpolate
-  prodData$recent <- toolInterpolate2D(prodData$recent, method = "linear")
-  prodData$current <- toolInterpolate2D(prodData$current, method = "linear")
+  prod_data$recent <- toolInterpolate2D(prod_data$recent, method = "linear")
+  prod_data$current <- toolInterpolate2D(prod_data$current, method = "linear")
 
   # Extrapolate
-  prod <- extrapolateSteelProduction(prodData)
+  prod <- extrapolateSteelProduction(prod_data)
 
   # Check if there are any NA left in prod
   if (any(is.na(prod))) { # check if there are any NA left in prod
@@ -46,15 +46,15 @@ getSteelProductionData <- function() {
   ))
 }
 
-extrapolateSteelProduction <- function(prodData) {
+extrapolateSteelProduction <- function(prod_data) {
   # Extrapolate current by recnet for regions where data overlaps
-  prod <- toolBackcastByReference2D(prodData$current,
-    ref = prodData$recent,
+  prod <- toolBackcastByReference2D(prod_data$current,
+    ref = prod_data$recent,
     doInterpolate = FALSE
   ) # already interpolated
 
   # calculate estimate of World Production
-  worldRef <- getWorldSteelProductionTrend(prod, prodData$hist)
+  worldRef <- getWorldSteelProductionTrend(prod, prod_data$hist)
 
   # Extrapolate remaining regions by world reference
   prod <- toolBackcastByReference2D(prod,

@@ -26,7 +26,7 @@ toolPlot2D <- function(x, title = "2D Plot") {
 
   # --- Plot ---
   p <- ggplot2::ggplot(df, ggplot2::aes(x = .data$Year, y = .data$Value, color = .data$Region)) +
-    ggplot2::geom_line(size = 1) +
+    ggplot2::geom_line(linewidth = 1) +
     ggplot2::theme_minimal(base_size = 12) +
     ggplot2::labs(title = title, x = "Year", y = "Value", color = "Region") +
     ggplot2::theme(
