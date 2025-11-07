@@ -6,7 +6,6 @@
 #' @param subtype Subtype of Cullen et al. (2012) data to load. Currently
 #' supported subtypes are flows & giMatrix.
 #' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
 readCullen2012 <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   version <- "v1.0"
