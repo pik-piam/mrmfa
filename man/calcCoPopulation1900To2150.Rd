@@ -16,9 +16,9 @@ format.
 \description{
 Calc population from 1900-2100 yearly for the SIMSON format on a country
 level. Can be aggregated to regions via calcOutput aggregate parameter.
-Uses \link[=readGapminder]{Gapminder} and \link[=readUN_PopDiv]{UN_PopDiv}
+Uses \link{readGapminder} and \link[mrdrivers]{readUN_PopDiv}
 datasets for historical population data as well as
-\link[=calcPopulation]{calcPopulation} from
+\link[mrdrivers]{calcPopulation} from
 mrdrivers for current and future population data according to a specific
 scenario (see \code{vignette("scenarios")} for more information).
 }
