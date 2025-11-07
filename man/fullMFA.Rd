@@ -36,8 +36,8 @@ fullMFA()
 
 }
 \seealso{
-\code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
-\code{\link[madrat]{calcOutput}}
+\code{\link[madrat:readSource]{readSource}}, \code{\link[madrat:getCalculations]{getCalculations}},
+\code{\link[madrat:calcOutput]{calcOutput}}
 }
 \author{
 Merlin HOSAK

@@ -11,7 +11,7 @@ calcStScrapConsumption(subtype, aggregate = NULL, regionmapping = NULL)
 Options: 'assumptions' or 'noAssumptions'. Must be set deliberately.}
 
 \item{aggregate}{Aggregation level. TRUE uses regionmapping,
-F for country level, 'GLO' for global level. See \link[madrat]{calcOutput}
+F for country level, 'GLO' for global level. See \link[madrat:calcOutput]{calcOutput}
 documentation. ++REGGLO/regglo/reg+glo etc. deprecated.}
 
 \item{regionmapping}{Regionmapping to use for regional aggregation. Should default

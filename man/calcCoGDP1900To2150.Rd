@@ -18,7 +18,7 @@ List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput fo
 Calc GDP (PPP) from 1900-2150 yearly for the SIMSON format on a country
 level. Can be aggregated to regions via calcOutput aggregate parameter.
 Uses \link[=readOECD_GDP]{OECD_GDP} for historical GDP data as well as
-\link[mrdrivers]{calcGDP} from mrdrivers for current and future GDP data
+\link[mrdrivers:calcGDP]{calcGDP} from mrdrivers for current and future GDP data
 according to a specific scenario (see \code{vignette("scenarios")}
 for more information). Population data from
 \link[=calcCoPopulation1900To2150]{calcCoPopulation1900To2150} is used to
