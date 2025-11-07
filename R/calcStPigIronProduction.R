@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Calculate pig iron production. Wrapper function. See
-#' \link{calcPigIronPreliminaryData} for specifics.
+#' \link{calcStPigIronPreliminaryData} for specifics.
 #'
 #' @author Merlin Jo Hosak
 #'
