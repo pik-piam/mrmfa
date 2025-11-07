@@ -18,7 +18,7 @@
 #' @param subtype Subtype of steel scrap consumption data to calculate.
 #' Options: 'assumptions' or 'noAssumptions'. Must be set deliberately.
 #' @param aggregate Aggregation level. TRUE uses regionmapping,
-#' F for country level, 'GLO' for global level. See calcOutput
+#' F for country level, 'GLO' for global level. See \link[madrat]{calcOutput}
 #' documentation. ++REGGLO/regglo/reg+glo etc. deprecated.
 #' @param regionmapping Regionmapping to use for regional aggregation. Should default
 #' to H12 REMIND regions.
