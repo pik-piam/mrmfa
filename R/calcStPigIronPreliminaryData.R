@@ -11,7 +11,6 @@
 #' @param subtype Options: 'production', 'imports', 'exports'
 #'
 #' @author Merlin Jo Hosak
-#' @export
 calcStPigIronPreliminaryData <- function(subtype) {
   # Load data
   data <- readPigIronData(subtype = subtype)

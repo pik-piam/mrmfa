@@ -7,7 +7,6 @@
 #' @param b Second magpie object to merge
 #' @param fill Value to use for cells not present in either input (default: NA)
 #' @return A 2D magpie object containing the union of regions and years from both inputs
-#' @export
 toolMerge2D <- function(a, b, fill = NA) {
   if (!(is.magpie(a) && is.magpie(b))) {
     stop("Both a and b must be magpie objects")

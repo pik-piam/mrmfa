@@ -10,7 +10,6 @@
 #' @return A ggplot object showing the time series for all regions.
 #'
 #' @author Merlin Jo Hosak
-#' @export
 toolPlot2D <- function(x, title = "2D Plot") {
   # --- Checks ---
   if (!magclass::is.magpie(x)) {

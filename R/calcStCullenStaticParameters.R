@@ -9,7 +9,6 @@
 #' subtypes are:
 #' 'productionLossRate', 'formingLossRate', 'formingYield', 'fabricationYield'.
 #' @author Merlin Jo Hosak
-#' @export
 calcStCullenStaticParameters <- function(subtype) {
   flows <- readSource("Cullen2012", subtype = "flows")
   flowNames <- getItems(flows, dim = 3)

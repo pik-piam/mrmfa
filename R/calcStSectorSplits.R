@@ -12,7 +12,6 @@
 #' Other options is to use Pauliuk et al.'s stock sector splits or other
 #' MFAs.
 #' @author Merlin Jo Hosak
-#' @export
 calcStSectorSplits <- function(subtype = "Pauliuk2013") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(

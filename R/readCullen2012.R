@@ -7,7 +7,6 @@
 #' supported subtypes are flows & giMatrix.
 #' @author Merlin Jo Hosak
 #' @param subtype TODOMERLIN: document
-#' @export
 readCullen2012 <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   version <- "v1.0"

@@ -8,7 +8,6 @@
 #' 'lifetimes' is available.
 #' @author Merlin Jo Hosak
 #' @param subtype TODOMERLIN: document
-#' @export
 readCooper2014 <- function(subtype = "lifetimes") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(

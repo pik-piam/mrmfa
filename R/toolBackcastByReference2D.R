@@ -17,7 +17,6 @@
 #' @param doForecast Logical, whether to do forecasting instead of backcasting.
 #' @param doMakeZeroNA Logical, whether to convert 0 values in final output to NA. As sometimes 0 is wrongly implicitly assumed.
 #' @author Merlin Jo Hosak
-#' @export
 toolBackcastByReference2D <- function(x,
                                       ref,
                                       doInterpolate = TRUE,

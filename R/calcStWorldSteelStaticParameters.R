@@ -5,7 +5,6 @@
 #' WorldSteelParameters folder for more information.
 #' @param subtype Parameter to load. Currently only 'scrapInBOFRate' available.
 #' @author Merlin Jo Hosak
-#' @export
 calcStWorldSteelStaticParameters <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(

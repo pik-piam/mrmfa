@@ -6,7 +6,6 @@
 #' @param subtype Data source used, current default is BIR (Bureau of
 #' International Recycling).
 #' @author Merlin Jo Hosak
-#' @export
 calcStMaxScrapShare <- function(subtype = "BIR") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(

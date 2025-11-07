@@ -14,7 +14,6 @@
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
 #' \code{\link[madrat]{calcOutput}}
-#' @export
 #' @examples
 #' \dontrun{
 #' retrieveData("MFA")

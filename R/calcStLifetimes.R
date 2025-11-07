@@ -6,7 +6,6 @@
 #' @author Merlin Jo Hosak
 #' @param subtype TODOMERLIN: document
 #' @importFrom purrr is_empty
-#' @export
 calcStLifetimes <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(

@@ -6,7 +6,6 @@
 #'
 #' @author Merlin Jo Hosak
 #'
-#' @export
 calcStPigIronProduction <- function() {
   data <- calcOutput("StPigIronPreliminaryData", subtype = "production", aggregate = FALSE)
 

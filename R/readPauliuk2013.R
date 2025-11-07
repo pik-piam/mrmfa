@@ -9,7 +9,6 @@
 #' as well as stock sector splits.
 #' @author Merlin Jo Hosak
 #' @param subtype TODOMERLIN: document
-#' @export
 readPauliuk2013 <- function(subtype = "sectorSplits") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(

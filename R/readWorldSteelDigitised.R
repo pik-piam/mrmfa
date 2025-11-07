@@ -13,7 +13,6 @@
 #' @param subtype TODOMERLIN: document
 #' @importFrom rlang .data
 #' @importFrom dplyr cur_data
-#' @export
 readWorldSteelDigitised <- function(subtype = "worldProduction") {
   version <- "v1.0"
   # ---- list all available subtypes with functions doing all the work ----

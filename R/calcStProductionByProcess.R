@@ -16,7 +16,6 @@
 #' @author Merlin Jo Hosak
 #' @return Steel production by process across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
-#' @export
 calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(0.2, 0, 0.8))) {
   # Load data
   data <- loadSteelProductionByProcessData()

@@ -13,7 +13,6 @@
 #' @param scenario Scenario to use for future population data (default: SSP2).
 #' @return List with Magpie object of population and metadata in calcOutput
 #' format.
-#' @export
 calcCoPopulation1900To2150 <- function(scenario = "SSP2") {
   popData <- getPopulation1900To2150Data(scenario = scenario)
 

@@ -11,7 +11,6 @@
 #' "scrap_imports", "scrap_exports", "indirectImports", "indirectExports"
 #' @return Steel trade across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
-#' @export
 calcStTrade <- function(subtype = "imports") {
   indirect <- subtype %in% c("indirectImports", "indirectExports")
   tradeData <- getSteelTradeData(subtype, indirect = indirect)

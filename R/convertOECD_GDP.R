@@ -3,7 +3,6 @@
 #' @author Merlin Jo Hosak
 #' @param x Magpie object as read by readOECD_GDP
 #' @param subtype Specific dataset used by that source
-#' @export
 convertOECD_GDP <- function(x, subtype = "gdpPC") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(

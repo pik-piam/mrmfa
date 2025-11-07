@@ -16,7 +16,6 @@
 #' @param scenario Scenario to use for future GDP data (default: SSP2).
 #' @param perCapita If TRUE, GDP is returned as per capita (default: FALSE).
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
-#' @export
 calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
   # load data
   gdpData <- getGDP1900To2150Data(scenario = scenario)

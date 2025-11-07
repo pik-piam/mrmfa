@@ -9,7 +9,6 @@
 #' @return A 2D magpie object with interpolated values
 #' @author Merlin Jo Hosak
 #' @importFrom tidyr pivot_wider
-#' @export
 toolInterpolate2D <- function(x, method = "linear", ...) {
   regions <- getItems(x, dim = 1)
   # turn into data frame with same index

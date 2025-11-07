@@ -7,7 +7,6 @@
 #' @param subtype Options: 'pigIronProduction', 'pigIronImports', 'pigIronExports'
 #'
 #' @author Merlin Jo Hosak
-#' @export
 #' @importFrom rlang .data
 readIEDC <- function(subtype = "pigIronProduction") {
   version <- "v1.0"

@@ -24,7 +24,6 @@
 #' to H12 REMIND regions.
 #'
 #' @author Merlin Jo Hosak
-#' @export
 calcStScrapConsumption <- function(subtype, aggregate = NULL, regionmapping = NULL) {
   consumptionData <- loadSteelScrapConsumptionData()
   scLinear <- calcSteelScrapConsumptionOnlyLinear(consumptionData)

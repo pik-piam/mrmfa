@@ -9,7 +9,6 @@
 #' @param subtype Options: 'production', 'imports', 'exports'
 #'
 #' @author Merlin Jo Hosak
-#' @export
 calcStDRIData <- function(subtype) {
   driSubtype <- paste("dri", tools::toTitleCase(subtype), sep = "")
   driData <- readSource("WorldSteelDatabase", subtype = driSubtype)
