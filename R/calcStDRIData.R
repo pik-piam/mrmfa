@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Cald direct reduced iron data mostly based on World Steel Association
-#' data (see |link[readWorldSteelDatabase]{readWorldSteelDatabase} for details).
+#' data (see \link{readWorldSteelDatabase} for details).
 #' The DRI data is backcasted based on steel production data to fill in missing
 #' years.
 #'
