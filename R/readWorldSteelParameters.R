@@ -12,7 +12,6 @@
 #' \item 'scrapInBOFRate': Share of scrap used production in Basic Oxygen Furnaces
 #' }
 #' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
 readWorldSteelParameters <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
