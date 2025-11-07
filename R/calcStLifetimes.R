@@ -4,7 +4,6 @@
 #' 'Cooper2014' is available. Other options might include Pauliuk or Wittig (
 #' see respective folders).
 #' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
 #' @importFrom purrr is_empty
 calcStLifetimes <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
