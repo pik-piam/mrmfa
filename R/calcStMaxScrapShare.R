@@ -7,7 +7,7 @@
 #' International Recycling).
 #' @author Merlin Jo Hosak
 #' @export
-calcSteelMaxScrapShare <- function(subtype = "BIR") {
+calcStMaxScrapShare <- function(subtype = "BIR") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "BIR" = function() {

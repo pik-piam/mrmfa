@@ -25,7 +25,7 @@
 #'
 #' @author Merlin Jo Hosak
 #' @export
-calcSteelScrapConsumption <- function(subtype, aggregate = NULL, regionmapping = NULL) {
+calcStScrapConsumption <- function(subtype, aggregate = NULL, regionmapping = NULL) {
   consumptionData <- loadSteelScrapConsumptionData()
   scLinear <- calcSteelScrapConsumptionOnlyLinear(consumptionData)
   context <- getAggregationContext(aggregate)

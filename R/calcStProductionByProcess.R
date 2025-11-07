@@ -17,7 +17,7 @@
 #' @return Steel production by process across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
 #' @export
-calcSteelProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(0.2, 0, 0.8))) {
+calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(0.2, 0, 0.8))) {
   # Load data
   data <- loadSteelProductionByProcessData()
 
