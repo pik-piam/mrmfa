@@ -2,15 +2,15 @@
 % Please edit documentation in R/readOECD_GDP.R
 \name{readOECD_GDP}
 \alias{readOECD_GDP}
-\title{Read OECD GDP}
+\title{Read OECD GDP per capita data from 1500-2016}
 \usage{
-readOECD_GDP(subtype = "gdpPC")
+readOECD_GDP(subtype = "gdppc")
 }
 \arguments{
-\item{subtype}{Specific dataset used by that source}
+\item{subtype}{TODOMERLIN: document}
 }
 \description{
-Read OECD GDP per capita data from 1500-2016, given in 2011 USD.
+Read OECD GDP per capita data from 1500-2016
 }
 \author{
 Merlin Jo Hosak
