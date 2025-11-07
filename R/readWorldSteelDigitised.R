@@ -358,9 +358,10 @@ toolLoadIndirectTrade2013 <- function(subtype, version) {
   x <- readxl::read_excel(path = path)
 
   # delete unnecessary rows (total or other in the name or NA)
-  x <- x %>%
-    filter(!grepl("total|other", .[[1]], ignore.case = TRUE))
-  x <- x[!is.na(x$country_name), ]
+  keep_rows <- !grepl("total|other", x[[1]], ignore.case = TRUE)
+  keep_rows[is.na(keep_rows)] <- FALSE
+  x <- x[keep_rows, , drop = FALSE]
+  x <- x[!is.na(x$country_name), , drop = FALSE]
 
   x <- as.magpie(x, spatial = "country_name")
 

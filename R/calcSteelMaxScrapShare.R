@@ -17,7 +17,11 @@ calcSteelMaxScrapShare <- function(subtype = "BIR") {
       scrapShares <- scrapShares[!getRegions(scrapShares) == "Turkey", , ]
 
       # Assume the max to be the 95th percentile of remaining data.
-      maxScrapShare <- magpply(X = scrapShares, MARGIN = 3, FUN = function(x) quantile(x, 0.95, na.rm = TRUE))
+      maxScrapShare <- magpply(
+        X = scrapShares,
+        MARGIN = 3,
+        FUN = function(x) stats::quantile(x, 0.95, na.rm = TRUE)
+      )
 
       # Finalize
 

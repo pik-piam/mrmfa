@@ -19,7 +19,10 @@ readBIR <- function(subtype = "scrapShare") {
     "scrapConsumption" = function() {
       scrapConsumption <- toolReadBIRscrapConsumption()
       countries <- getItems(scrapConsumption, dim = 1)
-      getItems(scrapConsumption, dim = 1) <- toolCountry2isocode(countries, ignore = c("EU 28", "World"))
+      getItems(scrapConsumption, dim = 1) <- toolCountry2isocode(
+        countries,
+        ignoreCountries = c("EU 28", "World")
+      )
 
       # remove NA rows
       scrapConsumption <- scrapConsumption[!is.na(getItems(scrapConsumption, dim = 1)), , ]

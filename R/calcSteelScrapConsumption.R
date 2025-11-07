@@ -28,10 +28,11 @@
 calcSteelScrapConsumption <- function(subtype, aggregate = NULL, regionmapping = NULL) {
   consumptionData <- loadSteelScrapConsumptionData()
   scLinear <- calcSteelScrapConsumptionOnlyLinear(consumptionData)
+  context <- getAggregationContext(aggregate)
 
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
-    "assumptions" = function() {
+  "assumptions" = function() {
       # Assume backcast with production and forecast with BIR data
 
       # Backcast recent data with production (basically assumes constant production share)
@@ -59,7 +60,6 @@ calcSteelScrapConsumption <- function(subtype, aggregate = NULL, regionmapping =
       return(result)
     },
     "noAssumptions" = function() {
-      context <- getAggregationContext(aggregate)
       message("Detected aggregation context: ", context) # Log to sanity check if code is correct
 
       # Country specific

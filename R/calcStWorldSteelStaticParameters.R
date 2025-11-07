@@ -9,7 +9,7 @@
 calcStWorldSteelStaticParameters <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
-    "scrapInBOFrate" = function(x) {
+  "scrapInBOFrate" = function() {
       scrapInBOFRate <- readSource("WorldSteelParameters", subtype = "scrapInBOFRate")
 
       final <- list(
@@ -30,6 +30,6 @@ calcStWorldSteelStaticParameters <- function(subtype) {
     ))
   } else {
     # ---- load data and do whatever ----
-    return(switchboard[[subtype]](x))
+  return(switchboard[[subtype]]())
   }
 }
