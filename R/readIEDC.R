@@ -8,6 +8,7 @@
 #'
 #' @author Merlin Jo Hosak
 #' @export
+#' @importFrom rlang .data
 readIEDC <- function(subtype = "pigIronProduction") {
   version <- "v1.0"
   switchboard <- list(
@@ -42,21 +43,21 @@ readNormalIEDC <- function(filename, version, region_col = "aspect 4 : origin_re
   path <- paste0(version, "/", filename)
   x <- read_excel(path, sheet = "Data") |>
     select(
-      time = `aspect 7 : time`,
+      time = all_of("aspect 7 : time"),
       region = all_of(region_col),
-      value
+      value = all_of("value")
     )
 
   # Pivot wider: one column per year
   x_wide <- x |>
-    pivot_wider(names_from = time, values_from = value)
+    pivot_wider(names_from = .data$time, values_from = .data$value)
 
   # Get sorted column names (excluding the first id col)
   year_cols <- sort(as.numeric(names(x_wide)[-1]))
 
   # Select by *column names* (as character)
   x_wide <- x_wide |>
-    select(region, all_of(as.character(year_cols)))
+    select(all_of(c("region", as.character(year_cols))))
 
   # Convert to magpie
   # region = 1st column, years = column names
