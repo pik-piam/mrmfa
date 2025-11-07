@@ -12,7 +12,7 @@
 #'
 #' @author Merlin Jo Hosak
 #' @export
-calcPigIronPreliminaryData <- function(subtype) {
+calcStPigIronPreliminaryData <- function(subtype) {
   # Load data
   data <- readPigIronData(subtype = subtype)
 

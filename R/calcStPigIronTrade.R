@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Calculate pig iron trade Wrapper function. See
-#' \link{calcPigIronPreliminaryData} for specifics.
+#' \link{calcStPigIronPreliminaryData} for specifics.
 #'
 #' @param subtype 'imports' or 'exports' to calculate pig iron imports or
 #' exports respectively.
@@ -10,9 +10,9 @@
 #' @author Merlin Jo Hosak
 #'
 #' @export
-calcPigIronTrade <- function(subtype) {
-  tradeData <- calcOutput("PigIronPreliminaryData", subtype = subtype, aggregate = FALSE)
-  production <- calcOutput("PigIronPreliminaryData", subtype = "production", aggregate = FALSE)
+calcStPigIronTrade <- function(subtype) {
+  tradeData <- calcOutput("StPigIronPreliminaryData", subtype = subtype, aggregate = FALSE)
+  production <- calcOutput("StPigIronPreliminaryData", subtype = "production", aggregate = FALSE)
 
   final <- toolBackcastByReference2D(tradeData, production)
 

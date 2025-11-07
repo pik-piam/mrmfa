@@ -6,7 +6,7 @@
 #' @param subtype Parameter to load. Currently only 'scrapInBOFRate' available.
 #' @author Merlin Jo Hosak
 #' @export
-calcWorldSteelStaticParameters <- function(subtype) {
+calcStWorldSteelStaticParameters <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "scrapInBOFrate" = function(x) {

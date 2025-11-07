@@ -10,7 +10,7 @@
 #'
 #' @author Merlin Jo Hosak
 #' @export
-calcDRIData <- function(subtype) {
+calcStDRIData <- function(subtype) {
   driSubtype <- paste("dri", tools::toTitleCase(subtype), sep = "")
   driData <- readSource("WorldSteelDatabase", subtype = driSubtype)
   steelProduction <- calcOutput("SteelProduction", aggregate = FALSE)
