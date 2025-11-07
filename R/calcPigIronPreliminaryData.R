@@ -3,8 +3,8 @@
 #' @description
 #'
 #' Prepare pig iron data for final output functions. Loads World Steel Association
-#' (WSA, s. \link[readWorldSteelDatabase]{readWorldSteelDatabase}) and
-#' Industrial Ecology Data Commons (IEDC, s. \link[readIEDC]{readIEDC}) data.
+#' (WSA, s. \link{readWorldSteelDatabase}) and
+#' Industrial Ecology Data Commons (IEDC, s. \link{readIEDC}) data.
 #' The WSA data is used as a baseline (as for many other steel related data)
 #' and forecasted using IEDC data as more recent WSA data is missing.
 #'

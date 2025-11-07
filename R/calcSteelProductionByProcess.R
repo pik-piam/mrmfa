@@ -2,11 +2,11 @@
 #' @description
 #' Calc steel production by process from WorldSteel datasets. Can be aggregated to regions
 #' via calcOutput aggregate parameter. Uses
-#' \link[readWorldSteelDigitised]{WorldSteelDigitised} and
-#' \link[readWorldSteelDatabase]{WorldSteelDatabase} datasets, the former for
+#' \link{readWorldSteelDigitised} and
+#' \link{readWorldSteelDatabase} datasets, the former for
 #' historic, the latter for current data. Out of this, the shares of BOF,
 #' EAF and Other processes are calculated and interpolated/extrapolated to cover
-#' the full time period from 1900-2022. \link[calcSteelProduction]{SteelProduction}
+#' the full time period from 1900-2022. \link{calcStProduction}
 #' is used to then multiply the percentages as this data is likely more reliable
 #' whilst the data split from the process data is still informative.
 #' @param assumedPastPercentages A list of assumed percentages for BOF, EAF,

@@ -2,7 +2,7 @@
 #' @description
 #' Estimate the maximum share steel scrap can have in steel production
 #' based on data by the Bureau of International Recycling (BIR),
-#' see \link[readBIR]{readBIR} and the folder 'BIR' in sources.
+#' see \link{readBIR} and the folder 'BIR' in sources.
 #' @param subtype Data source used, current default is BIR (Bureau of
 #' International Recycling).
 #' @author Merlin Jo Hosak

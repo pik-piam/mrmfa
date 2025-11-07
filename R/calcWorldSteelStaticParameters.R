@@ -1,7 +1,7 @@
 #' Calc World Steel Static Parameters
 #' @description
 #' Load static (singular) parameters based on World Steel Association data.
-#' See \link[readWorldSteelParameters]{readWorldSteelParameters} and the
+#' See \link{readWorldSteelParameters} and the
 #' WorldSteelParameters folder for more information.
 #' @param subtype Parameter to load. Currently only 'scrapInBOFRate' available.
 #' @author Merlin Jo Hosak

@@ -2,7 +2,7 @@
 #'
 #' @description
 #' Calculate pig iron trade Wrapper function. See
-#' \link[calcPigIronPreliminaryData]{calcPigIronPreliminaryData} for specifics.
+#' \link{calcPigIronPreliminaryData} for specifics.
 #'
 #' @param subtype 'imports' or 'exports' to calculate pig iron imports or
 #' exports respectively.

@@ -6,13 +6,12 @@
 #' 2004, India in 1995-1999 and the UK in 1960-65, 1970, 1974-79. These are
 #' based on the American Iron and Steel Institute, Spark Steel & Economy
 #' Research, the Iron and Steel Statistics Bureau and Dahlström et al. (2004)
-#' (see Metadata in File). See \link[readPauliuk2013]{readPauliuk2013} for
+#' (see Metadata in File). See \link{readPauliuk2013} for
 #' preprocessing.
 #' @param subtype Sector split source, currently using Pauliuk  et al. (2013).
 #' Other options is to use Pauliuk et al.'s stock sector splits or other
 #' MFAs.
 #' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
 #' @export
 calcStSectorSplits <- function(subtype = "Pauliuk2013") {
   # ---- list all available subtypes with functions doing all the work ----

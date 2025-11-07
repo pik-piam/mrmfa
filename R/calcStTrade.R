@@ -2,11 +2,13 @@
 #' @description
 #' Calc steel trade from WorldSteel datasets. Can be aggregated to regions
 #' via calcOutput aggregate parameter. Uses
-#' \link[readWorldSteelDigitised]{WorldSteelDigitised} and
-#' \link[readWorldSteelDatabase]{WorldSteelDatabase} datasets, the former for
+#' \link{readWorldSteelDigitised} and
+#' \link{readWorldSteelDatabase} datasets, the former for
 #' historic, the latter for current data. Further, uses
-#' \link[calcSteelProduction]{SteelProduction} to backcast historic trade data.
+#' \link{calcStProduction} to backcast historic trade data.
 #' @author Merlin Jo Hosak
+#' @param subtype Type of trade data to retrieve. Options: "imports", "exports", 
+#' "scrap_imports", "scrap_exports", "indirectImports", "indirectExports"
 #' @return Steel trade across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
 #' @export

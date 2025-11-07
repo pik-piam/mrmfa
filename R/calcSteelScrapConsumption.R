@@ -1,9 +1,9 @@
 #' Calc steel scrap consumption
 #' @description
 #' Function to calculate steel scrap consumption based on World Steel
-#' Association (see \link[readWorldSteelDigitised]{readWorldSteelDigitised})
+#' Association (see \link{readWorldSteelDigitised})
 #' data and Bureau of International Recycling (BIR) (see
-#' \link[readBIR]{readBIR}) data. Different subtypes allow to either use
+#' \link{readBIR}) data. Different subtypes allow to either use
 #' assumptions to fill data gaps or not.
 #'
 #' With assumptions, basic backcasting by production data and forecasting
@@ -18,7 +18,7 @@
 #' @param subtype Subtype of steel scrap consumption data to calculate.
 #' Options: 'assumptions' or 'noAssumptions'. Must be set deliberately.
 #' @param aggregate Aggregation level. TRUE uses regionmapping,
-#' F for country level, 'GLO' for global level. See \link[calcOutput]{calcOutput}
+#' F for country level, 'GLO' for global level. See \link[madrat]{calcOutput}
 #' documentation. ++REGGLO/regglo/reg+glo etc. deprecated.
 #' @param regionmapping Regionmapping to use for regional aggregation. Should default
 #' to H12 REMIND regions.
