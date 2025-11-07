@@ -8,7 +8,6 @@
 #' estimated stock saturation levels and times for various world regions
 #' as well as stock sector splits.
 #' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
 readPauliuk2013 <- function(subtype = "sectorSplits") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
