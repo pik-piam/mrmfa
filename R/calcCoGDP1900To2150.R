@@ -62,7 +62,7 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
 
 getGDP1900To2150Data <- function(scenario) {
   # load data
-  pop <- calcOutput("Population1900To2150", aggregate = FALSE)
+  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE)
   gdpHistPC <- readSource("OECD_GDP", subtype = "gdpPC", convert = TRUE)
   gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE)
 

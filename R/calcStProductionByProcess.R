@@ -132,7 +132,7 @@ splitHistoricalSteelProductionData <- function(productionByProcess, isoHistorica
 }
 
 loadSteelProductionByProcessData <- function() {
-  production <- calcOutput("SteelProduction", aggregate = FALSE)
+  production <- calcOutput("StProduction", aggregate = FALSE)
   bofRecent <- readSource("WorldSteelDigitised", subtype = "bofProduction", convert = FALSE)
   eafRecent <- readSource("WorldSteelDigitised", subtype = "eafProduction", convert = FALSE)
   bofCurrent <- readSource("WorldSteelDatabase", subtype = "bofProduction")

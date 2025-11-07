@@ -217,7 +217,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       # ignore super-regions
       countries <- getItems(x, dim = 1)
 
-      ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrindustry"))$IgnoredRegions
+      ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
       getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
 
       # Remove NA rows
@@ -334,7 +334,7 @@ toolLoadWorldSteelFiguresData <- function(filename, year, type) {
   x <- x[, , type]
   countries <- getItems(x, dim = 1)
 
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrindustry"))$IgnoredRegions
+  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
 
   getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
   getItems(x, dim = 2) <- year
@@ -381,7 +381,7 @@ toolLoadIndirectTrade2013 <- function(subtype, version) {
   x <- x[, , c("Construction", "Machinery", "Products", "Transport")]
 
   countries <- getItems(x, dim = 1)
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrindustry"))$IgnoredRegions
+  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
   getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
 
   # remove rows with NA in country_name column

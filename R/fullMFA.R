@@ -8,8 +8,8 @@
 #' @param rev Revision number for the data version
 #' @param dev Development version string
 #' @param scenario SSP scenario used for population and GDP drivers
-#' @param gdp_per_capita bool if GDP driver should be returned as per capita values
-#' @param run_sections Character vector selecting which parts to run.
+#' @param gdpPerCapita bool if GDP driver should be returned as per capita values
+#' @param runSections Character vector selecting which parts to run.
 #' Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
@@ -20,20 +20,20 @@
 #' fullMFA()
 #' }
 #'
-fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdp_per_capita = FALSE, run_sections = NULL) {
+fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, runSections = NULL) {
   # prepare section selector
   validSections <- c("drivers", "steel", "cement", "plastic")
 
-  if (is.null(run_sections)) {
-    run_sections <- validSections
+  if (is.null(runSections)) {
+    runSections <- validSections
   } else {
-    bad <- setdiff(run_sections, validSections)
+    bad <- setdiff(runSections, validSections)
     if (length(bad)) stop("Invalid sections: ", paste(bad, collapse = ", "))
   }
 
-  runSection <- function(name) name %in% run_sections
+  runSection <- function(name) name %in% runSections
 
-  if (!length(run_sections)) {
+  if (!length(runSections)) {
     message("fullMFA: no sections selected; nothing done.")
     return(invisible(NULL))
   }
@@ -41,7 +41,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdp_per_capita = FALSE
   #  ------------- DRIVERS -------------
   if (runSection("drivers")) {
     calcOutput("CoPopulation1900To2150", file = "co_population1900To2150.cs4r", scenario = scenario)
-    calcOutput("CoGDP1900To2150", file = "co_gdp1900To2150.cs4r", scenario = scenario, per_capita = gdp_per_capita)
+    calcOutput("CoGDP1900To2150", file = "co_gdp1900To2150.cs4r", scenario = scenario, perCapita = gdpPerCapita)
   }
 
   #  ------------- STEEL ----------------
@@ -51,10 +51,10 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdp_per_capita = FALSE
     # Trade
     calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports")
     calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports")
-    calcOutput("StTrade", file = "st_steel_scrap_imports.cs4r", subtype = "scrap_imports")
-    calcOutput("StTrade", file = "st_steel_scrap_exports.cs4r", subtype = "scrap_exports")
-    calcOutput("StTrade", file = "st_steel_indirect_imports.cs4r", subtype = "indirect_imports")
-    calcOutput("StTrade", file = "st_steel_indirect_exports.cs4r", subtype = "indirect_exports")
+    calcOutput("StTrade", file = "st_steel_scrap_imports.cs4r", subtype = "scrapImports")
+    calcOutput("StTrade", file = "st_steel_scrap_exports.cs4r", subtype = "scrapExports")
+    calcOutput("StTrade", file = "st_steel_indirect_imports.cs4r", subtype = "indirectImports")
+    calcOutput("StTrade", file = "st_steel_indirect_exports.cs4r", subtype = "indirectExports")
     # Parameters
     calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
     calcOutput("StLifetimes", subtype = "Cooper2014", file = "st_lifetimes.cs4r", aggregate = FALSE)

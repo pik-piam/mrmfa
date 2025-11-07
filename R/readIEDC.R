@@ -65,7 +65,7 @@ readNormalIEDC <- function(filename, version, region_col = "aspect 4 : origin_re
   countries <- getItems(x, dim = 1)
   countries <- gsub("_", ".", countries) # replace underscores with dots as magclass sometimes does the opposite
 
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrindustry"))$IgnoredRegions
+  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
   getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
 
   # remove new rows with NA in country_name column (that were ignored)

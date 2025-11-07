@@ -140,7 +140,7 @@ calcNoAssumptionsRegional <- function(scLinear, euConsumptionH12 = NULL) {
   # Load countries that are not as important within a region and where hence NAs
   # should be set to 0 to avoid NA as region aggregation
   countries2zero <- read.csv2(
-    system.file("extdata", "scrap_consumption_countries_2_zero.csv", package = "mrindustry"),
+    system.file("extdata", "scrap_consumption_countries_2_zero.csv", package = "mrmfa"),
     comment.char = "#"
   )$Countries2Zero
 
@@ -339,7 +339,7 @@ loadSteelScrapConsumptionData <- function() {
 
   # Load other data
 
-  production <- calcOutput("SteelProduction", aggregate = FALSE)
+  production <- calcOutput("StProduction", aggregate = FALSE)
 
   # adapt current BLXdata
   current <- adaptBLXdata(current, recent)

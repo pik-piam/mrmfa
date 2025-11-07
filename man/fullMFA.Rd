@@ -8,8 +8,8 @@ fullMFA(
   rev = 0,
   dev = "",
   scenario = "SSP2",
-  gdp_per_capita = FALSE,
-  run_sections = NULL
+  gdpPerCapita = FALSE,
+  runSections = NULL
 )
 }
 \arguments{
@@ -19,9 +19,9 @@ fullMFA(
 
 \item{scenario}{SSP scenario used for population and GDP drivers}
 
-\item{gdp_per_capita}{bool if GDP driver should be returned as per capita values}
+\item{gdpPerCapita}{bool if GDP driver should be returned as per capita values}
 
-\item{run_sections}{Character vector selecting which parts to run.
+\item{runSections}{Character vector selecting which parts to run.
 Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.}
 }
 \description{

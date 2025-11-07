@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: If you use this software, please cite it using the metadata from this file.
 type: software
 title: 'mrmfa: Input data generation for the REMIND MFA'
-version: 0.4.0
+version: 0.4.1
 date-released: '2025-11-07'
 abstract: The mrmfa packages contains data preprocessing for the REMIND MFA.
 authors:

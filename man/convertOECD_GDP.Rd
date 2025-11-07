@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertOECD_GDP.R
 \name{convertOECD_GDP}
 \alias{convertOECD_GDP}
-\title{Conver OECD GDP}
+\title{Convert OECD GDP}
 \usage{
 convertOECD_GDP(x, subtype = "gdpPC")
 }
