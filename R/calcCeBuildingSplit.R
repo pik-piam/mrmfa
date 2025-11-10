@@ -1,7 +1,7 @@
 #' Calculates relative floor area of SF, MF and NR buildings by structure type.
 #'
 #' @author Bennet Weiss
-calcBuildingSplit <- function() {
+calcCeBuildingSplit <- function() {
   floorArea <- calcOutput("BuildingFloorArea", aggregate = FALSE)
   floorArea_byStockType <- calcOutput("BuildingFloorArea", subtype = "Stock_Type", aggregate = FALSE)
   relFloorArea <- floorArea / floorArea_byStockType
