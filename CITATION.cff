@@ -3,7 +3,7 @@ message: If you use this software, please cite it using the metadata from this f
 type: software
 title: 'mrmfa: Input data generation for the REMIND MFA'
 version: 0.4.1
-date-released: '2025-11-07'
+date-released: '2025-11-10'
 abstract: The mrmfa packages contains data preprocessing for the REMIND MFA.
 authors:
 - family-names: Dürrwächter

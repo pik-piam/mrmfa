@@ -7,7 +7,10 @@
 readPauliuk2013(subtype = "sectorSplits")
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Subtype of Pauliuk 2013 data to load. Currently only
+'sectorSplits' is available, other potentially relevant data is
+estimated stock saturation levels and times for various world regions
+as well as stock sector splits.}
 }
 \description{
 Read data from Pauliuk et al. (2013) papers 'Steel all over the world:

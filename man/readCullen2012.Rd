@@ -7,7 +7,8 @@
 readCullen2012(subtype)
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Subtype of Cullen et al. (2012) data to load. Currently
+supported subtypes are flows & giMatrix.}
 }
 \description{
 Read data from supplementary material of Cullen et al. 2012 paper
