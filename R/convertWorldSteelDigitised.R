@@ -4,16 +4,19 @@
 #' @importFrom utils read.csv2
 #' @param x Magpie object
 convertWorldSteelDigitised <- function(x) {
+
   # Append missing regions
   countries <- getItems(x, dim = 1)
-  mapping <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
-  newCountries <- mapping[mapping$fromISO %in% countries, "toISO"]
+  mapping <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat")) %>%
+    filter(.data$fromISO %in% countries)
+  newCountries <- unique(mapping$toISO)
   missingCountries <- setdiff(newCountries, countries)
 
   x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
 
   # Convert to historical ISO codes and fill countries
-  y <- toolISOhistorical(x, overwrite = TRUE) %>% suppressWarnings()
+  y <- toolISOhistorical(x, overwrite = TRUE)
+
   z <- toolCountryFill(y, verbosity = 2)
 
   return(z)

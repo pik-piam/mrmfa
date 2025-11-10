@@ -9,6 +9,7 @@
 #' @return Steel Production across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
 calcStProduction <- function() {
+
   prod_data <- getSteelProductionData()
 
   # Interpolate

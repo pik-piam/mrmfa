@@ -47,7 +47,7 @@ mtab <- function(x) {
   # x: magpie object
   # returns: data.frame with the same content as the magpie object
   # but in a more readable format
-  df <- as.data.frame(x)
+  df <- magclass::as.data.frame(x)
   df <- df[, c("Region", "Year", "Value")]
   df <- pivot_wider(df, names_from = .data$Year, values_from = .data$Value)
   return(df)

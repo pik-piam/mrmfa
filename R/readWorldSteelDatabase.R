@@ -106,10 +106,7 @@ readWSDatabaseStandard <- function(name, version = "1.0") {
   # convert to magpie object
   x <- as.magpie(x, spatial = "Country")
 
-  # replace country names with ISO codes
-  countries <- getItems(x, dim = 1)
-  countries <- gsub("_", ".", countries) # replace _ with . for isocode conversion
-  getItems(x, dim = 1) <- toolCountry2isocode(countries)
+  x <- toolFoo(x)
 
   x <- x * 1e3 # convert from kt to tonnes
 
@@ -121,7 +118,6 @@ adaptWSDatabaseIndirectTrade <- function(x) {
 
   # add new country row for country bellux
   x <- add_columns(x, addnm = c("BEL", "LUX", "SRB", "MNE"), dim = 1)
-
 
   x["BEL", ] <- x["BLX", ] * 0.8
   x["LUX", ] <- x["BLX", ] * 0.2
