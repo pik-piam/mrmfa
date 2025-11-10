@@ -217,7 +217,8 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       # ignore super-regions
       countries <- getItems(x, dim = 1)
 
-      ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
+      ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$reg
+      browser()
       getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
 
       # Remove NA rows
@@ -272,25 +273,18 @@ toolLoadWorldSteelDigitised <- function(filenames, type, version) {
 }
 
 toolWSDecadeRead <- function(name) {
+
   x <- readxl::read_excel(path = name)
 
   # delete unnecessary rows (total or other in the name or NA)
   x <- x %>%
-    filter(!grepl("total|other", cur_data()[[1]], ignore.case = TRUE))
-  x <- x[!is.na(x$country_name), ]
+    filter(!grepl("total|other", cur_data()[[1]], ignore.case = TRUE),
+           !is.na(.data$country_name))
 
   # convert to magpie
-  x <- as.magpie(x, spatial = colnames(x)[1])
+  x <- as.magpie(x, spatial = 1)
 
-  # change to ISO country codes
-  countries <- getItems(x, dim = 1)
-  countries <- gsub("_", ".", countries) # replace underscores with dots as magclass sometimes does the opposite
-
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
-  getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
-
-  # remove new rows with NA in country_name column (that were ignored)
-  x <- x[!is.na(getItems(x, dim = 1)), ]
+  x <- toolFoo(x)
 
   return(x)
 }
@@ -334,8 +328,9 @@ toolLoadWorldSteelFiguresData <- function(filename, year, type) {
   x <- x[, , type]
   countries <- getItems(x, dim = 1)
 
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
+  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$reg
 
+  browser()
   getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
   getItems(x, dim = 2) <- year
   getItems(x, dim = 3) <- "value"
@@ -381,11 +376,47 @@ toolLoadIndirectTrade2013 <- function(subtype, version) {
   x <- x[, , c("Construction", "Machinery", "Products", "Transport")]
 
   countries <- getItems(x, dim = 1)
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$IgnoredRegions
+  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$reg
+  browser()
   getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
 
   # remove rows with NA in country_name column
   x <- x[!is.na(getItems(x, dim = 1)), ]
 
   return(x)
+}
+
+# change to ISO country codes
+# TODO unify toolCountry2isocode handling in this function and consider moving it to convert
+# altogether
+toolFoo <- function(x) {
+  regionNames <- gsub("_", "\\.", getItems(x, dim = 1))
+
+  # for now, we store all additional mappings in the mfa package
+  # as a next step, move universal mappings to country2iso.csv in madrat
+  m <- read.csv2(system.file("extdata", "MFA_rename_regions.csv", package = "mrmfa"), header = TRUE)
+  additionalIsoMappings <- m$to
+  names(additionalIsoMappings) <- m$from
+
+  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"), header = T)$reg
+
+
+  getItems(x, dim = 1) <- toolCountry2isocode(regionNames, ignoreCountries = ignore,
+                                              mapping = additionalIsoMappings)
+
+  # drop NAs introduced by ignoreCountries
+  x <- x[!is.na(getItems(x, dim = 1)), ]
+
+  # manual corrections ----
+
+  # BRG (West Germany before reunification) should be DEU after 1990
+  # TODO: this could be a feature in toolISOhistorical, if we want to actively enhance the tool
+  if ("BRG" %in% getRegions(x) & any(getYears(x, as.integer = TRUE) > 1990)) {
+    x <- add_columns(x, addnm = "DEU", dim = 1, fill = NA)
+    x["DEU", getYears(x, as.integer = TRUE) > 1990, ] <- x["BRG", getYears(x, as.integer = TRUE) > 1990, ]
+    x <- x["BRG", , invert = T]
+  }
+
+  return(x)
+
 }
