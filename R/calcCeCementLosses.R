@@ -1,17 +1,17 @@
-#' Calculate strength class distribution of concrete.
+#' Calculate Losses in cement cycle.
 #'
 #' @author Bennet Weiss
-calcMCeProductCementContent <- function(){
-  x <- readSource("Cao2024", subtype = "product_cement_content")
-  x <- x * 1e-3 # convert from kg to tonnes
+#' @param subtype Loss type: can be "cement_loss_construction" or "clinker_loss_production"
+calcCeCementLosses <- function(subtype){
+  x <- readSource("Cao2024", subtype = subtype)
 
   # create new magpie object and fill with ones
   weight <- new.magpie(cells_and_regions = NULL)
   weight <- toolCountryFill(weight, fill = 1, verbosity = 2)
 
-  unit <- "tonnes per cubic meter (t/m3)"
+  unit <- "ratio"
   description <- paste(
-    "Product cement content.",
+    "Losses in the cement cycle for subtype ", subtype, ".",
     "Data from Cao2024."
   )
   output <- list(x = x, weight = weight, unit = unit, description = description)

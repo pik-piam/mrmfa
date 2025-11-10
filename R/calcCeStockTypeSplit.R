@@ -1,6 +1,6 @@
 #' Calculates how cement consumption is split into stock types.
 #' @author Bennet Weiss
-calcMCeStockTypeSplit <- function() {
+calcCeStockTypeSplit <- function() {
   data <- readSource("Xi2016")
   unit <- "ratio"
   description <- paste(

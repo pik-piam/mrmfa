@@ -1,16 +1,16 @@
-#' Calculate share of cao available for carbonation.
+#' Calculate end use product share of cement.
 #'
 #' @author Bennet Weiss
-calcMCeCaOCarbonationShare <- function(){
-  x <- readSource("Cao2024", subtype = "cao_carbonation_share")
+calcCeProductMaterialSplit <- function(){
+  x <- readSource("Cao2024", subtype = "product_material_split")
 
   # create new magpie object and fill with ones
   weight <- new.magpie(cells_and_regions = NULL)
   weight <- toolCountryFill(weight, fill = 1, verbosity = 2)
-  
+
   unit <- "ratio"
   description <- paste(
-    "Share of CaO in End-Use Product available for carbonation.",
+    "Split cement into product materials.",
     "Data from Cao2024."
   )
   output <- list(x = x, weight = weight, unit = unit, description = description)

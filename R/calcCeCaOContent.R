@@ -2,7 +2,7 @@
 #'
 #' @param subtype Material of which CaO content is of interest. May be "clinker" or "CKD"
 #' @author Bennet Weiss
-calcMCeCaOContent <- function(subtype){
+calcCeCaOContent <- function(subtype){
 
   if (subtype == "CKD"){
     x <- readSource("Cao2024", subtype = "CKD_cao_content")

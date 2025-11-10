@@ -1,7 +1,7 @@
 #' Calculate share of CKD that goes to landfill.
 #'
 #' @author Bennet Weiss
-calcMCeCKDLandfillShare <- function(){
+calcCeCKDLandfillShare <- function(){
   x <- readSource("Cao2024", subtype = "CKD_landfill_share")
 
   # create new magpie object and fill with ones

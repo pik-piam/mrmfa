@@ -1,7 +1,7 @@
 #' Calculate strength class distribution of concrete.
 #'
 #' @author Bennet Weiss
-calcMCeProductThickness <- function(){
+calcCeProductThickness <- function(){
   x <- readSource("Cao2024", subtype = "product_thickness")
   x <- x * 1e-3 # convert from mm to m
 

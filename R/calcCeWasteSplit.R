@@ -1,9 +1,9 @@
-#' Calculate Losses in cement cycle.
+#' Calculate where concrete/mortar waste goes.
 #'
 #' @author Bennet Weiss
-#' @param subtype Loss type: can be "cement_loss_construction" or "clinker_loss_production"
-calcMCeCementLosses <- function(subtype){
-  x <- readSource("Cao2024", subtype = subtype)
+calcCeWasteSplit <- function(){
+
+  x <- readSource("Cao2024", subtype = "waste_split")
 
   # create new magpie object and fill with ones
   weight <- new.magpie(cells_and_regions = NULL)
@@ -11,7 +11,7 @@ calcMCeCementLosses <- function(subtype){
 
   unit <- "ratio"
   description <- paste(
-    "Losses in the cement cycle for subtype ", subtype, ".",
+    "Concrete/mortar waste split.",
     "Data from Cao2024."
   )
   output <- list(x = x, weight = weight, unit = unit, description = description)
