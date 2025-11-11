@@ -12,10 +12,11 @@ convertWorldSteelDigitised <- function(x) {
   newCountries <- unique(mapping$toISO)
   missingCountries <- setdiff(newCountries, countries)
 
-  x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
+  x <- add_columns(x, addnm = missingCountries, dim = 1, fill = 0)
 
   # Convert to historical ISO codes and fill countries
-  y <- toolISOhistorical(x, overwrite = TRUE)
+  y <- toolISOhistorical(x, overwrite = TRUE) %>%
+    suppressWarnings()
 
   z <- toolCountryFill(y, verbosity = 2)
 

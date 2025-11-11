@@ -10,14 +10,44 @@
 #' list of metadata (in calcOutput format).
 calcStProduction <- function() {
 
-  prod_data <- getSteelProductionData()
+  prodHist <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
+  prodRecent <- readSource("WorldSteelDigitised", subtype = "production")
+  prodCurrent <- readSource("WorldSteelDatabase", subtype = "production")
 
-  # Interpolate
-  prod_data$recent <- toolInterpolate2D(prod_data$recent, method = "linear")
-  prod_data$current <- toolInterpolate2D(prod_data$current, method = "linear")
+  # Interpolate ----
+  prodRecent <- toolInterpolate2D(prodRecent, method = "linear")
+  prodCurrent <- toolInterpolate2D(prodCurrent, method = "linear")
 
-  # Extrapolate
-  prod <- extrapolateSteelProduction(prod_data)
+  # Extrapolate ----
+
+  # Extrapolate current by recent for regions where data overlaps
+  prod <- toolBackcastByReference2D(prodCurrent,
+                                    ref = prodRecent,
+                                    doInterpolate = FALSE
+  ) # already interpolated
+
+
+  # calculate estimate of World Production
+
+  nonNaIndices <- which(!is.na(rowSums(prod)))
+  prodNonNaRegions <- prod[nonNaIndices, ]
+  sumNonNaRegions <- colSums(prodNonNaRegions)
+
+  worldRef <- toolBackcastByReference2D(prodHist,
+                                        ref = sumNonNaRegions,
+                                        doForecast = TRUE,
+                                        doInterpolate = FALSE
+  )
+
+  # Extrapolate remaining regions by world reference
+  prod <- toolBackcastByReference2D(prod,
+                                    ref = worldRef,
+                                    doInterpolate = FALSE
+  ) # already interpolated
+
+  # use constant (last observation carried forward) interpolation for
+  # remaining NaN values in the future
+  prod <- toolInterpolate2D(prod, method = "constant")
 
   # Check if there are any NA left in prod
   if (any(is.na(prod))) { # check if there are any NA left in prod
@@ -32,54 +62,4 @@ calcStProduction <- function() {
   )
 
   return(result)
-}
-
-getSteelProductionData <- function() {
-  # load data
-  prodHist <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
-  prodRecent <- readSource("WorldSteelDigitised", subtype = "production")
-  prodCurrent <- readSource("WorldSteelDatabase", subtype = "production")
-
-  return(list(
-    hist = prodHist,
-    recent = prodRecent,
-    current = prodCurrent
-  ))
-}
-
-extrapolateSteelProduction <- function(prod_data) {
-  # Extrapolate current by recnet for regions where data overlaps
-  prod <- toolBackcastByReference2D(prod_data$current,
-    ref = prod_data$recent,
-    doInterpolate = FALSE
-  ) # already interpolated
-
-  # calculate estimate of World Production
-  worldRef <- getWorldSteelProductionTrend(prod, prod_data$hist)
-
-  # Extrapolate remaining regions by world reference
-  prod <- toolBackcastByReference2D(prod,
-    ref = worldRef,
-    doInterpolate = FALSE
-  ) # already interpolated
-
-  # use constant (last observation carried forward) interpolation for
-  # remaining NaN values in the future
-  prod <- toolInterpolate2D(prod, method = "constant")
-
-  return(prod)
-}
-
-getWorldSteelProductionTrend <- function(prod, prodHist) {
-  nonNaIndices <- which(!is.na(rowSums(prod)))
-  prodNonNaRegions <- prod[nonNaIndices, ]
-  sumNonNaRegions <- colSums(prodNonNaRegions)
-
-  worldRef <- toolBackcastByReference2D(prodHist,
-    ref = sumNonNaRegions,
-    doForecast = TRUE,
-    doInterpolate = FALSE
-  )
-
-  return(worldRef)
 }
