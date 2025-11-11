@@ -6,8 +6,17 @@ toolFoo <- function(x) {
   # replace _ by dot
   regionNames <- gsub("_", "\\.", getItems(x, dim = 1))
 
+  # replace two whitespaces by one
+  regionNames <- gsub("  ", " ", regionNames)
+
   # remove appended info in round brackets, e.g. "Taiwan (R.O.C.)" -> "Taiwan"
   regionNames <- gsub(" *\\(.*\\) *$", "", regionNames)
+
+  # "German Dem . Rep ." -> "German Dem. Rep."
+  regionNames <- gsub(" \\.", "\\.", regionNames)
+
+  # "Taiwan , China" -> "Taiwan, China
+  regionNames <- gsub(" ,", ",", regionNames)
 
   # for now, we store all additional mappings in the mfa package
   # as a next step, move universal mappings to country2iso.csv in madrat
@@ -16,7 +25,6 @@ toolFoo <- function(x) {
   names(additionalIsoMappings) <- m$from
 
   ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"), header = TRUE)$reg
-
 
   getItems(x, dim = 1) <- toolCountry2isocode(regionNames,
     ignoreCountries = ignore,

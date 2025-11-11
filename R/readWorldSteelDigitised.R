@@ -51,8 +51,8 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
     "bofProduction" = function() {
       filenames <- paste0(
         c(
-          "bof_production_80s",
-          "bof_production_90s"
+          "BOF_production_80s",
+          "BOF_production_90s"
         ),
         ".xlsx"
       )
@@ -62,8 +62,8 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
     "eafProduction" = function() {
       filenames <- paste0(
         c(
-          "eaf_production_80s",
-          "eaf_production_90s"
+          "EAF_production_80s",
+          "EAF_production_90s"
         ),
         ".xlsx"
       )
@@ -71,20 +71,30 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       return(eafProduction)
     },
     "productionByProcess" = function() {
+
       bof <- new.magpie()
       eaf <- new.magpie()
       other <- new.magpie()
+
       bofLabels <- c("Basic\r\nBessemer\r\nThomas", "Pure\r\nOxygen", "Oxygen")
       eafLabels <- c("Electric")
       otherLabels <- c("Open\r\nHearth\r\nS. M.", "OH", "Other")
+
+      # bof <- new.magpie(years = seq(1974,1981,1), names = bofLabels)
+      # eaf <- new.magpie(years = seq(1974,1981,1), names = eafLabels)
+      # other <- new.magpie(years = seq(1974,1981,1), names = otherLabels)
+
       checkLabels <- c("Total", "Total Check")
+
       for (year in 1974:1981) {
+
         filename <- paste0("Production_by_Process_", year, ".xlsx")
-        x <- toolWSDecadeRead(paste0("./v1.0/bof_eaf_production/", filename))
+        x <- toolWSDecadeRead(file.path(".", "v1.0", "bof_eaf_production", filename))
         getItems(x, dim = 2) <- paste0("y", year)
         for (variable in getItems(x, dim = 3)) {
           if (variable %in% bofLabels) {
             bof <- toolMerge2D(bof, x[, , variable])
+            #bof <- mbind(bof, x[, , variable])
           } else if (variable %in% eafLabels) {
             eaf <- toolMerge2D(eaf, x[, , variable])
           } else if (variable %in% otherLabels) {
@@ -94,6 +104,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
           }
         }
       }
+
       x <- new.magpie(
         cells_and_regions = getItems(bof, dim = 1), # all three magpies should have the same regions as they were merged from the same datasets
         years = getItems(bof, dim = 2), # same goes for years
