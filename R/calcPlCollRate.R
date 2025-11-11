@@ -46,6 +46,7 @@ calcPlCollRate <- function() {
   # ---------------------------------------------------------------------------
   # Fill 1990-2000 for other regions with 2000 level
   #    - For non-CHA regions, assign 2000 value to 1990-2000 period.
+  #    - For all regions, assign 1990 value to 1950-1990
   # ---------------------------------------------------------------------------
   non_cha <- dplyr::filter(eol_df, .data$Region != "CHA")
   value2000 <- non_cha %>%
@@ -59,8 +60,17 @@ calcPlCollRate <- function() {
         .data$Region != "CHA" & .data$Year >= 1990 & .data$Year <= 2000,
         .data$val2000, .data$collected
       )
-    ) %>%
-    dplyr::select(-"val2000")
+    )
+  historic_df <- expand.grid(
+    Region = unique(eol_df$Region),
+    Year   = 1950:1989,
+    stringsAsFactors = FALSE
+  )%>%
+    dplyr::left_join(
+      dplyr::filter(eol_df, .data$Year == 1990) %>%
+        dplyr::select("Region", "collected"),
+      by = "Region"
+    )
 
   # ---------------------------------------------------------------------------
   # Extend series to 2100 with linear growth to 100%
@@ -89,6 +99,7 @@ calcPlCollRate <- function() {
     dplyr::select("Region", "Year", "collected")
 
   final_df <- dplyr::bind_rows(
+    historic_df,
     dplyr::filter(ext_df, .data$Year <= 2020) %>%
       dplyr::select("Region", "Year", "collected"),
     future_df
