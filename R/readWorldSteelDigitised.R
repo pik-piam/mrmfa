@@ -93,6 +93,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
           )
         # sum up variables (e.g. "Basic Bessemer Thomas" and "Pure Oxygen" appear both in some sheet,
         # so count their sum as "BOF")
+        # TODO: confirm with JD that this is as intended
         f <- stats::aggregate(value ~ country_name + variable + year, f, sum)
 
         f <- as.magpie(f[, c("country_name", "year", "variable", "value")], spatial = 1) %>%
@@ -103,6 +104,10 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       }
 
       x <- x * 1e3 # convert from kt to t
+
+      # remove all-NA regions
+      remove <- magpply(x, function(y) all(is.na(y)), MARGIN = 1)
+      x <- x[!remove, , ]
 
       return(x)
     },
