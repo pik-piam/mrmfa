@@ -2,6 +2,7 @@
 # TODO unify toolCountry2isocode handling in this function and consider moving it to convert
 # altogether
 toolFoo <- function(x) {
+
   # clean up region names ----
   # replace _ by dot
   regionNames <- gsub("_", "\\.", getItems(x, dim = 1))
@@ -26,11 +27,28 @@ toolFoo <- function(x) {
 
   ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"), header = TRUE)$reg
 
+
+  # check for duplicates introduced by country mapping
+
+  d <- toolCountry2isocode(regionNames,
+                      ignoreCountries = ignore,
+                      mapping = additionalIsoMappings,
+                      warn = TRUE
+  ) %>% sort()
+
+  if(length(unique(d)) < length(d)) {
+    stop("Country to ISO conversion introduces duplicates")
+  }
+
+  # apply country to ISO mapping
+
   getItems(x, dim = 1) <- toolCountry2isocode(regionNames,
     ignoreCountries = ignore,
     mapping = additionalIsoMappings,
     warn = TRUE
   )
+
+
 
   # drop NAs introduced by ignoreCountries
   x <- x[!is.na(getItems(x, dim = 1)), ]
@@ -48,11 +66,11 @@ toolFoo <- function(x) {
   # split BLX into LUX and BEL
 
   if ("BLX" %in% getItems(x, dim = 1) && !any(c("LUX", "BEL") %in% getItems(x, dim = 1))) {
-
     x <- add_columns(x, addnm = c("BEL", "LUX"), dim = 1, fill = NA)
     x["BEL", , ] <- x["BLX", , ] * 0.8
     x["LUX", , ] <- x["BLX", , ] * 0.2
     x <- x["BLX", , , invert = TRUE]
   }
+
   return(x)
 }

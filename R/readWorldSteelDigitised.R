@@ -72,52 +72,38 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
     },
     "productionByProcess" = function() {
 
-      bof <- new.magpie()
-      eaf <- new.magpie()
-      other <- new.magpie()
-
       bofLabels <- c("Basic\r\nBessemer\r\nThomas", "Pure\r\nOxygen", "Oxygen")
       eafLabels <- c("Electric")
       otherLabels <- c("Open\r\nHearth\r\nS. M.", "OH", "Other")
 
-      # bof <- new.magpie(years = seq(1974,1981,1), names = bofLabels)
-      # eaf <- new.magpie(years = seq(1974,1981,1), names = eafLabels)
-      # other <- new.magpie(years = seq(1974,1981,1), names = otherLabels)
+      x <- new.magpie(cells_and_regions = c(
+        madrat::getISOlist(), c("BRG", "GDR", "SUN", "YUG")),
+        years = seq(1974, 1981, 1),
+        names = c("BOF", "EAF", "Other"))
 
-      checkLabels <- c("Total", "Total Check")
+      for (y in seq(1974, 1981, 1)) {
+        f <- readxl::read_excel(path = file.path(".", "v1.0", "bof_eaf_production",
+                                                 paste0("Production_by_Process_", y, ".xlsx"))) %>%
+          tidyr::pivot_longer(c(-"country_name"), names_to = "variable") %>%
+          mutate(
+            "year" = y,
+            "variable" = replace(.data$variable, .data$variable %in% bofLabels, "BOF"),
+            "variable" = replace(.data$variable, .data$variable %in% eafLabels, "EAF"),
+            "variable" = replace(.data$variable, .data$variable %in% otherLabels, "Other")
+          )
+        # sum up variables (e.g. "Basic Bessemer Thomas" and "Pure Oxygen" appear both in some sheet,
+        # so count their sum as "BOF")
+        f <- stats::aggregate(value ~ country_name + variable + year, f, sum)
 
-      for (year in 1974:1981) {
+        f <- as.magpie(f[, c("country_name", "year", "variable", "value")], spatial = 1) %>%
+          toolFoo()
 
-        filename <- paste0("Production_by_Process_", year, ".xlsx")
-        x <- toolWSDecadeRead(file.path(".", "v1.0", "bof_eaf_production", filename))
-        getItems(x, dim = 2) <- paste0("y", year)
-        for (variable in getItems(x, dim = 3)) {
-          if (variable %in% bofLabels) {
-            bof <- toolMerge2D(bof, x[, , variable])
-            #bof <- mbind(bof, x[, , variable])
-          } else if (variable %in% eafLabels) {
-            eaf <- toolMerge2D(eaf, x[, , variable])
-          } else if (variable %in% otherLabels) {
-            other <- toolMerge2D(other, x[, , variable])
-          } else if (!variable %in% checkLabels) {
-            stop(paste("Unknown label", variable, "in file", filename))
-          }
-        }
+        x[getItems(f, dim = 1), y, ] <- f[, , c("BOF", "EAF", "Other")]
+
       }
 
-      x <- new.magpie(
-        cells_and_regions = getItems(bof, dim = 1), # all three magpies should have the same regions as they were merged from the same datasets
-        years = getItems(bof, dim = 2), # same goes for years
-        names = c("BOF", "EAF", "Other")
-      )
-      x[, , "BOF"] <- bof
-      x[, , "EAF"] <- eaf
-      x[, , "Other"] <- other
-
-      # remove unnecessary GLO region
-      x <- x[!rownames(x) %in% "GLO", ]
-
       x <- x * 1e3 # convert from kt to t
+
       return(x)
     },
     "imports" = function() {
