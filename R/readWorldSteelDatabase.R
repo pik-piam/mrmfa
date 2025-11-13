@@ -70,8 +70,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
     "driExports" = function() {
       x <- readWSDatabaseStandard("T13_exports_driron-2023-10-23")
       return(x)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {

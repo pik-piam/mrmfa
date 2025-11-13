@@ -1,5 +1,5 @@
 reg ;comment
-Accession Cts .;
+Accession Cts.;
 AFRICA;
 Africa;
 AFRICA & MIDDLE EAST;
@@ -22,6 +22,7 @@ EASTERN EUROPE & USSR;
 EE C;
 Eec;
 European Union;
+FAR EAST;
 LATIN AMERICA;
 Latin America;
 MIDDLE EAST;
@@ -46,7 +47,8 @@ Other W. EUROPE;
 OTHERAFRIC;
 OTHERASIA;
 Others;
-South African C.U.;Should we include this as SAC in country code list?
+South African C.U.;
+South African Customs Union;
 South Ameria;
 South America;
 Total;
@@ -69,7 +71,7 @@ Total Other Europe;
 Total Others;
 Total W Europe;
 Total W. EUROPE;
-Unallocated ( D );
+Unallocated;
 WESTERN EUROPE;
 Western Europe;
 World;

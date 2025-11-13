@@ -2,88 +2,121 @@
 #' @description
 #' Read Data from World Steel Association 1978-2022 yearbooks digitized to Excel sheets
 #' E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Yearbook-1982.pdf
-#' @param subtype Character string defining which subtype of data to read.
 #' Available subtypes are:
 #' 'worldProduction', 'production', 'bofProduction', 'eafProduction',
 #' 'productionByProcess', 'imports', 'exports', 'scrapImports', 'scrapExports',
 #' 'scrapConsumptionYearbooks', 'scrapConsumptionFigures',
 #' 'specificScrapConsumption_70s', 'worldScrapConsumption',
 #' 'indirectImportsByCategory_2013', 'indirectExportsByCategory_2013'
-#' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
-#' @importFrom rlang .data
-#' @importFrom dplyr cur_data
+#' @author Merlin Jo Hosak, Falk Benke
+#'
 readWorldSteelDigitised <- function(subtype = "worldProduction") {
   version <- "v1.0"
+
+  # helper functions ----
+
+  # common format: "country_name", followed by year colums
+  .readCommonSourceFormat <- function(filenames, type, version) {
+    paths <- file.path(version, type, filenames)
+
+    df <- NULL
+    for (f in paths) {
+      tmp <- readxl::read_excel(path = f) %>%
+        tidyr::pivot_longer(c(-"country_name"), names_to = "variable")
+      df <- rbind(df, tmp)
+    }
+
+    df <- toolCleanSteelRegions(df)
+
+    x <- as.magpie(df, spatial = 1)
+    x <- x * 1e3 # convert from kt to t
+    return(x)
+  }
+
+  .readIndirectTradeFormat <- function(subtype, version) {
+    path <- file.path(".", version, "indirect_trade_2013", paste0("WSA_", subtype, "_categories_2013.xlsx"))
+    df <- readxl::read_excel(path = path) %>%
+      tidyr::pivot_longer(c(-"country_name"), names_to = "variable")
+
+    df <- toolCleanSteelRegions(df)
+
+    x <- as.magpie(df, spatial = "country_name") %>%
+      add_columns(addnm = c("Construction", "Machinery", "Transport", "Products", "Total"), dim = "variable")
+
+    x[, , "Construction"] <- 0
+    x[, , "Machinery"] <- x[, , "Mechanical Machinery"]
+    x[, , "Transport"] <- x[, , "Automotive"] + x[, , "Other transport"]
+    x[, , "Products"] <- x[, , "Electrical Equipment"] + x[, , "Metal products"] + x[, , "Domestic appliances"]
+    x[, , "Total"] <- x[, , "Machinery"] + x[, , "Transport"] + x[, , "Products"]
+
+
+    x[, , "Machinery"] <- x[, , "Machinery"] / x[, , "Total"]
+    x[, , "Transport"] <- x[, , "Transport"] / x[, , "Total"]
+    x[, , "Products"] <- x[, , "Products"] / x[, , "Total"]
+
+    x <- x[, , c("Construction", "Machinery", "Products", "Transport")]
+
+    return(x)
+  }
+
+
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "worldProduction" = function() {
-      path <- paste0(
-        "./", version, "/production/",
-        "world_production_1900-1979.xlsx"
-      )
-      x <- readxl::read_excel(
-        path = path,
-        range = "A4:B84"
-      )
+      path <- file.path(".", version, "production", "world_production_1900-1979.xlsx")
+      x <- readxl::read_excel(path = path, range = "A4:B84")
       x <- as.magpie(x)
-
       # convert from Mt to t
       x <- x * 1e6
-
       getItems(x, dim = 3) <- "value"
-
       return(x)
     },
     "production" = function() {
-      filenames <- paste0(
-        c(
-          "production_70s",
-          "production_80s",
-          "production_90s",
-          "production_00s"
-        ),
-        ".xlsx"
+      filenames <- c(
+        "production_70s.xlsx",
+        "production_80s.xlsx",
+        "production_90s.xlsx",
+        "production_00s.xlsx"
       )
-      production <- toolLoadWorldSteelDigitised(filenames, type = "production", version = version)
-      return(production)
+      x <- .readCommonSourceFormat(filenames, type = "production", version = version)
+
+      # fix mislabelled data for 1991-1999 (should be DEU, but is BRG)
+      x["DEU", seq(1991, 1999), ] <- x["BRG", seq(1991, 1999), ]
+      x["BRG", seq(1991, 1999), ] <- NA
+      return(x)
     },
     "bofProduction" = function() {
-      filenames <- paste0(
-        c(
-          "BOF_production_80s",
-          "BOF_production_90s"
-        ),
-        ".xlsx"
+      # TODO: make sure, this works with convert as well (by merging subtypes)
+      filenames <- c(
+        "BOF_production_80s.xlsx",
+        "BOF_production_90s.xlsx"
       )
-      bofProduction <- toolLoadWorldSteelDigitised(filenames, type = "bof_eaf_production", version = version)
-      return(bofProduction)
+
+      x <- .readCommonSourceFormat(filenames, type = "bof_eaf_production", version = version)
+      return(x)
     },
     "eafProduction" = function() {
-      filenames <- paste0(
-        c(
-          "EAF_production_80s",
-          "EAF_production_90s"
-        ),
-        ".xlsx"
+      # TODO: make sure, this works with convert as well (by merging subtypes)
+      filenames <- c(
+        "EAF_production_80s.xlsx",
+        "EAF_production_90s.xlsx"
       )
-      eafProduction <- toolLoadWorldSteelDigitised(filenames, type = "bof_eaf_production", version = version)
-      return(eafProduction)
+      x <- .readCommonSourceFormat(filenames, type = "bof_eaf_production", version = version)
+      return(x)
     },
     "productionByProcess" = function() {
-
+      # TODO: make sure, this works with convert as well (by merging subtypes)
       bofLabels <- c("Basic\r\nBessemer\r\nThomas", "Pure\r\nOxygen", "Oxygen")
       eafLabels <- c("Electric")
       otherLabels <- c("Open\r\nHearth\r\nS. M.", "OH", "Other")
 
-      x <- new.magpie(cells_and_regions = c(
-        madrat::getISOlist(), c("BRG", "GDR", "SUN", "YUG")),
-        years = seq(1974, 1981, 1),
-        names = c("BOF", "EAF", "Other"))
+      df <- NULL
 
       for (y in seq(1974, 1981, 1)) {
-        f <- readxl::read_excel(path = file.path(".", "v1.0", "bof_eaf_production",
-                                                 paste0("Production_by_Process_", y, ".xlsx"))) %>%
+        f <- readxl::read_excel(path = file.path(
+          ".", "v1.0", "bof_eaf_production",
+          paste0("Production_by_Process_", y, ".xlsx")
+        )) %>%
           tidyr::pivot_longer(c(-"country_name"), names_to = "variable") %>%
           mutate(
             "year" = y,
@@ -96,146 +129,122 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         # TODO: confirm with JD that this is as intended
         f <- stats::aggregate(value ~ country_name + variable + year, f, sum)
 
-        f <- as.magpie(f[, c("country_name", "year", "variable", "value")], spatial = 1) %>%
-          toolFoo()
-
-        x[getItems(f, dim = 1), y, ] <- f[, , c("BOF", "EAF", "Other")]
-
+        df <- rbind(df, f)
       }
 
-      x <- x * 1e3 # convert from kt to t
+      df <- toolCleanSteelRegions(df)
+      x <- as.magpie(df[, c("country_name", "year", "variable", "value")], spatial = 1)[, , c("BOF", "EAF", "Other")]
 
-      # remove all-NA regions
-      remove <- magpply(x, function(y) all(is.na(y)), MARGIN = 1)
-      x <- x[!remove, , ]
+      x <- x * 1e3 # convert from kt to t
 
       return(x)
     },
     "imports" = function() {
-      filenames <- paste0(
-        c(
-          "imports_70s",
-          "imports_80s",
-          "imports_90s",
-          "imports_00s"
-        ),
-        ".xlsx"
+      # TODO: does not seem to be used right now?
+      # TODO: ask JD if we want to include South African Customs Union (needs to be disaggregated)
+      filenames <- c(
+        "imports_70s.xlsx",
+        "imports_80s.xlsx",
+        "imports_90s.xlsx",
+        "imports_00s.xlsx"
       )
-      imports <- toolLoadWorldSteelDigitised(filenames, type = "trade", version = version)
-      return(imports)
+      x <- .readCommonSourceFormat(filenames, type = "trade", version = version)
+      return(x)
     },
     "exports" = function() {
-      filenames <- paste0(
-        c(
-          "exports_70s",
-          "exports_80s",
-          "exports_90s",
-          "exports_00s"
-        ),
-        ".xlsx"
+      # TODO: does not seem to be used right now?
+      filenames <- c(
+        "exports_70s.xlsx",
+        "exports_80s.xlsx",
+        "exports_90s.xlsx",
+        "exports_00s.xlsx"
       )
-      exports <- toolLoadWorldSteelDigitised(filenames, type = "trade", version = version)
-      return(exports)
+      x <- .readCommonSourceFormat(filenames, type = "trade", version = version)
+      return(x)
     },
     "scrapImports" = function() {
-      filenames <- paste0(
-        c(
-          "scrap_imports_70s",
-          "scrap_imports_80s",
-          "scrap_imports_90s",
-          "scrap_imports_00s"
-        ),
-        ".xlsx"
+      # TODO: does not seem to be used right now?
+      filenames <- c(
+        "scrap_imports_70s.xlsx",
+        "scrap_imports_80s.xlsx",
+        "scrap_imports_90s.xlsx",
+        "scrap_imports_00s.xlsx"
       )
-      scrapImports <- toolLoadWorldSteelDigitised(filenames, type = "scrap_trade", version = version)
-      return(scrapImports)
+
+      x <- .readCommonSourceFormat(filenames, type = "scrap_trade", version = version)
+      return(x)
     },
     "scrapExports" = function() {
-      filenames <- paste0(
-        c(
-          "scrap_exports_70s",
-          "scrap_exports_80s",
-          "scrap_exports_90s",
-          "scrap_exports_00s"
-        ),
-        ".xlsx"
+      # TODO: does not seem to be used right now?
+      filenames <- c(
+        "scrap_exports_70s.xlsx",
+        "scrap_exports_80s.xlsx",
+        "scrap_exports_90s.xlsx",
+        "scrap_exports_00s.xlsx"
       )
-      scrapExports <- toolLoadWorldSteelDigitised(filenames, type = "scrap_trade", version = version)
-      return(scrapExports)
+      x <- .readCommonSourceFormat(filenames, type = "scrap_trade", version = version)
+      return(x)
     },
     "scrapConsumptionYearbooks" = function() {
-      filenames <- paste0(
+      # TODO: make sure, this works with convert as well (by merging subtypes)
+      filenames <-
         c(
-          "scrap_consumption_75s",
-          "scrap_consumption_80s",
-          "scrap_consumption_85s",
-          "scrap_consumption_90s"
-        ),
-        ".xlsx"
-      )
+          "scrap_consumption_75s.xlsx",
+          "scrap_consumption_80s.xlsx",
+          "scrap_consumption_85s.xlsx",
+          "scrap_consumption_90s.xlsx"
+        )
 
       # Combine 5 year steps into one via loader function
       # Even though datasets are ten years each, merging works and the more recent data is taken (overwrites the old one)
-      scrapConsumption <- toolLoadWorldSteelDigitised(filenames, type = "scrap_consumption", version = version)
-      return(scrapConsumption)
+      x <- .readCommonSourceFormat(filenames, type = "scrap_consumption", version = version)
+      return(x)
     },
     "scrapConsumptionFigures" = function() {
-      filenames <- paste0(
+      # TODO: make sure, this works with convert as well (by merging subtypes)
+      filenames <-
         c(
-          "scrap_consumption_2000",
-          "scrap_consumption_2001",
-          "scrap_consumption_2002",
-          "scrap_consumption_2003",
-          "scrap_consumption_2004",
-          "scrap_consumption_2005",
-          "scrap_consumption_2006",
-          "scrap_consumption_2007",
-          "scrap_consumption_2008"
-        ),
-        ".xlsx"
-      )
-      years <- paste0("y", 2000:2008)
+          "scrap_consumption_2000.xlsx",
+          "scrap_consumption_2001.xlsx",
+          "scrap_consumption_2002.xlsx",
+          "scrap_consumption_2003.xlsx",
+          "scrap_consumption_2004.xlsx",
+          "scrap_consumption_2005.xlsx",
+          "scrap_consumption_2006.xlsx",
+          "scrap_consumption_2007.xlsx",
+          "scrap_consumption_2008.xlsx"
+        )
 
-      year_data <- comprehenr::to_list(
-        for (i in seq_along(filenames)) {
-          toolLoadWorldSteelFiguresData(filenames[i], years[i], type = "Consumption")
-        }
-      )
+      df <- NULL
+      for (f in filenames) {
+        year <- as.numeric(sub("scrap_consumption_([0-9]{4})\\.xlsx", "\\1", f))
+        tmp <- readxl::read_excel(path = file.path(
+          ".", "v1.0", "scrap_consumption", f
+        )) %>%
+          tidyr::pivot_longer(c(-"country_name"), names_to = "variable") %>%
+          filter(.data$variable == "Consumption") %>%
+          mutate("year" = year)
 
-      x <- toolWSDecadeMerge(year_data)
+        df <- rbind(df, tmp)
+      }
 
-      # remove IAF and IAS (other Asia and Africa, due to inconsistent madrat mapping)
-      x <- x[!rownames(x) %in% c("IAF", "IAS"), ]
-
+      df <- toolCleanSteelRegions(df)
+      x <- as.magpie(df[, c("country_name", "year", "variable", "value")], spatial = 1)
       x <- x * 1e6 # convert from Mt to tonnes
 
       return(x)
     },
     "specificScrapConsumption70s" = function() {
-      path <- paste0("./", version, "/scrap_consumption/", "specific_scrap_consumption_70s.xlsx")
-      x <- readxl::read_excel(path = path)
-      x <- as.magpie(x, spatial = "country_name")
-
-      # ignore super-regions
-      countries <- getItems(x, dim = 1)
-
-      ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$reg
-      browser()
-      getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
-
-      # Remove NA rows
-      x <- x[!is.na(getItems(x, dim = 1)), ]
-
+      # TODO: make sure, this works with convert as well (by merging subtypes)
+      filenames <- c("specific_scrap_consumption_70s.xlsx")
+      x <- .readCommonSourceFormat(filenames, type = "scrap_consumption", version = version)
       x <- x * 1e-3 # convert from kg/t to t/t (actual share)
 
       return(x)
     },
     "worldScrapConsumption" = function() {
       x <- readxl::read_excel(
-        path = paste0(
-          "./v1.0/scrap_consumption/",
-          "global_scrap_consumption_1975-2008.xlsx"
-        ),
+        path = file.path(".", version, "scrap_consumption", "global_scrap_consumption_1975-2008.xlsx"),
         sheet = "Data"
       )
       x <- as.magpie(x)
@@ -243,14 +252,13 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       return(x)
     },
     "indirectImportsByCategory2013" = function() {
-      x <- toolLoadIndirectTrade2013("indirect_imports", version = version)
+      x <- .readIndirectTradeFormat("indirect_imports", version = version)
       return(x)
     },
     "indirectExportsByCategory2013" = function() {
-      x <- toolLoadIndirectTrade2013("indirect_exports", version = version)
+      x <- .readIndirectTradeFormat("indirect_exports", version = version)
       return(x)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
@@ -263,127 +271,3 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
     return(switchboard[[subtype]]())
   }
 }
-
-# ---- Functions ----
-
-toolLoadWorldSteelDigitised <- function(filenames, type, version) {
-  paths <- paste0(version, "/", type, "/", filenames)
-  decades <- comprehenr::to_list(for (path in paths) toolWSDecadeRead(path))
-  x <- toolWSDecadeMerge(decades)
-  x <- x * 1e3 # convert from kt to t
-  return(x)
-}
-
-toolWSDecadeRead <- function(name) {
-
-  x <- readxl::read_excel(path = name)
-  # delete unnecessary rows (total or other in the name or NA)
-  x <- x %>%
-    filter(!grepl("total|other", cur_data()[[1]], ignore.case = TRUE),
-           !is.na(.data$country_name))
-
-  # convert to magpie
-  x <- as.magpie(x, spatial = 1)
-
-  x <- toolFoo(x)
-
-  return(x)
-}
-
-toolWSDecadeMerge <- function(magpies) {
-  # get merged countries & years
-  countries <- character(0)
-  years <- character(0)
-  for (magpie in magpies) {
-    countries <- union(countries, getItems(magpie, dim = 1))
-    years <- union(years, getItems(magpie, dim = 2))
-  }
-
-  # sort the indices
-  countries <- sort(countries)
-  years <- sort(years)
-
-  # create a new magpie object with appropriate size
-  x <- new.magpie(
-    cells_and_regions = countries,
-    years = years,
-    names = "value",
-    fill = NA,
-    sets = names(dimnames(magpies[[1]]))
-  )
-
-  # fill in the data
-  for (magpie in magpies) {
-    x[getItems(magpie, dim = 1), getItems(magpie, dim = 2)] <- magpie
-  }
-
-  return(x)
-}
-
-toolLoadWorldSteelFiguresData <- function(filename, year, type) {
-  x <- readxl::read_excel(path = paste0(
-    "./v1.0/scrap_consumption/",
-    filename
-  ))
-  x <- as.magpie(x, spatial = "country_name")
-  x <- x[, , type]
-  countries <- getItems(x, dim = 1)
-
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$reg
-
-  browser()
-  getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
-  getItems(x, dim = 2) <- year
-  getItems(x, dim = 3) <- "value"
-
-  x <- x[!is.na(getItems(x, dim = 1)), ]
-
-  return(x)
-}
-
-toolLoadIndirectTrade2013 <- function(subtype, version) {
-  path <- paste0(
-    "./",
-    version,
-    "/indirect_trade_2013/",
-    "WSA_",
-    subtype,
-    "_categories_2013.xlsx"
-  )
-  x <- readxl::read_excel(path = path)
-
-  # delete unnecessary rows (total or other in the name or NA)
-  keep_rows <- !grepl("total|other", x[[1]], ignore.case = TRUE)
-  keep_rows[is.na(keep_rows)] <- FALSE
-  x <- x[keep_rows, , drop = FALSE]
-  x <- x[!is.na(x$country_name), , drop = FALSE]
-
-  x <- as.magpie(x, spatial = "country_name")
-
-  x <- add_columns(x, addnm = c("Construction", "Machinery", "Transport", "Products", "Total"), dim = "variable")
-
-  x[, , "Construction"] <- 0
-  x[, , "Machinery"] <- x[, , "Mechanical Machinery"]
-  x[, , "Transport"] <- x[, , "Automotive"] + x[, , "Other transport"]
-  x[, , "Products"] <- x[, , "Electrical Equipment"] + x[, , "Metal products"] + x[, , "Domestic appliances"]
-  x[, , "Total"] <- x[, , "Machinery"] + x[, , "Transport"] + x[, , "Products"]
-
-  # calc shares
-  x[, , "Machinery"] <- x[, , "Machinery"] / x[, , "Total"]
-  x[, , "Transport"] <- x[, , "Transport"] / x[, , "Total"]
-  x[, , "Products"] <- x[, , "Products"] / x[, , "Total"]
-
-  # drop unnecessary columns
-  x <- x[, , c("Construction", "Machinery", "Products", "Transport")]
-
-  countries <- getItems(x, dim = 1)
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"))$reg
-  browser()
-  getItems(x, dim = 1) <- toolCountry2isocode(countries, ignoreCountries = ignore)
-
-  # remove rows with NA in country_name column
-  x <- x[!is.na(getItems(x, dim = 1)), ]
-
-  return(x)
-}
-
