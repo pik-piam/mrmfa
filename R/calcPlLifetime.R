@@ -4,12 +4,14 @@
 #'        - "Lifetime_mean"
 #'        - "Lifetime_std"
 calcPlLifetime <- function(subtype) {
-  data_raw <- readSource("Geyer", subtype=subtype, convert=FALSE)
+  data_raw <- readSource("Geyer", subtype = subtype, convert = FALSE)
   sector_map <- toolGetMapping(
-    "structuremappingPlasticGeyerLifetime.csv", type = "sectoral", where = "mrmfa"
+    "structuremappingPlasticGeyerLifetime.csv",
+    type = "sectoral", where = "mrmfa"
   )
   data <- toolAggregate(
-    data_raw, rel = sector_map, dim = 3,
+    data_raw,
+    rel = sector_map, dim = 3,
     from = "Source", to = "Target"
   )
   # remove category "Industrial Machinery"

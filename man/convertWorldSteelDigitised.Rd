@@ -2,14 +2,12 @@
 % Please edit documentation in R/convertWorldSteelDigitised.R
 \name{convertWorldSteelDigitised}
 \alias{convertWorldSteelDigitised}
-\title{Convert data World Steel Association digitised 1978-2022 yearbooks.}
+\title{Convert World Steel Digitised}
 \usage{
-convertWorldSteelDigitised(x, subtype = "production")
+convertWorldSteelDigitised(x)
 }
 \arguments{
 \item{x}{Magpie object}
-
-\item{subtype}{TODOMERLIN: document}
 }
 \description{
 Convert data World Steel Association digitised 1978-2022 yearbooks.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/convertWorldSteelDatabase.R
 \name{convertWorldSteelDatabase}
 \alias{convertWorldSteelDatabase}
-\title{Convert data from WorldSteelAssociation Database}
+\title{Convert World Steel Database}
 \usage{
 convertWorldSteelDatabase(x, subtype = "production")
 }

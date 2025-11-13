@@ -18,8 +18,7 @@
 #' @author Qianzhi Zhang
 calcPlTrade <- function(
     category = c("final", "primary", "intermediate", "manufactured"),
-    flow_label     = c("Exports", "Imports")
-) {
+    flow_label = c("Exports", "Imports")) {
   # ---------------------------------------------------------------------------
   # Match inputs and map to UNCTAD subtype identifier
   # ---------------------------------------------------------------------------
@@ -37,7 +36,8 @@ calcPlTrade <- function(
   # Load regional trade data for the selected category
   # ---------------------------------------------------------------------------
   region_df <- calcOutput(
-    "PlUNCTAD", subtype = subtype_region
+    "PlUNCTAD",
+    subtype = subtype_region
   ) %>%
     as.data.frame()
 
@@ -45,8 +45,8 @@ calcPlTrade <- function(
   # Filter by export or import flows
   # ---------------------------------------------------------------------------
   flow_df <- region_df %>%
-    dplyr::filter(.data$Data1 == flow_label)  %>%
-    dplyr::select("Region","Year","Value")
+    dplyr::filter(.data$Data1 == flow_label) %>%
+    dplyr::select("Region", "Year", "Value")
 
   # ---------------------------------------------------------------------------
   # Fill missing historical years (1990-2004) using 2005 values
@@ -57,7 +57,7 @@ calcPlTrade <- function(
   hist_years <- 1990:2004
   hist_df <- expand.grid(
     Region = unique(flow_df$Region),
-    Year   = hist_years,
+    Year = hist_years,
     stringsAsFactors = FALSE
   ) %>%
     dplyr::left_join(base_2005, by = c("Region"))
@@ -80,10 +80,12 @@ calcPlTrade <- function(
     spatial = 1, temporal = 2
   )
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   gdp_ssp2 <- calcOutput(
-    "GDP", scenario="SSP2", average2020 = FALSE, naming = "scenario", aggregate = FALSE
+    "GDP",
+    scenario = "SSP2", average2020 = FALSE, naming = "scenario", aggregate = FALSE
   )[, paste0("y", 1990:2022), "SSP2"]
   x <- toolAggregate(
     x,
@@ -99,12 +101,12 @@ calcPlTrade <- function(
   # Return results
   # ---------------------------------------------------------------------------
   list(
-    x           = x,
-    weight      = NULL,
-    unit        = "Mt Plastic",
+    x = x,
+    weight = NULL,
+    unit = "Mt Plastic",
     description = sprintf(
       "Country-level %s plastics %s (1990-2100)", category, flow_label
     ),
-    note        = "dimensions: (Historic Time,Region,value)"
+    note = "dimensions: (Historic Time,Region,value)"
   )
 }

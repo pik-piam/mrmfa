@@ -2,18 +2,18 @@
 % Please edit documentation in R/calcStProduction.R
 \name{calcStProduction}
 \alias{calcStProduction}
-\title{Get Steel Production data}
+\title{Calc Steel Production}
 \usage{
 calcStProduction()
 }
 \value{
-Steel Production across all regions from 1900-2022 as magpie within 
+Steel Production across all regions from 1900-2022 as magpie within
 list of metadata (in calcOutput format).
 }
 \description{
-Calc steel production from WorldSteel datasets. Can be aggregated to regions 
-via calcOutput aggregate parameter. Uses 
-\link{readWorldSteelDigitised} and 
+Calc steel production from WorldSteel datasets. Can be aggregated to regions
+via calcOutput aggregate parameter. Uses
+\link{readWorldSteelDigitised} and
 \link{readWorldSteelDatabase} datasets, the former for
 historic, the latter for current data.
 }

@@ -11,7 +11,8 @@ calcPlDACRate <- function() {
   #    - Retrieve sectoral targets from manufacturing mapping, excluding totals.
   # ---------------------------------------------------------------------------
   sector_map <- toolGetMapping(
-    "structuremappingPlasticManu.csv", type = "sectoral", where = "mrmfa"
+    "structuremappingPlasticManu.csv",
+    type = "sectoral", where = "mrmfa"
   )
   targets <- unique(sector_map$Target)
   targets <- setdiff(targets, "Total")
@@ -21,7 +22,8 @@ calcPlDACRate <- function() {
   #    - Retrieve regional codes from mapping.
   # ---------------------------------------------------------------------------
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   regions <- unique(region_map$RegionCode)
 
@@ -44,7 +46,7 @@ calcPlDACRate <- function() {
   #    - Merge with share bounds and interpolate linearly
   # ---------------------------------------------------------------------------
   traj_df <- expand.grid(
-    Year   = years,
+    Year = years,
     Target = targets,
     Region = regions,
     stringsAsFactors = FALSE
@@ -54,7 +56,7 @@ calcPlDACRate <- function() {
     Year < 2020, start,
     ifelse(
       Year <= 2050,
-      start + (Year - 2020)*(end - start)/(2050 - 2020),
+      start + (Year - 2020) * (end - start) / (2050 - 2020),
       end
     )
   ))
@@ -66,7 +68,8 @@ calcPlDACRate <- function() {
   # ---------------------------------------------------------------------------
   x <- as.magpie(traj_df, spatial = 1, temporal = 2)
   x <- toolAggregate(
-    x, rel = region_map, dim = 1,
+    x,
+    rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode"
   )
 
@@ -75,7 +78,7 @@ calcPlDACRate <- function() {
   #    - Equal weights (1) for all entries
   # ---------------------------------------------------------------------------
   weight <- x
-  weight[,] <- 1
+  weight[, ] <- 1
 
   return(list(
     x           = x,
@@ -85,5 +88,3 @@ calcPlDACRate <- function() {
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }
-
-

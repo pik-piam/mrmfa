@@ -2,15 +2,18 @@
 % Please edit documentation in R/calcStRecoveryRate.R
 \name{calcStRecoveryRate}
 \alias{calcStRecoveryRate}
-\title{TODOMERLIN: document}
+\title{Calc steel recovery rate}
 \usage{
 calcStRecoveryRate(subtype)
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Subtype of steel recovery rate data to load. Currently only
+'WorldSteel' is available, see 
+\link{readWorldSteelParameters} for details.}
 }
 \description{
-TODOMERLIN: document
+Function to load steel recovery rate data in the four main end-use sectors
+(construction, machinery, products, transport).
 }
 \author{
 Merlin Jo Hosak

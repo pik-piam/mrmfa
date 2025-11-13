@@ -27,4 +27,3 @@ calcPlOECD <- function(subtype) {
     description = "Data on Plastic MFA from OECD Plastic Outlook"
   ))
 }
-

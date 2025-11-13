@@ -8,7 +8,7 @@
 
 
 # redirect standard messaging functions to vcat
-cat     <- function(...) vcat(1, ...)
+cat <- function(...) vcat(1, ...)
 message <- function(...) vcat(1, ...)
 warning <- function(...) vcat(0, ...)
-stop    <- function(...) vcat(-1, ...)
+stop <- function(...) vcat(-1, ...)

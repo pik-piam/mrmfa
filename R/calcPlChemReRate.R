@@ -28,8 +28,8 @@ calcPlChemReRate <- function(target = NULL) {
   years <- 1990:2100
   bounds <- data.frame(
     Target = targets,
-    start  = 0,
-    end    = 0.10,
+    start = 0,
+    end = 0.10,
     stringsAsFactors = FALSE
   )
 
@@ -39,7 +39,7 @@ calcPlChemReRate <- function(target = NULL) {
   #    - Merge share bounds and compute piecewise trajectories
   # ---------------------------------------------------------------------------
   traj_df <- expand.grid(
-    Year   = years,
+    Year = years,
     Target = targets,
     Region = regions,
     stringsAsFactors = FALSE
@@ -49,7 +49,7 @@ calcPlChemReRate <- function(target = NULL) {
     Year < 2020, start,
     ifelse(
       Year <= 2050,
-      start + (Year - 2020)*(end - start)/(2050 - 2020),
+      start + (Year - 2020) * (end - start) / (2050 - 2020),
       end
     )
   ))
@@ -60,7 +60,8 @@ calcPlChemReRate <- function(target = NULL) {
   # ---------------------------------------------------------------------------
   x <- as.magpie(traj_df, spatial = 1, temporal = 2)
   x <- toolAggregate(
-    x, rel = region_map, dim = 1,
+    x,
+    rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode"
   )
 
@@ -68,7 +69,7 @@ calcPlChemReRate <- function(target = NULL) {
   # Prepare weight object and return
   # ---------------------------------------------------------------------------
   weight <- x
-  weight[,] <- 1
+  weight[, ] <- 1
 
   return(list(
     x           = x,
@@ -78,5 +79,3 @@ calcPlChemReRate <- function(target = NULL) {
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }
-
-

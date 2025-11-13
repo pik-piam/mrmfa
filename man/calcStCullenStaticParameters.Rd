@@ -2,12 +2,21 @@
 % Please edit documentation in R/calcStCullenStaticParameters.R
 \name{calcStCullenStaticParameters}
 \alias{calcStCullenStaticParameters}
-\title{TODOMERLIN: document}
+\title{Calc Cullen Static Parameters}
 \usage{
-calcStCullenStaticParameters()
+calcStCullenStaticParameters(subtype)
+}
+\arguments{
+\item{subtype}{Subtype of static parameter to calculate. Currently supported
+subtypes are:
+'productionLossRate', 'formingLossRate', 'formingYield', 'fabricationYield'.}
 }
 \description{
-TODOMERLIN: document
+Calc static (singular) steel parameters based on supplementary information of
+Cullen et al. (2012) paper
+'Mapping the global flow of steel: from steelmaking to end‐use goods'. See
+\link{readCullen2012} and the folder Cullen2012 in sources
+for details on the preprocessing.
 }
 \author{
 Merlin Jo Hosak

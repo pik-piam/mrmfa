@@ -37,8 +37,7 @@ readUS_EPA <- function() {
   magpie_data <- as.magpie(df, temporal = 1)
 
   magpie_data[is.na(magpie_data)] <- 0
-  getItems(magpie_data, dim=1) <- "USA"
+  getItems(magpie_data, dim = 1) <- "USA"
 
   return(magpie_data)
 }
-

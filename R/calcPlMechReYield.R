@@ -11,11 +11,13 @@ calcPlMechReYield <- function() {
   #    - Retrieve manufacturing sectors (excluding 'Total') and regional codes.
   # ---------------------------------------------------------------------------
   sector_map <- toolGetMapping(
-    "structuremappingPlasticManu.csv", type = "sectoral", where = "mrmfa"
+    "structuremappingPlasticManu.csv",
+    type = "sectoral", where = "mrmfa"
   )
   targets <- setdiff(unique(sector_map$Target), "Total")
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   regions <- unique(region_map$RegionCode)
 
@@ -28,8 +30,8 @@ calcPlMechReYield <- function() {
   years <- 1990:2100
   bounds <- data.frame(
     Target = targets,
-    start  = 0.79,
-    end    = 0.79,
+    start = 0.79,
+    end = 0.79,
     stringsAsFactors = FALSE
   )
 
@@ -39,7 +41,7 @@ calcPlMechReYield <- function() {
   #    - Merge bounds and linearly interpolate beyond 2020 to 2100
   # ---------------------------------------------------------------------------
   traj_df <- expand.grid(
-    Year   = years,
+    Year = years,
     Target = targets,
     Region = regions,
     stringsAsFactors = FALSE
@@ -57,7 +59,8 @@ calcPlMechReYield <- function() {
   # ---------------------------------------------------------------------------
   x <- as.magpie(traj_df, spatial = 1, temporal = 2)
   x <- toolAggregate(
-    x, rel = region_map, dim = 1,
+    x,
+    rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode"
   )
 
@@ -65,7 +68,7 @@ calcPlMechReYield <- function() {
   # Prepare weight object and return
   # ---------------------------------------------------------------------------
   weight <- x
-  weight[,] <- 1
+  weight[, ] <- 1
 
   return(list(
     x           = x,
@@ -75,5 +78,3 @@ calcPlMechReYield <- function() {
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }
-
-

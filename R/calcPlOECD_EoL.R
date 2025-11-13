@@ -13,7 +13,8 @@ calcPlOECD_EoL <- function() {
   # ---------------------------------------------------------------------------
   eps <- 1e-9
   eol_df <- calcOutput(
-    "PlOECD", subtype = "WasteEOL_1990-2019_region", aggregate = TRUE
+    "PlOECD",
+    subtype = "WasteEOL_1990-2019_region", aggregate = TRUE
   ) %>%
     as.data.frame() %>%
     dplyr::filter(!.data$Data1 %in% c("Total", "Not applicable")) %>%
@@ -38,11 +39,13 @@ calcPlOECD_EoL <- function() {
   #    - Convert to MagPIE and apply regional-to-country mapping.
   # ---------------------------------------------------------------------------
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   x <- as.magpie(eol_df, spatial = 1, temporal = 2)
   x <- toolAggregate(
-    x, rel = region_map, dim = 1,
+    x,
+    rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode"
   )
 
@@ -51,7 +54,7 @@ calcPlOECD_EoL <- function() {
   #    - Use equal weights (1) for all country-fate combinations.
   # ---------------------------------------------------------------------------
   weight <- x
-  weight[,] <- 1
+  weight[, ] <- 1
 
   # ---------------------------------------------------------------------------
   # Return results
@@ -63,5 +66,3 @@ calcPlOECD_EoL <- function() {
     description = "End-of-life fate ratios of plastic aggregated to country level."
   ))
 }
-
-

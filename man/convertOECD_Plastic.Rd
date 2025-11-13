@@ -18,7 +18,7 @@ aggregated to ISO country level
 }
 \examples{
 \dontrun{
-  a <- convertOECD_Plastic(x)
+a <- convertOECD_Plastic(x)
 }
 
 }

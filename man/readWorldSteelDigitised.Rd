@@ -2,10 +2,9 @@
 % Please edit documentation in R/readWorldSteelDigitised.R
 \name{readWorldSteelDigitised}
 \alias{readWorldSteelDigitised}
-\title{Read Data from World Steel Association 1978-2022 yearbooks digitized to Excel sheets
-E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Yearbook-1982.pdf}
+\title{Read World Steel Digitised}
 \usage{
-readWorldSteelDigitised(subtype = "world_production")
+readWorldSteelDigitised(subtype = "worldProduction")
 }
 \arguments{
 \item{subtype}{TODOMERLIN: document}

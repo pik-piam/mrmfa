@@ -36,15 +36,15 @@ calcPlIncinRate <- function() {
   # Compute historical share from external datasets (2005-2020)
   #    - Load EU, China, and US EoL CSVs, compute incineration share per region-year.
   # ---------------------------------------------------------------------------
-  eu <- readSource("PlasticsEurope", subtype="PlasticEoL_EU", convert=FALSE) %>%
+  eu <- readSource("PlasticsEurope", subtype = "PlasticEoL_EU", convert = FALSE) %>%
     as.data.frame() %>%
     dplyr::mutate(Region = "EUR", Year = as.integer(as.character(.data$Year)))
-  cn <- readSource("China_PlasticEoL", convert=FALSE) %>%
+  cn <- readSource("China_PlasticEoL", convert = FALSE) %>%
     as.data.frame() %>%
-    dplyr::mutate(Region="CHA", Year=as.integer(as.character(.data$Year)))
-  us <- readSource("US_EPA", convert=FALSE) %>%
-    as.data.frame()%>%
-    dplyr::mutate(Region="USA", Year=as.integer(as.character(.data$Year)))
+    dplyr::mutate(Region = "CHA", Year = as.integer(as.character(.data$Year)))
+  us <- readSource("US_EPA", convert = FALSE) %>%
+    as.data.frame() %>%
+    dplyr::mutate(Region = "USA", Year = as.integer(as.character(.data$Year)))
 
   ext_all <- dplyr::bind_rows(eu, cn, us) %>%
     dplyr::filter(.data$Year >= 2005, .data$Year <= 2020) %>%
@@ -115,7 +115,7 @@ calcPlIncinRate <- function() {
   # Prepare weight object and return
   # ---------------------------------------------------------------------------
   weight <- x
-  weight[,] <- 1
+  weight[, ] <- 1
 
   return(list(
     x           = x,
@@ -125,4 +125,3 @@ calcPlIncinRate <- function() {
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }
-

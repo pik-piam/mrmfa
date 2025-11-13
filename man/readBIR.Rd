@@ -2,12 +2,16 @@
 % Please edit documentation in R/readBIR.R
 \name{readBIR}
 \alias{readBIR}
-\title{TODOMERLIN: document}
+\title{Read BIR (Bureau of International Recycling) data}
 \usage{
-readBIR()
+readBIR(subtype = "scrapShare")
+}
+\arguments{
+\item{subtype}{Type of data to read. Options: "scrapShare", "scrapConsumption", 
+"scrapConsumptionEU", "scrapConsumptionWorld"}
 }
 \description{
-TODOMERLIN: document
+Reads BIR data on steel scrap shares and consumption.
 }
 \author{
 Merlin Jo Hosak
