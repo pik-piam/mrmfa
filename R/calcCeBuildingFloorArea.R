@@ -1,6 +1,6 @@
 #' Calculates relative floor area of SF, MF and NR buildings by structure type.
 #'
-#' @param subtype Floor Area grouped by: None, "Stock_Type", "Structure", "Function".
+#' @param subtype Floor Area grouped by: "Stock_Type", "Structure", "Function", NULL (i.e. all).
 #' @author Bennet Weiss
 calcCeBuildingFloorArea <- function(subtype = NULL) {
   possible_subtypes <- c("Stock_Type", "Structure", "Function")
