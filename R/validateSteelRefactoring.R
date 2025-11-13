@@ -45,8 +45,5 @@ foo <- function() {
   driImports <- readSource("WorldSteelDatabase", subtype = "driImports")
   driExports <- readSource("WorldSteelDatabase", subtype = "driExports")
 
-  y[c("SRB", "MNE", "SVN", "HRV", "MKD", "BIH"), , ]
-  x[c("YUG", "SRB", "MNE", "SVN", "HRV", "MKD", "BIH"), , ]
-
 }
 

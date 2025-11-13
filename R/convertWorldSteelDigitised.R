@@ -5,7 +5,7 @@
 #' @param x Magpie object
 convertWorldSteelDigitised <- function(x) {
 
-  # prepare toolISOhistorical ----
+  # TODO: make sure all the subtypes have a working convert function (so far, only "production)
 
   # add regions not present in the magpie object yet needed for toolISOhistorical to work
   countries <- getItems(x, dim = 1)
@@ -14,23 +14,10 @@ convertWorldSteelDigitised <- function(x) {
   newCountries <- unique(mapping$toISO)
   missingCountries <- setdiff(newCountries, countries)
 
-  # TODO: more elegant way to do this ?
-
-  if ("BRG" %in% countries && !"GDR" %in% countries) {
-    missingCountries <- c(missingCountries, c("GDR"))
-  }
-
-  if ("GDR" %in% countries && !"BRG" %in% countries) {
-    missingCountries <- c(missingCountries, c("BRG"))
-  }
-
   x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
 
-  # Convert to historical ISO codes and fill countries
+  # convert historical countries to current iso countries
   y <- toolISOhistorical(x, overwrite = TRUE)
-  # %>%
-  #   suppressWarnings()
-
   z <- toolCountryFill(y, verbosity = 2)
 
   return(z)
