@@ -59,7 +59,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
     return(x)
   }
 
-
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "worldProduction" = function() {

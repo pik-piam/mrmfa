@@ -20,12 +20,33 @@ foo <- function() {
   scrapImports <- readSource("WorldSteelDigitised", subtype = "scrapImports", convert = FALSE)
   scrapExports <- readSource("WorldSteelDigitised", subtype = "scrapExports", convert = FALSE)
 
-  indirectImportsByCategory2013 <- readSource("WorldSteelDigitised", subtype = "indirectImportsByCategory2013", convert = FALSE) # here
-  indirectExportsByCategory2013 <-
+  indirectImportsByCategory2013 <- readSource("WorldSteelDigitised", subtype = "indirectImportsByCategory2013", convert = FALSE)
+  indirectExportsByCategory2013 <- readSource("WorldSteelDigitised", subtype = "indirectExportsByCategory2013", convert = FALSE)
 
   # WorldSteelDatabase ----
+
+  production <- readSource("WorldSteelDatabase", subtype = "production")
+
   bofCurrent <- readSource("WorldSteelDatabase", subtype = "bofProduction")
   eafCurrent <- readSource("WorldSteelDatabase", subtype = "eafProduction")
+  imports <- readSource("WorldSteelDatabase", subtype = "imports")
+  exports <- readSource("WorldSteelDatabase", subtype = "exports")
+
+  scrap_imports <- readSource("WorldSteelDatabase", subtype = "scrapImports")
+  scrap_exports <- readSource("WorldSteelDatabase", subtype = "scrapExports")
+  indirectImports <- readSource("WorldSteelDatabase", subtype = "indirectImports")
+  indirectExports <- readSource("WorldSteelDatabase", subtype = "indirectExports")
+
+  pigIronProduction <- readSource("WorldSteelDatabase", subtype = "pigIronProduction")
+  pigIronImports <- readSource("WorldSteelDatabase", subtype = "pigIronImports")
+
+  pigIronExports <- readSource("WorldSteelDatabase", subtype = "pigIronExports")
+  driProduction <- readSource("WorldSteelDatabase", subtype = "driProduction")
+  driImports <- readSource("WorldSteelDatabase", subtype = "driImports")
+  driExports <- readSource("WorldSteelDatabase", subtype = "driExports")
+
+  y[c("SRB", "MNE", "SVN", "HRV", "MKD", "BIH"), , ]
+  x[c("YUG", "SRB", "MNE", "SVN", "HRV", "MKD", "BIH"), , ]
 
 }
 

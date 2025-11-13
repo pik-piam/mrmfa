@@ -5,70 +5,102 @@
 #' Most datasets are available between around 2002 and 2022
 #' on a yearly resolution.
 #' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
+#' @param subtype must be one of "production", "bofProduction", "eafProduction",
+#' "imports", "exports", "scrapImports",  "scrapExports", "indirectImports",
+#' "indirectExports", "pigIronProduction", "pigIronImports", "pigIronExports",
+#' "driProduction", "driImports", "driExports"
+#'
+#'
+#' TODO: check if all these subtpyes are actually used
 readWorldSteelDatabase <- function(subtype = "production") {
+
+  .readCommonSourceFormat <- function(name, version = "v1.0") {
+
+    # read data from Excel file
+    path <- file.path(".", version, name)
+
+    # Read the excel and suppress warning about non-numeric values in B column
+    # as WS files are always in the same format, last rows will be cut anyways.
+    x <- readxl::read_excel(path, skip = 2) %>% suppressSpecificWarnings(
+      regularExpr = "Expecting numeric in B"
+    )
+
+    # delete last 5 rows as they are irrelevant in WS Database files
+    x <- x[1:(nrow(x) - 5), ]
+
+    x <- x %>%
+      tidyr::pivot_longer(c(-"Country"), names_to = "variable") %>%
+      dplyr::rename("country_name" = "Country") %>%
+       toolCleanSteelRegions()
+
+    # convert to magpie object
+    x <- as.magpie(x, spatial = "country_name")
+
+    x <- x * 1e3 # convert from kt to tonnes
+
+    return(x)
+  }
+
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "production" = function() {
-      x <- readWSDatabaseStandard("P01_crude_2023-10-23")
+      x <- .readCommonSourceFormat("P01_crude_2023-10-23.xlsx")
       return(x)
     },
     "bofProduction" = function() {
-      x <- readWSDatabaseStandard("P05_bof_2023-10-23")
+      x <- .readCommonSourceFormat("P05_bof_2023-10-23.xlsx")
       return(x)
     },
     "eafProduction" = function() {
-      x <- readWSDatabaseStandard("P06_eaf_2023-10-23")
+      x <- .readCommonSourceFormat("P06_eaf_2023-10-23.xlsx")
       return(x)
     },
     "imports" = function() {
-      x <- readWSDatabaseStandard("T02_imports_finished-2023-10-23")
+      x <- .readCommonSourceFormat("T02_imports_finished-2023-10-23.xlsx")
       return(x)
     },
     "exports" = function() {
-      x <- readWSDatabaseStandard("T01_exports_finished-2023-10-23")
+      x <- .readCommonSourceFormat("T01_exports_finished-2023-10-23.xlsx")
       return(x)
     },
     "scrapImports" = function() {
-      x <- readWSDatabaseStandard("T18_imports_scrap-2023-10-23")
+      x <- .readCommonSourceFormat("T18_imports_scrap-2023-10-23.xlsx")
       return(x)
     },
     "scrapExports" = function() {
-      x <- readWSDatabaseStandard("T17_exports_scrap-2023-10-23")
+      x <- .readCommonSourceFormat("T17_exports_scrap-2023-10-23.xlsx")
       return(x)
     },
     "indirectImports" = function() {
-      x <- readWSDatabaseStandard("I02_indirect_imports_2023-10-23")
-      x <- adaptWSDatabaseIndirectTrade(x)
+      x <- .readCommonSourceFormat("I02_indirect_imports_2023-10-23.xlsx")
       return(x)
     },
     "indirectExports" = function() {
-      x <- readWSDatabaseStandard("I01_indirect_exports_2023-10-23")
-      x <- adaptWSDatabaseIndirectTrade(x)
+      x <- .readCommonSourceFormat("I01_indirect_exports_2023-10-23.xlsx")
       return(x)
     },
     "pigIronProduction" = function() {
-      x <- readWSDatabaseStandard("P26_pigiron_2023-10-23")
+      x <- .readCommonSourceFormat("P26_pigiron_2023-10-23.xlsx")
       return(x)
     },
     "pigIronImports" = function() {
-      x <- readWSDatabaseStandard("T12_imports_pigiron-2023-10-23")
+      x <- .readCommonSourceFormat("T12_imports_pigiron-2023-10-23.xlsx")
       return(x)
     },
     "pigIronExports" = function() {
-      x <- readWSDatabaseStandard("T11_exports_pigiron-2023-10-23")
+      x <- .readCommonSourceFormat("T11_exports_pigiron-2023-10-23.xlsx")
       return(x)
     },
     "driProduction" = function() {
-      x <- readWSDatabaseStandard("P27_driron_2023-10-23")
+      x <- .readCommonSourceFormat("P27_driron_2023-10-23.xlsx")
       return(x)
     },
     "driImports" = function() {
-      x <- readWSDatabaseStandard("T14_imports_driron-2023-10-23")
+      x <- .readCommonSourceFormat("T14_imports_driron-2023-10-23.xlsx")
       return(x)
     },
     "driExports" = function() {
-      x <- readWSDatabaseStandard("T13_exports_driron-2023-10-23")
+      x <- .readCommonSourceFormat("T13_exports_driron-2023-10-23.xlsx")
       return(x)
     }
   )
@@ -82,49 +114,4 @@ readWorldSteelDatabase <- function(subtype = "production") {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())
   }
-}
-
-
-readWSDatabaseStandard <- function(name, version = "1.0") {
-  # read data from Excel file
-  path <- paste0("./v", version, "/", name, ".xlsx")
-
-  # Read the excel and suppress warning about non-numeric values in B column
-  # as WS files are always in the same format, last rows will be cut anyways.
-  x <- readxl::read_excel(path, skip = 2) %>% suppressSpecificWarnings(
-    regularExpr = "Expecting numeric in B"
-  )
-
-  # delete last 5 rows as they are irrelevant in WS Database files
-  x <- x[1:(nrow(x) - 5), ]
-
-
-  # Delete Others and World rows
-  x <- x[!x$Country %in% c("Others", "World"), ]
-
-  # convert to magpie object
-  x <- as.magpie(x, spatial = "Country")
-
-  x <- toolFoo(x)
-
-  x <- x * 1e3 # convert from kt to tonnes
-
-  return(x)
-}
-
-adaptWSDatabaseIndirectTrade <- function(x) {
-  # distribute Belgium Luxemburg 80/20 %
-
-  # add new country row for country bellux
-  x <- add_columns(x, addnm = c("BEL", "LUX", "SRB", "MNE"), dim = 1)
-
-  x["BEL", ] <- x["BLX", ] * 0.8
-  x["LUX", ] <- x["BLX", ] * 0.2
-  x <- x[-which(rownames(x) == "BLX"), ]
-
-  x["SRB", ] <- x["SCG", ] * 0.9
-  x["MNE", ] <- x["SCG", ] * 0.1
-  x <- x[-which(rownames(x) == "SCG"), ]
-
-  return(x)
 }
