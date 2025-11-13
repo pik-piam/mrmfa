@@ -3,7 +3,7 @@
 #' @author Merlin Jo Hosak
 #' @importFrom utils read.csv2
 #' @param x Magpie object
-convertWorldSteelDigitised <- function(x) {
+convertWorldSteelDigitised <- function(x, subtype) {
 
   # TODO: make sure all the subtypes have a working convert function (so far, only "production)
 
@@ -16,8 +16,14 @@ convertWorldSteelDigitised <- function(x) {
 
   x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
 
-  # convert historical countries to current iso countries
-  y <- toolISOhistorical(x, overwrite = TRUE)
+  # use additional mapping for BLX
+  blx <- data.frame(
+    fromISO = "BLX",
+    toISO = c("BEL", "LUX"),
+    lastYear = "y2003"
+  )
+
+  y <- toolISOhistorical(x, additional_mapping = blx, overwrite = TRUE)
   z <- toolCountryFill(y, verbosity = 2)
 
   return(z)

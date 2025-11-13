@@ -4,7 +4,10 @@
 #' @param x Magpie object
 convertWorldSteelDatabase <- function(x, subtype = "production") {
 
-  # Special case for splitting BLX ----
+  # TODO: for some subtypes, we split BLX and SCG according to fixed rules, for others we use
+  # toolISOhistorical. Should this be unified?
+
+  # Special case for splitting BLX and SCG ----
 
   if (subtype %in% c("indirectImports", "indirectExports")) {
     x <- add_columns(x, addnm = c("BEL", "LUX", "SRB", "MNE"), dim = 1)
@@ -54,7 +57,6 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
       toISO = c("SRB", "MNE", "SVN", "HRV", "MKD", "BIH"),
       lastYear = "y2005"
     )
-
 
     blx <- data.frame(
       fromISO = "BLX",

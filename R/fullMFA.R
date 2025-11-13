@@ -46,8 +46,10 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
 
   #  ------------- STEEL ----------------
   if (runSection("steel")) {
+
     # Production
     calcOutput("StProduction", file = "st_steel_production.cs4r")
+
     # Trade
     calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports")
     calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports")
@@ -55,6 +57,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     calcOutput("StTrade", file = "st_steel_scrap_exports.cs4r", subtype = "scrapExports")
     calcOutput("StTrade", file = "st_steel_indirect_imports.cs4r", subtype = "indirectImports")
     calcOutput("StTrade", file = "st_steel_indirect_exports.cs4r", subtype = "indirectExports")
+
     # Parameters
     calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
     calcOutput("StLifetimes", subtype = "Cooper2014", file = "st_lifetimes.cs4r", aggregate = FALSE)
