@@ -94,7 +94,6 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     # Service demand / bottom-up
     calcOutput("CeBuildingsMI", file = "ce_ConcreteBuildingMI.cs4r", subtype = "concrete")
     calcOutput("CeBuildingSplit", file = "ce_BuildingSplit.cs4r")
-    calcOutput("CeBuildingSplit", file = "ce_BuildingSplit.cs4r")
   }
 
   #  ------------- PLASTIC -----------
