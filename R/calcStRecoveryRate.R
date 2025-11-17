@@ -1,7 +1,6 @@
-#' TODOMERLIN: document
+#' calculate Steel Recovery Rate
 #'
 #' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
 calcStRecoveryRate <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
@@ -12,6 +11,7 @@ calcStRecoveryRate <- function(subtype) {
         x = ws,
         weight = NULL,
         unit = 1,
+        isocountries = FALSE,
         description = "World Steel Association steel scrap recovery rate"
       )
 

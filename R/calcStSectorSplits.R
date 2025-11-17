@@ -16,7 +16,7 @@ calcStSectorSplits <- function(subtype = "Pauliuk2013") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "Pauliuk2013" = function() {
-      x <- readSource("Pauliuk2013", subtype = "sectorSplits", convert = FALSE)
+      x <- readSource("Pauliuk2013")
 
       final <- list(
         x = x,
