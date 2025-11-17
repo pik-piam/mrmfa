@@ -10,7 +10,7 @@ calcStMaxScrapShare <- function(subtype = "BIR") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "BIR" = function() {
-      scrapShares <- readSource("BIR", subtype = "scrapShare", convert = FALSE)
+      scrapShares <- readSource("BIR", subtype = "scrapShare")
 
       # Remove turkey as it is an outlier
       scrapShares <- scrapShares[!getRegions(scrapShares) == "Turkey", , ]
@@ -32,6 +32,7 @@ calcStMaxScrapShare <- function(subtype = "BIR") {
         x = maxScrapShare,
         weight = NULL,
         unit = 1,
+        isocountries = FALSE,
         description = "Maximum scrap share in production"
       )
 

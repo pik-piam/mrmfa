@@ -3,13 +3,13 @@
 #' Reads BIR data on steel scrap shares and consumption.
 #'
 #' @author Merlin Jo Hosak
-#' @param subtype Type of data to read. Options: "scrapShare", "scrapConsumption", 
+#' @param subtype Type of data to read. Options: "scrapShare", "scrapConsumption",
 #' "scrapConsumptionEU", "scrapConsumptionWorld"
 readBIR <- function(subtype = "scrapShare") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "scrapShare" = function() {
-      path <- paste0("./v1.0/BIR_ScrapShareProduction.xlsx")
+      path <- file.path(".", "v1.0", "BIR_ScrapShareProduction.xlsx")
       df <- readxl::read_excel(path, sheet = "Data")
       scrapShares <- as.magpie(df, spatial = "Scrap share in production")
 

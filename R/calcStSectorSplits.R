@@ -22,6 +22,7 @@ calcStSectorSplits <- function(subtype = "Pauliuk2013") {
         x = x,
         weight = NULL,
         unit = 1,
+        isocountries = FALSE,
         description = "Cooper 2014 Steel Lifetimes Mean & SD"
       )
 

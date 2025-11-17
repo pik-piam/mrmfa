@@ -13,9 +13,10 @@ calcStWorldSteelStaticParameters <- function(subtype) {
 
       final <- list(
         x = scrapInBOFRate,
-        weights = NULL,
+        weight = NULL,
         description = "Scrap in BOF rate (according to the World Steel Association)",
-        unit = 1
+        unit = 1,
+        isocountries = FALSE
       )
       return(final)
     },

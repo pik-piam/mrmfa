@@ -71,9 +71,11 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     calcOutput("StCullenStaticParameters", subtype = "formingLossRate", file = "st_forming_loss_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "formingYield", file = "st_forming_yield.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "fabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
+
     # Scrap consumption
     calcOutput("StScrapConsumption", file = "st_scrap_consumption.cs4r", subtype = "assumptions")
     calcOutput("StScrapConsumption", file = "st_scrap_consumption_no_assumptions.cs4r", subtype = "noAssumptions", warnNA = FALSE)
+
     # Pig Iron
     calcOutput("StPigIronProduction", file = "st_pig_iron_production.cs4r")
     calcOutput("StPigIronTrade", file = "st_pig_iron_imports.cs4r", subtype = "imports")
