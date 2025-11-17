@@ -4,7 +4,7 @@
 #' 'Mapping the global flow of steel: from steelmaking to end‐use goods'.
 #' Files were digitalized from pdf to Excel.
 #' @param subtype Subtype of Cullen et al. (2012) data to load. Currently
-#' supported subtypes are "flows", "giMatrix"
+#' supported subtypes are "flows" and "giMatrix".
 #' @author Merlin Jo Hosak
 readCullen2012 <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----

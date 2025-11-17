@@ -34,6 +34,7 @@ calcStCullenFabricationYield <- function() {
     x = final,
     weight = NULL,
     unit = 1,
+    isocountries = FALSE,
     description = "Cullen 2012 Fabrication Yield"
   )
 

@@ -1,21 +1,20 @@
 #' Calc Steel Lifetimes
 #' @description Function to load steel lifetimes data in years.
-#' @param subtype Subtype of steel lifetimes data to load. Currently only
-#' 'Cooper2014' is available. Other options might include Pauliuk or Wittig (
-#' see respective folders).
+#' @param subtype Subtype of steel lifetimes data to load. Currently, only
+#' 'Cooper2014' is available. Other options might include Pauliuk or Wittig
+#' (see respective folders).
 #' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
 #' @importFrom purrr is_empty
 calcStLifetimes <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "Cooper2014" = function() {
-      cooperLifetimes <- readSource("Cooper2014", subtype = "lifetimes")
-
+      cooperLifetimes <- readSource("Cooper2014")
       final <- list(
         x = cooperLifetimes,
         weight = NULL,
         unit = 1,
+        isocountries = FALSE,
         description = "Cooper 2014 Steel Lifetimes Mean & SD"
       )
 
