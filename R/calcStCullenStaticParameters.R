@@ -10,7 +10,7 @@
 #' 'productionLossRate', 'formingLossRate', 'formingYield', 'fabricationYield'.
 #' @author Merlin Jo Hosak
 calcStCullenStaticParameters <- function(subtype) {
-  flows <- readSource("Cullen2012", subtype = "flows")
+  flows <- readSource("Cullen2012", subtype = "flows") # TODO: deal with changed names (no dots)
   flowNames <- getItems(flows, dim = 3)
   lossFlows <- flows[, , grep("Loss", flowNames, fixed = TRUE)]
   lossFlowNames <- getItems(lossFlows, dim = 3)

@@ -4,6 +4,7 @@
 #' Using the function \link{readCullen2012}.
 #' @author Merlin Jo Hosak
 calcStCullenFabricationYield <- function() {
+
   # Read data
   giMatrix <- readSource("Cullen2012", subtype = "giMatrix", convert = FALSE)
 

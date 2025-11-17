@@ -139,7 +139,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       return(x)
     },
     "imports" = function() {
-      # TODO: does not seem to be used right now?
       # TODO: ask JD if we want to include South African Customs Union (needs to be disaggregated)
       filenames <- c(
         "imports_70s.xlsx",
@@ -151,7 +150,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       return(x)
     },
     "exports" = function() {
-      # TODO: does not seem to be used right now?
       filenames <- c(
         "exports_70s.xlsx",
         "exports_80s.xlsx",
@@ -162,7 +160,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       return(x)
     },
     "scrapImports" = function() {
-      # TODO: does not seem to be used right now?
       filenames <- c(
         "scrap_imports_70s.xlsx",
         "scrap_imports_80s.xlsx",
@@ -174,7 +171,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       return(x)
     },
     "scrapExports" = function() {
-      # TODO: does not seem to be used right now?
       filenames <- c(
         "scrap_exports_70s.xlsx",
         "scrap_exports_80s.xlsx",

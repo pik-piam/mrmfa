@@ -4,31 +4,28 @@
 #' 'Mapping the global flow of steel: from steelmaking to end‐use goods'.
 #' Files were digitalized from pdf to Excel.
 #' @param subtype Subtype of Cullen et al. (2012) data to load. Currently
-#' supported subtypes are flows & giMatrix.
+#' supported subtypes are "flows", "giMatrix"
 #' @author Merlin Jo Hosak
-#' @param subtype TODOMERLIN: document
 readCullen2012 <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   version <- "v1.0"
   switchboard <- list(
     "flows" = function() {
-      path <- paste0("./", version, "/Cullen_2012_Flows.xlsx")
-      df <- readxl::read_excel(
-        path = path,
-        sheet = "Data"
-      )
+      path <- file.path(".", version, "Cullen_2012_Flows.xlsx")
+      df <- readxl::read_excel(path = path, sheet = "Data") %>%
+        mutate(
+          "Description" = ifelse(is.na(.data$Description), "", paste0(" (", .data$Description, ")")),
+          "identifier" = paste0(.data$ID, ": ", .data$Source, " -> ", .data$Target, .data$Description),
+          # remove dots, as they are reserved separators in magpie objects
+          "identifier" = gsub("\\.", "", identifier)
+        ) %>%
+        select("identifier", "value" = "Value")
 
-      identifier <- createFlowsIdentifier(df)
-
-      flows <- new.magpie(
-        names = identifier,
-        fill = df$Value
-      )
-
-      return(flows)
+      x <- as.magpie(df)
+      return(x)
     },
     "giMatrix" = function() {
-      path <- paste0("./", version, "/Cullen_2012_GI_Matrix.xlsx")
+      path <- file.path(".", version, "Cullen_2012_GI_Matrix.xlsx")
       df <- readxl::read_excel(
         path = path,
         sheet = "Data"
@@ -56,15 +53,4 @@ readCullen2012 <- function(subtype) {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())
   }
-}
-
-createFlowsIdentifier <- function(df) {
-  df$Description <- paste0(" (", df$Description, ")")
-  df$Description[df$Description == " (NA)"] <- ""
-
-  identifier <- paste(df$ID, df$Source, sep = ": ")
-  identifier <- paste(identifier, df$Target, sep = " -> ")
-  identifier <- paste(identifier, df$Description, sep = "")
-
-  return(identifier)
 }
