@@ -24,22 +24,29 @@
 #' to H12 REMIND regions.
 #'
 #' @author Merlin Jo Hosak
-calcStScrapConsumption <- function(subtype, aggregate = NULL, regionmapping = NULL) {
+calcStScrapConsumption <- function(subtype) {
+  # load data ----
+
   consumptionData <- loadSteelScrapConsumptionData()
+  browser()
   scLinear <- calcSteelScrapConsumptionOnlyLinear(consumptionData)
   context <- getAggregationContext(aggregate)
 
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
-  "assumptions" = function() {
+    "assumptions" = function() {
       # Assume backcast with production and forecast with BIR data
 
       # Backcast recent data with production (basically assumes constant production share)
       scAssumptions <- toolBackcastByReference2D(scLinear, consumptionData$production, doMakeZeroNA = TRUE)
 
-      scAssumptions <- forecastEUwithEUdata(scAssumptions, consumptionData$birEU)
+      # Forecast EU with EU data
 
-      scAssumptions <- forecastRestWithWorldData(scAssumptions, consumptionData$global, consumptionData$birWorld)
+      birEU <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)["EU 28", , ]
+      scAssumptions <- forecastEUwithEUdata(scAssumptions, birEU)
+
+      birWorld <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)["World", , ]
+      scAssumptions <- forecastRestWithWorldData(scAssumptions, consumptionData$global, birWorld)
 
       # Finalize
 
@@ -48,7 +55,7 @@ calcStScrapConsumption <- function(subtype, aggregate = NULL, regionmapping = NU
 
       result <- list(
         x = scAssumptions,
-        weights = NULL,
+        weight = NULL,
         unit = "Tonnes",
         description = paste(
           "Worldsteel data on steel scrap consumption with assumptions aggregated to",
@@ -76,7 +83,7 @@ calcStScrapConsumption <- function(subtype, aggregate = NULL, regionmapping = NU
           regionmapping <- getConfig("regionmapping")
         }
         if (grepl("H12", regionmapping)) {
-          result <- calcNoAssumptionsRegional(scLinear, euConsumptionH12 = consumptionData$birEU)
+          result <- calcNoAssumptionsRegional(scLinear, euConsumptionH12 = birEU)
         } else {
           result <- calcNoAssumptionsRegional(scLinear)
         }
@@ -242,15 +249,13 @@ calcSteelScrapConsumptionOnlyLinear <- function(consumptionData) {
   )
 
   scrapConsumption <- combineWSandBIRscrapConsumption(
-    scrapConsumptionWS,
-    consumptionData$bir
+    scrapConsumptionWS
   )
   return(scrapConsumption)
 }
 
 
-combineWSandBIRscrapConsumption <- function(scrapConsumptionWS,
-                                            scrapConsumptionBIR) {
+combineWSandBIRscrapConsumption <- function(scrapConsumptionWS) {
   scrapConsumption <- new.magpie(
     cells_and_regions = getItems(scrapConsumptionWS, dim = 1),
     years = paste0("y", 1965:2025),
@@ -258,6 +263,8 @@ combineWSandBIRscrapConsumption <- function(scrapConsumptionWS,
     fill = NA,
     sets = names(dimnames(scrapConsumptionWS))
   )
+
+  scrapConsumptionBIR <- readSource("BIR", subtype = "scrapConsumption")
 
   scrapConsumption[getItems(scrapConsumptionWS, dim = 1), getItems(scrapConsumptionWS, dim = 2), ] <- scrapConsumptionWS
   scrapConsumption[getItems(scrapConsumptionBIR, dim = 1), getItems(scrapConsumptionBIR, dim = 2), ] <- scrapConsumptionBIR
@@ -331,12 +338,6 @@ loadSteelScrapConsumptionData <- function() {
   prodHistGlobal <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
   prodHist <- readSource("WorldSteelDigitised", subtype = "production", convert = FALSE)
 
-  # Load BIR data
-
-  bir <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)
-  birEU <- readSource("BIR", subtype = "scrapConsumptionEU", convert = FALSE)
-  birWorld <- readSource("BIR", subtype = "scrapConsumptionWorld", convert = FALSE)
-
   # Load other data
 
   production <- calcOutput("StProduction", aggregate = FALSE)
@@ -353,10 +354,7 @@ loadSteelScrapConsumptionData <- function() {
     global = global,
     prodHistGlobal = prodHistGlobal,
     prodHist = prodHist,
-    production = production,
-    bir = bir,
-    birEU = birEU,
-    birWorld = birWorld
+    production = production
   )
 
   return(consumptionData)

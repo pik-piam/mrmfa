@@ -5,8 +5,8 @@
 #' This function backcasts (or forecasts) missing values in a 2D magpie object x
 #' based on reference data ref. The backcasting/forecasting is done by calculating
 #' ratios of x to ref for shared years, computing weights for these ratios based
-#' on their recency (linearly weighted),
-#' and applying these weights to scale ref for missing years in x.
+#' on their recency (linearly weighted), and applying these weights to scale ref
+#' for missing years in x.
 #'
 #' @param x A 2D magpie object (regions x years) to be backcasted/forecasted.
 #' @param ref A 2D magpie object (regions x years) to be used as reference for
@@ -15,7 +15,9 @@
 #' before calculating weights. Recommended to ensure more stable weight calculation.
 #' @param maxN Maximum number of years to consider for weight calculation (default 5).
 #' @param doForecast Logical, whether to do forecasting instead of backcasting.
-#' @param doMakeZeroNA Logical, whether to convert 0 values in final output to NA. As sometimes 0 is wrongly implicitly assumed.
+#' @param doMakeZeroNA Logical, whether to convert 0 values in final output to NA.
+#' As sometimes 0 is wrongly implicitly assumed.
+#'
 #' @author Merlin Jo Hosak
 toolBackcastByReference2D <- function(x,
                                       ref,
