@@ -31,8 +31,7 @@ readWorldSteelParameters <- function(subtype) {
       getSets(m) <- c("Region", "Year", "Parameter")
 
       return(m)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {

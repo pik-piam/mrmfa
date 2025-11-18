@@ -5,6 +5,5 @@ convertBIR <- function(x, subtype) {
     getItems(x, dim = 1) <- toolCountry2isocode(getItems(x, dim = 1))
     x <- toolCountryFill(x, verbosity = 2)
   }
-
   return(x)
 }
