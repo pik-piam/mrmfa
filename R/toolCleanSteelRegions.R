@@ -19,7 +19,7 @@ toolCleanSteelRegions <- function(df) {
   )
 
   # remove ignored countries ----
-  ignore <- read.csv2(system.file("extdata", "MFA_ignore_regions.csv", package = "mrmfa"), header = TRUE)$reg
+  ignore <- toolGetMapping("MFA_ignore_regions.csv", where = "mrmfa")$reg
 
   df <- df %>%
     filter(!(.data$country_name %in% ignore)) %>%
@@ -28,10 +28,10 @@ toolCleanSteelRegions <- function(df) {
 
   # rename countries to ISO3 code ----
   # TODO: consider moving some of these to madrat, see also https://github.com/pik-piam/madrat/pull/250/files
-  m <- read.csv2(system.file("extdata", "MFA_rename_regions.csv", package = "mrmfa"), header = TRUE)
+  m <- toolGetMapping("MFA_rename_regions.csv", where = "mrmfa")
+
   additionalIsoMappings <- m$to
   names(additionalIsoMappings) <- m$from
-
 
   levels(df$country_name) <- toolCountry2isocode(levels(df$country_name),
                                                  mapping = additionalIsoMappings,

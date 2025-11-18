@@ -9,7 +9,8 @@ convertWorldSteelDigitised <- function(x, subtype) {
 
   # add regions not present in the magpie object yet needed for toolISOhistorical to work
   countries <- getItems(x, dim = 1)
-  mapping <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat")) %>%
+
+  mapping <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
     filter(.data$fromISO %in% countries)
   newCountries <- unique(mapping$toISO)
   missingCountries <- setdiff(newCountries, countries)
