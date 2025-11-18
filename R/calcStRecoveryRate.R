@@ -16,8 +16,7 @@ calcStRecoveryRate <- function(subtype) {
       )
 
       return(final)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {

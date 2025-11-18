@@ -37,8 +37,7 @@ calcStMaxScrapShare <- function(subtype = "BIR") {
       )
 
       return(final)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {

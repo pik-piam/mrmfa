@@ -81,7 +81,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     calcOutput("StPigIronTrade", file = "st_pig_iron_imports.cs4r", subtype = "imports")
     calcOutput("StPigIronTrade", file = "st_pig_iron_exports.cs4r", subtype = "exports")
 
-    # Direct reduced Iron - open
+    # Direct reduced Iron
     calcOutput("StDRIData", file = "st_dri_production.cs4r", subtype = "production")
     calcOutput("StDRIData", file = "st_dri_imports.cs4r", subtype = "imports")
     calcOutput("StDRIData", file = "st_dri_exports.cs4r", subtype = "exports")

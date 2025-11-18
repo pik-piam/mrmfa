@@ -92,8 +92,7 @@ calcStCullenStaticParameters <- function(subtype) {
       fabricationScrap <- flows[, , "Fabrication scrap", pmatch = TRUE]
       fabricationYield <- (fabricationInflow - fabricationScrap) / fabricationInflow
       return(fabricationYield)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
