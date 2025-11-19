@@ -18,39 +18,33 @@ calcStProduction <- function() {
 
   # Extrapolate ----
 
-  # Extrapolate current by recent for regions where data overlaps
-  prod <- toolBackcastByReference2D(prodCurrent,
-                                    ref = prodRecent,
-                                    doInterpolate = FALSE
-  ) # already interpolated
-
-
-  # calculate estimate of World Production
-
-  nonNaIndices <- which(!is.na(rowSums(prod)))
-  prodNonNaRegions <- prod[nonNaIndices, ]
-  sumNonNaRegions <- colSums(prodNonNaRegions)
-
-  worldRef <- toolBackcastByReference2D(prodHist,
-                                        ref = sumNonNaRegions,
-                                        doForecast = TRUE,
-                                        doInterpolate = FALSE
+  # extrapolate current by recent for regions where data overlaps
+  prod <- toolBackcastByReference2D(
+    prodCurrent,
+    ref = prodRecent,
+    doInterpolate = FALSE
   )
 
-  # Extrapolate remaining regions by world reference
-  prod <- toolBackcastByReference2D(prod,
-                                    ref = worldRef,
-                                    doInterpolate = FALSE
-  ) # already interpolated
+  # calculate estimate of World Production
+  sumNonNaRegions <- dimSums(prod, dim = 1, na.rm = TRUE)
+
+  worldRef <- toolBackcastByReference2D(
+    prodHist,
+    ref = sumNonNaRegions,
+    doForecast = TRUE,
+    doInterpolate = FALSE
+  )
+
+  # extrapolate remaining regions by world reference
+  prod <- toolBackcastByReference2D(
+    prod,
+    ref = worldRef,
+    doInterpolate = FALSE
+  )
 
   # use constant (last observation carried forward) interpolation for
   # remaining NaN values in the future
   prod <- toolInterpolate2D(prod, method = "constant")
-
-  # Check if there are any NA left in prod
-  if (any(is.na(prod))) { # check if there are any NA left in prod
-    warning("There are still NA values in the production data after extrapolation.")
-  }
 
   result <- list(
     x = prod,
