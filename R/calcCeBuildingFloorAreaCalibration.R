@@ -1,42 +1,105 @@
 #' Calculates a factor to translate energy-related floor area to material-related floor area.
 #' Related to from net to gross floor area.
 #'
+#' @param plotting Type of plot to generate. Options are "floor area comparison" and "ratio over cement production". Defaults to no plot.
 #' @author Bennet Weiss
-calcCeBuildingFloorAreaCalibration <- function() {
+calcCeBuildingFloorAreaCalibration <- function(plotting = NULL) {
 
-  # data for 2020 (Mm2)
+  # ---Read and prepare data---
+
+  # EDGE-B data for 2020 (m2)
   # TODO check if 2020 data is scenario agnostic (as it should be)
   edgeb_floor_area <- calcOutput(
-    type = "Floorspace",
-    regionmapping = "regionmapping_ISO_2_ISO.csv",
-    scenario = "SSP2"
+    type = "CeEDGEBFloorSpace",
+    aggregate = FALSE
   )[,2020]
   edgeb_floor_area <- dimReduce(edgeb_floor_area)
-  # remove buildings total
-  edgeb_floor_area <- edgeb_floor_area[,,(Variable = "buildings"), invert = TRUE]
 
-  # data for 2020 (m2)
-  eubucco_floor_area <- readSource("EUBUCCO") * 1e-6 # convert from m2 to Mm2
+  # EUBUCCO data for 2020 (m2)
+  eubucco_floor_area <- readSource("EUBUCCO")
   eubucco_floor_area[is.na(eubucco_floor_area)] <- 0 # TODO remove; this is just for plotting
 
-  # TODO: See how this can be used
-  # data for 2021 (m2)
-  gem_floor_area <- calcOutput(
-    type = "CeBuildingFloorArea",
-    regionmapping = "regionmapping_ISO_2_ISO.csv",
-    subtype = "Stock_Type"
-  ) * 1e-6 # convert from m2 to Mm2
-  # rename
-  expected_names <- c("Com", "Res")
-  stopifnot(identical(getNames(gem_floor_area), expected_names))
-  gem_floor_area <- setNames(gem_floor_area, c("commercial", "residential"))
+  # ---Calculate correction factor (in progress)---
 
-  plot_floor_area_comparison(edgeb_floor_area, eubucco_floor_area, gem_floor_area)
+  # TODO: a correction factor differentiated by countries
+  ratio <- eubucco_floor_area / edgeb_floor_area
+
+  #
+  availability_mask <- (eubucco_floor_area > 0)
+  total_eubucco <- sum(eubucco_floor_area[availability_mask])
+  total_edgeb <- sum(edgeb_floor_area[availability_mask])
+  correction_factor <- total_eubucco / total_edgeb
+
+  # ---Plotting---
+
+  if (!is.null(plotting)) {
+    if (plotting == "floor area comparison") {
+
+      # GEM data for 2021 (m2)
+      gem_floor_area <- calcOutput(
+        type = "CeBuildingFloorArea",
+        aggregate = FALSE,
+        subtype = "Stock_Type"
+      )
+      # rename
+      expected_names <- c("Com", "Res")
+      stopifnot(identical(getNames(gem_floor_area), expected_names))
+      gem_floor_area <- setNames(gem_floor_area, c("commercial", "residential"))
+
+      # GHS-OBAT data for 2020 (m2)
+      ghsoobat_floor_area <- calcOutput("CeGHSOBATFloorArea", aggregate = FALSE)
+      ghsoobat_floor_area <- setNames(ghsoobat_floor_area, c("residential", "commercial"))
+
+      plot_floor_area_comparison(edgeb_floor_area, eubucco_floor_area, gem_floor_area, ghsoobat_floor_area)
+
+    } else if (plotting == "ratio over cement production") {
+
+      cement_production <- calcOutput(
+        type = "CeBinderProduction",
+        subtype = "cement",
+        aggregate = FALSE
+      )[,2020] # tonnes
+
+      plot_ratio_over_x(edgeb_floor_area, eubucco_floor_area, cement_production, "Cement Production (tonnes)")
+
+    } else {
+      stop("Invalid plotting option. Choose either 'floor area comparison' or 'ratio over cement production'.")
+    }
+  }
+
+  # ---Output--- # TODO
+  description <- "PLACEHOLDER"
+  note <- "PLACEHOLDER"
+  output <- list(x = eubucco_floor_area, weight = NULL, unit = "PLACEHOLDER", description = description, note = note)
+  return(output)
 }
+
+#' Plots edge_b / eubucco ratio as function of GDP
+#' @author Bennet Weiss
+#' @param edgeb EDGE-B floor area magpie object
+#' @param eubucco EUBUCCO floor area magpie object
+#' @param x magpie object to plot ratio against (e.g., Production, GDP)
+#' @param xlabel label for x axis
+plot_ratio_over_x <- function(edgeb, eubucco, x, xlabel) {
+  # TODO see if this works
+  ratio <- dimSums(eubucco / edgeb)
+  ratio_df <- as.data.frame(ratio)
+  x_df <- as.data.frame(x)
+  ratio_df$x <- x_df$Value
+  ratio_df <- ratio_df[ratio_df$Value > 0,]
+
+  ggplot2::ggplot(ratio_df, ggplot2::aes(x = x, y = Value)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::labs(x = xlabel, y = "Floor-area ratio: EUBUCCO/EDGE-B") +
+    ggplot2::theme_minimal()
+
+}
+
 
 #' Plots a comparison of floor area data from EDGE-B, EUBUCCO and GEM.
 #' @author Bennet Weiss
-plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem_floor_area) {
+plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem_floor_area, ghsoobat_floor_area) {
   savefolder <- "figures/floor_area_comparison_2020_"
   ylab <- "Floor Area (Million m2)"
 
@@ -45,9 +108,14 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
   floorlist <- list(
     "(1) EDGE-B" = edgeb_floor_area,
     "(2) GEM" = gem_floor_area,
-    "(3) EUBUCCO" = eubucco_floor_area
+    "(3) GHS-OBAT" = ghsoobat_floor_area,
+    "(4) EUBUCCO" = eubucco_floor_area
   )
-  toolMplotMulti(floorlist, title = "Global", xlab = "", ylab = ylab, filename = filename)
+  toolMplotMulti(floorlist, title = "Global", xlab = "", ylab = ylab,
+                 filename = filename, ncol = length(floorlist), nrow = 1)
+
+  # TODO European plot (EUBUCCO Data)
+
 
   # country plots
   countries <- getItems(gem_floor_area, dim = 1)
@@ -59,9 +127,11 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
     edgeb <- edgeb_floor_area[country,,]
     eubucco <- eubucco_floor_area[country,,]
     gem <- gem_floor_area[country,,]
-    floorlist <- list("(1) EDGE-B" = edgeb, "(2) GEM" = gem, "(3) EUBUCCO" = eubucco)
+    ghsobat <- ghsoobat_floor_area[country,,]
+    floorlist <- list("(1) EDGE-B" = edgeb, "(2) GEM" = gem, "(4) EUBUCCO" = eubucco, "(3) GHS-OBAT" = ghsobat)
     filename <- paste0(savefolder, region, "_", country, ".png")
-    toolMplotMulti(floorlist, title = country, xlab = "", ylab = ylab, filename = filename)
+    toolMplotMulti(floorlist, title = country, xlab = "", ylab = ylab,
+                   filename = filename, ncol = length(floorlist), nrow = 1)
   }
 }
 
@@ -74,12 +144,13 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
 #' @param global Whether data should be aggregated over regions to global values.
 #' @param total Whether the total of all data values should also be visualized.
 #' @param title A string to be used as the plot's main title. Defaults to NULL.
+#' @param nrow Number of rows for the facet layout (passed to facet_wrap).
+#' @param ncol Number of columns for the facet layout (passed to facet_wrap).
 #' @author Bennet Weiss, Pascal Sauer (mplot), Patrick Rein (mplot)
 #' @importFrom rlang .data
 #' @export
-toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NULL, ylab = NULL, filename = NULL) {
-
-  rlang::check_installed("ggplot2")
+toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NULL, ylab = NULL, filename = NULL,
+                           nrow = NULL, ncol = NULL) {
 
   # --- Handle single object or list of objects ---
   if (inherits(px, "magpie")) {
@@ -231,13 +302,16 @@ toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab 
   facetBySource  <- !isSingleObject && temporalCategorial # Only facet source for bars
 
   if (facetBySpatial && !facetBySource) {
-    # Case 1: Spatial only (Line plots, or single object bar plots)
-    plot <- plot + ggplot2::facet_wrap(stats::as.formula(paste("~", spatialDimName)))
+    # Case 1: Spatial only
+    plot <- plot + ggplot2::facet_wrap(stats::as.formula(paste("~", spatialDimName)),
+                                       nrow = nrow, ncol = ncol) # <--- MODIFIED
   } else if (!facetBySpatial && facetBySource) {
-    # Case 2: Source only (Global, multi-object bar plots)
-    plot <- plot + ggplot2::facet_wrap(~ .data$source)
+    # Case 2: Source only (This is your specific case with 4 objects)
+    plot <- plot + ggplot2::facet_wrap(~ .data$source,
+                                       nrow = nrow, ncol = ncol) # <--- MODIFIED
   } else if (facetBySpatial && facetBySource) {
-    # Case 3: Both (Spatial, multi-object bar plots)
+    # Case 3: Both
+    # Note: facet_grid does NOT accept nrow/ncol as dimensions are fixed by variables
     plot <- plot + ggplot2::facet_grid(stats::as.formula(paste("source ~", spatialDimName)))
   }
   # Case 4 (Neither) requires no faceting.

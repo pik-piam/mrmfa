@@ -1,16 +1,19 @@
-#' Calculates relative floor area of SF, MF and NR buildings by structure type.
+#' Calculate total building floor area from GEM, optionally grouped by subtype.
 #'
 #' @param subtype Floor Area grouped by: "Stock_Type", "Structure", "Function", NULL (i.e. all).
+#' @param remove_ind Logical, if TRUE (default), industrial buildings are removed from the dataset.
 #' @author Bennet Weiss
-calcCeBuildingFloorArea <- function(subtype = NULL) {
+calcCeBuildingFloorArea <- function(subtype = NULL, remove_ind = TRUE) {
   possible_subtypes <- c("Stock_Type", "Structure", "Function")
 
   data <- readSource("GEM")
 
   # transform to df for easier handling
   df <- as.data.frame(data, rev = 3)
-  # remove Ind buildings
-  df <- df[df$Stock_Type != "Ind", ]
+
+  if (remove_ind) {
+    df <- df[df$Stock_Type != "Ind", ]
+  }
   floorArea <- as.magpie(df, spatial = 1)
 
   if (is.null(subtype)){
