@@ -49,12 +49,9 @@ foo <- function() {
 
   ##
 
-  renv::install("leonieschweiger/mrmfa@steel_updates")
-  renv::install("Merjo/madrat@simson-country-map")
 
-  library(madrat)
-  library(mrmfa)
-  setConfig(outputfolder = "/p/tmp/benke/steel_before")
+
+  ############
 
   # Production
   calcOutput("StProduction", file = "st_steel_production.cs4r")
@@ -68,6 +65,19 @@ foo <- function() {
   calcOutput("StTrade", file = "st_steel_indirect_exports.cs4r", subtype = "indirectExports")
 
   piamutils::compareMagpieObject("~/madrat/output/steel_before/st_steel_indirect_imports.cs4r", "~/madrat/output/new/st_steel_indirect_imports.cs4r")
+
+
+  ##############
+
+  renv::install("leonieschweiger/mrmfa@steel_updates")
+  renv::install("Merjo/madrat@simson-country-map")
+
+  library(madrat)
+  library(mrmfa)
+  setConfig(cachefolder = "~/madrat/cache/clean-cache/", forcecache = F, ignorecache = T, outputfolder = "/p/tmp/benke/steel_before")
+
+  calcOutput("StProductionByProcess", file = "st_steel_production_by_process.cs4r", aggregate = F)
+
 
 
 }

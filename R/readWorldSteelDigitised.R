@@ -3,14 +3,15 @@
 #' Read Data from World Steel Association 1978-2022 yearbooks digitized to Excel sheets
 #' E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Yearbook-1982.pdf
 #' Available subtypes are:
-#' 'worldProduction', 'production', 'bofProduction', 'eafProduction',
-#' 'productionByProcess', 'imports', 'exports', 'scrapImports', 'scrapExports',
+#' 'worldProduction', 'production', 'productionByProcess',
+#' 'imports', 'exports', 'scrapImports', 'scrapExports',
 #' 'scrapConsumptionYearbooks', 'scrapConsumptionFigures',
 #' 'specificScrapConsumption_70s', 'worldScrapConsumption',
 #' 'indirectImportsByCategory_2013', 'indirectExportsByCategory_2013'
 #' @author Merlin Jo Hosak, Falk Benke
 #'
 readWorldSteelDigitised <- function(subtype = "worldProduction") {
+
   version <- "v1.0"
 
   # helper functions ----
@@ -49,7 +50,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
     x[, , "Products"] <- x[, , "Electrical Equipment"] + x[, , "Metal products"] + x[, , "Domestic appliances"]
     x[, , "Total"] <- x[, , "Machinery"] + x[, , "Transport"] + x[, , "Products"]
 
-
     x[, , "Machinery"] <- x[, , "Machinery"] / x[, , "Total"]
     x[, , "Transport"] <- x[, , "Transport"] / x[, , "Total"]
     x[, , "Products"] <- x[, , "Products"] / x[, , "Total"]
@@ -84,37 +84,19 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       x["BRG", seq(1991, 1999), ] <- NA
       return(x)
     },
-    "bofProduction" = function() {
-      # TODO: make sure, this works with convert as well (by merging subtypes)
-      filenames <- c(
-        "BOF_production_80s.xlsx",
-        "BOF_production_90s.xlsx"
-      )
-
-      x <- .readCommonSourceFormat(filenames, type = "bof_eaf_production", version = version)
-      return(x)
-    },
-    "eafProduction" = function() {
-      # TODO: make sure, this works with convert as well (by merging subtypes)
-      filenames <- c(
-        "EAF_production_80s.xlsx",
-        "EAF_production_90s.xlsx"
-      )
-      x <- .readCommonSourceFormat(filenames, type = "bof_eaf_production", version = version)
-      return(x)
-    },
     "productionByProcess" = function() {
-      # TODO: make sure, this works with convert as well (by merging subtypes)
+
+      p <- file.path(".", "v1.0", "bof_eaf_production")
       bofLabels <- c("Basic\r\nBessemer\r\nThomas", "Pure\r\nOxygen", "Oxygen")
       eafLabels <- c("Electric")
       otherLabels <- c("Open\r\nHearth\r\nS. M.", "OH", "Other")
 
       df <- NULL
 
+      # read in data from 1974 - 1982 ----
+
       for (y in seq(1974, 1981, 1)) {
-        f <- readxl::read_excel(path = file.path(
-          ".", "v1.0", "bof_eaf_production",
-          paste0("Production_by_Process_", y, ".xlsx")
+        f <- readxl::read_excel(path = file.path(p, paste0("Production_by_Process_", y, ".xlsx")
         )) %>%
           tidyr::pivot_longer(c(-"country_name"), names_to = "variable") %>%
           mutate(
@@ -131,10 +113,28 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         df <- rbind(df, f)
       }
 
-      df <- toolCleanSteelRegions(df)
-      x <- as.magpie(df[, c("country_name", "year", "variable", "value")], spatial = 1)[, , c("BOF", "EAF", "Other")]
+      # read in data from 80s and 90 ----
 
+      filenames <- c(
+        "BOF_production_80s.xlsx",
+        "BOF_production_90s.xlsx",
+        "EAF_production_80s.xlsx",
+        "EAF_production_90s.xlsx"
+      )
+
+      for (f in filenames) {
+        tmp <- readxl::read_excel(path = file.path(p, f)) %>%
+          tidyr::pivot_longer(c(-"country_name"), names_to = "year") %>%
+          mutate("variable" = gsub("^([A-Z]{3})_.*", "\\1", f),
+                 "year" = as.numeric(.data$year))
+        df <- rbind(df, tmp)
+      }
+
+      df <- toolCleanSteelRegions(df)
+
+      x <- as.magpie(df, spatial = 1)
       x <- x * 1e3 # convert from kt to t
+      x <- x[, , c("BOF", "EAF", "Other")]
 
       return(x)
     },
@@ -257,10 +257,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste(
-      "Invalid subtype -- supported subtypes are:",
-      names(switchboard)
-    ))
+    stop("Invalid subtype -- supported subtypes are:",  paste0(names(switchboard), collapse = ", "))
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())

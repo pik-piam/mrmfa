@@ -22,28 +22,10 @@ calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(
 
   # Internal functions ----
 
-  .splitHistoricalSteelProductionData <- function(productionByProcess) {
+  .cleanMergeProcessData <- function(byProcessData, CurrentData) {
 
-    isoHistoricalMap <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
-    countries <- getItems(productionByProcess, dim = 1)
-    newCountries <- isoHistoricalMap[isoHistoricalMap$fromISO %in% countries, "toISO"]
-    missingCountries <- setdiff(newCountries, countries)
-
-    productionByProcess <- add_columns(productionByProcess, addnm = missingCountries, dim = 1, fill = 0)
-    productionByProcess <- toolISOhistorical(productionByProcess, overwrite = TRUE) %>% suppressWarnings()
-
-    # Add SCG (former Serbia and Montenegro to Serbia and delete it)
-    productionByProcess["SRB", ] <- productionByProcess["SCG", ] + productionByProcess["SRB", ]
-    productionByProcess <- productionByProcess[!rownames(productionByProcess) %in% "SCG", ]
-
-    return(productionByProcess)
-  }
-
-  .cleanMergeProcessData <- function(byProcessData, RecentData, CurrentData) {
-    data <- toolMerge2D(byProcessData, RecentData)
-    data <- .splitHistoricalSteelProductionData(data)
-    data <- toolMerge2D(data, CurrentData)
-
+    getNames(byProcessData) <- "value"
+    data <- mbind(byProcessData, CurrentData)
     data <- toolCountryFill(data, verbosity = 2)
     data <- toolInterpolate2D(data, method = "linear")
 
@@ -115,17 +97,15 @@ calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(
 
   # Load data ----
 
-  bofRecent <- readSource("WorldSteelDigitised", subtype = "bofProduction", convert = FALSE)
+  byProcess <- readSource("WorldSteelDigitised", subtype = "productionByProcess")
   bofCurrent <- readSource("WorldSteelDatabase", subtype = "bofProduction")
-  byProcess <- readSource("WorldSteelDigitised", subtype = "productionByProcess", convert = FALSE)
-  eafRecent <- readSource("WorldSteelDigitised", subtype = "eafProduction", convert = FALSE)
   eafCurrent <- readSource("WorldSteelDatabase", subtype = "eafProduction")
   production <- calcOutput("StProduction", aggregate = FALSE)
 
   # Clean data ----
 
-  bof <- .cleanMergeProcessData(byProcess[, , "BOF"], bofRecent, bofCurrent)
-  eaf <- .cleanMergeProcessData(byProcess[, , "EAF"], eafRecent, eafCurrent)
+  bof <- .cleanMergeProcessData(byProcess[, , "BOF"], bofCurrent)
+  eaf <- .cleanMergeProcessData(byProcess[, , "EAF"], eafCurrent)
 
   # Combine BOF, EAF, Other
   together <- .createCombinedProcessData(bof, eaf, production)

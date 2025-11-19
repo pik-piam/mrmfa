@@ -4,7 +4,6 @@
 #' @importFrom utils read.csv2
 #' @param x Magpie object
 convertWorldSteelDigitised <- function(x, subtype) {
-
   # TODO: make sure all the subtypes have a working convert function (so far, only "production)
 
   # add regions not present in the magpie object yet needed for toolISOhistorical to work
@@ -14,7 +13,6 @@ convertWorldSteelDigitised <- function(x, subtype) {
     filter(.data$fromISO %in% countries)
   newCountries <- unique(mapping$toISO)
   missingCountries <- setdiff(newCountries, countries)
-
   x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
 
   # use additional mapping for BLX
@@ -25,6 +23,13 @@ convertWorldSteelDigitised <- function(x, subtype) {
   )
 
   y <- toolISOhistorical(x, additional_mapping = blx, overwrite = TRUE)
+
+  # add SCG (former Serbia and Montenegro to Serbia and delete it)
+  if (subtype == "productionByProcess") {
+    y["SRB", ] <- y["SCG", ]
+    y <- y["SCG", , invert = TRUE]
+  }
+
   z <- toolCountryFill(y, verbosity = 2)
 
   return(z)
