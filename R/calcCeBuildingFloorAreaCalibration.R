@@ -17,7 +17,6 @@ calcCeBuildingFloorAreaCalibration <- function(plotting = NULL) {
 
   # EUBUCCO data for 2020 (m2)
   eubucco_floor_area <- readSource("EUBUCCO")
-  eubucco_floor_area[is.na(eubucco_floor_area)] <- 0 # TODO remove; this is just for plotting
 
   # ---Calculate correction factor (in progress)---
 
@@ -115,7 +114,16 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
                  filename = filename, ncol = length(floorlist), nrow = 1)
 
   # TODO European plot (EUBUCCO Data)
-
+  filename <- paste0(savefolder, "EU27", ".png")
+  eubucco_mask <- !is.na(eubucco_floor_area)
+  floorlist <- list(
+    "(1) EDGE-B" = edgeb_floor_area * eubucco_mask,
+    "(2) GEM" = gem_floor_area * eubucco_mask,
+    "(3) GHS-OBAT" = ghsoobat_floor_area * eubucco_mask,
+    "(4) EUBUCCO" = eubucco_floor_area * eubucco_mask
+  )
+  toolMplotMulti(floorlist, title = "EU27", xlab = "", ylab = ylab,
+                 filename = filename, ncol = length(floorlist), nrow = 1)
 
   # country plots
   countries <- getItems(gem_floor_area, dim = 1)
@@ -146,11 +154,12 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
 #' @param title A string to be used as the plot's main title. Defaults to NULL.
 #' @param nrow Number of rows for the facet layout (passed to facet_wrap).
 #' @param ncol Number of columns for the facet layout (passed to facet_wrap).
+#' @param ignore_na Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) before plotting. Defaults to TRUE.
 #' @author Bennet Weiss, Pascal Sauer (mplot), Patrick Rein (mplot)
 #' @importFrom rlang .data
 #' @export
 toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NULL, ylab = NULL, filename = NULL,
-                           nrow = NULL, ncol = NULL) {
+                           nrow = NULL, ncol = NULL, ignore_na = TRUE) {
 
   # --- Handle single object or list of objects ---
   if (inherits(px, "magpie")) {
@@ -210,6 +219,12 @@ toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab 
     currentPx <- pxList[[i]]
     currentName <- names(pxList)[i]
 
+    if (ignore_na) {
+      # Replace all NA, NaN, Inf, and -Inf values with 0.
+      # This cleans the data before any transformations or aggregations.
+      currentPx <- magclass::replace_non_finite(currentPx, replace = 0)
+    }
+
     # Ensure all dimensions have items or are somewhat normalized
     if (is.null(magclass::getItems(currentPx, 1))) {
       magclass::getItems(currentPx, 1) <- "global"
@@ -253,6 +268,12 @@ toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab 
     # Convert to data.frame
     df <- as.data.frame(currentPx, rev = 3)
 
+    if (ignore_na) {
+      # Filter out rows where the value column is NA.
+      # The value column is named ".value" when using rev = 3.
+      df <- df[!is.na(df$.value), ]
+    }
+
     # --- Add source column if this is a list ---
     if (!isSingleObject) {
       df$source <- currentName
@@ -294,7 +315,7 @@ toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab 
                             color = .data[[dataDimName]], # This becomes fill
                             group = .data[[dataDimName]])
 
-    plot <- plot + ggplot2::geom_bar(linewidth = 1.5, mapping = bar_aes)
+      plot <- plot + ggplot2::geom_bar(linewidth = 1.5, mapping = bar_aes)
   }
 
   # --- Faceting ---
