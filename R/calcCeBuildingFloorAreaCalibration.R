@@ -13,7 +13,7 @@ calcCeBuildingFloorAreaCalibration <- function(plotting = NULL) {
     type = "CeEDGEBFloorSpace",
     aggregate = FALSE
   )[,2020]
-  edgeb_floor_area <- dimReduce(edgeb_floor_area)
+  edgeb_floor_area <- dimReduce(edgeb_floor_area) # remove year 2020 dimension
 
   # EUBUCCO data for 2020 (m2)
   eubucco_floor_area <- readSource("EUBUCCO")
@@ -155,11 +155,12 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
 #' @param nrow Number of rows for the facet layout (passed to facet_wrap).
 #' @param ncol Number of columns for the facet layout (passed to facet_wrap).
 #' @param ignore_na Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) before plotting. Defaults to TRUE.
+#' @param show_shares Logical indicating whether stacked bars should display percentage shares for each category. Defaults to FALSE.
 #' @author Bennet Weiss, Pascal Sauer (mplot), Patrick Rein (mplot)
 #' @importFrom rlang .data
 #' @export
 toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NULL, ylab = NULL, filename = NULL,
-                           nrow = NULL, ncol = NULL, ignore_na = TRUE) {
+                           nrow = NULL, ncol = NULL, ignore_na = TRUE, show_shares = TRUE) {
 
   # --- Handle single object or list of objects ---
   if (inherits(px, "magpie")) {
@@ -199,6 +200,11 @@ toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab 
   if (grepl(".", temporalDimName, fixed = TRUE)) {
     temporalDimName <- "temporal"
     temporalCategorial <- TRUE # Has subdimensions, treat as categorial
+  }
+
+  if (show_shares && !temporalCategorial) {
+    warning("'show_shares' is only available for categorical temporal data (stacked bar plots). Ignoring.")
+    show_shares <- FALSE
   }
 
   # Get Spatial dim name
@@ -290,6 +296,9 @@ toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab 
   # Base plot
   plot <- ggplot2::ggplot(data = px_df, ggplot2::aes(x = .data[[temporalDimName]]))
 
+  facetBySpatial <- !global
+  facetBySource  <- !isSingleObject && temporalCategorial
+
   if (!temporalCategorial) {
     # --- LINE PLOT ---
     # Define aesthetics
@@ -310,17 +319,46 @@ toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab 
 
   } else {
     # --- BAR PLOT ---
-    # Original 'color' maps to 'fill' for bars
     bar_aes <- ggplot2::aes(weight = .data$.value,
-                            color = .data[[dataDimName]], # This becomes fill
+                            color = .data[[dataDimName]],
                             group = .data[[dataDimName]])
 
-      plot <- plot + ggplot2::geom_bar(linewidth = 1.5, mapping = bar_aes)
+    plot <- plot + ggplot2::geom_bar(linewidth = 1.5, mapping = bar_aes)
+
+    if (show_shares) {
+      groupCols <- c(temporalDimName)
+      if (facetBySpatial) {
+        groupCols <- c(groupCols, spatialDimName)
+      }
+      if (!isSingleObject) {
+        groupCols <- c(groupCols, "source")
+      }
+
+      if (length(groupCols) == 0) {
+        totals <- sum(px_df$.value)
+        totals <- rep(totals, nrow(px_df))
+      } else {
+        totals <- ave(px_df$.value, interaction(px_df[groupCols], drop = TRUE, lex.order = TRUE), FUN = sum)
+      }
+
+      share_df <- px_df
+      share_df$share <- ifelse(totals > 0, share_df$.value / totals, NA_real_)
+      share_df <- share_df[!is.na(share_df$share) & share_df$share > 0, , drop = FALSE]
+
+      if (nrow(share_df) > 0) {
+        share_df$label <- sprintf("%.1f%%", share_df$share * 100)
+        plot <- plot + ggplot2::geom_text(
+          data = share_df,
+          mapping = ggplot2::aes(y = .data$.value, label = .data$label, group = .data[[dataDimName]]),
+          position = ggplot2::position_stack(vjust = 0.5),
+          show.legend = FALSE,
+          color = "white"
+        )
+      }
+    }
   }
 
   # --- Faceting ---
-  facetBySpatial <- !global
-  facetBySource  <- !isSingleObject && temporalCategorial # Only facet source for bars
 
   if (facetBySpatial && !facetBySource) {
     # Case 1: Spatial only

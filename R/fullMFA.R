@@ -92,6 +92,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     calcOutput("CeBuiltLifespan", file = "ce_use_lifetime_mean.cs4r")
     calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = 1900:2023)
     # Service demand / bottom-up
+    calcOutput("CeFloorSpace", file = "ce_floorspace.cs4r")
     calcOutput("CeBuildingsMI", file = "ce_ConcreteBuildingMI.cs4r", subtype = "concrete")
     calcOutput("CeBuildingSplit", file = "ce_BuildingSplit.cs4r")
   }
