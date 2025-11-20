@@ -8,15 +8,11 @@
 #' list of metadata (in calcOutput format).
 calcStProduction <- function() {
 
-  prodHist <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
   prodRecent <- readSource("WorldSteelDigitised", subtype = "production")
-  prodCurrent <- readSource("WorldSteelDatabase", subtype = "production")
-
-  # Interpolate ----
   prodRecent <- toolInterpolate2D(prodRecent, method = "linear")
-  prodCurrent <- toolInterpolate2D(prodCurrent, method = "linear")
 
-  # Extrapolate ----
+  prodCurrent <- readSource("WorldSteelDatabase", subtype = "production")
+  prodCurrent <- toolInterpolate2D(prodCurrent, method = "linear")
 
   # extrapolate current by recent for regions where data overlaps
   prod <- toolBackcastByReference2D(
@@ -27,9 +23,13 @@ calcStProduction <- function() {
 
   # calculate estimate of World Production
   sumNonNaRegions <- dimSums(prod, dim = 1, na.rm = TRUE)
+  getItems(sumNonNaRegions, dim = 1) <- "GLO"
+
+
+  prodWorld <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
 
   worldRef <- toolBackcastByReference2D(
-    prodHist,
+    prodWorld,
     ref = sumNonNaRegions,
     doForecast = TRUE,
     doInterpolate = FALSE

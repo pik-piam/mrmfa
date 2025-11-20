@@ -44,6 +44,10 @@ toolBackcastByReference2D <- function(x,
     if (length(intersect(getItems(x, dim = 2), getItems(ref, dim = 2))) == 0) {
       stop("x and ref must share at least one year for backcasting.")
     }
+
+    if (is.null(getRegions(ref))) {
+      stop("no regions names found in reference")
+    }
   }
 
   .adaptRefRegions <- function(x, ref) {
