@@ -12,23 +12,26 @@
 #' @return Steel trade across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
 calcStTrade <- function(subtype = "imports") {
-
   # helper functions ----
 
   .splitIndirectTrade <- function(trade, shares) {
+    # remove regions containing only NAs
+    remove <- magpply(shares, function(y) all(is.na(y)), MARGIN = 1)
+    shares <- shares[!remove, , ]
+
     # Multiply indirect trade with shares for intersecting countries
     intersectingCountries <- intersect(getItems(trade, 1), getItems(shares, 1))
-    tradeIntersecting <- trade[intersectingCountries, ] * shares[intersectingCountries, ]
+    tradeIntersecting <- trade[intersectingCountries, , ] * shares[intersectingCountries, , ]
 
     # For non-intersecting countries, use global average shares
     # assuming all countries with data have same weight. Calculation works because rows sum to 1
     averageShare <- colSums(shares) / nregions(shares)
     nonIntersectingCountries <- setdiff(getItems(trade, 1), intersectingCountries)
-    tradeNonIntersecting <- trade[nonIntersectingCountries, ] * averageShare
+    tradeNonIntersecting <- trade[nonIntersectingCountries, , ] * averageShare
 
     # Combine both
-    trade <- mbind(tradeIntersecting, tradeNonIntersecting)
-    trade <- toolCountryFill(trade, verbosity = 2, fill = 0) # Fill missing countries with zeroes
+    trade <- mbind(tradeIntersecting, tradeNonIntersecting)# %>%
+      #collapseDim()
 
     return(trade)
   }
@@ -41,9 +44,13 @@ calcStTrade <- function(subtype = "imports") {
   database <- readSource("WorldSteelDatabase", subtype = subtype)
 
   if (subtype == "indirectImports") {
-    digitised <- readSource("WorldSteelDigitised", subtype = "indirectImportsByCategory2013", convert = FALSE)
+    trade <- readSource("WorldSteelDigitised", subtype = "indirectTrade", convert = F)
+
+    digitised <- calcOutput("IndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "imports"] %>%
+      collapseDim()
   } else if (subtype == "indirectExports") {
-    digitised <- readSource("WorldSteelDigitised", subtype = "indirectExportsByCategory2013", convert = FALSE)
+    digitised <- calcOutput("IndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "exports"] %>%
+      collapseDim()
   } else {
     digitised <- readSource("WorldSteelDigitised", subtype)
   }
@@ -68,8 +75,7 @@ calcStTrade <- function(subtype = "imports") {
   # Split indirect trade
   if (indirect) {
     # Split indirect trade into direct trade
-    shares <- digitised
-    trade <- .splitIndirectTrade(trade, shares)
+    trade <- .splitIndirectTrade(trade, shares = digitised)
   }
 
   # Finalize
@@ -87,5 +93,3 @@ calcStTrade <- function(subtype = "imports") {
 
   return(trade)
 }
-
-

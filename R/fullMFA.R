@@ -47,10 +47,10 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
   #  ------------- STEEL ----------------
   if (runSection("steel")) {
 
-    # Production
+    # Production - TODO
     calcOutput("StProduction", file = "st_steel_production.cs4r")
 
-    # Trade
+    # Trade - TODO, here
     calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports")
     calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports")
     calcOutput("StTrade", file = "st_steel_scrap_imports.cs4r", subtype = "scrapImports")
@@ -58,13 +58,13 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     calcOutput("StTrade", file = "st_steel_indirect_imports.cs4r", subtype = "indirectImports")
     calcOutput("StTrade", file = "st_steel_indirect_exports.cs4r", subtype = "indirectExports")
 
-    # Parameters
+    # Parameters - TODO
     calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
     calcOutput("StLifetimes", subtype = "Cooper2014", file = "st_lifetimes.cs4r", aggregate = FALSE)
     calcOutput("StRecoveryRate", subtype = "WorldSteel", file = "st_recovery_rate.cs4r", aggregate = FALSE)
     calcOutput("StSectorSplits", subtype = "Pauliuk2013", file = "st_sector_splits.cs4r", aggregate = FALSE)
 
-    # Static Parameters
+    # Static Parameters - TODO
     calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
     calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_BOF_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "productionLossRate", file = "st_production_loss_rate.cs4r", aggregate = FALSE)
@@ -72,19 +72,21 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     calcOutput("StCullenStaticParameters", subtype = "formingYield", file = "st_forming_yield.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "fabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
 
-    # Scrap consumption
+    # Scrap consumption - TODO
     calcOutput("StScrapConsumption", file = "st_scrap_consumption.cs4r", subtype = "assumptions")
     calcOutput("StScrapConsumption", file = "st_scrap_consumption_no_assumptions.cs4r", subtype = "noAssumptions", warnNA = FALSE)
 
-    # Pig Iron
+    # Pig Iron - TODO
     calcOutput("StPigIronProduction", file = "st_pig_iron_production.cs4r")
     calcOutput("StPigIronTrade", file = "st_pig_iron_imports.cs4r", subtype = "imports")
     calcOutput("StPigIronTrade", file = "st_pig_iron_exports.cs4r", subtype = "exports")
 
-    # Direct reduced Iron
+    # Direct reduced Iron - TODO
     calcOutput("StDRIData", file = "st_dri_production.cs4r", subtype = "production")
     calcOutput("StDRIData", file = "st_dri_imports.cs4r", subtype = "imports")
     calcOutput("StDRIData", file = "st_dri_exports.cs4r", subtype = "exports")
+
+    # calcOutput("StProductionByProcess") # TODO
   }
 
   #  ------------- CEMENT -----------

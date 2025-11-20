@@ -74,7 +74,8 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
     x <- toolISOhistorical(x, overwrite = TRUE, mapping = historicalMapping)
   }
 
-  x <- x[!is.na(getItems(x, dim = 1)), ] # remove rows with NA in country_name column
+  # remove rows with NA in country_name column
+  x <- x[!is.na(getItems(x, dim = 1)), ]
   x <- toolCountryFill(x, verbosity = 2)
 
   return(x)

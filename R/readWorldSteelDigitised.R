@@ -2,12 +2,13 @@
 #' @description
 #' Read Data from World Steel Association 1978-2022 yearbooks digitized to Excel sheets
 #' E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Yearbook-1982.pdf
+#' @param subtype
 #' Available subtypes are:
 #' 'worldProduction', 'production', 'productionByProcess',
 #' 'imports', 'exports', 'scrapImports', 'scrapExports',
 #' 'scrapConsumptionYearbooks', 'scrapConsumptionFigures',
 #' 'specificScrapConsumption_70s', 'worldScrapConsumption',
-#' 'indirectImportsByCategory_2013', 'indirectExportsByCategory_2013'
+#' 'indirectTrade'
 #' @author Merlin Jo Hosak, Falk Benke
 #'
 readWorldSteelDigitised <- function(subtype = "worldProduction") {
@@ -31,31 +32,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
 
     x <- as.magpie(df, spatial = 1)
     x <- x * 1e3 # convert from kt to t
-    return(x)
-  }
-
-  .readIndirectTradeFormat <- function(subtype, version) {
-    path <- file.path(".", version, "indirect_trade_2013", paste0("WSA_", subtype, "_categories_2013.xlsx"))
-    df <- readxl::read_excel(path = path) %>%
-      tidyr::pivot_longer(c(-"country_name"), names_to = "variable")
-
-    df <- toolCleanSteelRegions(df)
-
-    x <- as.magpie(df, spatial = "country_name") %>%
-      add_columns(addnm = c("Construction", "Machinery", "Transport", "Products", "Total"), dim = "variable")
-
-    x[, , "Construction"] <- 0
-    x[, , "Machinery"] <- x[, , "Mechanical Machinery"]
-    x[, , "Transport"] <- x[, , "Automotive"] + x[, , "Other transport"]
-    x[, , "Products"] <- x[, , "Electrical Equipment"] + x[, , "Metal products"] + x[, , "Domestic appliances"]
-    x[, , "Total"] <- x[, , "Machinery"] + x[, , "Transport"] + x[, , "Products"]
-
-    x[, , "Machinery"] <- x[, , "Machinery"] / x[, , "Total"]
-    x[, , "Transport"] <- x[, , "Transport"] / x[, , "Total"]
-    x[, , "Products"] <- x[, , "Products"] / x[, , "Total"]
-
-    x <- x[, , c("Construction", "Machinery", "Products", "Transport")]
-
     return(x)
   }
 
@@ -85,7 +61,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       return(x)
     },
     "productionByProcess" = function() {
-
       p <- file.path(".", "v1.0", "bof_eaf_production")
       bofLabels <- c("Basic\r\nBessemer\r\nThomas", "Pure\r\nOxygen", "Oxygen")
       eafLabels <- c("Electric")
@@ -96,8 +71,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       # read in data from 1974 - 1982 ----
 
       for (y in seq(1974, 1981, 1)) {
-        f <- readxl::read_excel(path = file.path(p, paste0("Production_by_Process_", y, ".xlsx")
-        )) %>%
+        f <- readxl::read_excel(path = file.path(p, paste0("Production_by_Process_", y, ".xlsx"))) %>%
           tidyr::pivot_longer(c(-"country_name"), names_to = "variable") %>%
           mutate(
             "year" = y,
@@ -125,8 +99,10 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       for (f in filenames) {
         tmp <- readxl::read_excel(path = file.path(p, f)) %>%
           tidyr::pivot_longer(c(-"country_name"), names_to = "year") %>%
-          mutate("variable" = gsub("^([A-Z]{3})_.*", "\\1", f),
-                 "year" = as.numeric(.data$year))
+          mutate(
+            "variable" = gsub("^([A-Z]{3})_.*", "\\1", f),
+            "year" = as.numeric(.data$year)
+          )
         df <- rbind(df, tmp)
       }
 
@@ -246,18 +222,38 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       x <- x * 1e3 # convert from kT to T
       return(x)
     },
-    "indirectImportsByCategory2013" = function() {
-      x <- .readIndirectTradeFormat("indirect_imports", version = version)
-      return(x)
-    },
-    "indirectExportsByCategory2013" = function() {
-      x <- .readIndirectTradeFormat("indirect_exports", version = version)
+    "indirectTrade" = function() {
+
+      files <- c(
+        "WSA_indirect_exports_categories_2013.xlsx",
+        "WSA_indirect_imports_categories_2013.xlsx"
+      )
+
+      df <- NULL
+
+      for (f in files) {
+        path <- file.path(".", version, "indirect_trade_2013", f)
+
+        tmp <- readxl::read_excel(path = path) %>%
+          tidyr::pivot_longer(c(-"country_name"), names_to = "variable") %>%
+          mutate(
+            type = gsub("^WSA_indirect_(.*)_c.*", "\\1", f),
+            year = 2013
+          )
+
+        df <- rbind(df, tmp)
+      }
+
+      df <- toolCleanSteelRegions(df)
+
+      x <- as.magpie(df, spatial = "country_name")
+
       return(x)
     }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop("Invalid subtype -- supported subtypes are:",  paste0(names(switchboard), collapse = ", "))
+    stop("Invalid subtype -- supported subtypes are:", paste0(names(switchboard), collapse = ", "))
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())
