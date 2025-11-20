@@ -30,9 +30,6 @@ convertWorldSteelDigitised <- function(x, subtype) {
 
     mapping <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
       filter(.data$fromISO %in% countries)
-    newCountries <- unique(mapping$toISO)
-    missingCountries <- setdiff(newCountries, countries)
-    x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
 
     # use additional mapping for BLX
     blx <- data.frame(
@@ -41,7 +38,18 @@ convertWorldSteelDigitised <- function(x, subtype) {
       lastYear = "y2003"
     )
 
-    y <- toolISOhistorical(x, additional_mapping = blx, overwrite = TRUE)
+    # use additional mapping for SAC
+    sac <- data.frame(
+      fromISO = "SAC",
+      toISO = c("BWA", "ZAF", "LSO", "SWZ", "NAM"),
+      lastYear = "y2005"
+    )
+
+    newCountries <- c(unique(mapping$toISO), blx$toISO, sac$toISO)
+    missingCountries <- setdiff(newCountries, countries)
+    x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
+
+    y <- toolISOhistorical(x, additional_mapping = rbind(blx, sac), overwrite = TRUE)
 
     # add SCG (former Serbia and Montenegro to Serbia and delete it)
     if (subtype == "productionByProcess") {

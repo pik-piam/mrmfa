@@ -9,9 +9,11 @@
 #' @author Merlin Jo Hosak
 #' @param subtype Type of trade data to retrieve. Options: "imports", "exports",
 #' "scrap_imports", "scrap_exports", "indirectImports", "indirectExports"
+#'
 #' @return Steel trade across all regions from 1900-2022 as magpie within
-#' list of metadata (in calcOutput format).
+#' list of metadata.
 calcStTrade <- function(subtype = "imports") {
+
   # helper functions ----
 
   .splitIndirectTrade <- function(trade, shares) {

@@ -115,7 +115,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       return(x)
     },
     "imports" = function() {
-      # TODO: ask JD if we want to include South African Customs Union (needs to be disaggregated)
       filenames <- c(
         "imports_70s.xlsx",
         "imports_80s.xlsx",

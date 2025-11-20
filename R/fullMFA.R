@@ -47,7 +47,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
   #  ------------- STEEL ----------------
   if (runSection("steel")) {
 
-    # Production - TODO
+    # Production
     calcOutput("StProduction", file = "st_steel_production.cs4r")
 
     # Trade - TODO, here
