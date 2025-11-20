@@ -15,6 +15,7 @@ calcStTrade <- function(subtype = "imports") {
   # helper functions ----
 
   .splitIndirectTrade <- function(trade, shares) {
+
     # remove regions containing only NAs
     remove <- magpply(shares, function(y) all(is.na(y)), MARGIN = 1)
     shares <- shares[!remove, , ]
@@ -31,7 +32,8 @@ calcStTrade <- function(subtype = "imports") {
 
     # Combine both
     trade <- mbind(tradeIntersecting, tradeNonIntersecting)# %>%
-      #collapseDim()
+    # TODO after validation
+    #collapseDim()
 
     return(trade)
   }
@@ -40,20 +42,7 @@ calcStTrade <- function(subtype = "imports") {
 
   indirect <- subtype %in% c("indirectImports", "indirectExports")
 
-  production <- calcOutput("StProduction", aggregate = FALSE)
   database <- readSource("WorldSteelDatabase", subtype = subtype)
-
-  if (subtype == "indirectImports") {
-    trade <- readSource("WorldSteelDigitised", subtype = "indirectTrade", convert = F)
-
-    digitised <- calcOutput("IndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "imports"] %>%
-      collapseDim()
-  } else if (subtype == "indirectExports") {
-    digitised <- calcOutput("IndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "exports"] %>%
-      collapseDim()
-  } else {
-    digitised <- readSource("WorldSteelDigitised", subtype)
-  }
 
   # Interpolate and Extrapolate
   database <- toolInterpolate2D(database)
@@ -63,10 +52,12 @@ calcStTrade <- function(subtype = "imports") {
   } else { # indirect trade isn't given in digitised yearbooks, only digitised 2013 shares
     # if values are too small, they are not fit for extrapolation by reference
     # (potentially creating infinite/unrealistic values)
+    digitised <- readSource("WorldSteelDigitised", subtype)
     digitised[digitised < 1] <- NA
     trade <- toolBackcastByReference2D(database, ref = digitised)
   }
 
+  production <- calcOutput("StProduction", aggregate = FALSE)
   trade <- toolBackcastByReference2D(trade, ref = production)
 
   # use constant (last observation carried forward) interpolation for remaining NaN values in the future
@@ -74,21 +65,27 @@ calcStTrade <- function(subtype = "imports") {
 
   # Split indirect trade
   if (indirect) {
+    if (subtype == "indirectImports") {
+      shares <- calcOutput("IndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "imports"] %>%
+        collapseDim()
+    } else if (subtype == "indirectExports") {
+      shares <- calcOutput("IndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "exports"] %>%
+        collapseDim()
+    }
     # Split indirect trade into direct trade
-    trade <- .splitIndirectTrade(trade, shares = digitised)
+    trade <- .splitIndirectTrade(trade, shares = shares)
   }
 
   # Finalize
   trade[is.na(trade)] <- 0 # fill remaining NA with zero
 
+  # TODO after validation
+  #getNames(trade) <- NULL
   trade <- list(
     x = trade,
     weight = NULL,
     unit = "Tonnes",
-    description = paste0(
-      "Steel trade:", subtype,
-      "from 1900-2021 yearly for the SIMSON format."
-    )
+    description = paste0("Steel trade:", subtype, "from 1900-2021 yearly for the SIMSON format.")
   )
 
   return(trade)

@@ -25,7 +25,6 @@ toolBackcastByReference2D <- function(x,
                                       maxN = 5,
                                       doForecast = FALSE,
                                       doMakeZeroNA = FALSE) {
-
   # internal functions ----
 
   .checkBackcastByReference2D <- function(x, ref) {
@@ -60,11 +59,11 @@ toolBackcastByReference2D <- function(x,
     )
 
     if ("GLO" %in% refRegions) {
-      newRef[, ] <- ref["GLO", ] # if GLO is in ref, copy it to all regions
+      newRef[, , ] <- ref["GLO", , ] # if GLO is in ref, copy it to all regions
     }
 
     # Fill rest of new ref with existing ref data
-    newRef[refRegions %in% xRegions, ] <- ref[refRegions %in% xRegions, ]
+    newRef[refRegions %in% xRegions, , ] <- ref[refRegions %in% xRegions, , ]
 
     return(newRef)
   }
@@ -86,7 +85,8 @@ toolBackcastByReference2D <- function(x,
     ratios,
     nSharedYears = nyears(ratios),
     maxN = 5,
-    doForecast = FALSE) { # TODO Check if you can do that in R parameters in function statements
+    doForecast = FALSE
+  ) { # TODO Check if you can do that in R parameters in function statements
     baseWeights <- nSharedYears:1
     if (doForecast) {
       baseWeights <- 1:nSharedYears
@@ -153,10 +153,10 @@ toolBackcastByReference2D <- function(x,
 
   if (doForecast) {
     # cut ref if it extends to the past over x (not necessary for backcasting)
-    ref <- ref[, refYears >= min(xYears)]
+    ref <- ref[, refYears >= min(xYears), ]
   } else {
     # cut ref if it extends to the future over x (not necessary for backcasting)
-    ref <- ref[, refYears <= max(xYears)]
+    ref <- ref[, refYears <= max(xYears), ]
   }
   refYears <- getItems(ref, dim = 2)
 
@@ -164,7 +164,7 @@ toolBackcastByReference2D <- function(x,
   nSharedYears <- length(sharedYears)
 
   # calculate ratios and weights
-  ratios <- x[, sharedYears] / ref[, sharedYears]
+  ratios <- x[, sharedYears, ] / ref[, sharedYears, ]
   weights <- .calcBackcastWeights(ratios, nSharedYears, maxN = maxN, doForecast = doForecast)
 
   finalRatio <- rowSums(ratios * weights, na.rm = TRUE)
@@ -180,13 +180,12 @@ toolBackcastByReference2D <- function(x,
     sets = names(dimnames(x))
   )
 
-  final[, xYears] <- x[, xYears]
+  final[, xYears, ] <- x[, xYears, ]
 
   refExtended <- final # simple copy of structure
-  refExtended[, refYears] <- scaledRef[, refYears]
+  refExtended[, refYears, ] <- scaledRef[, refYears, ]
 
   # fill final with refExtended where final is NA
-
   final[is.na(final)] <- refExtended[is.na(final)] # update gaps and not existing data in x/final
 
   if (doMakeZeroNA) {
