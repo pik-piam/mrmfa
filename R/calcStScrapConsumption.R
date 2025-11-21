@@ -39,7 +39,6 @@ calcStScrapConsumption <- function(subtype) {
     # historic scrap production needed to multiply with historic shares as values are needed for former countries
     historic <- historicShare * prodHist[getItems(historicShare, dim = 1), getItems(historicShare, dim = 2), ]
 
-
     # get recent and current consumption ----
     recent <- readSource("WorldSteelDigitised", subtype = "scrapConsumptionYearbooks", convert = FALSE)
     current <- readSource("WorldSteelDigitised", subtype = "scrapConsumptionFigures", convert = FALSE)
@@ -96,6 +95,10 @@ calcStScrapConsumption <- function(subtype) {
     )
 
     scrapConsumptionBIR <- readSource("BIR", subtype = "scrapConsumption")
+
+    # remove regions containing only NAs
+    remove <- magpply(scrapConsumptionBIR, function(y) all(is.na(y)), MARGIN = 1)
+    scrapConsumptionBIR <- scrapConsumptionBIR[!remove, , ]
 
     scrapConsumption[getItems(scrapConsumptionWS, dim = 1),
                      getItems(scrapConsumptionWS, dim = 2), ] <- scrapConsumptionWS
@@ -179,7 +182,7 @@ calcStScrapConsumption <- function(subtype) {
 
       # finalize ----
       scAssumptions[is.na(scAssumptions)] <- 0 # Assume 0 scrap consumption for remaining cells
-      scAssumptions <- scAssumptions[, seq(1990, 2022, 1), ] # Cut to the years 1900-2022
+      scAssumptions <- scAssumptions[, seq(1900, 2022, 1), ] # Cut to the years 1900-2022
 
       result <- list(
         x = scAssumptions,

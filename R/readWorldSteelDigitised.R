@@ -12,12 +12,11 @@
 #' @author Merlin Jo Hosak, Falk Benke
 #'
 readWorldSteelDigitised <- function(subtype = "worldProduction") {
-
   version <- "v1.0"
 
   # helper functions ----
 
-  # common format: "country_name", followed by year colums
+  # common format: "country_name", followed by year columns
   .readCommonSourceFormat <- function(filenames, type, version) {
     paths <- file.path(version, type, filenames)
 
@@ -31,7 +30,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
     df <- toolCleanSteelRegions(df)
 
     x <- as.magpie(df, spatial = 1)
-    x <- x * 1e3 # convert from kt to t
+
     return(x)
   }
 
@@ -54,6 +53,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         "production_00s.xlsx"
       )
       x <- .readCommonSourceFormat(filenames, type = "production", version = version)
+      x <- x * 1e3 # convert from kt to t
 
       # fix mislabelled data for 1991-1999 (should be DEU, but is BRG)
       x["DEU", seq(1991, 1999), ] <- x["BRG", seq(1991, 1999), ]
@@ -122,6 +122,8 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         "imports_00s.xlsx"
       )
       x <- .readCommonSourceFormat(filenames, type = "trade", version = version)
+      x <- x * 1e3 # convert from kt to t
+
       return(x)
     },
     "exports" = function() {
@@ -132,6 +134,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         "exports_00s.xlsx"
       )
       x <- .readCommonSourceFormat(filenames, type = "trade", version = version)
+      x <- x * 1e3 # convert from kt to t
 
       return(x)
     },
@@ -144,6 +147,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       )
 
       x <- .readCommonSourceFormat(filenames, type = "scrap_trade", version = version)
+      x <- x * 1e3 # convert from kt to t
 
       # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
       x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
@@ -159,6 +163,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         "scrap_exports_00s.xlsx"
       )
       x <- .readCommonSourceFormat(filenames, type = "scrap_trade", version = version)
+      x <- x * 1e3 # convert from kt to t
 
       # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
       x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
@@ -168,17 +173,32 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
     },
     "scrapConsumptionYearbooks" = function() {
       # TODO: make sure, this works with convert as well (by merging subtypes)
-      filenames <-
-        c(
-          "scrap_consumption_75s.xlsx",
-          "scrap_consumption_80s.xlsx",
-          "scrap_consumption_85s.xlsx",
-          "scrap_consumption_90s.xlsx"
-        )
 
-      # Combine 5 year steps into one via loader function
-      # Even though datasets are ten years each, merging works and the more recent data is taken (overwrites the old one)
-      x <- .readCommonSourceFormat(filenames, type = "scrap_consumption", version = version)
+      # read in only years that are not superseded by next sheet
+      sheetsAndYears <- c(
+        "scrap_consumption_75s.xlsx" = list(seq(1975,1978,1)),
+        "scrap_consumption_80s.xlsx" = list(seq(1979,1984,1)),
+        "scrap_consumption_85s.xlsx" = list(seq(1985,1988,1)),
+        "scrap_consumption_90s.xlsx" = list(seq(1989,1998,1))
+      )
+      df <- NULL
+      for (f in names(sheetsAndYears)) {
+        tmp <- readxl::read_excel(path = file.path(version, "scrap_consumption", f)) %>%
+          tidyr::pivot_longer(c(-"country_name"), names_to = "period") %>%
+          mutate("period" = as.numeric(.data$period)) %>%
+          filter(.data$period %in% sheetsAndYears[[f]])
+        df <- rbind(df, tmp)
+      }
+
+
+
+      df <- df[!duplicated(df), ]
+      df <- toolCleanSteelRegions(df)
+      x <- as.magpie(df, spatial = 1)
+      # manually fix a data error
+      x["SUN", 1989, ] <- x["SUN", 1989, ] * 1000
+
+      x <- x * 1e3 # convert from kt to t
       return(x)
     },
     "scrapConsumptionFigures" = function() {
@@ -233,7 +253,6 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       return(x)
     },
     "indirectTrade" = function() {
-
       files <- c(
         "WSA_indirect_exports_categories_2013.xlsx",
         "WSA_indirect_imports_categories_2013.xlsx"
