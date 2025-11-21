@@ -58,7 +58,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     calcOutput("StTrade", file = "st_steel_indirect_imports.cs4r", subtype = "indirectImports")
     calcOutput("StTrade", file = "st_steel_indirect_exports.cs4r", subtype = "indirectExports")
 
-    # Parameters - TODO
+    # Parameters
     calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
     calcOutput("StLifetimes", subtype = "Cooper2014", file = "st_lifetimes.cs4r", aggregate = FALSE)
     calcOutput("StRecoveryRate", subtype = "WorldSteel", file = "st_recovery_rate.cs4r", aggregate = FALSE)

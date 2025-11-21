@@ -8,6 +8,7 @@
 #' as well as stock sector splits.
 #' @author Merlin Jo Hosak
 readPauliuk2013 <- function(subtype = "sectorSplits") {
+
   # TODO JD: shouldn't this be further split into countries and years
   path <- file.path(".", "v1.0", "Pauliuk2013SectorSplits.xlsx")
   df <- readxl::read_excel(path, sheet = "Data")

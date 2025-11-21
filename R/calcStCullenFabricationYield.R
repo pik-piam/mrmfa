@@ -5,38 +5,25 @@
 #' @author Merlin Jo Hosak
 calcStCullenFabricationYield <- function() {
 
-  # Read data
-  giMatrix <- readSource("Cullen2012", subtype = "giMatrix", convert = FALSE)
+  x <- readSource("Cullen2012", subtype = "giMatrix")
+  x <- x[, , "End Use Goods - End Use Goods", pmatch = T]
+  x <- x[, , c("Construction %", "Machinery %", "Products %", "Transport %")]
 
-  # Extract relevant cells from matrix and bind do one magpie
-
-  parameters <- getItems(giMatrix, dim = 3)
-  endUseGoods <- giMatrix[, , grep("End Use Goods - End Use Goods", parameters, fixed = TRUE)]
-  endUseGoodsParameters <- getItems(endUseGoods, dim = 3)
-
-  patterns <- c("Construction %", "Machinery %", "Products %", "Transport %")
-  final <- do.call(
-    mbind,
-    lapply(patterns, function(p) endUseGoods[, , grep(p, endUseGoodsParameters, fixed = TRUE)])
-  )
-
-  # Finalize
-
-  getSets(final) <- c("region", "year", "parameter")
-  getItems(final, dim = 3) <- c(
+  getSets(x) <- c("region", "year", "parameter")
+  getItems(x, dim = 3) <- c(
     "Construction Yield",
     "Machinery Yield",
     "Products Yield",
     "Transport Yield"
   )
 
-  final <- list(
-    x = final,
+  x <- list(
+    x = x,
     weight = NULL,
     unit = 1,
     isocountries = FALSE,
     description = "Cullen 2012 Fabrication Yield"
   )
 
-  return(final)
+  return(x)
 }
