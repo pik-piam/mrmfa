@@ -72,16 +72,16 @@ calcStScrapConsumption <- function(subtype) {
 
     # interpolate missing values ----
     scrapConsumptionWS <- toolInterpolate2D(scrapConsumptionWS)
-
     # split historic regions ----
     # TODO: this should be done much earlier in convert function (merge read subtypes?)
-    newCountries <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
-    newCountries <- newCountries[newCountries$fromISO %in% allRegions, "toISO"]
-    missingCountries <- setdiff(newCountries, allRegions)
+    map <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
+    newCountries <- map[map$fromISO %in% allRegions, "toISO"]
+    missingCountries <- setdiff(c(newCountries, "SRB", "MNE"), allRegions)
 
     scrapConsumptionWS <- add_columns(scrapConsumptionWS, addnm = missingCountries, dim = 1, fill = NA)
 
     scrapConsumptionWS <- toolISOhistorical(scrapConsumptionWS)
+
     scrapConsumptionWS <- toolCountryFill(scrapConsumptionWS, verbosity = 2)
 
     # combine WS and BIR scrap consumption ----
@@ -165,6 +165,7 @@ calcStScrapConsumption <- function(subtype) {
 
   scLinear <- .calcSteelScrapConsumptionOnlyLinear()
 
+
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "assumptions" = function() {
@@ -208,6 +209,7 @@ calcStScrapConsumption <- function(subtype) {
       # includes values from the original source for global region instead of calculating
       # it as the sum of all countries (as countries are incomplete)
       .customAggregate <- function(x, rel, to = NULL, eu28) {
+
         out <- toolAggregate(x, rel = rel, to = to)
 
         if ("EUR" %in% getItems(out, dim = 1)) {

@@ -190,13 +190,17 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         df <- rbind(df, tmp)
       }
 
-
-
       df <- df[!duplicated(df), ]
       df <- toolCleanSteelRegions(df)
       x <- as.magpie(df, spatial = 1)
       # manually fix a data error
-      x["SUN", 1989, ] <- x["SUN", 1989, ] * 1000
+      # todo: activate, once the comparison is done
+      # x["SUN", 1989, ] <- x["SUN", 1989, ] * 1000
+
+      # fix mislabelled data for 1991-1998 (should be DEU, but is BRG)
+      x <- add_columns(x, addnm = "DEU", dim = 1, fill = NA)
+      x["DEU", seq(1991, 1998), ] <- x["BRG", seq(1991, 1998), ]
+      x["BRG", seq(1991, 1998), ] <- NA
 
       x <- x * 1e3 # convert from kt to t
       return(x)
