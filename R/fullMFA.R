@@ -50,7 +50,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     # Production
     calcOutput("StProduction", file = "st_steel_production.cs4r")
 
-    # Trade - TODO, here
+    # Trade
     calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports")
     calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports")
     calcOutput("StTrade", file = "st_steel_scrap_imports.cs4r", subtype = "scrapImports")

@@ -2,29 +2,25 @@
 #' @description Convert data World Steel Association digitised 1978-2022 yearbooks.
 #' @author Merlin Jo Hosak
 convertWorldSteelDigitised <- function(x, subtype) {
-
   # TODO: make sure all the subtypes have a working convert function (so far, only "production)
 
   if (subtype == "indirectTrade") {
-
     x <- add_columns(x, addnm = c("BEL", "LUX", "SRB", "MNE"), dim = 1)
 
     # distribute Belgium Luxemburg 80/20 %
-    x["BEL", ] <- x["BLX", ] * 0.8
-    x["LUX", ] <- x["BLX", ] * 0.2
+    x["BEL", ] <- x["BLX", , ] * 0.8
+    x["LUX", ] <- x["BLX", , ] * 0.2
     x <- x["BLX", , , invert = TRUE]
 
     # distribute Serbia Montenegro 90/10 %
-    x["SRB", ] <- x["SCG", ] * 0.9
-    x["MNE", ] <- x["SCG", ] * 0.1
+    x["SRB", ] <- x["SCG", , ] * 0.9
+    x["MNE", ] <- x["SCG", , ] * 0.1
     x <- x["SCG", , , invert = TRUE]
 
     x <- toolCountryFill(x, verbosity = 2)
 
     return(x)
-
   } else {
-
     # add regions not present in the magpie object yet needed for toolISOhistorical to work
     countries <- getItems(x, dim = 1)
 
@@ -61,5 +57,4 @@ convertWorldSteelDigitised <- function(x, subtype) {
 
     return(z)
   }
-
 }

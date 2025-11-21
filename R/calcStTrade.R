@@ -8,7 +8,7 @@
 #' \link{calcStProduction} to backcast historic trade data.
 #' @author Merlin Jo Hosak
 #' @param subtype Type of trade data to retrieve. Options: "imports", "exports",
-#' "scrap_imports", "scrap_exports", "indirectImports", "indirectExports"
+#' "scrapImports", "scrapExports", "indirectImports", "indirectExports"
 #'
 #' @return Steel trade across all regions from 1900-2022 as magpie within
 #' list of metadata.
@@ -33,9 +33,8 @@ calcStTrade <- function(subtype = "imports") {
     tradeNonIntersecting <- trade[nonIntersectingCountries, , ] * averageShare
 
     # Combine both
-    trade <- mbind(tradeIntersecting, tradeNonIntersecting)# %>%
-    # TODO after validation
-    #collapseDim()
+    trade <- mbind(tradeIntersecting, tradeNonIntersecting) %>%
+      collapseDim()
 
     return(trade)
   }
@@ -81,13 +80,12 @@ calcStTrade <- function(subtype = "imports") {
   # Finalize
   trade[is.na(trade)] <- 0 # fill remaining NA with zero
 
-  # TODO after validation
-  #getNames(trade) <- NULL
+  getNames(trade) <- NULL
   trade <- list(
     x = trade,
     weight = NULL,
     unit = "Tonnes",
-    description = paste0("Steel trade:", subtype, "from 1900-2021 yearly for the SIMSON format.")
+    description = paste0("Steel trade: ", subtype, " from 1900-2021 yearly for the SIMSON format.")
   )
 
   return(trade)

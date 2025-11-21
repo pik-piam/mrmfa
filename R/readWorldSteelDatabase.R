@@ -106,10 +106,9 @@ readWorldSteelDatabase <- function(subtype = "production") {
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste(
-      "Invalid subtype -- supported subtypes are:",
-      names(switchboard)
-    ))
+    stop("Invalid subtype -- supported subtypes are:",
+      paste0(names(switchboard), collapse = ", ")
+    )
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())

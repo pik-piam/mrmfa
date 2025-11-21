@@ -132,6 +132,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         "exports_00s.xlsx"
       )
       x <- .readCommonSourceFormat(filenames, type = "trade", version = version)
+
       return(x)
     },
     "scrapImports" = function() {
@@ -143,6 +144,11 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       )
 
       x <- .readCommonSourceFormat(filenames, type = "scrap_trade", version = version)
+
+      # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
+      x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
+      x["BRG", seq(1991, 2000), ] <- NA
+
       return(x)
     },
     "scrapExports" = function() {
@@ -153,6 +159,11 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         "scrap_exports_00s.xlsx"
       )
       x <- .readCommonSourceFormat(filenames, type = "scrap_trade", version = version)
+
+      # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
+      x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
+      x["BRG", seq(1991, 2000), ] <- NA
+
       return(x)
     },
     "scrapConsumptionYearbooks" = function() {

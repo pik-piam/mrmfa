@@ -10,6 +10,7 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
   # Special case for splitting BLX and SCG ----
 
   if (subtype %in% c("indirectImports", "indirectExports")) {
+
     x <- add_columns(x, addnm = c("BEL", "LUX", "SRB", "MNE"), dim = 1)
 
     # distribute Belgium Luxemburg 80/20 %
