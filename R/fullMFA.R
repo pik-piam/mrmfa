@@ -64,7 +64,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
     calcOutput("StRecoveryRate", subtype = "WorldSteel", file = "st_recovery_rate.cs4r", aggregate = FALSE)
     calcOutput("StSectorSplits", subtype = "Pauliuk2013", file = "st_sector_splits.cs4r", aggregate = FALSE)
 
-    # Static Parameters - TODO
+    # Static Parameters
     calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
     calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_BOF_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "productionLossRate", file = "st_production_loss_rate.cs4r", aggregate = FALSE)

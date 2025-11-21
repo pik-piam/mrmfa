@@ -23,10 +23,10 @@ calcStWorldSteelStaticParameters <- function(subtype) {
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste(
+    stop(
       "Invalid subtype -- supported subtypes are:",
-      names(switchboard)
-    ))
+      paste0(names(switchboard), collapse = ", ")
+    )
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())
