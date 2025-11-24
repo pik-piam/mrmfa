@@ -13,9 +13,7 @@
 #'
 #' TODO: check if all these subtpyes are actually used
 readWorldSteelDatabase <- function(subtype = "production") {
-
   .readCommonSourceFormat <- function(name, version = "v1.0") {
-
     # read data from Excel file
     path <- file.path(".", version, name)
 
@@ -31,7 +29,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
     x <- x %>%
       tidyr::pivot_longer(c(-"Country"), names_to = "variable") %>%
       dplyr::rename("country_name" = "Country") %>%
-       toolCleanSteelRegions()
+      toolCleanSteelRegions()
 
     # convert to magpie object
     x <- as.magpie(x, spatial = "country_name")
@@ -45,6 +43,12 @@ readWorldSteelDatabase <- function(subtype = "production") {
   switchboard <- list(
     "production" = function() {
       x <- .readCommonSourceFormat("P01_crude_2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     },
     "bofProduction" = function() {
@@ -53,22 +57,52 @@ readWorldSteelDatabase <- function(subtype = "production") {
     },
     "eafProduction" = function() {
       x <- .readCommonSourceFormat("P06_eaf_2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2002, 2005), ] <- x["YUG", seq(2002, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     },
     "imports" = function() {
       x <- .readCommonSourceFormat("T02_imports_finished-2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     },
     "exports" = function() {
       x <- .readCommonSourceFormat("T01_exports_finished-2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     },
     "scrapImports" = function() {
       x <- .readCommonSourceFormat("T18_imports_scrap-2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     },
     "scrapExports" = function() {
       x <- .readCommonSourceFormat("T17_exports_scrap-2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     },
     "indirectImports" = function() {
@@ -85,10 +119,22 @@ readWorldSteelDatabase <- function(subtype = "production") {
     },
     "pigIronImports" = function() {
       x <- .readCommonSourceFormat("T12_imports_pigiron-2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     },
     "pigIronExports" = function() {
       x <- .readCommonSourceFormat("T11_exports_pigiron-2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     },
     "driProduction" = function() {
@@ -97,16 +143,29 @@ readWorldSteelDatabase <- function(subtype = "production") {
     },
     "driImports" = function() {
       x <- .readCommonSourceFormat("T14_imports_driron-2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     },
     "driExports" = function() {
       x <- .readCommonSourceFormat("T13_exports_driron-2023-10-23.xlsx")
+
+      # fix mislabelled data for 2003-2005 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
+      x <- x["YUG", , , invert = TRUE]
+
       return(x)
     }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop("Invalid subtype -- supported subtypes are:",
+    stop(
+      "Invalid subtype -- supported subtypes are:",
       paste0(names(switchboard), collapse = ", ")
     )
   } else {

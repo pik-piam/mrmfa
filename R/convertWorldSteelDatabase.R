@@ -22,36 +22,15 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
     x["SRB", ] <- x["SCG", ] * 0.9
     x["MNE", ] <- x["SCG", ] * 0.1
     x <- x["SCG", , , invert = TRUE]
+
+
   }
 
-  # Special case for splitting YUG ----
+  if (any(c("BLX", "YUG", "SCG") %in% getRegions(x))) {
 
-  # distribute YUG 2003-2005 to SRB and MNE only, as the other YUG countries are already
-  # reported separately
-
-
-  if (subtype %in% c(
-    "production", "eafProduction", "imports", "exports",
-    "scrapImports", "scrapExports", "pigIronImports", "pigIronExports",
-    "driImports", "driExports"
-  )) {
-    yugoslavia <- data.frame(
-      fromISO = "YUG",
-      toISO = c("SRB", "MNE"),
-      lastYear = "y2005"
-    )
-
-    x <- toolISOhistorical(x, overwrite = TRUE, mapping = yugoslavia)
-  }
-
-
-  # General case for splitting of BLX and YUG ----
-
-  if (any(c("BLX", "YUG") %in% getRegions(x))) {
     # Add historical mapping for Yugoslavia with last year being 2005
     # instead of 1991 as there is some aggregated data in this dataset
     # for the years 2002-2005 for Yugoslavia. Similar for Belgium and Luxembourg.
-
 
     yugoslavia <- data.frame(
       fromISO = "YUG",
@@ -64,8 +43,12 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
       toISO = c("BEL", "LUX"),
       lastYear = "y2003"
     )
+    scg <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
+      filter(.data$fromISO == "SCG")
 
-    historicalMapping <- rbind(yugoslavia, blx)
+
+    historicalMapping <- rbind(yugoslavia, blx, scg) %>%
+      filter(.data$fromISO %in% getItems(x, dim = 1))
 
     # add countries missing yet that will get data after YUG/BLX split
     newCountries <- historicalMapping$toISO
