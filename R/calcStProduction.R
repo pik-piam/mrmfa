@@ -8,9 +8,11 @@
 #' list of metadata (in calcOutput format).
 calcStProduction <- function() {
 
+  # steel production from 1969 - 2009
   prodRecent <- readSource("WorldSteelDigitised", subtype = "production")
   prodRecent <- toolInterpolate2D(prodRecent, method = "linear")
 
+  # steel production from 2003 - 2022
   prodCurrent <- readSource("WorldSteelDatabase", subtype = "production")
   prodCurrent <- toolInterpolate2D(prodCurrent, method = "linear")
 
@@ -24,7 +26,6 @@ calcStProduction <- function() {
   # calculate estimate of World Production
   sumNonNaRegions <- dimSums(prod, dim = 1, na.rm = TRUE)
   getItems(sumNonNaRegions, dim = 1) <- "GLO"
-
 
   prodWorld <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
 

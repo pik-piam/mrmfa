@@ -81,6 +81,7 @@ calcStTrade <- function(subtype = "imports") {
   trade[is.na(trade)] <- 0 # fill remaining NA with zero
 
   getNames(trade) <- NULL
+
   trade <- list(
     x = trade,
     weight = NULL,

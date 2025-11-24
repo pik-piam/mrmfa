@@ -23,7 +23,6 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
     x["MNE", ] <- x["SCG", ] * 0.1
     x <- x["SCG", , , invert = TRUE]
 
-
   }
 
   if (any(c("BLX", "YUG", "SCG") %in% getRegions(x))) {
@@ -43,9 +42,9 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
       toISO = c("BEL", "LUX"),
       lastYear = "y2003"
     )
+
     scg <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
       filter(.data$fromISO == "SCG")
-
 
     historicalMapping <- rbind(yugoslavia, blx, scg) %>%
       filter(.data$fromISO %in% getItems(x, dim = 1))
@@ -55,11 +54,9 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
     missingCountries <- setdiff(newCountries, getItems(x, dim = 1))
     x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
 
-    x <- toolISOhistorical(x, overwrite = TRUE, mapping = historicalMapping)
+    x <- toolISOhistorical(x, mapping = historicalMapping, overwrite = TRUE)
   }
 
-  # remove rows with NA in country_name column
-  x <- x[!is.na(getItems(x, dim = 1)), ]
   x <- toolCountryFill(x, verbosity = 2)
 
   return(x)

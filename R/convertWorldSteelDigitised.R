@@ -21,6 +21,7 @@ convertWorldSteelDigitised <- function(x, subtype) {
 
     return(x)
   } else {
+
     # add regions not present in the magpie object yet needed for toolISOhistorical to work
     countries <- getItems(x, dim = 1)
 
@@ -45,16 +46,18 @@ convertWorldSteelDigitised <- function(x, subtype) {
     missingCountries <- setdiff(newCountries, countries)
     x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
 
-    y <- toolISOhistorical(x, additional_mapping = rbind(blx, sac), overwrite = TRUE)
+    x <- toolISOhistorical(x, additional_mapping = rbind(blx, sac), overwrite = TRUE)
 
-    # add SCG (former Serbia and Montenegro to Serbia and delete it)
-    if (subtype == "productionByProcess") {
-      y["SRB", ] <- y["SCG", ]
-      y <- y["SCG", , invert = TRUE]
+    # YUG in the 70s is split among others into SCG, not into MNE and SRB (as, the last year for SCG is 2005)
+    # add SCG (former Serbia and Montenegro) to Serbia by hand and delete it
+    if ("SCG" %in% getItems(x, dim = 1)) {
+      x <- add_columns(x, addnm = "SRB", dim = 1, fill = NA)
+      x["SRB", , ] <- x["SCG", , ]
+      x <- x["SCG", , invert = TRUE]
     }
 
-    z <- toolCountryFill(y, verbosity = 2)
+    x <- toolCountryFill(x, verbosity = 2)
 
-    return(z)
+    return(x)
   }
 }

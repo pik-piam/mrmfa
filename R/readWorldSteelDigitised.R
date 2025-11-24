@@ -7,7 +7,7 @@
 #' 'worldProduction', 'production', 'productionByProcess',
 #' 'imports', 'exports', 'scrapImports', 'scrapExports',
 #' 'scrapConsumptionYearbooks', 'scrapConsumptionFigures',
-#' 'specificScrapConsumption_70s', 'worldScrapConsumption',
+#' 'specificScrapConsumption70s', 'worldScrapConsumption',
 #' 'indirectTrade'
 #' @author Merlin Jo Hosak, Falk Benke
 #'
@@ -127,6 +127,14 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       )
       x <- .readCommonSourceFormat(filenames, type = "trade", version = version)
       x <- x * 1e3 # convert from kt to t
+
+      # fix mislabelled data for 1991-1997 (should be DEU, but is BRG)
+      x["DEU", seq(1991, 1997), ] <- x["BRG", seq(1991, 1997), ]
+      x["BRG", seq(1991, 1997), ] <- NA
+
+      # fix mislabelled data for 1992-1997 (should be SCG, but is YUG)
+      x["SCG", seq(1992, 1997), ] <- x["YUG", seq(1992, 1997), ]
+      x["YUG", seq(1992, 1997), ] <- NA
 
       return(x)
     },
