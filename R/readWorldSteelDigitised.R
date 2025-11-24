@@ -55,6 +55,10 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       x <- .readCommonSourceFormat(filenames, type = "production", version = version)
       x <- x * 1e3 # convert from kt to t
 
+      # fix mislabelled data for 1992-1999 (should be SCG, but is YUG)
+      x["SCG", seq(1992, 1999), ] <- x["YUG", seq(1992, 1999), ]
+      x["YUG", seq(1992, 1999), ] <- NA
+
       # fix mislabelled data for 1991-1999 (should be DEU, but is BRG)
       x["DEU", seq(1991, 1999), ] <- x["BRG", seq(1991, 1999), ]
       x["BRG", seq(1991, 1999), ] <- NA
@@ -176,10 +180,10 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
 
       # read in only years that are not superseded by next sheet
       sheetsAndYears <- c(
-        "scrap_consumption_75s.xlsx" = list(seq(1975,1978,1)),
-        "scrap_consumption_80s.xlsx" = list(seq(1979,1984,1)),
-        "scrap_consumption_85s.xlsx" = list(seq(1985,1988,1)),
-        "scrap_consumption_90s.xlsx" = list(seq(1989,1998,1))
+        "scrap_consumption_75s.xlsx" = list(seq(1975, 1978, 1)),
+        "scrap_consumption_80s.xlsx" = list(seq(1979, 1984, 1)),
+        "scrap_consumption_85s.xlsx" = list(seq(1985, 1988, 1)),
+        "scrap_consumption_90s.xlsx" = list(seq(1989, 1998, 1))
       )
       df <- NULL
       for (f in names(sheetsAndYears)) {
