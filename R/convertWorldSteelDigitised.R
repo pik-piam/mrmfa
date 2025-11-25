@@ -4,6 +4,7 @@
 convertWorldSteelDigitised <- function(x, subtype) {
   # TODO: make sure all the subtypes have a working convert function (so far, only "production)
 
+  # TODO: consider using the same split as in other subtypes using toolIsoHistorical
   if (subtype == "indirectTrade") {
     x <- add_columns(x, addnm = c("BEL", "LUX", "SRB", "MNE"), dim = 1)
 
@@ -23,10 +24,9 @@ convertWorldSteelDigitised <- function(x, subtype) {
   } else {
 
     # add regions not present in the magpie object yet needed for toolISOhistorical to work
-    countries <- getItems(x, dim = 1)
 
-    mapping <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
-      filter(.data$fromISO %in% countries)
+    historicalMapping <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
+      filter(.data$fromISO %in% getItems(x, dim = 1))
 
     # use additional mapping for BLX
     blx <- data.frame(
@@ -42,16 +42,18 @@ convertWorldSteelDigitised <- function(x, subtype) {
       lastYear = "y2005"
     )
 
-    newCountries <- c(unique(mapping$toISO), blx$toISO, sac$toISO)
-    missingCountries <- setdiff(newCountries, countries)
-    x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
+    scg <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
+      filter(.data$fromISO == "SCG")
 
+    newCountries <- c(unique(historicalMapping$toISO), blx$toISO, sac$toISO, scg$toISO)
+    missingCountries <- setdiff(newCountries, getItems(x, dim = 1))
+    x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
     x <- toolISOhistorical(x, additional_mapping = rbind(blx, sac), overwrite = TRUE)
 
-    # YUG in the 70s is split among others into SCG, not into MNE and SRB (as, the last year for SCG is 2005)
+    # YUG in the 70s is split (among others) into SCG, not into MNE and SRB
+    # (as, the last year in the data for SCG is 2005)
     # add SCG (former Serbia and Montenegro) to Serbia by hand and delete it
-    if ("SCG" %in% getItems(x, dim = 1)) {
-      x <- add_columns(x, addnm = "SRB", dim = 1, fill = NA)
+    if (subtype == "productionByProcess") {
       x["SRB", , ] <- x["SCG", , ]
       x <- x["SCG", , invert = TRUE]
     }

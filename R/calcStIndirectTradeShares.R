@@ -3,7 +3,7 @@
 #'
 #' @author Falk Benke
 #'
-calcIndirectTradeShares <- function() {
+calcStIndirectTradeShares <- function() {
   x <- readSource("WorldSteelDigitised", subtype = "indirectTrade")
 
   x <- add_columns(x, addnm = c("Construction", "Machinery", "Transport", "Products", "Total"), dim = "variable")

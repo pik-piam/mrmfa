@@ -67,10 +67,10 @@ calcStTrade <- function(subtype = "imports") {
   # Split indirect trade
   if (indirect) {
     if (subtype == "indirectImports") {
-      shares <- calcOutput("IndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "imports"] %>%
+      shares <- calcOutput("StIndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "imports"] %>%
         collapseDim()
     } else if (subtype == "indirectExports") {
-      shares <- calcOutput("IndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "exports"] %>%
+      shares <- calcOutput("StIndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "exports"] %>%
         collapseDim()
     }
     # Split indirect trade into direct trade

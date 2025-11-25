@@ -148,6 +148,14 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       x <- .readCommonSourceFormat(filenames, type = "trade", version = version)
       x <- x * 1e3 # convert from kt to t
 
+      # fix mislabelled data for 1991-1997 (should be DEU, but is BRG)
+      x["DEU", seq(1991, 1997), ] <- x["BRG", seq(1991, 1997), ]
+      x["BRG", seq(1991, 1997), ] <- NA
+
+      # fix mislabelled data for 1992-1997 (should be SCG, but is YUG)
+      x["SCG", seq(1992, 1997), ] <- x["YUG", seq(1992, 1997), ]
+      x["YUG", seq(1992, 1997), ] <- NA
+
       return(x)
     },
     "scrapImports" = function() {
@@ -160,6 +168,11 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
 
       x <- .readCommonSourceFormat(filenames, type = "scrap_trade", version = version)
       x <- x * 1e3 # convert from kt to t
+
+      # fix mislabelled data for 1992-2000 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(1992, 2000), ] <- x["YUG", seq(1992, 2000), ]
+      x["YUG", seq(1992, 2000), ] <- NA
 
       # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
       x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
@@ -176,6 +189,10 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       )
       x <- .readCommonSourceFormat(filenames, type = "scrap_trade", version = version)
       x <- x * 1e3 # convert from kt to t
+
+      # fix mislabelled data for 1992-2000 (should be SCG, but is YUG)
+      x["SCG", seq(1992, 2000), ] <- x["YUG", seq(1992, 2000), ]
+      x["YUG", seq(1992, 2000), ] <- NA
 
       # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
       x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
@@ -205,9 +222,14 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       df <- df[!duplicated(df), ]
       df <- toolCleanSteelRegions(df)
       x <- as.magpie(df, spatial = 1)
+
       # manually fix a data error
-      # todo: activate, once the comparison is done
-      # x["SUN", 1989, ] <- x["SUN", 1989, ] * 1000
+      x["SUN", 1989, ] <- x["SUN", 1989, ] * 1000
+
+      # fix mislabelled data for 1992-1998 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(1992, 1998), ] <- x["YUG", seq(1992, 1998), ]
+      x["YUG", seq(1992, 1998), ] <- NA
 
       # fix mislabelled data for 1991-1998 (should be DEU, but is BRG)
       x <- add_columns(x, addnm = "DEU", dim = 1, fill = NA)
@@ -246,8 +268,12 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       }
 
       df <- toolCleanSteelRegions(df)
-      x <- as.magpie(df[, c("country_name", "year", "variable", "value")], spatial = 1)
+      x <- as.magpie(df[, c("country_name", "year", "value")], spatial = 1)
       x <- x * 1e6 # convert from Mt to tonnes
+
+      # fix mislabelled data for 2000-2003 (should be DEU, but is BRG)
+      x["DEU", seq(2000, 2003), ] <- x["BRG", seq(2000, 2003), ]
+      x <- x["BRG", , , invert = TRUE]
 
       return(x)
     },
