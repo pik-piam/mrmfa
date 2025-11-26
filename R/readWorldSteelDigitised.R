@@ -6,8 +6,7 @@
 #' Available subtypes are:
 #' 'worldProduction', 'production', 'productionByProcess',
 #' 'imports', 'exports', 'scrapImports', 'scrapExports',
-#' 'scrapConsumptionYearbooks', 'scrapConsumptionFigures',
-#' 'specificScrapConsumption70s', 'worldScrapConsumption',
+#' 'historicScrapShare', 'worldScrapConsumption',
 #' 'indirectTrade'
 #' @author Merlin Jo Hosak, Falk Benke
 #'
@@ -200,9 +199,8 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
 
       return(x)
     },
-    "scrapConsumptionYearbooks" = function() {
-      # TODO: make sure, this works with convert as well (by merging subtypes)
-
+    "scrapConsumption" = function() {
+      # read in 1975 - 1998 ----
       # read in only years that are not superseded by next sheet
       sheetsAndYears <- c(
         "scrap_consumption_75s.xlsx" = list(seq(1975, 1978, 1)),
@@ -214,33 +212,18 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
       for (f in names(sheetsAndYears)) {
         tmp <- readxl::read_excel(path = file.path(version, "scrap_consumption", f)) %>%
           tidyr::pivot_longer(c(-"country_name"), names_to = "period") %>%
-          mutate("period" = as.numeric(.data$period)) %>%
+          mutate(
+            "period" = as.numeric(.data$period),
+            "value" = .data$value * 1e3 # convert from kt to t
+          ) %>%
           filter(.data$period %in% sheetsAndYears[[f]])
         df <- rbind(df, tmp)
       }
 
       df <- df[!duplicated(df), ]
-      df <- toolCleanSteelRegions(df)
-      x <- as.magpie(df, spatial = 1)
 
-      # manually fix a data error
-      x["SUN", 1989, ] <- x["SUN", 1989, ] * 1000
+      # read in 2000s ----
 
-      # fix mislabelled data for 1992-1998 (should be SCG, but is YUG)
-      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
-      x["SCG", seq(1992, 1998), ] <- x["YUG", seq(1992, 1998), ]
-      x["YUG", seq(1992, 1998), ] <- NA
-
-      # fix mislabelled data for 1991-1998 (should be DEU, but is BRG)
-      x <- add_columns(x, addnm = "DEU", dim = 1, fill = NA)
-      x["DEU", seq(1991, 1998), ] <- x["BRG", seq(1991, 1998), ]
-      x["BRG", seq(1991, 1998), ] <- NA
-
-      x <- x * 1e3 # convert from kt to t
-      return(x)
-    },
-    "scrapConsumptionFigures" = function() {
-      # TODO: make sure, this works with convert as well (by merging subtypes)
       filenames <-
         c(
           "scrap_consumption_2000.xlsx",
@@ -254,7 +237,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
           "scrap_consumption_2008.xlsx"
         )
 
-      df <- NULL
+
       for (f in filenames) {
         year <- as.numeric(sub("scrap_consumption_([0-9]{4})\\.xlsx", "\\1", f))
         tmp <- readxl::read_excel(path = file.path(
@@ -262,23 +245,41 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
         )) %>%
           tidyr::pivot_longer(c(-"country_name"), names_to = "variable") %>%
           filter(.data$variable == "Consumption") %>%
-          mutate("year" = year)
-
+          mutate(
+            "period" = year,
+            "value" = .data$value * 1e6 # convert from Mt to tonnes
+          ) %>%
+          select(-c("variable"))
         df <- rbind(df, tmp)
       }
 
       df <- toolCleanSteelRegions(df)
-      x <- as.magpie(df[, c("country_name", "year", "value")], spatial = 1)
-      x <- x * 1e6 # convert from Mt to tonnes
+      x <- as.magpie(df, spatial = 1)
+      x <- add_columns(x, addnm = "y1999", dim = 2, fill = NA)
 
-      # fix mislabelled data for 2000-2003 (should be DEU, but is BRG)
-      x["DEU", seq(2000, 2003), ] <- x["BRG", seq(2000, 2003), ]
-      x <- x["BRG", , , invert = TRUE]
+      # manually fix a data error
+      x["SUN", 1989, ] <- x["SUN", 1989, ] * 1000
+
+      # fix mislabelled data for 1992-1998 (should be SCG, but is YUG)
+      x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
+      x["SCG", seq(1992, 1998), ] <- x["YUG", seq(1992, 1998), ]
+      x["YUG", seq(1992, 1998), ] <- NA
+
+      # fix mislabelled data for 1991-2003 (should be DEU, but is BRG)
+      x["DEU", seq(1991, 2003), ] <- x["BRG", seq(1991, 2003), ]
+      x["BRG", seq(1991, 2003), ] <- NA
+
+      # split BLX in current according to ratio in latest year with data for BEL and LUX ----
+      x["BEL", seq(2000, 2008), ] <- x["BLX", seq(2000, 2008), ] * x["BEL", 1998, ] /
+        (x["BEL", 1998, ] + x["LUX", 1998, ])
+      x["LUX", seq(2000, 2008), ] <- x["BLX", seq(2000, 2008), ] * x["LUX", 1998, ] /
+        (x["BEL", 1998, ] + x["LUX", 1998, ])
+      x <- x["BLX", , , invert = T]
 
       return(x)
     },
-    "specificScrapConsumption70s" = function() {
-      # TODO: make sure, this works with convert as well (by merging subtypes)
+    "historicScrapShare" = function() {
+
       filenames <- c("specific_scrap_consumption_70s.xlsx")
       x <- .readCommonSourceFormat(filenames, type = "scrap_consumption", version = version)
       x <- x * 1e-3 # convert from kg/t to t/t (actual share)

@@ -17,98 +17,10 @@
 #'
 #' @param subtype Subtype of steel scrap consumption data to calculate.
 #' Options: 'assumptions' or 'noAssumptions'. Must be set deliberately.
-#' @param aggregate Aggregation level. TRUE uses regionmapping,
-#' F for country level, 'GLO' for global level. See \link[madrat]{calcOutput}
-#' documentation. ++REGGLO/regglo/reg+glo etc. deprecated.
-#' @param regionmapping Regionmapping to use for regional aggregation. Should default
-#' to H12 REMIND regions.
 #'
 #' @author Merlin Jo Hosak
 calcStScrapConsumption <- function(subtype) {
   # internal helper functions ----
-  # TODO: refactor this
-  .calcSteelScrapConsumptionOnlyLinear <- function() {
-    # get historic consumption ----
-
-    prodHist <- readSource("WorldSteelDigitised", subtype = "production", convert = FALSE)
-    prodHistGlobal <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
-    prodHist <- toolBackcastByReference2D(prodHist, prodHistGlobal)
-
-    historicShare <- readSource("WorldSteelDigitised", subtype = "specificScrapConsumption70s", convert = FALSE)
-
-    # historic scrap production needed to multiply with historic shares as values are needed for former countries
-    historic <- historicShare * prodHist[getItems(historicShare, dim = 1), getItems(historicShare, dim = 2), ]
-
-    # get recent and current consumption ----
-    recent <- readSource("WorldSteelDigitised", subtype = "scrapConsumptionYearbooks", convert = FALSE)
-    current <- readSource("WorldSteelDigitised", subtype = "scrapConsumptionFigures", convert = FALSE)
-
-    # split BLX in current according to ratio in recent ----
-    # TODO: move to convert function
-    lastRecentIdx <- length(getItems(recent, dim = 2))
-    lastBELval <- recent["BEL", lastRecentIdx]
-    lastLUXval <- recent["LUX", lastRecentIdx]
-    lastBLXval <- lastBELval + lastLUXval
-
-    current <- add_columns(current, addnm = c("BEL", "LUX"), dim = 1, fill = NA)
-    current["BEL", ] <- current["BLX", ] * lastBELval / lastBLXval
-    current["LUX", ] <- current["BLX", ] * lastLUXval / lastBLXval
-    current <- current["BLX", , , invert = TRUE]
-
-    # merge all world steel digitised sources ----
-    allRegions <- union(getItems(historic, dim = 1), union(getItems(recent, dim = 1), getItems(current, dim = 1)))
-
-    scrapConsumptionWS <- new.magpie(
-      cells_and_regions = allRegions,
-      years = paste0("y", 1965:2008),
-      names = "value",
-      fill = NA,
-      sets = names(dimnames(historic))
-    )
-
-    scrapConsumptionWS[getItems(historic, dim = 1), getItems(historic, dim = 2), ] <- historic
-    scrapConsumptionWS[getItems(recent, dim = 1), getItems(recent, dim = 2), ] <- recent
-    scrapConsumptionWS[getItems(current, dim = 1), getItems(current, dim = 2), ] <- current
-
-    # interpolate missing values ----
-    scrapConsumptionWS <- toolInterpolate2D(scrapConsumptionWS)
-    # split historic regions ----
-    # TODO: this should be done much earlier in convert function (merge read subtypes?)
-    map <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
-    newCountries <- map[map$fromISO %in% allRegions, "toISO"]
-    missingCountries <- setdiff(c(newCountries, "SRB", "MNE"), allRegions)
-
-    scrapConsumptionWS <- add_columns(scrapConsumptionWS, addnm = missingCountries, dim = 1, fill = NA)
-
-    scrapConsumptionWS <- toolISOhistorical(scrapConsumptionWS)
-
-    scrapConsumptionWS <- toolCountryFill(scrapConsumptionWS, verbosity = 2)
-
-    # combine WS and BIR scrap consumption ----
-
-    scrapConsumption <- new.magpie(
-      cells_and_regions = getItems(scrapConsumptionWS, dim = 1),
-      years = paste0("y", 1965:2025),
-      names = "value",
-      fill = NA,
-      sets = names(dimnames(scrapConsumptionWS))
-    )
-
-    scrapConsumptionBIR <- readSource("BIR", subtype = "scrapConsumption")
-
-    # remove regions containing only NAs
-    remove <- magpply(scrapConsumptionBIR, function(y) all(is.na(y)), MARGIN = 1)
-    scrapConsumptionBIR <- scrapConsumptionBIR[!remove, , ]
-
-    scrapConsumption[getItems(scrapConsumptionWS, dim = 1),
-                     getItems(scrapConsumptionWS, dim = 2), ] <- scrapConsumptionWS
-    scrapConsumption[getItems(scrapConsumptionBIR, dim = 1),
-                     getItems(scrapConsumptionBIR, dim = 2), ] <- scrapConsumptionBIR
-
-    scrapConsumption <- toolInterpolate2D(scrapConsumption)
-
-    return(scrapConsumption)
-  }
 
   .forecastEUData <- function(scAssumptions) {
     euCurrent <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)["EU 28", , ]
@@ -163,8 +75,33 @@ calcStScrapConsumption <- function(subtype) {
 
   # main logic ----
 
-  scLinear <- .calcSteelScrapConsumptionOnlyLinear()
 
+  scrapConsumptionWS <- calcOutput("StScrapConsumptionWS", aggregate = FALSE, warnNA = FALSE)
+
+  scrapConsumptionBIR <- readSource("BIR", subtype = "scrapConsumption")
+  # remove regions containing only NAs
+  remove <- magpply(scrapConsumptionBIR, function(y) all(is.na(y)), MARGIN = 1)
+  scrapConsumptionBIR <- scrapConsumptionBIR[!remove, , ]
+
+  # combine WS and BIR scrap consumption ----
+
+  scrapConsumption <- new.magpie(
+    cells_and_regions = getItems(scrapConsumptionWS, dim = 1),
+    years = seq(1965, 2025, 1),
+    names = "value",
+    fill = NA,
+    sets = names(dimnames(scrapConsumptionWS))
+  )
+
+  scrapConsumption[, getItems(scrapConsumptionWS, dim = 2), ] <- scrapConsumptionWS
+
+  # note that this overwrites some data from WorldSteelDigitised for the overlapping years 1998 - 2008!
+  scrapConsumption[
+    getItems(scrapConsumptionBIR, dim = 1),
+    getItems(scrapConsumptionBIR, dim = 2),
+  ] <- scrapConsumptionBIR
+
+  scLinear <- toolInterpolate2D(scrapConsumption)
 
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
@@ -195,7 +132,6 @@ calcStScrapConsumption <- function(subtype) {
       return(result)
     },
     "noAssumptions" = function() {
-
       # Load countries that are not as important within a region and where hence NAs
       # should be set to 0 to avoid NA as region aggregation
       f <- toolGetMapping("scrap_consumption_countries_2_zero.csv", where = "mrmfa", returnPathOnly = TRUE)
@@ -209,7 +145,6 @@ calcStScrapConsumption <- function(subtype) {
       # includes values from the original source for global region instead of calculating
       # it as the sum of all countries (as countries are incomplete)
       .customAggregate <- function(x, rel, to = NULL, eu28) {
-
         out <- toolAggregate(x, rel = rel, to = to)
 
         if ("EUR" %in% getItems(out, dim = 1)) {

@@ -33,8 +33,7 @@ calcStTrade <- function(subtype = "imports") {
     tradeNonIntersecting <- trade[nonIntersectingCountries, , ] * averageShare
 
     # Combine both
-    trade <- mbind(tradeIntersecting, tradeNonIntersecting) %>%
-      collapseDim()
+    trade <- mbind(tradeIntersecting, tradeNonIntersecting)
 
     return(trade)
   }
@@ -79,8 +78,7 @@ calcStTrade <- function(subtype = "imports") {
 
   # Finalize
   trade[is.na(trade)] <- 0 # fill remaining NA with zero
-
-  getNames(trade) <- NULL
+  trade <- collapseDim(trade)
 
   trade <- list(
     x = trade,

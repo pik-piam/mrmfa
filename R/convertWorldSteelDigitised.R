@@ -1,10 +1,13 @@
 #' Convert World Steel Digitised
 #' @description Convert data World Steel Association digitised 1978-2022 yearbooks.
+#' @inherit readWorldSteelDigitised
 #' @author Merlin Jo Hosak
 convertWorldSteelDigitised <- function(x, subtype) {
-  # TODO: make sure all the subtypes have a working convert function (so far, only "production)
+  # TODO complete
+  if (subtype %in% c("worldProduction", "historicScrapShare", "scrapConsumption")) {
+    stop("convert not supported for subtype '", subtype, "'")
+  }
 
-  # TODO: consider using the same split as in other subtypes using toolIsoHistorical
   if (subtype == "indirectTrade") {
     x <- add_columns(x, addnm = c("BEL", "LUX", "SRB", "MNE"), dim = 1)
 
@@ -22,7 +25,7 @@ convertWorldSteelDigitised <- function(x, subtype) {
 
     return(x)
   } else {
-
+    # TODO make subtypes explicit
     # add regions not present in the magpie object yet needed for toolISOhistorical to work
 
     historicalMapping <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
