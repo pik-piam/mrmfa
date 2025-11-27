@@ -8,7 +8,7 @@ fullMFA(
   rev = 0,
   dev = "",
   scenario = "SSP2",
-  gdp_per_capita = FALSE,
+  gdp_per_capita = TRUE,
   run_sections = NULL
 )
 }

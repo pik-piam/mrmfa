@@ -4,12 +4,12 @@
 \alias{calcCoGDP1900To2150}
 \title{Get GDP from 1900-2150}
 \usage{
-calcCoGDP1900To2150(scenario = "SSP2", per_capita = FALSE)
+calcCoGDP1900To2150(scenario = "SSP2", per_capita = TRUE)
 }
 \arguments{
 \item{scenario}{Scenario to use for future GDP data (default: SSP2).}
 
-\item{per_capita}{If TRUE, GDP is returned as per capita (default: FALSE).}
+\item{per_capita}{If TRUE, GDP is returned as per capita (default: TRUE).}
 }
 \value{
 List with Magpie object of GDP and metadata in calcOutput format.

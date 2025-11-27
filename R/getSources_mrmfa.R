@@ -8,10 +8,13 @@
 #' @author Leonie Schweiger
 #'
 #' @importFrom tibble as_tibble_row
-#' @importFrom knitr kable
+#' @importFrom dplyr bind_rows
 #'
 getSources_mrmfa <- function(){
   calcFunctions <- getDependencies("fullMFA", direction = "din")
+  # get mapping of calcFunctions to parameters in fullMFA
+  mapping <- extract_calc_output_calls(fullMFA)
+  # get GDP sources to exclude for all but the common parameters (only used for weighting)
   GDP_sources <- getSources("calcGDP")
 
   rows <- list()
@@ -30,8 +33,8 @@ getSources_mrmfa <- function(){
       )
     } else {
       for (j in sources$source) {
-        # skip GDP sources
-        if (j %in% GDP_sources$source) next
+        # skip GDP sources for non-common parameters
+        if (j %in% GDP_sources$source & !(i %in% mapping$CalcFunction[startsWith(mapping$Filename, "co_")])) next
         # get source folders and bibtex entries for each source
         sourceFolder <- getSourceFolder(j, subtype = NULL)
         sourceFile   <- find_source_info(sourceFolder)
@@ -78,7 +81,6 @@ getSources_mrmfa <- function(){
       }
     ))
   # map calc functions to parameters by parsing fullMFA
-  mapping <- extract_calc_output_calls(fullMFA)
   table_final <- merge(mapping, table_summary, by="CalcFunction") %>%
     select("Filename", "CalcFunction", "Source", "Bibtex")
 

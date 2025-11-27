@@ -21,7 +21,7 @@
 #' fullMFA()
 #' }
 #'
-fullMFA <- function(rev = 0, dev = "", scenario='SSP2', gdp_per_capita=FALSE, run_sections=NULL) {
+fullMFA <- function(rev = 0, dev = "", scenario='SSP2', gdp_per_capita=TRUE, run_sections=NULL) {
 
   # prepare section selector
   validSections <- c("drivers","steel","cement","plastic")
@@ -42,8 +42,8 @@ fullMFA <- function(rev = 0, dev = "", scenario='SSP2', gdp_per_capita=FALSE, ru
 
   #  ------------- DRIVERS -------------
   if (runSection("drivers")) {
-    calcOutput("CoPopulation1900To2150", file = "co_population1900To2150.cs4r", scenario=scenario)
-    calcOutput("CoGDP1900To2150", file = "co_gdp1900To2150.cs4r", scenario=scenario, per_capita=gdp_per_capita)
+    calcOutput("CoPopulation1900To2150", file = "co_population.cs4r", scenario=scenario)
+    calcOutput("CoGDP1900To2150", file = "co_gdppc.cs4r", scenario=scenario, per_capita=gdp_per_capita)
   }
 
   #  ------------- STEEL ----------------
