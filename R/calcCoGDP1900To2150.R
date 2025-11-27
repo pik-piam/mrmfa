@@ -14,10 +14,10 @@
 #' (see \link[=toolInterpolate]{toolInterpolate}).
 #' @author Merlin Jo Hosak
 #' @param scenario Scenario to use for future GDP data (default: SSP2).
-#' @param per_capita If TRUE, GDP is returned as per capita (default: FALSE).
+#' @param per_capita If TRUE, GDP is returned as per capita (default: TRUE).
 #' @return List with Magpie object of GDP and metadata in calcOutput format.
 #' @export
-calcCoGDP1900To2150 <- function(scenario='SSP2', per_capita=FALSE) {
+calcCoGDP1900To2150 <- function(scenario='SSP2', per_capita=TRUE) {
   # load data
   gdp_data <- getGDP1900To2150Data(scenario=scenario)
 
