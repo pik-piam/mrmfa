@@ -3,8 +3,10 @@
 #' @inherit readWorldSteelDigitised
 #' @author Merlin Jo Hosak
 convertWorldSteelDigitised <- function(x, subtype) {
+
   # TODO complete
-  if (subtype %in% c("worldProduction", "historicScrapShare", "scrapConsumption")) {
+  if (subtype %in% c("worldProduction", "historicScrapShare",
+                     "scrapConsumption", "worldScrapConsumption")) {
     stop("convert not supported for subtype '", subtype, "'")
   }
 

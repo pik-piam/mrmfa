@@ -33,48 +33,58 @@ calcStScrapConsumption <- function(subtype) {
     scAssumptionsEU <- toolBackcastByReference2D(scAssumptionsEU, euCurrent,
       doForecast = TRUE, doMakeZeroNA = TRUE
     )
-    scAssumptions[euCountries, ] <- scAssumptionsEU[euCountries, ]
+    scAssumptions[euCountries, , ] <- scAssumptionsEU[euCountries, , ]
 
     return(scAssumptions)
   }
 
   .forecastRestWithWorldData <- function(scAssumptions) {
-    birGlobalSum <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)["World", , ]
+
+    # FIXME: this forecasting should be revisited and reworked, produces negative values as is
+
+    # get global scrap consumption
     globalSum <- readSource("WorldSteelDigitised", subtype = "worldScrapConsumption", convert = FALSE)
-
-    # Get sum of countries which have no NA before 2023
-    noNAcountries <- getItems(scAssumptions[rowSums(is.na(scAssumptions[, 1:123])) == 0, ], dim = 1)
-    scAssumptionsNoNA <- scAssumptions[noNAcountries, ]
-    sumSCnoNA <- colSums(scAssumptionsNoNA, na.rm = TRUE)
-
-    # Get assumption of world consumption
+    birGlobalSum <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)["World", , ]
+    getItems(birGlobalSum, dim = 1) <- "GLO"
     worldCurrent <- toolBackcastByReference2D(globalSum, birGlobalSum, doForecast = TRUE, doMakeZeroNA = TRUE)
-    worldSC <- toolBackcastByReference2D(worldCurrent, sumSCnoNA[, 1:109])
 
-    # Calculate assumption for rest of world
+    # the rest of the code separates between "complete" countries and rest of World,
+    # where complete countries have data until 2023
+
+    # get scrap consumption of countries with complete data before 2023 (no NAs)
+    noNA <- magpply(scAssumptions[, seq(1900, 2022, 1), ], function(y) all(!is.na(y)), MARGIN = 1)
+    scAssumptionsNoNA <- scAssumptions[noNA, , ]
+    completeCountries <- getItems(scAssumptionsNoNA, dim = 1)
+    sumSCnoNA <- dimSums(scAssumptionsNoNA, dim = 1, na.rm = T)
+    getItems(sumSCnoNA, dim = 1) <- "GLO"
+
+    # get assumption of world consumption
+    worldSC <- toolBackcastByReference2D(worldCurrent, sumSCnoNA[, seq(1900, 2008, 1), ])
+
+    # calculate assumption for rest of world steel consumption by deducting sum of
+    # complete countries from world consumption
+    # TODO: for some years, the values are negative, which will produce negative steel consumption later on
+    # therefore, this forecasting method seems inadequate and should be reworked
     restWorldSC <- worldSC - sumSCnoNA
 
-    # Fore- and backcast countries with missing data with assumptions for rest of the world
-    restWorldCountries <- setdiff(getItems(scAssumptions, dim = 1), noNAcountries)
+    # fore- and backcast countries with missing data with assumptions for rest of the world
+    restWorldCountries <- setdiff(getItems(scAssumptions, dim = 1), completeCountries)
+    scAssumptionsRest <- scAssumptions[restWorldCountries, , ]
 
-    scAssumptionsRest <- scAssumptions[restWorldCountries, ]
-
-    # Forecast
+    # forecast
     scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest, restWorldSC,
-      doForecast = TRUE,
-      doMakeZeroNA = TRUE
-    )
+                                                   doForecast = TRUE, doMakeZeroNA = TRUE)
 
-    # Backcast
-    scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest, restWorldSC[, 1:109])
+    # backcast
+    scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest,
+                                                   restWorldSC[, seq(1900, 2008, 1), ])
 
-    # Update scAssumptions
-    scAssumptions[restWorldCountries, ] <- scAssumptionsRest
+    # update scAssumptions
+    scAssumptions[restWorldCountries, , ] <- scAssumptionsRest
     return(scAssumptions)
   }
 
   # main logic ----
-
 
   scrapConsumptionWS <- calcOutput("StScrapConsumptionWS", aggregate = FALSE, warnNA = FALSE)
 

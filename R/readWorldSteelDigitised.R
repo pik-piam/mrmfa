@@ -4,10 +4,9 @@
 #' E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Yearbook-1982.pdf
 #' @param subtype
 #' Available subtypes are:
-#' 'worldProduction', 'production', 'productionByProcess',
-#' 'imports', 'exports', 'scrapImports', 'scrapExports',
-#' 'historicScrapShare', 'worldScrapConsumption',
-#' 'indirectTrade'
+#' 'worldProduction', 'production', 'productionByProcess', 'imports', 'exports',
+#' 'scrapImports', 'scrapExports', 'scrapConsumption', historicScrapShare',
+#' 'worldScrapConsumption', 'indirectTrade'
 #' @author Merlin Jo Hosak, Falk Benke
 #'
 readWorldSteelDigitised <- function(subtype = "worldProduction") {
