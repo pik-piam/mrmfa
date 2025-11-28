@@ -18,7 +18,7 @@
 #' list of metadata (in calcOutput format).
 calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(0.2, 0, 0.8))) {
 
-  # TODO: JD where will this be used?
+  # TODO: where will this be used?
 
   # Internal functions ----
 
@@ -26,7 +26,6 @@ calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(
 
     getNames(byProcessData) <- "value"
     data <- mbind(byProcessData, CurrentData)
-    data <- toolCountryFill(data, verbosity = 2)
     data <- toolInterpolate2D(data, method = "linear")
 
     return(data)
@@ -74,7 +73,7 @@ calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(
     eaf[is.na(eaf) & !is.na(bof)] <- 0
 
     bofEaf <- bof + eaf
-    factor <- production[, getYears(bofEaf)] / bofEaf
+    factor <- production[, getYears(bofEaf), ] / bofEaf
 
     factor[factor > 1] <- 1
 
@@ -82,15 +81,17 @@ calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(
     eaf <- eaf * factor
 
     # new addition is necessary as data might have been scaled down
-    other <- production[, getYears(bofEaf)] - (bof + eaf)
+    other <- production[, getYears(bofEaf), ] - (bof + eaf)
 
     together <- mbind(bof, eaf, other)
 
-    # Clean new dataset
+    # clean new dataset
     getNames(together) <- c("BOF", "EAF", "Other")
     missingYears <- setdiff(getYears(production), getYears(together))
-    together <- add_columns(together, addnm = missingYears, dim = 2) # add missing years
-    together <- together[, paste0("y", 1900:2022), ] # sort years
+
+    # add missing years and sort them
+    together <- add_columns(together, addnm = missingYears, dim = 2) %>%
+      magpiesort()
 
     return(together)
   }

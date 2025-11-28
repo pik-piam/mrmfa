@@ -25,6 +25,7 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
 
   }
 
+  # TODO make subtypes explicit?
   if (any(c("BLX", "YUG", "SCG") %in% getRegions(x))) {
 
     # Add historical mapping for Yugoslavia with last year being 2005
