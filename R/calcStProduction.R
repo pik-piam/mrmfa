@@ -24,8 +24,10 @@ calcStProduction <- function() {
   )
 
   # calculate estimate of World Production
-  sumNonNaRegions <- dimSums(prod, dim = 1, na.rm = TRUE)
-  getItems(sumNonNaRegions, dim = 1) <- "GLO"
+  nonNaIndices <- which(!is.na(rowSums(prod)))
+  prodNonNaRegions <- prod[nonNaIndices, , ]
+  # sum of regions which have no NAs in any years used as reference
+  sumNonNaRegions <- colSums(prodNonNaRegions)
 
   prodWorld <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
 

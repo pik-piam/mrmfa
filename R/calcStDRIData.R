@@ -13,7 +13,7 @@ calcStDRIData <- function(subtype) {
 
   if (subtype == "production") {
     driData <- readSource("WorldSteelDatabase", subtype = "driProduction")
-  } else if (subtype == "import") {
+  } else if (subtype == "imports") {
     driData <- readSource("WorldSteelDatabase", subtype = "driImports")
   } else if (subtype == "exports") {
     driData <- readSource("WorldSteelDatabase", subtype = "driExports")
@@ -28,7 +28,7 @@ calcStDRIData <- function(subtype) {
     x = final,
     weight = NULL,
     unit = "Tonnes",
-    description = paste("DRI data of type", subtype, "from 1900-2022 yearly for the SIMSON format")
+    description = paste0("DRI data of type ", subtype, " from 1900-2022 yearly for the SIMSON format")
   )
 
   return(result)
