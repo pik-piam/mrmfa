@@ -16,15 +16,20 @@ calcStPigIronPreliminaryData <- function(subtype) {
   if (subtype == "production") {
     ws <- readSource("WorldSteelDatabase", subtype = "pigIronProduction")
     iedc <- readSource("IEDC", subtype = "pigIronProduction")
-  } else if (subtype == "import") {
+  } else if (subtype == "imports") {
     ws <- readSource("WorldSteelDatabase", subtype = "pigIronImports")
     iedc <- readSource("IEDC", subtype = "pigIronImports")
   } else if (subtype == "exports") {
     ws <- readSource("WorldSteelDatabase", subtype = "pigIronExports")
     iedc <- readSource("IEDC", subtype = "pigIronExports")
+  } else {
+    stop("Invalid subtype ", subtype)
   }
 
-  globalTrend <- dimSums(iedc, dim = 1, na.rm = TRUE)
+  # fill IEDC data with assumptions to make backcasting more reliable
+  # global trend is derived only from countries without NAs in any years
+  noNACountries <- getItems(iedc, dim = 1)[rowSums(is.na(iedc)) == 0]
+  globalTrend <- colSums(iedc[noNACountries, ,])
   iedc <- toolBackcastByReference2D(iedc, globalTrend, doForecast = TRUE)
   iedc <- toolBackcastByReference2D(iedc, globalTrend)
 
@@ -38,7 +43,7 @@ calcStPigIronPreliminaryData <- function(subtype) {
     x = final,
     weight = NULL,
     unit = "Tonnes",
-    description = paste("Pig iron data of type", subtype, "merged from WorldSteel and IEDC data.")
+    description = paste0("Pig iron data of type '", subtype, "' merged from WorldSteel and IEDC data.")
   )
 
   return(result)

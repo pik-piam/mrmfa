@@ -139,11 +139,15 @@ toolBackcastByReference2D <- function(x,
     return(normalizedWeights)
   }
 
+  # FIXME: the code assumes the magpie objects are sorted by years
+  # either adapt logic or make sure that objects are sorted here
+
 
   # main routine ----
 
   .checkBackcastByReference2D(x, ref)
   ref <- .adaptRefRegions(x, ref)
+
 
   if (doInterpolate) {
     # Interpolate missing values in x and ref

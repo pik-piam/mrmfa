@@ -1,19 +1,12 @@
 #' @author Falk Benke
 convertIEDC <- function(x, subtype) {
+
   countries <- getItems(x, dim = 1)
 
   # replace underscores with dots (special character in magclass)
   countries <- gsub("_", ".", countries)
-  # drop hyphens and slashes
-  countries <- gsub("-|–|/", " ", countries)
-  # replace two or more whitespaces by one
-  countries <- gsub("  +", " ", countries)
-  # remove appended info in round brackets, e.g. "Taiwan (R.O.C.)" -> "Taiwan"
-  countries <- gsub(" *\\(.*\\) *$", "", countries)
-  # "German Dem . Rep ." -> "German Dem. Rep.",
-  countries <- gsub(" \\.", "\\.", countries)
-  # "Taiwan , China" -> "Taiwan, China
-  countries <- gsub(" ,", ",", countries)
+  # drop hyphens
+  countries <- gsub("-", " ", countries)
 
   ignore <- toolGetMapping("MFA_ignore_regions.csv", where = "mrmfa")$reg
 
@@ -31,15 +24,21 @@ convertIEDC <- function(x, subtype) {
 
   # disaggregate no longer existing countries ----
 
+  # use WorldSteel data as reference
+  ws <- readSource("WorldSteelDatabase", subtype = subtype)
+  ws[is.na(ws)] <- 0
+  ws <- ws[,getYears(ws, as.integer = TRUE) >= 2009,]
+  x <- toolMerge2D(x, ws)
+
   # create custom iso mapping matching the data
-  mapping <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
+  histMapping <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
     filter(
       .data$fromISO %in% c("SUN", "CSK", "ANT", "YUG"),
       !.data$toISO %in% c("SCG")
     )
 
   # all former regions have data until 2008
-  mapping$lastYear <- "y2008"
+  histMapping$lastYear <- "y2009"
 
   # directly transform YUG -> SRB
   # - not via SCG as data contains different lastYear definition than standard mapping
@@ -47,37 +46,22 @@ convertIEDC <- function(x, subtype) {
   scg <- data.frame(
     fromISO = "YUG",
     toISO = "SRB",
-    lastYear = "y2008"
+    lastYear = "y2009"
   )
 
   blx <- data.frame(
     fromISO = "BLX",
     toISO = c("BEL", "LUX"),
-    lastYear = "y2008"
+    lastYear = "y2009"
   )
 
-  # TODO: check if there is a problem with the change: https://github.com/leonieschweiger/mrmfa/blob/steel_updates/R/calcStPigIronPreliminaryData.R#L66
-  # before: lastYear was 2009 of WorldSteelDatabase data
-  # now: lastYear is 2008 of IEDS data
+  histMapping <- rbind(histMapping, scg, blx)
 
-  mapping <- rbind(mapping, scg, blx)
+  x <- toolISOhistorical(x, overwrite = TRUE, mapping = histMapping)
+  x <- toolCountryFill(x, verbosity = 2)
 
-  # add regions not present in the magpie object yet needed for toolISOhistorical to work
-
-  missingCountries <- mapping %>%
-    dplyr::pull("toISO") %>%
-    setdiff(getItems(x, dim = 1))
-  x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
-
-  # TODO: workaround to make toolISOhistorical not crash
-  x <- add_columns(x, addnm = "y2009", dim = 2, fill = NA)
-
-  y <- toolISOhistorical(x, overwrite = TRUE, mapping = mapping)
-
-  x <- toolCountryFill(y, verbosity = 2)
-
-  # TODO: workaround to make toolISOhistorical not crash
-  x <- x[, 2009, , invert = T]
+  # drop reference data again
+  x <- x[, getYears(x, as.integer = TRUE) < 2009, , invert = T]
 
   return(x)
 }

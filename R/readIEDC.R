@@ -20,7 +20,8 @@ readIEDC <- function(subtype = "pigIronProduction") {
       ) %>%
       mutate("time" = as.numeric(.data$time))
 
-    x <- as.magpie(x, spatial = 2)
+    x <- as.magpie(x, spatial = 2) %>%
+      magpiesort()
 
     # convert from Gigagrams to tons
     x <- x * 1e3
@@ -52,10 +53,10 @@ readIEDC <- function(subtype = "pigIronProduction") {
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste(
-      "Invalid subtype -- supported subtypes are:",
-      names(switchboard)
-    ))
+    stop(
+      "Invalid subtype -- supported subtypes are: ",
+      paste0(names(switchboard), sep = ", ")
+    )
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())
