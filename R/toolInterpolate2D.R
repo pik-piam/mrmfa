@@ -41,6 +41,7 @@ toolInterpolate2D <- function(x, method = "linear", ...) {
   # turn back to magpie object
   df <- tibble::rownames_to_column(df, "Region")
   y <- as.magpie(df, spatial = "Region")
+  getNames(y) <- NULL
 
   return(y)
 }
