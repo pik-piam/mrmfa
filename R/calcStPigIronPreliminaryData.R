@@ -39,6 +39,8 @@ calcStPigIronPreliminaryData <- function(subtype) {
   # assume 0 pig iron data in remaining cells
   final[is.na(final)] <- 0
 
+  getNames(final) <- NULL
+
   result <- list(
     x = final,
     weight = NULL,

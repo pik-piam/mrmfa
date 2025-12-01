@@ -180,6 +180,7 @@ toolBackcastByReference2D <- function(x,
   scaledRef <- ref * finalRatio
 
   # create final magpie and fill with x and scaledRef
+  # TODO: should then new magpie object rather have NA in the third column?
   final <- new.magpie(
     cells_and_regions = getItems(x, dim = 1),
     years = sort(union(refYears, xYears)),
