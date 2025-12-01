@@ -132,6 +132,8 @@ calcStScrapConsumption <- function(subtype) {
       scAssumptions[is.na(scAssumptions)] <- 0 # Assume 0 scrap consumption for remaining cells
       scAssumptions <- scAssumptions[, seq(1900, 2022, 1), ] # Cut to the years 1900-2022
 
+      getNames(scAssumptions) <- NULL
+
       result <- list(
         x = scAssumptions,
         weight = NULL,
@@ -143,6 +145,7 @@ calcStScrapConsumption <- function(subtype) {
       return(result)
     },
     "noAssumptions" = function() {
+
       # Load countries that are not as important within a region and where hence NAs
       # should be set to 0 to avoid NA as region aggregation
       f <- toolGetMapping("scrap_consumption_countries_2_zero.csv", where = "mrmfa", returnPathOnly = TRUE)
@@ -159,14 +162,18 @@ calcStScrapConsumption <- function(subtype) {
         out <- toolAggregate(x, rel = rel, to = to)
 
         if ("EUR" %in% getItems(out, dim = 1)) {
+
           eu28 <- eu28[, !is.na(eu28), ] # select only years with data
-          out["EUR", getYears(eu28), getNames(eu28)] <- eu28
+          out["EUR", getYears(eu28), ] <- eu28
         }
 
         return(out)
       }
 
       birEu28 <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)["EU 28", , ]
+
+      getNames(scLinear) <- NULL
+      getNames(birEu28) <- NULL
 
       result <- list(
         x = scLinear,

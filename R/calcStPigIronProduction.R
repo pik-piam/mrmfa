@@ -7,6 +7,7 @@
 #' @author Merlin Jo Hosak
 #'
 calcStPigIronProduction <- function() {
+
   data <- calcOutput("StPigIronPreliminaryData", subtype = "production", aggregate = FALSE)
 
   # Pig Iron production Data doesn't need any more processing, wrapper function just there for completeness.
