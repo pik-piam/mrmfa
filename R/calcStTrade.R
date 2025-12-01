@@ -84,7 +84,8 @@ calcStTrade <- function(subtype = "imports") {
     x = trade,
     weight = NULL,
     unit = "Tonnes",
-    description = paste0("Steel trade: ", subtype, " from 1900-2021 yearly for the SIMSON format.")
+    description = paste0("Steel trade: ", subtype, " from 1900-2021 yearly."),
+    note        = "dimensions: (Historic Time,Region,value)"
   )
 
   return(trade)

@@ -136,7 +136,8 @@ calcStScrapConsumption <- function(subtype) {
         x = scAssumptions,
         weight = NULL,
         unit = "Tonnes",
-        description = "Worldsteel data on steel scrap consumption with assumptions"
+        description = "Worldsteel data on steel scrap consumption with assumptions",
+        note = "dimensions: (Historic Time,Region,value)"
       )
 
       return(result)
@@ -173,7 +174,8 @@ calcStScrapConsumption <- function(subtype) {
         unit = "Tonnes",
         aggregationFunction = .customAggregate,
         aggregationArguments = list(eu28 = birEu28),
-        description = "Worldsteel data on steel scrap consumption with limited assumptions"
+        description = "Worldsteel data on steel scrap consumption with limited assumptions",
+        note = "dimensions: (Historic Time,Region,value)"
       )
 
       return(result)

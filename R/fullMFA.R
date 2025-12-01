@@ -20,7 +20,7 @@
 #' fullMFA()
 #' }
 #'
-fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, runSections = NULL) {
+fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, runSections = NULL) {
   # prepare section selector
   validSections <- c("drivers", "steel", "cement", "plastic")
 
@@ -40,8 +40,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
 
   #  ------------- DRIVERS -------------
   if (runSection("drivers")) {
-    calcOutput("CoPopulation1900To2150", file = "co_population1900To2150.cs4r", scenario = scenario)
-    calcOutput("CoGDP1900To2150", file = "co_gdp1900To2150.cs4r", scenario = scenario, perCapita = gdpPerCapita)
+    calcOutput("CoPopulation1900To2150", file = "co_population.cs4r", scenario = scenario)
+    calcOutput("CoGDP1900To2150", file = "co_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita)
   }
 
   #  ------------- STEEL ----------------
@@ -60,9 +60,10 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = FALSE, 
 
     # Parameters
     calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE) # FIXME: this is currently overwritten by a latter calc function
-    calcOutput("StLifetimes", subtype = "Cooper2014", file = "st_lifetimes.cs4r", aggregate = FALSE)
+    calcOutput("StLifetimes", subtype = "Cooper2014", unit = "mean", file = "st_lifetime_mean.cs4r", aggregate = FALSE)
+    calcOutput("StLifetimes", subtype = "Cooper2014", unit = "std", file = "st_lifetime_std.cs4r", aggregate = FALSE)
     calcOutput("StRecoveryRate", subtype = "WorldSteel", file = "st_recovery_rate.cs4r", aggregate = FALSE)
-    calcOutput("StSectorSplits", subtype = "Pauliuk2013", file = "st_sector_splits.cs4r", aggregate = FALSE)
+    calcOutput("StSectorSplits", subtype = "Pauliuk2013", file = "st_sector_splits.cs4r", aggregate = FALSE) # FIXME: dimensions??
 
     # Static Parameters
     calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)

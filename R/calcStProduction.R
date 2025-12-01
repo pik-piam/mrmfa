@@ -55,7 +55,8 @@ calcStProduction <- function() {
     x = prod,
     weight = NULL,
     unit = "Tonnes",
-    description = "Steel production from 1900-2022 yearly for the SIMSON format"
+    description = "Steel production from 1900-2022 yearly",
+    note        = "dimensions: (Historic Time,Region,value)"
   )
 
   return(result)

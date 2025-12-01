@@ -28,7 +28,8 @@ calcStDRIData <- function(subtype) {
     x = final,
     weight = NULL,
     unit = "Tonnes",
-    description = paste0("DRI data of type ", subtype, " from 1900-2022 yearly for the SIMSON format")
+    description = paste0("DRI data of type ", subtype, " from 1900-2022 yearly"),
+    note = "dimensions: (Historic Time,Region,value)"
   )
 
   return(result)

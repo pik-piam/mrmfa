@@ -12,7 +12,8 @@ calcStRecoveryRate <- function(subtype) {
         weight = NULL,
         unit = 1,
         isocountries = FALSE,
-        description = "World Steel Association steel scrap recovery rate"
+        description = "World Steel Association steel scrap recovery rate",
+        note = "dimensions: (Good,value)"
       )
 
       return(final)

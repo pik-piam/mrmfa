@@ -26,14 +26,15 @@ calcStMaxScrapShare <- function(subtype = "BIR") {
 
       getSets(maxScrapShare) <- c("Region", "Year", "Parameter")
       getItems(maxScrapShare, dim = 1) <- "GLO"
-      getNames(maxScrapShare) <- "Max steel scrap share"
+      getNames(maxScrapShare) <- NULL
 
       final <- list(
         x = maxScrapShare,
         weight = NULL,
         unit = 1,
         isocountries = FALSE,
-        description = "Maximum scrap share in production"
+        description = "Maximum scrap share in production",
+        note = "dimensions: (value)"
       )
 
       return(final)
