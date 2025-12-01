@@ -74,6 +74,10 @@ calcStTrade <- function(subtype = "imports") {
     }
     # Split indirect trade into direct trade
     trade <- .splitIndirectTrade(trade, shares = shares)
+    note <- "dimensions: (Historic Time,Region,Good,value)"
+  }
+  else {
+    note <- "dimensions: (Historic Time,Region,value)"
   }
 
   # Finalize
@@ -85,7 +89,7 @@ calcStTrade <- function(subtype = "imports") {
     weight = NULL,
     unit = "Tonnes",
     description = paste0("Steel trade: ", subtype, " from 1900-2021 yearly."),
-    note        = "dimensions: (Historic Time,Region,value)"
+    note        = note
   )
 
   return(trade)
