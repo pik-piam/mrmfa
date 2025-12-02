@@ -38,7 +38,9 @@ calcStScrapConsumptionWS <- function() {
   missingCountries <- setdiff(c(newCountries, "SRB", "MNE"), getItems(scrapConsumptionWS, dim = 1))
   scrapConsumptionWS <- add_columns(scrapConsumptionWS, addnm = missingCountries, dim = 1, fill = NA)
 
-  scrapConsumptionWS <- toolISOhistorical(scrapConsumptionWS)
+  scrapConsumptionWS <- toolISOhistorical(scrapConsumptionWS) %>%
+    suppressSpecificWarnings("Weight in toolISOhistorical contained NAs. Set NAs to 0!")
+
   scrapConsumptionWS <- toolCountryFill(scrapConsumptionWS, verbosity = 2)
 
   result <- list(

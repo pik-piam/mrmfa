@@ -55,7 +55,8 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
     missingCountries <- setdiff(newCountries, getItems(x, dim = 1))
     x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
 
-    x <- toolISOhistorical(x, mapping = historicalMapping, overwrite = TRUE)
+    x <- toolISOhistorical(x, mapping = historicalMapping, overwrite = TRUE) %>%
+      suppressSpecificWarnings("Weight in toolISOhistorical contained NAs. Set NAs to 0!")
   }
 
   x <- toolCountryFill(x, verbosity = 2)

@@ -57,7 +57,7 @@ convertWorldSteelDigitised <- function(x, subtype) {
     missingCountries <- setdiff(newCountries, getItems(x, dim = 1))
     x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
     x <- toolISOhistorical(x, additional_mapping = rbind(blx, sac), overwrite = TRUE) %>%
-
+      suppressSpecificWarnings("Weight in toolISOhistorical contained NAs. Set NAs to 0!")
 
     # YUG in the 70s is split (among others) into SCG, not into MNE and SRB
     # (as, the last year in the data for SCG is 2005)

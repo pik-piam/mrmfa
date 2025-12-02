@@ -60,7 +60,9 @@ convertIEDC <- function(x, subtype) {
 
   histMapping <- rbind(histMapping, scg, blx)
 
-  x <- toolISOhistorical(x, overwrite = TRUE, mapping = histMapping)
+  x <- toolISOhistorical(x, overwrite = TRUE, mapping = histMapping) %>%
+    suppressSpecificWarnings("Weight in toolISOhistorical contained NAs. Set NAs to 0!")
+
   x <- toolCountryFill(x, verbosity = 2)
 
   # drop reference data again
