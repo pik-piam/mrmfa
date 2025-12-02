@@ -139,9 +139,8 @@ toolBackcastByReference2D <- function(x,
     return(normalizedWeights)
   }
 
-  # FIXME: the code assumes the magpie objects are sorted by years
-  # either adapt logic or make sure that objects are sorted here
-
+  # FIXME: the code assumes the magpie objects are sorted by years and create
+  # consider making sure that objects are sorted here or throw warning/error otherwise
 
   # main routine ----
 

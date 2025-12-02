@@ -63,7 +63,7 @@ calcStScrapConsumption <- function(subtype) {
 
     # calculate assumption for rest of world steel consumption by deducting sum of
     # complete countries from world consumption
-    # TODO: for some years, the values are negative, which will produce negative steel consumption later on
+    # FIXME: for some years, the values are negative, which will produce negative steel consumption later on
     # therefore, this forecasting method seems inadequate and should be reworked
     restWorldSC <- worldSC - sumSCnoNA
 

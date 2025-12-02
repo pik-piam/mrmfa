@@ -20,7 +20,7 @@ country codes.
 This operation would normally happen on magclass object in the convert function,
 but as the cleansing can introduce duplicates for the given data, we resolve this on
 the data frames in the respective read functions before converting to a MagPIE
-object (MagPIE does not handle duplicate regions in first dimension well)
+object (MagPIE does not handle duplicate regions in first dimension well).
 }
 \author{
 Falk Benke

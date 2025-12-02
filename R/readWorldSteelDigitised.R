@@ -83,7 +83,7 @@ readWorldSteelDigitised <- function(subtype) {
           )
         # sum up variables (e.g. "Basic Bessemer Thomas" and "Pure Oxygen" appear both in some sheet,
         # so count their sum as "BOF")
-        # TODO: confirm with JD that this is as intended
+        # TODO: confirm that this logic is as intended
         f <- stats::aggregate(value ~ country_name + variable + year, f, sum)
 
         df <- rbind(df, f)

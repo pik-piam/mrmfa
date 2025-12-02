@@ -2,12 +2,12 @@
 #' @description Convert data World Steel Association digitised 1978-2022 yearbooks.
 #' @inherit readWorldSteelDigitised
 #' @param x MagPIE object
-#' @author Merlin Jo Hosak
+#' @author Merlin Jo Hosak, Falk Benke
 convertWorldSteelDigitised <- function(x, subtype) {
-
-  # TODO complete
-  if (subtype %in% c("worldProduction", "historicScrapShare",
-                     "scrapConsumption", "worldScrapConsumption")) {
+  if (subtype %in% c(
+    "worldProduction", "historicScrapShare",
+    "scrapConsumption", "worldScrapConsumption"
+  )) {
     stop("convert not supported for subtype '", subtype, "'")
   }
 
@@ -27,8 +27,10 @@ convertWorldSteelDigitised <- function(x, subtype) {
     x <- toolCountryFill(x, verbosity = 2)
 
     return(x)
-  } else {
-    # TODO make subtypes explicit
+  } else if (subtype %in% c(
+    "production", "productionByProcess", "imports", "exports",
+    "scrapImports", "scrapExports"
+  )) {
     # add regions not present in the magpie object yet needed for toolISOhistorical to work
 
     historicalMapping <- toolGetMapping("ISOhistorical.csv", where = "madrat") %>%
@@ -54,7 +56,8 @@ convertWorldSteelDigitised <- function(x, subtype) {
     newCountries <- c(unique(historicalMapping$toISO), blx$toISO, sac$toISO, scg$toISO)
     missingCountries <- setdiff(newCountries, getItems(x, dim = 1))
     x <- add_columns(x, addnm = missingCountries, dim = 1, fill = NA)
-    x <- toolISOhistorical(x, additional_mapping = rbind(blx, sac), overwrite = TRUE)
+    x <- toolISOhistorical(x, additional_mapping = rbind(blx, sac), overwrite = TRUE) %>%
+
 
     # YUG in the 70s is split (among others) into SCG, not into MNE and SRB
     # (as, the last year in the data for SCG is 2005)
@@ -67,5 +70,7 @@ convertWorldSteelDigitised <- function(x, subtype) {
     x <- toolCountryFill(x, verbosity = 2)
 
     return(x)
+  } else {
+    stop("Invalid subtype.")
   }
 }

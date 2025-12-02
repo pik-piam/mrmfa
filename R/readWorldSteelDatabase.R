@@ -11,7 +11,6 @@
 #' "driProduction", "driImports", "driExports"
 #'
 #'
-#' TODO: check if all these subtpyes are actually used
 readWorldSteelDatabase <- function(subtype = "production") {
   .readCommonSourceFormat <- function(name, version = "v1.0") {
 

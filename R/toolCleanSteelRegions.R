@@ -17,9 +17,6 @@
 #' @author Falk Benke
 toolCleanSteelRegions <- function(df) {
 
-  # TODO: what about  \u2014|
-
-
   # clean up region names ----
   df <- df %>%
     filter(!grepl("total|other", .data$country_name, ignore.case = TRUE),

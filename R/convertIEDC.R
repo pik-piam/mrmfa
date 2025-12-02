@@ -1,4 +1,6 @@
 #' @author Falk Benke
+#' @inherit readIEDC
+#' @param x MagPIE object
 convertIEDC <- function(x, subtype) {
 
   countries <- getItems(x, dim = 1)
@@ -28,6 +30,7 @@ convertIEDC <- function(x, subtype) {
   ws <- readSource("WorldSteelDatabase", subtype = subtype)
   ws[is.na(ws)] <- 0
   ws <- ws[,getYears(ws, as.integer = TRUE) >= 2009,]
+
   x <- toolMerge2D(x, ws)
 
   # create custom iso mapping matching the data

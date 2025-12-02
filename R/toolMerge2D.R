@@ -1,4 +1,5 @@
 #' Merge two 2D magpie objects
+#'
 #' @description
 #' Perform an outer merge on two 2D magpie objects (regions x years).
 #'
@@ -9,10 +10,7 @@
 #' @return A 2D magpie object containing the union of regions and years from both inputs
 #'
 #'
-#'
 toolMerge2D <- function(a, b, fill = NA) {
-
-  # TODO: still needed?
 
   if (!(is.magpie(a) && is.magpie(b))) {
     stop("Both a and b must be magpie objects")

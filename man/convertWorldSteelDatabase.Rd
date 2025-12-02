@@ -12,10 +12,7 @@ convertWorldSteelDatabase(x, subtype = "production")
 \item{subtype}{must be one of "production", "bofProduction", "eafProduction",
 "imports", "exports", "scrapImports",  "scrapExports", "indirectImports",
 "indirectExports", "pigIronProduction", "pigIronImports", "pigIronExports",
-"driProduction", "driImports", "driExports"
-
-
-TODO: check if all these subtpyes are actually used}
+"driProduction", "driImports", "driExports"}
 }
 \description{
 Convert data from WorldSteelAssociation Database
