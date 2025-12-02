@@ -33,9 +33,8 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2") {
   # The UN_PopDiv dataset reaches from 1900 to 2150, in 5 year steps and is
   # therefore interpolated to 1 year resolution. It is used to extrapolate
   # 20th century data for the remaining regions.
-  worldHist <- readSource("UN_PopDiv", subtype = "pop", subset = "1900-2150", convert = FALSE)
-  worldHist <- time_interpolate(worldHist, 1900:2150)
-  getItems(worldHist, dim = 3) <- "value"
+  worldHist <- readSource("UNWorldPopulation")
+  worldHist <- time_interpolate(worldHist, seq(1900, 2150, 1))
   worldHist <- worldHist * 1e3 # convert from thousands to inhabitants
 
   # extrapolate with world average as reference data for other countries

@@ -52,6 +52,7 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
   unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
   description <- "GDP from 1900-2150 yearly for the SIMSON format"
   weight <- NULL
+  getNames(gdp) <- NULL
 
   # convert to per capita if requested
   if (perCapita) {
