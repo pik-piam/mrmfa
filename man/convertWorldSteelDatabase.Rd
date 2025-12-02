@@ -9,7 +9,13 @@ convertWorldSteelDatabase(x, subtype = "production")
 \arguments{
 \item{x}{Magpie object}
 
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{must be one of "production", "bofProduction", "eafProduction",
+"imports", "exports", "scrapImports",  "scrapExports", "indirectImports",
+"indirectExports", "pigIronProduction", "pigIronImports", "pigIronExports",
+"driProduction", "driImports", "driExports"
+
+
+TODO: check if all these subtpyes are actually used}
 }
 \description{
 Convert data from WorldSteelAssociation Database

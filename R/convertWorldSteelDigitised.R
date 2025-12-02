@@ -1,6 +1,7 @@
 #' Convert World Steel Digitised
 #' @description Convert data World Steel Association digitised 1978-2022 yearbooks.
 #' @inherit readWorldSteelDigitised
+#' @param x MagPIE object
 #' @author Merlin Jo Hosak
 convertWorldSteelDigitised <- function(x, subtype) {
 

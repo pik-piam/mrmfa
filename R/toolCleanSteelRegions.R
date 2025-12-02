@@ -1,5 +1,24 @@
-# TODO: add documentation
+#' Clean up region names in steel sources
+#'
+#' @description Clean up region names for a given data frame with steel data
+#' read in from in \link{readWorldSteelDigitised} and \link{readWorldSteelDatabase}
+#'
+#' Applies data cleansing, removes ignored countries/regions and converts country names to ISO3
+#' country codes.
+#'
+#' This operation would normally happen on magclass object in the convert function,
+#' but as the cleansing can introduce duplicates for the given data, we resolve this on
+#' the data frames in the respective read functions before converting to a MagPIE
+#' object (MagPIE does not handle duplicate regions in first dimension well).
+#'
+#' @param df a data frame with steel data consisting of three columns 'country_name',
+#' 'period' and 'value'
+#'
+#' @author Falk Benke
 toolCleanSteelRegions <- function(df) {
+
+  # TODO: what about  \u2014|
+
 
   # clean up region names ----
   df <- df %>%
@@ -7,7 +26,7 @@ toolCleanSteelRegions <- function(df) {
            !is.na(.data$country_name)) %>%
     mutate(
       # drop hyphens and slashes
-      "country_name" =  gsub("-|–|/", " ", .data$country_name),
+      "country_name" =  gsub("-|/", " ", .data$country_name),
       # replace two or more whitespaces by one
       "country_name" =  gsub("  +", " ", .data$country_name),
       # remove appended info in round brackets, e.g. "Taiwan (R.O.C.)" -> "Taiwan"
@@ -27,7 +46,8 @@ toolCleanSteelRegions <- function(df) {
 
 
   # rename countries to ISO3 code ----
-  # TODO: consider moving some of these to madrat, see also https://github.com/pik-piam/madrat/pull/250/files
+  # TODO: consider moving some of these to madrat,
+  # see also https://github.com/pik-piam/madrat/pull/250/files
   m <- toolGetMapping("MFA_rename_regions.csv", where = "mrmfa")
 
   additionalIsoMappings <- m$to

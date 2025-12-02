@@ -1,7 +1,6 @@
 #' Read OECD GDP
 #' @description Read OECD GDP per capita data from 1500-2016, given in 2011 USD.
 #' @author Merlin Jo Hosak
-
 readOECD_GDP <- function() {
 
   version <- "v1.1"

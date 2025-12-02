@@ -2,6 +2,7 @@
 #' @description Convert data from WorldSteelAssociation Database
 #' @author Merlin Jo Hosak
 #' @param x Magpie object
+#' @inherit readWorldSteelDatabase
 convertWorldSteelDatabase <- function(x, subtype = "production") {
 
   # TODO: for some subtypes, we split BLX and SCG according to fixed rules, for others we use

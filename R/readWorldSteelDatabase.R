@@ -14,6 +14,7 @@
 #' TODO: check if all these subtpyes are actually used
 readWorldSteelDatabase <- function(subtype = "production") {
   .readCommonSourceFormat <- function(name, version = "v1.0") {
+
     # read data from Excel file
     path <- file.path(".", version, name)
 
@@ -27,7 +28,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
     x <- x[1:(nrow(x) - 5), ]
 
     x <- x %>%
-      tidyr::pivot_longer(c(-"Country"), names_to = "variable") %>%
+      tidyr::pivot_longer(c(-"Country"), names_to = "period") %>%
       dplyr::rename("country_name" = "Country") %>%
       toolCleanSteelRegions()
 

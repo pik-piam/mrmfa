@@ -145,8 +145,9 @@ calcStScrapConsumption <- function(subtype) {
 
       # Load countries that are not as important within a region and where hence NAs
       # should be set to 0 to avoid NA as region aggregation
-      f <- toolGetMapping("scrap_consumption_countries_2_zero.csv", where = "mrmfa", returnPathOnly = TRUE)
-      countries2zero <- read.csv2(f, comment.char = "#")$Countries2Zero
+      f <- toolGetMapping("scrap_consumption_countries_2_zero.csv", where = "mrmfa",
+                          returnPathOnly = TRUE)
+      countries2zero <- utils::read.csv2(f, comment.char = "#")$Countries2Zero
 
       tmp <- scLinear[countries2zero, , ]
       tmp[is.na(tmp)] <- 0

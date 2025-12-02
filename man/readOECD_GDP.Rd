@@ -4,10 +4,7 @@
 \alias{readOECD_GDP}
 \title{Read OECD GDP}
 \usage{
-readOECD_GDP(subtype = "gdpPC")
-}
-\arguments{
-\item{subtype}{Specific dataset used by that source}
+readOECD_GDP()
 }
 \description{
 Read OECD GDP per capita data from 1500-2016, given in 2011 USD.

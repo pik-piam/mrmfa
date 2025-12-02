@@ -9,7 +9,7 @@
 #' 'worldScrapConsumption', 'indirectTrade'
 #' @author Merlin Jo Hosak, Falk Benke
 #'
-readWorldSteelDigitised <- function(subtype = "worldProduction") {
+readWorldSteelDigitised <- function(subtype) {
   version <- "v1.0"
 
   # helper functions ----
@@ -21,7 +21,7 @@ readWorldSteelDigitised <- function(subtype = "worldProduction") {
     df <- NULL
     for (f in paths) {
       tmp <- readxl::read_excel(path = f) %>%
-        tidyr::pivot_longer(c(-"country_name"), names_to = "variable")
+        tidyr::pivot_longer(c(-"country_name"), names_to = "period")
       df <- rbind(df, tmp)
     }
 

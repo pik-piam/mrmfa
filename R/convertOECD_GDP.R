@@ -1,6 +1,7 @@
 #' Convert OECD GDP
 #' @description Convert OECD GDP per capita data from 1500-2016
 #' @author Merlin Jo Hosak
+#' @param x MagPIE object
 convertOECD_GDP <- function(x) {
 
   countries <- getItems(x, dim = 1)

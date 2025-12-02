@@ -33,7 +33,7 @@ calcStScrapConsumptionWS <- function() {
   scrapConsumptionWS <- toolInterpolate2D(scrapConsumptionWS)
 
   # split historic regions ----
-  historicalMap <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
+  historicalMap <- utils::read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
   newCountries <- historicalMap[historicalMap$fromISO %in% getItems(scrapConsumptionWS, dim = 1), "toISO"]
   missingCountries <- setdiff(c(newCountries, "SRB", "MNE"), getItems(scrapConsumptionWS, dim = 1))
   scrapConsumptionWS <- add_columns(scrapConsumptionWS, addnm = missingCountries, dim = 1, fill = NA)
