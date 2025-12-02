@@ -7,7 +7,9 @@
 calcStLifetimes(subtype)
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Subtype of steel lifetimes data to load. Currently only
+'Cooper2014' is available. Other options might include Pauliuk or Wittig (
+see respective folders).}
 }
 \description{
 Function to load steel lifetimes data in years.

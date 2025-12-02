@@ -1,6 +1,6 @@
 #' Get GDP from 1900-2150
 #' @description
-#' Calc GDP (PPP) from 1900-2150 yearly for the SIMSON format on a country
+#' Calc GDP (PPP) from 1900-2150 yearly for the REMIND-MFA format on a country
 #' level. Can be aggregated to regions via calcOutput aggregate parameter.
 #' Uses \link[=readOECD_GDP]{OECD_GDP} for historical GDP data as well as
 #' \link[mrdrivers]{calcGDP} from mrdrivers for current and future GDP data

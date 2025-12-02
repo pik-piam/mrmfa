@@ -18,8 +18,6 @@
 #' list of metadata (in calcOutput format).
 calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(0.2, 0, 0.8))) {
 
-  # TODO: where will this be used?
-
   # Internal functions ----
 
   .cleanMergeProcessData <- function(byProcessData, CurrentData) {

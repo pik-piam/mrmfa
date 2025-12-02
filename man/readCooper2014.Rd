@@ -7,7 +7,8 @@
 readCooper2014(subtype = "lifetimes")
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Subtype of Cooper 2014 data to load. Currently only
+'lifetimes' is available.}
 }
 \description{
 Read data based on the paper 'Component level strategies for exploiting

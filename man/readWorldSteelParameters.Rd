@@ -7,7 +7,13 @@
 readWorldSteelParameters(subtype)
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Subtype of World Steel parameter to read. Currently available
+subtypes are:
+\itemize{
+\item 'recoveryRate': Steel scrap recovery rates in the main end-use sectors
+(construction, machinery, products, transport)
+\item 'scrapInBOFRate': Share of scrap used production in Basic Oxygen Furnaces
+}}
 }
 \description{
 Read World Steel Association (WSA) parameters from various sources like

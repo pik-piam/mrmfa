@@ -14,7 +14,7 @@ List with Magpie object of population and metadata in calcOutput
 format.
 }
 \description{
-Calc population from 1900-2100 yearly for the SIMSON format on a country
+Calc population from 1900-2100 yearly for the REMIND-MFA format on a country
 level. Can be aggregated to regions via calcOutput aggregate parameter.
 Uses \link{readGapminder} and \link[mrdrivers]{readUN_PopDiv}
 datasets for historical population data as well as

@@ -11,6 +11,5 @@ readCooper2014 <- function() {
     tidyr::pivot_longer(cols = c(2, 3)) %>%
     dplyr::rename("variable" = "Cooper Lifetimes", "unit" = "name") %>%
     as.magpie()
-
   return(x)
 }
