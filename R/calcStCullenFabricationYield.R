@@ -11,10 +11,10 @@ calcStCullenFabricationYield <- function() {
 
   getSets(x) <- c("region", "year", "parameter")
   getItems(x, dim = 3) <- c(
-    "Construction Yield",
-    "Machinery Yield",
-    "Products Yield",
-    "Transport Yield"
+    "Construction",
+    "Machinery",
+    "Products",
+    "Transport"
   )
 
   x <- list(
