@@ -39,7 +39,6 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2") {
 
   # extrapolate with world average as reference data for other countries
   pop <- toolBackcastByReference2D(x = pop, ref = worldHist)
-  getNames(pop) <- NULL
 
   result <- list(
     x = pop,

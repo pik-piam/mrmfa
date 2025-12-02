@@ -23,7 +23,6 @@ calcStDRIData <- function(subtype) {
 
   # Backcast DRI production based on steel production
   final <- toolBackcastByReference2D(driData, steelProduction)
-  getNames(final) <- NULL
 
   result <- list(
     x = final,

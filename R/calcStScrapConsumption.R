@@ -132,8 +132,6 @@ calcStScrapConsumption <- function(subtype) {
       scAssumptions[is.na(scAssumptions)] <- 0 # Assume 0 scrap consumption for remaining cells
       scAssumptions <- scAssumptions[, seq(1900, 2022, 1), ] # Cut to the years 1900-2022
 
-      getNames(scAssumptions) <- NULL
-
       result <- list(
         x = scAssumptions,
         weight = NULL,
@@ -170,9 +168,6 @@ calcStScrapConsumption <- function(subtype) {
       }
 
       birEu28 <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)["EU 28", , ]
-
-      getNames(scLinear) <- NULL
-      getNames(birEu28) <- NULL
 
       result <- list(
         x = scLinear,

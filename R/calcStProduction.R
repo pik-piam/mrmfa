@@ -49,8 +49,6 @@ calcStProduction <- function() {
   # remaining NaN values in the future
   prod <- toolInterpolate2D(prod, method = "constant")
 
-  getNames(prod) <- NULL
-
   result <- list(
     x = prod,
     weight = NULL,

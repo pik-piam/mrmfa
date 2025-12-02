@@ -15,7 +15,6 @@ calcStPigIronTrade <- function(subtype) {
   production <- calcOutput("StPigIronPreliminaryData", subtype = "production", aggregate = FALSE)
 
   final <- toolBackcastByReference2D(tradeData, production)
-  getNames(final) <- NULL
 
   result <- list(
     x = final,

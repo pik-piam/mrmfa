@@ -57,7 +57,7 @@ toolBackcastByReference2D <- function(x,
     newRef <- new.magpie(
       cells_and_regions = xRegions,
       years = getItems(ref, dim = 2),
-      names = "value",
+      names = NULL,
       fill = NA,
       sets = names(dimnames(ref))
     )
@@ -99,7 +99,7 @@ toolBackcastByReference2D <- function(x,
     # make new magpie with same regions as ratios and for every region the values 1,2,3...
     sampleWeights <- new.magpie(
       years = getItems(ratios, dim = 2),
-      names = "value",
+      names = NULL,
       fill = baseWeights,
       sets = names(dimnames(ratios))
     )
@@ -107,7 +107,7 @@ toolBackcastByReference2D <- function(x,
     totalWeights <- new.magpie(
       cells_and_regions = getItems(ratios, dim = 1),
       years = getItems(ratios, dim = 2),
-      names = "value",
+      names = NULL,
       fill = NA,
       sets = names(dimnames(ratios))
     )
@@ -180,11 +180,10 @@ toolBackcastByReference2D <- function(x,
   scaledRef <- ref * finalRatio
 
   # create final magpie and fill with x and scaledRef
-  # TODO: should then new magpie object rather have NA in the third column?
   final <- new.magpie(
     cells_and_regions = getItems(x, dim = 1),
     years = sort(union(refYears, xYears)),
-    names = "value",
+    names = NULL,
     fill = NA,
     sets = names(dimnames(x))
   )

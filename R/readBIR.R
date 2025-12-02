@@ -13,12 +13,14 @@ readBIR <- function(subtype) {
       path <- file.path(".", "v1.0", "BIR_ScrapShareProduction.xlsx")
       df <- readxl::read_excel(path, sheet = "Data")
       x <- as.magpie(df, spatial = "Scrap share in production")
+      getNames(x) <- NULL
       return(x)
     },
     "scrapConsumption" = function() {
       path <- file.path(".", "v1.0", "BIR_ScrapConsumption_Ammended.xlsx")
       df <- readxl::read_excel(path, sheet = "Data", skip = 1)
       x <- as.magpie(df, spatial = "region")
+      getNames(x) <- NULL
       x <- x * 1e6 # convert from Mt to t
       return(x)
     }
