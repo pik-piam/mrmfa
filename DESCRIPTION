@@ -2,7 +2,7 @@ Type: Package
 Package: mrmfa
 Title: Input data generation for the REMIND MFA
 Version: 0.5.0
-Date: 2025-12-02
+Date: 2025-12-03
 Authors@R: c(
     person("Jakob", "Dürrwächter", , "jakobdu@pik-potsdam.de", role = c("aut", "cre")),
     person("Bennet", "Weiss", , "bennet.weiss@pik-potsdam.de", role = "aut"),

@@ -10,8 +10,6 @@
 #' @author Merlin Jo Hosak
 toolInterpolate2D <- function(x, method = "linear", ...) {
 
-  regions <- getItems(x, dim = 1)
-
   # turn into data frame with same index
   df <- magclass::as.data.frame(x)
   df <- df[, c("Region", "Year", "Value")]
@@ -45,4 +43,3 @@ toolInterpolate2D <- function(x, method = "linear", ...) {
 
   return(y)
 }
-

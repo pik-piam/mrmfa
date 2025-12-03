@@ -3,7 +3,7 @@
 #' @author Merlin Jo Hosak
 #' @param x Magpie object
 #' @inherit readWorldSteelDatabase
-convertWorldSteelDatabase <- function(x, subtype = "production") {
+convertWorldSteelDatabase <- function(x, subtype) {
 
   # TODO: for some subtypes, we split BLX and SCG according to fixed rules, for others we use
   # toolISOhistorical. Should this be unified?
@@ -26,7 +26,7 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
 
   }
 
-  if (any(c("BLX", "YUG", "SCG") %in% getRegions(x))) {
+  if (any(c("BLX", "YUG", "SCG") %in% getItems(x, dim = 1))) {
 
     # Add historical mapping for Yugoslavia with last year being 2005
     # instead of 1991 as there is some aggregated data in this dataset
@@ -58,6 +58,7 @@ convertWorldSteelDatabase <- function(x, subtype = "production") {
     x <- toolISOhistorical(x, mapping = historicalMapping, overwrite = TRUE) %>%
       suppressSpecificWarnings("Weight in toolISOhistorical contained NAs. Set NAs to 0!")
   }
+
 
   x <- toolCountryFill(x, verbosity = 2)
 

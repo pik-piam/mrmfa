@@ -4,9 +4,8 @@
 #' Using the function \link{readCullen2012}.
 #' @author Merlin Jo Hosak
 calcStCullenFabricationYield <- function() {
-
   x <- readSource("Cullen2012", subtype = "giMatrix")
-  x <- x[, , "End Use Goods - End Use Goods", pmatch = T]
+  x <- x[, , "End Use Goods - End Use Goods", pmatch = TRUE]
   x <- x[, , c("Construction %", "Machinery %", "Products %", "Transport %")]
 
   getSets(x) <- c("region", "year", "parameter")

@@ -29,7 +29,7 @@ convertIEDC <- function(x, subtype) {
   # use WorldSteel data as reference
   ws <- readSource("WorldSteelDatabase", subtype = subtype)
   ws[is.na(ws)] <- 0
-  ws <- ws[,getYears(ws, as.integer = TRUE) >= 2009,]
+  ws <- ws[, getYears(ws, as.integer = TRUE) >= 2009, ]
 
   x <- toolMerge2D(x, ws)
 
@@ -66,7 +66,7 @@ convertIEDC <- function(x, subtype) {
   x <- toolCountryFill(x, verbosity = 2)
 
   # drop reference data again
-  x <- x[, getYears(x, as.integer = TRUE) < 2009, , invert = T]
+  x <- x[, getYears(x, as.integer = TRUE) < 2009, , invert = TRUE]
 
   return(x)
 }

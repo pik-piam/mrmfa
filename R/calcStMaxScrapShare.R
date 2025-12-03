@@ -10,10 +10,10 @@ calcStMaxScrapShare <- function(subtype = "BIR") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "BIR" = function() {
-      scrapShares <- readSource("BIR", subtype = "scrapShare", convert = F)
+      scrapShares <- readSource("BIR", subtype = "scrapShare", convert = FALSE)
 
       # Remove turkey as it is an outlier
-      scrapShares <- scrapShares[!getRegions(scrapShares) == "Turkey", , ]
+      scrapShares <- scrapShares[!getItems(scrapShares, dim = 1) == "Turkey", , ]
 
       # Assume the max to be the 95th percentile of remaining data.
       maxScrapShare <- magpply(

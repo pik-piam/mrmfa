@@ -12,7 +12,6 @@
 #'
 #' @author Merlin Jo Hosak
 calcStPigIronPreliminaryData <- function(subtype) {
-
   if (subtype == "production") {
     ws <- readSource("WorldSteelDatabase", subtype = "pigIronProduction")
     iedc <- readSource("IEDC", subtype = "pigIronProduction")
@@ -29,7 +28,7 @@ calcStPigIronPreliminaryData <- function(subtype) {
   # fill IEDC data with assumptions to make backcasting more reliable
   # global trend is derived only from countries without NAs in any years
   noNACountries <- getItems(iedc, dim = 1)[rowSums(is.na(iedc)) == 0]
-  globalTrend <- colSums(iedc[noNACountries, ,])
+  globalTrend <- colSums(iedc[noNACountries, , ])
   iedc <- toolBackcastByReference2D(iedc, globalTrend, doForecast = TRUE)
   iedc <- toolBackcastByReference2D(iedc, globalTrend)
 

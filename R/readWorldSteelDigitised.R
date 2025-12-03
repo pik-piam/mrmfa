@@ -273,7 +273,7 @@ readWorldSteelDigitised <- function(subtype) {
         (x["BEL", 1998, ] + x["LUX", 1998, ])
       x["LUX", seq(2000, 2008), ] <- x["BLX", seq(2000, 2008), ] * x["LUX", 1998, ] /
         (x["BEL", 1998, ] + x["LUX", 1998, ])
-      x <- x["BLX", , , invert = T]
+      x <- x["BLX", , , invert = TRUE]
 
       return(x)
     },

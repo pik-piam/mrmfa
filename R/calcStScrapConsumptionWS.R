@@ -49,4 +49,7 @@ calcStScrapConsumptionWS <- function() {
     unit = "Tonnes",
     description = "scrap consumption based on source WorldSteelDigitised"
   )
+
+  return(result)
+
 }

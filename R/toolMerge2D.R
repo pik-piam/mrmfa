@@ -15,8 +15,8 @@ toolMerge2D <- function(a, b, fill = NA) {
   if (!(is.magpie(a) && is.magpie(b))) {
     stop("Both a and b must be magpie objects")
   }
-  aRegions <- getRegions(a)
-  bRegions <- getRegions(b)
+  aRegions <- getItems(a, dim = 1)
+  bRegions <- getItems(b, dim = 1)
   aYears <- getYears(a)
   bYears <- getYears(b)
 

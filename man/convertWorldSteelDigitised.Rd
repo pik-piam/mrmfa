@@ -18,5 +18,5 @@ convertWorldSteelDigitised(x, subtype)
 Convert data World Steel Association digitised 1978-2022 yearbooks.
 }
 \author{
-Merlin Jo Hosak
+Merlin Jo Hosak, Falk Benke
 }

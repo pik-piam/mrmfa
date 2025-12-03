@@ -55,7 +55,7 @@ calcStScrapConsumption <- function(subtype) {
     noNA <- magpply(scAssumptions[, seq(1900, 2022, 1), ], function(y) all(!is.na(y)), MARGIN = 1)
     scAssumptionsNoNA <- scAssumptions[noNA, , ]
     completeCountries <- getItems(scAssumptionsNoNA, dim = 1)
-    sumSCnoNA <- dimSums(scAssumptionsNoNA, dim = 1, na.rm = T)
+    sumSCnoNA <- dimSums(scAssumptionsNoNA, dim = 1, na.rm = TRUE)
     getItems(sumSCnoNA, dim = 1) <- "GLO"
 
     # get assumption of world consumption

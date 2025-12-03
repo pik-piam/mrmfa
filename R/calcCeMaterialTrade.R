@@ -23,13 +23,13 @@ calcCeMaterialTrade <- function(subtype) {
   } else {
     stop("Invalid subtype. Choose either 'cement' or 'clinker'.")
   }
-  
+
   trade[is.na(trade)] <- 0
 
   # balance trade
   production <- calcOutput("CeBinderProduction", subtype = subtype, aggregate = FALSE)[, getYears(trade)]
   total_production <- dimSums(production, dim = 1)
-  total_production[total_production == 0] <- 1  # to avoid division by zero
+  total_production[total_production == 0] <- 1 # to avoid division by zero
   trade_imbalance <- dimSums(trade, dim = 1)
   trade <- trade - trade_imbalance * production / total_production
 

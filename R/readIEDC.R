@@ -49,6 +49,7 @@ readIEDC <- function(subtype = "pigIronProduction") {
         "1_F_steel_200R_F_2_30_pig_iron_export.xlsx", version,
         regionCol = "aspect 4 : origin_region"
       )
+      return(x)
     }
   )
   # ---- check if the subtype called is available ----
