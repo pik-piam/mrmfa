@@ -102,15 +102,16 @@ calcStCullenStaticParameters <- function(subtype) {
   } else {
     # ---- load data and do whatever ----
     data <- switchboard[[subtype]]()
-    getItems(data, dim = 3) <- "value"
     getSets(data)["d3.1"] <- subtype
+    getNames(data) <- NULL
 
     final <- list(
       x = data,
       weight = NULL,
       description = subtype,
       unit = 1,
-      isocountries = FALSE
+      isocountries = FALSE,
+      note = "dimensions: (value)"
     )
     return(final)
   }
