@@ -4,14 +4,19 @@
 \alias{convertWorldSteelDigitised}
 \title{Convert World Steel Digitised}
 \usage{
-convertWorldSteelDigitised(x)
+convertWorldSteelDigitised(x, subtype)
 }
 \arguments{
-\item{x}{Magpie object}
+\item{x}{MagPIE object}
+
+\item{subtype}{Available subtypes are:
+'worldProduction', 'production', 'productionByProcess', 'imports', 'exports',
+'scrapImports', 'scrapExports', 'scrapConsumption', historicScrapShare',
+'worldScrapConsumption', 'indirectTrade'}
 }
 \description{
 Convert data World Steel Association digitised 1978-2022 yearbooks.
 }
 \author{
-Merlin Jo Hosak
+Merlin Jo Hosak, Falk Benke
 }

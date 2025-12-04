@@ -7,7 +7,10 @@
 readWorldSteelDatabase(subtype = "production")
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{must be one of "production", "bofProduction", "eafProduction",
+"imports", "exports", "scrapImports",  "scrapExports", "indirectImports",
+"indirectExports", "pigIronProduction", "pigIronImports", "pigIronExports",
+"driProduction", "driImports", "driExports"}
 }
 \description{
 Read Data from World Steel Association online Database,

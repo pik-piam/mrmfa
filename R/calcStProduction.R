@@ -1,27 +1,53 @@
 #' Calc Steel Production
 #' @description
 #' Calc steel production from WorldSteel datasets. Can be aggregated to regions
-#' via calcOutput aggregate parameter. Uses
-#' \link{readWorldSteelDigitised} and
-#' \link{readWorldSteelDatabase} datasets, the former for
-#' historic, the latter for current data.
+#' via calcOutput aggregate parameter. Uses \link{readWorldSteelDigitised} and
+#' \link{readWorldSteelDatabase} datasets, the former for historic, the latter for current data.
 #' @author Merlin Jo Hosak
 #' @return Steel Production across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
 calcStProduction <- function() {
-  prod_data <- getSteelProductionData()
 
-  # Interpolate
-  prod_data$recent <- toolInterpolate2D(prod_data$recent, method = "linear")
-  prod_data$current <- toolInterpolate2D(prod_data$current, method = "linear")
+  # steel production from 1969 - 2009
+  prodRecent <- readSource("WorldSteelDigitised", subtype = "production")
+  prodRecent <- toolInterpolate2D(prodRecent, method = "linear")
 
-  # Extrapolate
-  prod <- extrapolateSteelProduction(prod_data)
+  # steel production from 2003 - 2022
+  prodCurrent <- readSource("WorldSteelDatabase", subtype = "production")
+  prodCurrent <- toolInterpolate2D(prodCurrent, method = "linear")
 
-  # Check if there are any NA left in prod
-  if (any(is.na(prod))) { # check if there are any NA left in prod
-    warning("There are still NA values in the production data after extrapolation.")
-  }
+  # extrapolate current by recent for regions where data overlaps
+  prod <- toolBackcastByReference2D(
+    prodCurrent,
+    ref = prodRecent,
+    doInterpolate = FALSE
+  )
+
+  # calculate estimate of World Production
+  nonNaIndices <- which(!is.na(rowSums(prod)))
+  prodNonNaRegions <- prod[nonNaIndices, , ]
+  # sum of regions which have no NAs in any years used as reference
+  sumNonNaRegions <- colSums(prodNonNaRegions)
+
+  prodWorld <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
+
+  worldRef <- toolBackcastByReference2D(
+    prodWorld,
+    ref = sumNonNaRegions,
+    doForecast = TRUE,
+    doInterpolate = FALSE
+  )
+
+  # extrapolate remaining regions by world reference
+  prod <- toolBackcastByReference2D(
+    prod,
+    ref = worldRef,
+    doInterpolate = FALSE
+  )
+
+  # use constant (last observation carried forward) interpolation for
+  # remaining NaN values in the future
+  prod <- toolInterpolate2D(prod, method = "constant")
 
   result <- list(
     x = prod,
@@ -31,54 +57,4 @@ calcStProduction <- function() {
   )
 
   return(result)
-}
-
-getSteelProductionData <- function() {
-  # load data
-  prodHist <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
-  prodRecent <- readSource("WorldSteelDigitised", subtype = "production")
-  prodCurrent <- readSource("WorldSteelDatabase", subtype = "production")
-
-  return(list(
-    hist = prodHist,
-    recent = prodRecent,
-    current = prodCurrent
-  ))
-}
-
-extrapolateSteelProduction <- function(prod_data) {
-  # Extrapolate current by recnet for regions where data overlaps
-  prod <- toolBackcastByReference2D(prod_data$current,
-    ref = prod_data$recent,
-    doInterpolate = FALSE
-  ) # already interpolated
-
-  # calculate estimate of World Production
-  worldRef <- getWorldSteelProductionTrend(prod, prod_data$hist)
-
-  # Extrapolate remaining regions by world reference
-  prod <- toolBackcastByReference2D(prod,
-    ref = worldRef,
-    doInterpolate = FALSE
-  ) # already interpolated
-
-  # use constant (last observation carried forward) interpolation for
-  # remaining NaN values in the future
-  prod <- toolInterpolate2D(prod, method = "constant")
-
-  return(prod)
-}
-
-getWorldSteelProductionTrend <- function(prod, prodHist) {
-  nonNaIndices <- which(!is.na(rowSums(prod)))
-  prodNonNaRegions <- prod[nonNaIndices, ]
-  sumNonNaRegions <- colSums(prodNonNaRegions)
-
-  worldRef <- toolBackcastByReference2D(prodHist,
-    ref = sumNonNaRegions,
-    doForecast = TRUE,
-    doInterpolate = FALSE
-  )
-
-  return(worldRef)
 }

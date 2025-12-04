@@ -4,18 +4,11 @@
 \alias{calcStScrapConsumption}
 \title{Calc steel scrap consumption}
 \usage{
-calcStScrapConsumption(subtype, aggregate = NULL, regionmapping = NULL)
+calcStScrapConsumption(subtype)
 }
 \arguments{
 \item{subtype}{Subtype of steel scrap consumption data to calculate.
 Options: 'assumptions' or 'noAssumptions'. Must be set deliberately.}
-
-\item{aggregate}{Aggregation level. TRUE uses regionmapping,
-F for country level, 'GLO' for global level. See \link[madrat]{calcOutput}
-documentation. ++REGGLO/regglo/reg+glo etc. deprecated.}
-
-\item{regionmapping}{Regionmapping to use for regional aggregation. Should default
-to H12 REMIND regions.}
 }
 \description{
 Function to calculate steel scrap consumption based on World Steel

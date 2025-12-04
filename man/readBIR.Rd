@@ -4,11 +4,10 @@
 \alias{readBIR}
 \title{Read BIR (Bureau of International Recycling) data}
 \usage{
-readBIR(subtype = "scrapShare")
+readBIR(subtype)
 }
 \arguments{
-\item{subtype}{Type of data to read. Options: "scrapShare", "scrapConsumption", 
-"scrapConsumptionEU", "scrapConsumptionWorld"}
+\item{subtype}{Type of data to read. Options: "scrapShare", "scrapConsumption"}
 }
 \description{
 Reads BIR data on steel scrap shares and consumption.

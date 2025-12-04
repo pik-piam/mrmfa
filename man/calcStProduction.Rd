@@ -12,10 +12,8 @@ list of metadata (in calcOutput format).
 }
 \description{
 Calc steel production from WorldSteel datasets. Can be aggregated to regions
-via calcOutput aggregate parameter. Uses
-\link{readWorldSteelDigitised} and
-\link{readWorldSteelDatabase} datasets, the former for
-historic, the latter for current data.
+via calcOutput aggregate parameter. Uses \link{readWorldSteelDigitised} and
+\link{readWorldSteelDatabase} datasets, the former for historic, the latter for current data.
 }
 \author{
 Merlin Jo Hosak

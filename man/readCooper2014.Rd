@@ -4,11 +4,7 @@
 \alias{readCooper2014}
 \title{Read Cooper et al. (2014) data}
 \usage{
-readCooper2014(subtype = "lifetimes")
-}
-\arguments{
-\item{subtype}{Subtype of Cooper 2014 data to load. Currently only
-'lifetimes' is available.}
+readCooper2014()
 }
 \description{
 Read data based on the paper 'Component level strategies for exploiting

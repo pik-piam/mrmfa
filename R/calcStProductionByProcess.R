@@ -17,20 +17,101 @@
 #' @return Steel production by process across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
 calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(0.2, 0, 0.8))) {
-  # Load data
-  data <- loadSteelProductionByProcessData()
 
-  # Clean data
-  isoHistoricalMap <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
-  data$bof <- cleanMergeProcessData(data$byProcess[, , "BOF"], data$bofRecent, data$bofCurrent, isoHistoricalMap)
-  data$eaf <- cleanMergeProcessData(data$byProcess[, , "EAF"], data$eafRecent, data$eafCurrent, isoHistoricalMap)
+  # Internal functions ----
+
+  .cleanMergeProcessData <- function(byProcessData, CurrentData) {
+
+    getNames(byProcessData) <- "value"
+    data <- mbind(byProcessData, CurrentData)
+    data <- toolInterpolate2D(data, method = "linear")
+
+    return(data)
+  }
+
+  .checkPercentagesAddToOne <- function(pct) {
+    test <- pct[, , 1] + pct[, , 2] + pct[, , 3] - 1
+    if (any(abs(test) > 1e-5)) {
+      stop("Percentages do not add to one!")
+    }
+  }
+
+  .calcPercentagesPerProcess <- function(together, production, assumedPastPercentages) {
+    pct <- together / production
+
+    # Overwrite years with no data with global average percentage
+
+    togetherSum <- colSums(together, na.rm = TRUE)
+    togetherSumProcesses <- togetherSum[, , 1] + togetherSum[, , 2] + togetherSum[, , 3]
+    togetherSumPct <- togetherSum / togetherSumProcesses
+    rowTotal <- rowSums(together, na.rm = TRUE) # get countries without any data
+
+    pct[rowTotal == 0, , ] <- togetherSumPct
+
+    # Iterate through assumed past percentages and interpolate to actual values.
+    # Assume last value carried forwards for future Extrapolation
+
+    for (idx in 1:3) { # idx refers to processes (BOF, EAF, Other)
+      for (year in names(assumedPastPercentages)) {
+        pct[, year, idx] <- assumedPastPercentages[[year]][idx]
+      }
+      pct[, , idx] <- toolInterpolate2D(pct[, , idx], method = "linear")
+      # constant percentage towards future (last observation carried forwards/locf)
+      pct[, , idx] <- toolInterpolate2D(pct[, , idx], method = "constant")
+    }
+
+    # Final check to make sure everything sums up to production values
+    .checkPercentagesAddToOne(pct)
+
+    return(pct)
+  }
+
+  .createCombinedProcessData <- function(bof, eaf, production) {
+    bof[is.na(bof) & !is.na(eaf)] <- 0
+    eaf[is.na(eaf) & !is.na(bof)] <- 0
+
+    bofEaf <- bof + eaf
+    factor <- production[, getYears(bofEaf), ] / bofEaf
+
+    factor[factor > 1] <- 1
+
+    bof <- bof * factor
+    eaf <- eaf * factor
+
+    # new addition is necessary as data might have been scaled down
+    other <- production[, getYears(bofEaf), ] - (bof + eaf)
+
+    together <- mbind(bof, eaf, other)
+
+    # clean new dataset
+    getNames(together) <- c("BOF", "EAF", "Other")
+    missingYears <- setdiff(getYears(production), getYears(together))
+
+    # add missing years and sort them
+    together <- add_columns(together, addnm = missingYears, dim = 2) %>%
+      magpiesort()
+
+    return(together)
+  }
+
+  # Load data ----
+
+  byProcess <- readSource("WorldSteelDigitised", subtype = "productionByProcess")
+  bofCurrent <- readSource("WorldSteelDatabase", subtype = "bofProduction")
+  eafCurrent <- readSource("WorldSteelDatabase", subtype = "eafProduction")
+  production <- calcOutput("StProduction", aggregate = FALSE)
+
+  # Clean data ----
+
+  bof <- .cleanMergeProcessData(byProcess[, , "BOF"], bofCurrent)
+  eaf <- .cleanMergeProcessData(byProcess[, , "EAF"], eafCurrent)
 
   # Combine BOF, EAF, Other
-  data$together <- createCombinedProcessData(data)
+  together <- .createCombinedProcessData(bof, eaf, production)
 
   # Interpolate missing years via split assumptions
-  pct <- calcPercentagesPerProcess(data, assumedPastPercentages)
-  productionByProcess <- pct * data$production
+  pct <- .calcPercentagesPerProcess(together, production, assumedPastPercentages)
+  productionByProcess <- pct * production
 
   # Finalize
   final <- list(
@@ -41,110 +122,4 @@ calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(
   )
 
   return(final)
-}
-
-calcPercentagesPerProcess <- function(data, assumedPastPercentages) {
-  pct <- data$together / data$production
-
-  # Overwrite years with no data with global average percentage
-
-  togetherSum <- colSums(data$together, na.rm = TRUE)
-  togetherSumProcesses <- togetherSum[, , 1] + togetherSum[, , 2] + togetherSum[, , 3]
-  togetherSumPct <- togetherSum / togetherSumProcesses
-  rowTotal <- rowSums(data$together, na.rm = TRUE) # get countries without any data
-
-  pct[rowTotal == 0, , ] <- togetherSumPct
-
-  # Iterate through assumed past percentages and interpolate to actual values.
-  # Assume last value carried forwards for future Extrapolation
-
-  for (idx in 1:3) { # idx refers to processes (BOF, EAF, Other)
-    for (year in names(assumedPastPercentages)) {
-      pct[, year, idx] <- assumedPastPercentages[[year]][idx]
-    }
-    pct[, , idx] <- toolInterpolate2D(pct[, , idx], method = "linear")
-    # constant percentage towards future (last observation carried forwards/locf)
-    pct[, , idx] <- toolInterpolate2D(pct[, , idx], method = "constant")
-  }
-
-  # Final check to make sure everything sums up to production values
-  checkPercentagesAddToOne(pct)
-
-  return(pct)
-}
-
-checkPercentagesAddToOne <- function(pct) {
-  test <- pct[, , 1] + pct[, , 2] + pct[, , 3] - 1
-  if (any(abs(test) > 1e-5)) {
-    stop("Percentages do not add to one!")
-  }
-}
-
-createCombinedProcessData <- function(data) {
-  data$bof[is.na(data$bof) & !is.na(data$eaf)] <- 0
-  data$eaf[is.na(data$eaf) & !is.na(data$bof)] <- 0
-
-  data$bofEaf <- data$bof + data$eaf
-  data$factor <- data$production[, getYears(data$bofEaf)] / data$bofEaf
-
-  data$factor[data$factor > 1] <- 1
-
-  data$bof <- data$bof * data$factor
-  data$eaf <- data$eaf * data$factor
-  # new addition is necessary as data might have been scaled down
-  data$other <- data$production[, getYears(data$bofEaf)] - (data$bof + data$eaf)
-
-  together <- mbind(data$bof, data$eaf, data$other)
-
-  # Clean new dataset
-  getNames(together) <- c("BOF", "EAF", "Other")
-  missingYears <- setdiff(getYears(data$production), getYears(together))
-  together <- add_columns(together, addnm = missingYears, dim = 2) # add missing years
-  together <- together[, paste0("y", 1900:2022), ] # sort years
-
-  return(together)
-}
-
-cleanMergeProcessData <- function(byProcessData, RecentData, CurrentData, isoHistoricalMap) {
-  data <- toolMerge2D(byProcessData, RecentData)
-  data <- splitHistoricalSteelProductionData(data, isoHistoricalMap)
-  data <- toolMerge2D(data, CurrentData)
-
-  data <- toolCountryFill(data, verbosity = 2)
-  data <- toolInterpolate2D(data, method = "linear")
-
-  return(data)
-}
-
-splitHistoricalSteelProductionData <- function(productionByProcess, isoHistoricalMap) {
-  countries <- getItems(productionByProcess, dim = 1)
-  newCountries <- isoHistoricalMap[isoHistoricalMap$fromISO %in% countries, "toISO"]
-  missingCountries <- setdiff(newCountries, countries)
-
-  productionByProcess <- add_columns(productionByProcess, addnm = missingCountries, dim = 1, fill = 0)
-  productionByProcess <- toolISOhistorical(productionByProcess, overwrite = TRUE) %>% suppressWarnings()
-
-  # Add SCG (former Serbia and Montenegro to Serbia and delete it)
-  productionByProcess["SRB", ] <- productionByProcess["SCG", ] + productionByProcess["SRB", ]
-  productionByProcess <- productionByProcess[!rownames(productionByProcess) %in% "SCG", ]
-
-  return(productionByProcess)
-}
-
-loadSteelProductionByProcessData <- function() {
-  production <- calcOutput("StProduction", aggregate = FALSE)
-  bofRecent <- readSource("WorldSteelDigitised", subtype = "bofProduction", convert = FALSE)
-  eafRecent <- readSource("WorldSteelDigitised", subtype = "eafProduction", convert = FALSE)
-  bofCurrent <- readSource("WorldSteelDatabase", subtype = "bofProduction")
-  eafCurrent <- readSource("WorldSteelDatabase", subtype = "eafProduction")
-  byProcess <- readSource("WorldSteelDigitised", subtype = "productionByProcess", convert = FALSE)
-
-  return(list(
-    production = production,
-    bofRecent = bofRecent,
-    eafRecent = eafRecent,
-    bofCurrent = bofCurrent,
-    eafCurrent = eafCurrent,
-    byProcess = byProcess
-  ))
 }

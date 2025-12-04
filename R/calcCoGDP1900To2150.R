@@ -18,35 +18,48 @@
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
 calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
   # load data
-  gdpData <- getGDP1900To2150Data(scenario = scenario)
+  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE)
 
-  # interpolate
-  gdpData <- interpolateGDP1900To2150(gdpData)
+  gdpHistPC <- readSource("OECD_GDP")
+  gdpHistPC <- toolInterpolate2D(gdpHistPC, method = "linear")
+
+  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE)
+  gdpRecent <- gdpRecent * 1e6 # convert to million USD
+  getItems(gdpRecent, dim = 3) <- "value"
+  gdpRecent <- time_interpolate(gdpRecent, seq(1965, 2150, 1))
 
   # convert historic data from per capita to total
   # data before 1900 irrelevant (don't cut off before because it helps for interpolation)
-  gdpData$histPC <- gdpData$histPC[, 1900:2016]
-  gdpData$hist <- gdpData$pop[, 1:117] * gdpData$histPC
+  hist <- pop[, seq(1900, 2016, 1), ] * gdpHistPC[, seq(1900, 2016, 1), ]
 
-  # extrapolate
-  gdp <- extrapolateGDP1900To2150(gdpData)
+  # extrapolate data with OECD data as reference where data is available
+  gdp <- toolBackcastByReference2D(gdpRecent, ref = hist, doInterpolate = FALSE) # Interpolation already done
 
-  # check if there are any NA left in gdp
-  if (any(is.na(gdp))) {
-    warning("There are still NA values in the GDP data.")
-  }
+  # extrapolate GDP data by global total for regions without OECD data
+
+  ## get GDP of regions that have data up to 1900
+  regions <- getItems(gdp, dim = 1)
+  regionsNotNA <- regions[!is.na(gdp[, 1900, ])]
+
+  ## sum over these regions
+  sumGDPfrom1900 <- dimSums(gdp[regionsNotNA, , ], dim = 1)
+  getItems(sumGDPfrom1900, dim = 1) <- "GLO"
+
+  # extrapolate missing regions with the global average
+  gdp <- toolBackcastByReference2D(gdp, ref = sumGDPfrom1900)
 
   # finalize for calcOutput
   unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
   description <- "GDP from 1900-2150 yearly for the SIMSON format"
   weight <- NULL
+  getNames(gdp) <- NULL
 
   # convert to per capita if requested
   if (perCapita) {
-    gdp <- gdp / gdpData$pop
+    gdp <- gdp / pop
     unit <- paste0(unit, " per capita")
     description <- "GDP per capita from 1900-2150 yearly for the SIMSON format"
-    weight <- gdpData$pop
+    weight <- pop
   }
 
   result <- list(
@@ -56,53 +69,5 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
     description = description
   )
 
-
   return(result)
-}
-
-getGDP1900To2150Data <- function(scenario) {
-  # load data
-  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE)
-  gdpHistPC <- readSource("OECD_GDP", subtype = "gdpPC", convert = TRUE)
-  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE)
-
-  # convert format
-  gdpRecent <- gdpRecent * 1e6 # convert to million USD
-  getItems(gdpRecent, dim = 3) <- "value"
-
-  return(list(
-    pop = pop,
-    histPC = gdpHistPC,
-    recent = gdpRecent
-  ))
-}
-
-interpolateGDP1900To2150 <- function(gdpData) {
-  gdpData$recent <- time_interpolate(gdpData$recent, 1965:2150)
-  gdpData$histPC <- toolInterpolate2D(gdpData$histPC, method = "linear")
-
-  return(gdpData)
-}
-
-extrapolateGDP1900To2150 <- function(gdpData) {
-  # Extrapolate data with OECD data as reference where data is available
-  gdp <- toolBackcastByReference2D(gdpData$recent, ref = gdpData$hist, doInterpolate = FALSE) # Interpolation already done
-
-
-  # Extrapolate GDP data by global total for regions without OECD data
-
-  ## get GDP of regions that have data up to 1900
-  regions <- getRegions(gdp)
-  regionsNotNA <- regions[!is.na(gdp[, 1])]
-  gdpFrom1900 <- gdp[regionsNotNA, ]
-
-  ## sum over these regions
-  mapping <- data.frame(from = regionsNotNA, global = "GLO")
-  sumGDPfrom1900 <- toolAggregate(gdpFrom1900, rel = mapping)
-
-
-  # Extrapolate missing regions with the global average
-  gdp <- toolBackcastByReference2D(gdp, ref = sumGDPfrom1900)
-
-  return(gdp)
 }

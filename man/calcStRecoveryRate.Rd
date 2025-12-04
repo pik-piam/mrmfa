@@ -2,13 +2,13 @@
 % Please edit documentation in R/calcStRecoveryRate.R
 \name{calcStRecoveryRate}
 \alias{calcStRecoveryRate}
-\title{Calc steel recovery rate}
+\title{calculate Steel Recovery Rate}
 \usage{
 calcStRecoveryRate(subtype)
 }
 \arguments{
 \item{subtype}{Subtype of steel recovery rate data to load. Currently only
-'WorldSteel' is available, see 
+'WorldSteel' is available, see
 \link{readWorldSteelParameters} for details.}
 }
 \description{
