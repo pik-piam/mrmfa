@@ -22,23 +22,26 @@ calcPlUNCTAD <- function(subtype) {
   # ---------------------------------------------------------------------------
   # Setup: files, mappings, and weights
   # ---------------------------------------------------------------------------
-  data <- readSource("UNCTAD", convert=TRUE)
-  data_regional <- readSource("UNCTAD", convert=FALSE)
+  data <- readSource("UNCTAD", convert = TRUE)
+  data_regional <- readSource("UNCTAD", convert = FALSE)
   recode_regions <- c(
     "European Union (2020 \u2026)" = "EUR",
-    "China"                    = "CHA",
+    "China" = "CHA",
     "United States of America" = "USA"
   )
-  map_df   <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
-  gdp_ssp2 <- calcOutput("GDP", scenario="SSP2",average2020 = FALSE, naming = "scenario", aggregate = FALSE)[,paste0("y", 2005:2023), "SSP2"]
+  map_df <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
+  gdp_ssp2 <- calcOutput("GDP", scenario = "SSP2", average2020 = FALSE, naming = "scenario", aggregate = FALSE)
+  gdp_ssp2 <- gdp_ssp2[, paste0("y", 2005:2022), "SSP2"]
 
   # ---------------------------------------------------------------------------
   # Helper: build region-level flows for given product and tag
   # ---------------------------------------------------------------------------
   build_region_flow <- function(prod_label, data2_tag) {
     # get data on country level and aggregate to region
-    m_r <- toolAggregate(data, rel = map_df, dim = 1,
-                         from = "CountryCode", to = "RegionCode")
+    m_r <- toolAggregate(data,
+      rel = map_df, dim = 1,
+      from = "CountryCode", to = "RegionCode"
+    )
     df_r <- as.data.frame(m_r) %>%
       dplyr::filter(.data$Data2 == prod_label) %>%
       dplyr::mutate(Year = as.integer(as.character(.data$Year))) %>%
@@ -46,20 +49,29 @@ calcPlUNCTAD <- function(subtype) {
     # get data directly on regional level and use this instead of aggregated data if available
     df_ov <- data_regional %>%
       as.data.frame() %>%
-      dplyr::filter(.data$Region %in% names(recode_regions),
-                    .data$Data2 == prod_label) %>%
-      dplyr::mutate(Region = dplyr::recode(.data$Region, !!!recode_regions),
-                    Year   = as.integer(as.character(.data$Year))) %>%
+      dplyr::filter(
+        .data$Region %in% names(recode_regions),
+        .data$Data2 == prod_label
+      ) %>%
+      dplyr::mutate(
+        Region = dplyr::recode(.data$Region, !!!recode_regions),
+        Year = as.integer(as.character(.data$Year))
+      ) %>%
       dplyr::select("Region", "Year", "Data1", "Value")
     df_f <- df_r %>%
       dplyr::left_join(df_ov, by = c("Region", "Year", "Data1"), suffix = c("", ".new")) %>%
-      dplyr::mutate(Value = dplyr::if_else(!is.na(.data$Value.new), .data$Value.new, .data$Value),
-                    Data2 = data2_tag) %>%
+      dplyr::mutate(
+        Value = dplyr::if_else(!is.na(.data$Value.new), .data$Value.new, .data$Value),
+        Data2 = data2_tag
+      ) %>%
       dplyr::select("Region", "Year", "Data1", "Data2", "Value")
-    m_f <- as.magpie(df_f, spatial = 1, temporal = 2); m_f[is.na(m_f)] <- 0
-    x <- toolAggregate(m_f, rel = map_df, dim = 1,
-                       from = "RegionCode", to = "CountryCode",
-                       weight = gdp_ssp2[unique(map_df$CountryCode), , ])
+    m_f <- as.magpie(df_f, spatial = 1, temporal = 2)
+    m_f[is.na(m_f)] <- 0
+    x <- toolAggregate(m_f,
+      rel = map_df, dim = 1,
+      from = "RegionCode", to = "CountryCode",
+      weight = gdp_ssp2[unique(map_df$CountryCode), , ]
+    )
     return(x / 1000) # thousand tons to Mt
   }
 
@@ -103,8 +115,8 @@ calcPlUNCTAD <- function(subtype) {
   # Helper: build country-level flows for given product
   # ---------------------------------------------------------------------------
   build_country_flow <- function(prod_label, data2_tag) {
-    x <- data[,,grepl(prod_label, getItems(data, dim = 3))]
-    getItems(x, dim=3.2) <- data2_tag
+    x <- data[, , grepl(prod_label, getItems(data, dim = 3))]
+    getItems(x, dim = 3.2) <- data2_tag
     return(x / 1000) # thousand tons to Mt
   }
 

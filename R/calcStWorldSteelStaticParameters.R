@@ -1,0 +1,34 @@
+#' Calc World Steel Static Parameters
+#' @description
+#' Load static (singular) parameters based on World Steel Association data.
+#' See \link{readWorldSteelParameters} and the
+#' WorldSteelParameters folder for more information.
+#' @param subtype Parameter to load. Currently only 'scrapInBOFRate' available.
+#' @author Merlin Jo Hosak
+calcStWorldSteelStaticParameters <- function(subtype) {
+  # ---- list all available subtypes with functions doing all the work ----
+  switchboard <- list(
+    "scrapInBOFrate" = function() {
+      scrapInBOFRate <- readSource("WorldSteelParameters", subtype = "scrapInBOFRate")
+
+      final <- list(
+        x = scrapInBOFRate,
+        weight = NULL,
+        description = "Scrap in BOF rate (according to the World Steel Association)",
+        unit = 1,
+        isocountries = FALSE
+      )
+      return(final)
+    }
+  )
+  # ---- check if the subtype called is available ----
+  if (is_empty(intersect(subtype, names(switchboard)))) {
+    stop(
+      "Invalid subtype -- supported subtypes are:",
+      paste0(names(switchboard), collapse = ", ")
+    )
+  } else {
+    # ---- load data and do whatever ----
+    return(switchboard[[subtype]]())
+  }
+}

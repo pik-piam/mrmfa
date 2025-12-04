@@ -1,4 +1,4 @@
-#'Calculate Country-Level Plastic Collection Rate Trajectories
+#' Calculate Country-Level Plastic Collection Rate Trajectories
 #'
 #' Build time series of plastic collection rates by sector and region,
 #' apply fixed and interpolated values, then aggregate to countries for 1990-2100.
@@ -13,7 +13,8 @@ calcPlCollRate <- function() {
   #    - Read end-of-life outputs and exclude non-collection categories.
   # ---------------------------------------------------------------------------
   eol_df <- calcOutput(
-    "PlOECD_EoL", aggregate = TRUE
+    "PlOECD_EoL",
+    aggregate = TRUE
   ) %>%
     as.data.frame() %>%
     dplyr::select(-"Cell") %>%
@@ -33,7 +34,7 @@ calcPlCollRate <- function() {
   # ---------------------------------------------------------------------------
   # source: Assessment of Plastic Stocks and Flows in China: 1978-2017; 1-(Untreatment share)
   fixed_years <- c(1990, 2005, 2010, 2015, 2017)
-  fixed_vals  <- c(0.65, 0.68, 0.84, 0.96, 0.98)
+  fixed_vals <- c(0.65, 0.68, 0.84, 0.96, 0.98)
 
   # Interpolate for China across full timeline
   china_idx <- eol_df$Region == "CHA"
@@ -84,7 +85,7 @@ calcPlCollRate <- function() {
   target_final <- 1.0
   future_df <- expand.grid(
     Region = unique(ext_df$Region),
-    Year   = 2021:2100,
+    Year = 2021:2100,
     stringsAsFactors = FALSE
   ) %>%
     dplyr::left_join(
@@ -109,7 +110,7 @@ calcPlCollRate <- function() {
   # Expand df by material
   # ---------------------------------------------------------------------------
   sector_map <- toolGetMapping("structuremappingPlasticManu.csv", type = "sectoral", where = "mrmfa")
-  targets    <- setdiff(unique(sector_map$Target), "Total")
+  targets <- setdiff(unique(sector_map$Target), "Total")
   exp_df <- crossing(final_df, targets) %>%
     dplyr::select("Region", "Year", "targets", "collected")
 
@@ -119,10 +120,12 @@ calcPlCollRate <- function() {
   # ---------------------------------------------------------------------------
   x <- as.magpie(exp_df, spatial = 1, temporal = 2)
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   x <- toolAggregate(
-    x, rel = region_map, dim = 1,
+    x,
+    rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode"
   )
 
@@ -131,7 +134,7 @@ calcPlCollRate <- function() {
   #    - Equal weights (1) for all entries
   # ---------------------------------------------------------------------------
   weight <- x
-  weight[,] <- 1
+  weight[, ] <- 1
 
   return(list(
     x           = x,

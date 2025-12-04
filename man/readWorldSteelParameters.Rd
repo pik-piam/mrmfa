@@ -2,15 +2,24 @@
 % Please edit documentation in R/readWorldSteelParameters.R
 \name{readWorldSteelParameters}
 \alias{readWorldSteelParameters}
-\title{TODOMERLIN: document}
+\title{Read World Steel Association Parameters}
 \usage{
-readWorldSteelParameters(subtype = "recoveryRate")
+readWorldSteelParameters(subtype)
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Subtype of World Steel parameter to read. Currently available
+subtypes are:
+\itemize{
+\item 'recoveryRate': Steel scrap recovery rates in the main end-use sectors
+(construction, machinery, products, transport)
+\item 'scrapInBOFRate': Share of scrap used production in Basic Oxygen Furnaces
+}}
 }
 \description{
-TODOMERLIN: document
+Read World Steel Association (WSA) parameters from various sources like
+yearbooks, pdfs and webpages. The data is stored in Excel files in the
+WorldSteelParameters directory with metadata, the primary sources
+are stored there as well if available.
 }
 \author{
 Merlin Jo Hosak

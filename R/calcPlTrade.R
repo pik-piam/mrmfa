@@ -19,8 +19,7 @@
 #' @author Qianzhi Zhang
 calcPlTrade <- function(
     category = c("final", "primary", "intermediate", "manufactured"),
-    flow_label     = c("Exports", "Imports")
-) {
+    flow_label = c("Exports", "Imports")) {
   # ---------------------------------------------------------------------------
   # Match inputs and map to UNCTAD subtype identifier
   # ---------------------------------------------------------------------------
@@ -54,7 +53,8 @@ calcPlTrade <- function(
     spatial = 1, temporal = 2
   )
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   gdp_ssp2 <- calcOutput("CoGDP1900To2150", scenario="SSP2", per_capita=FALSE, aggregate=FALSE)[, paste0("y", 1950:2023),]
   x <- toolAggregate(
@@ -71,12 +71,12 @@ calcPlTrade <- function(
   # Return results
   # ---------------------------------------------------------------------------
   list(
-    x           = x,
-    weight      = NULL,
-    unit        = "Mt Plastic",
+    x = x,
+    weight = NULL,
+    unit = "Mt Plastic",
     description = sprintf(
       "Country-level %s plastics %s (1990-2023)", category, flow_label
     ),
-    note        = "dimensions: (Historic Time,Region,value)"
+    note = "dimensions: (Historic Time,Region,value)"
   )
 }

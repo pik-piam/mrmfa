@@ -7,7 +7,7 @@
 #' @author Leonie Schweiger
 #' @examples
 #' \dontrun{
-#'   a <- convertUNCTAD(x)
+#' a <- convertUNCTAD(x)
 #' }
 #'
 #' @importFrom magclass where
@@ -54,4 +54,3 @@ convertUNCTAD <- function(x) {
   # ---------------------------------------------------------------------------
   return(x)
 }
-

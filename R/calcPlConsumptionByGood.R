@@ -11,10 +11,11 @@ calcPlConsumptionByGood <- function() {
   # Load sectoral share data
   # ---------------------------------------------------------------------------
   share_df <- calcOutput(
-    "PlGoodShare", aggregate = TRUE
+    "PlGoodShare",
+    aggregate = TRUE
   ) %>%
     as.data.frame() %>%
-    dplyr::select(-"Cell",-"Year")
+    dplyr::select(-"Cell", -"Year")
 
   # ---------------------------------------------------------------------------
   # Load total use data 1990-2019
@@ -22,11 +23,11 @@ calcPlConsumptionByGood <- function() {
   # Backcast total use data to 1950
   # ---------------------------------------------------------------------------
   total <- calcOutput("PlConsumption", aggregate = TRUE)
-  Geyer <- readSource("Geyer", subtype="Prod_1950-2015", convert=FALSE)
+  Geyer <- readSource("Geyer", subtype = "Prod_1950-2015", convert = FALSE)
   total_df <- toolBackcastByReference2D(total, Geyer) %>%
     as.data.frame() %>%
-    dplyr::mutate(Year = as.integer(as.character(.data$Year)))%>%
-    dplyr::select(-"Cell",-"Data1")
+    dplyr::mutate(Year = as.integer(as.character(.data$Year))) %>%
+    dplyr::select(-"Cell", -"Data1")
 
   # ---------------------------------------------------------------------------
   # Combine shares and totals to compute sectoral use
@@ -50,12 +51,14 @@ calcPlConsumptionByGood <- function() {
   x <- as.magpie(combined, spatial = 1, temporal = 2)
 
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   gdp_weights <- calcOutput("CoGDP1900To2150", scenario="SSP2", per_capita=FALSE, aggregate=FALSE)[, paste0("y", 1950:2019),]
 
   x <- toolAggregate(
-    x, rel = region_map, dim = 1,
+    x,
+    rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode",
     weight = gdp_weights[unique(region_map$CountryCode), , ]
   )

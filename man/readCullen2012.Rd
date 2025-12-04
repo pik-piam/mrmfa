@@ -2,15 +2,18 @@
 % Please edit documentation in R/readCullen2012.R
 \name{readCullen2012}
 \alias{readCullen2012}
-\title{TODOMERLIN: document}
+\title{Read data from Cullen et al. (2012)}
 \usage{
 readCullen2012(subtype)
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Subtype of Cullen et al. (2012) data to load. Currently
+supported subtypes are "flows" and "giMatrix".}
 }
 \description{
-TODOMERLIN: document
+Read data from supplementary material of Cullen et al. 2012 paper
+'Mapping the global flow of steel: from steelmaking to end‐use goods'.
+Files were digitalized from pdf to Excel.
 }
 \author{
 Merlin Jo Hosak

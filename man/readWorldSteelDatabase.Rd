@@ -2,22 +2,21 @@
 % Please edit documentation in R/readWorldSteelDatabase.R
 \name{readWorldSteelDatabase}
 \alias{readWorldSteelDatabase}
-\title{Read Data from World Steel Association online Database,
-downloaded to Excel files in the ./v1.0 directory. 
-They should be updated yearly via the PIK's subscription to the database.
-Most datasets are available between around 2002 and 2022 
-on a yearly resolution.}
+\title{Read World Steel Database}
 \usage{
 readWorldSteelDatabase(subtype = "production")
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{must be one of "production", "bofProduction", "eafProduction",
+"imports", "exports", "scrapImports",  "scrapExports", "indirectImports",
+"indirectExports", "pigIronProduction", "pigIronImports", "pigIronExports",
+"driProduction", "driImports", "driExports"}
 }
 \description{
 Read Data from World Steel Association online Database,
-downloaded to Excel files in the ./v1.0 directory. 
+downloaded to Excel files in the ./v1.0 directory.
 They should be updated yearly via the PIK's subscription to the database.
-Most datasets are available between around 2002 and 2022 
+Most datasets are available between around 2002 and 2022
 on a yearly resolution.
 }
 \author{

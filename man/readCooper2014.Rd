@@ -2,15 +2,14 @@
 % Please edit documentation in R/readCooper2014.R
 \name{readCooper2014}
 \alias{readCooper2014}
-\title{TODOMERLIN: document}
+\title{Read Cooper et al. (2014) data}
 \usage{
-readCooper2014(subtype = "lifetimes")
-}
-\arguments{
-\item{subtype}{TODOMERLIN: document}
+readCooper2014()
 }
 \description{
-TODOMERLIN: document
+Read data based on the paper 'Component level strategies for exploiting
+the lifespan of steel in products'. See notes file in the Cooper 2014
+folder (notes_on_cooper_lifetime_mean_sd.pdf).
 }
 \author{
 Merlin Jo Hosak
