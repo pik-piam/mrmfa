@@ -2,14 +2,12 @@
 % Please edit documentation in R/convertOECD_GDP.R
 \name{convertOECD_GDP}
 \alias{convertOECD_GDP}
-\title{Convert OECD GDP per capita data from 1500-2016}
+\title{Convert OECD GDP}
 \usage{
-convertOECD_GDP(x, subtype = "gdppc")
+convertOECD_GDP(x)
 }
 \arguments{
-\item{x}{TODOMERLIN: document}
-
-\item{subtype}{TODOMERLIN: document}
+\item{x}{MagPIE object}
 }
 \description{
 Convert OECD GDP per capita data from 1500-2016

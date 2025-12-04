@@ -16,8 +16,9 @@ format.
 \description{
 Calc population from 1900-2100 yearly for the REMIND-MFA format on a country
 level. Can be aggregated to regions via calcOutput aggregate parameter.
-Uses \link[=readGapminder]{Gapminder} and \link[mrdrivers]{readUN_PopDiv}
-datasets for historical population data as well as \link[mrdrivers]{calcPopulation} from
+Uses \link{readGapminder} and \link[mrdrivers]{readUN_PopDiv}
+datasets for historical population data as well as
+\link[mrdrivers]{calcPopulation} from
 mrdrivers for current and future population data according to a specific
 scenario (see \code{vignette("scenarios")} for more information).
 }

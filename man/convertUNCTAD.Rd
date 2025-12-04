@@ -17,7 +17,7 @@ Convert UNCTAD data to ISO country level.
 }
 \examples{
 \dontrun{
-  a <- convertUNCTAD(x)
+a <- convertUNCTAD(x)
 }
 
 }

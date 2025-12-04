@@ -11,7 +11,8 @@ calcPlOECD_MGshare <- function() {
   #    - Read regional use output, exclude 'Total' categories.
   # ---------------------------------------------------------------------------
   use_df <- calcOutput(
-    "PlOECD", subtype = "Use_2019_region", aggregate = TRUE
+    "PlOECD",
+    subtype = "Use_2019_region", aggregate = TRUE
   ) %>%
     as.data.frame() %>%
     dplyr::select(-"Cell") %>%
@@ -35,11 +36,13 @@ calcPlOECD_MGshare <- function() {
   #    - Convert to MagPIE and map regional codes to country codes.
   # ---------------------------------------------------------------------------
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   x <- as.magpie(ratio_df, spatial = 1)
   x <- toolAggregate(
-    x, rel = region_map, dim = 1,
+    x,
+    rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode"
   )
 
@@ -48,7 +51,7 @@ calcPlOECD_MGshare <- function() {
   #    - Use equal weights for aggregation.
   # ---------------------------------------------------------------------------
   weight <- x
-  weight[,] <- 1
+  weight[, ] <- 1
 
   return(list(
     x           = x,
@@ -58,5 +61,3 @@ calcPlOECD_MGshare <- function() {
     note        = "dimensions: (Region,Good,Material,value)"
   ))
 }
-
-
