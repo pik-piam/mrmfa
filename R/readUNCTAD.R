@@ -32,7 +32,7 @@ readUNCTAD <- function() {
     mutate(Region = case_when(.data$Region=="Sudan (...2011)" ~ "Sudan", .default = Region),
            Partner_Region = case_when(.data$Partner_Region=="Sudan (...2011)" ~ "Sudan", .default = .data$Partner_Region)) %>%
     group_by(.data$Region, .data$Year, .data$Partner_Region, .data$Flow, .data$Product) %>%
-    summarise(Value = sum(`Metric tons in thousands`, na.rm=T)) %>% ungroup()
+    summarise(Value = sum(`Metric tons in thousands`, na.rm=T)) %>% dplyr::ungroup()
 
   # data of interest: imports&exports from Region X to World
   # check data based on World to Region X exports and imports
@@ -43,7 +43,7 @@ readUNCTAD <- function() {
     dplyr::mutate(Year = as.integer(as.character(.data$Year)))
   # some values in the data_check seem to be false, as they are an order of magnitude above the respective data in data_origin and are clear outliers in the whole set
   merged_filtered <- merged %>% filter(.data$Value<1e6) %>%
-    arrange(.data$Region, .data$Flow, .data$Product, .data$Year) %>%
+    dplyr::arrange(.data$Region, .data$Flow, .data$Product, .data$Year) %>%
     group_by(.data$Region, .data$Flow, .data$Product) %>%
     mutate(
       # check whether difference between imports and exports is greater than 5x of median difference
@@ -57,8 +57,8 @@ readUNCTAD <- function() {
     # Replace implausible Value with NA
     mutate(Value_clean = if_else(.data$implausible, NA_real_, .data$Value)) %>%
     # Interpolate over missing (implausible) values
-    mutate(Value_interpolated = na.approx(.data$Value_clean, .data$Year, na.rm = FALSE, rule=2)) %>%
-    ungroup()
+    mutate(Value_interpolated = zoo::na.approx(.data$Value_clean, .data$Year, na.rm = FALSE, rule=2)) %>%
+    dplyr::ungroup()
 
   data_final <- merged_filtered %>% select("Year","Region","Flow","Product","Value_interpolated")
 

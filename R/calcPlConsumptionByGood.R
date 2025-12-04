@@ -2,7 +2,7 @@
 #'
 #' Backcast total plastic use from 1990-2019 back to 1950.
 #' Combine sectoral use shares and total use to compute plastic use
-#' by sector at country level for 1960-2019.
+#' by sector at country level for 1950-2019.
 #'
 #' @author Qianzhi Zhang
 #'
@@ -47,14 +47,12 @@ calcPlConsumptionByGood <- function() {
   # Convert to MagPIE and aggregate to country level
   #    - Map regions to countries using GDP weights.
   # ---------------------------------------------------------------------------
-  x <- as.magpie(combined, spatial = 1, temporal = 2)[, paste0("y", 1960:2019),] # use only data back to 1960 because no GDP weights available before
+  x <- as.magpie(combined, spatial = 1, temporal = 2)
 
   region_map <- toolGetMapping(
     "regionmappingH12.csv", type = "regional", where = "mappingfolder"
   )
-  gdp_weights <- calcOutput(
-    "GDP", scenario="SSP2", average2020 = FALSE, aggregate = FALSE
-  )[, paste0("y", 1960:2019) , "SSP2"]
+  gdp_weights <- calcOutput("CoGDP1900To2150", scenario="SSP2", per_capita=FALSE, aggregate=FALSE)[, paste0("y", 1950:2019),]
 
   x <- toolAggregate(
     x, rel = region_map, dim = 1,
@@ -69,7 +67,7 @@ calcPlConsumptionByGood <- function() {
     x           = x,
     weight      = NULL,
     unit        = "Mt Plastic",
-    description = "Sectoral plastic use aggregated to country level for 1960-2019.",
+    description = "Sectoral plastic use aggregated to country level for 1950-2019.",
     note        = "dimensions: (Historic Time,Region,Good,value)"
   ))
 }

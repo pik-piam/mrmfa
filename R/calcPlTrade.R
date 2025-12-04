@@ -56,9 +56,7 @@ calcPlTrade <- function(
   region_map <- toolGetMapping(
     "regionmappingH12.csv", type = "regional", where = "mappingfolder"
   )
-  gdp_ssp2 <- calcOutput(
-    "GDP", scenario="SSP2", average2020 = FALSE, naming = "scenario", aggregate = FALSE
-  )[, paste0("y", 1960:2023), "SSP2"]
+  gdp_ssp2 <- calcOutput("CoGDP1900To2150", scenario="SSP2", per_capita=FALSE, aggregate=FALSE)[, paste0("y", 1950:2023),]
   x <- toolAggregate(
     x,
     rel    = region_map,
