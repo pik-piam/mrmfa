@@ -10,13 +10,15 @@ calcStWorldSteelStaticParameters <- function(subtype) {
   switchboard <- list(
     "scrapInBOFrate" = function() {
       scrapInBOFRate <- readSource("WorldSteelParameters", subtype = "scrapInBOFRate")
+      getNames(scrapInBOFRate) <- NULL
 
       final <- list(
         x = scrapInBOFRate,
         weight = NULL,
         description = "Scrap in BOF rate (according to the World Steel Association)",
         unit = 1,
-        isocountries = FALSE
+        isocountries = FALSE,
+        note = "dimensions: (value)"
       )
       return(final)
     }

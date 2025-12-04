@@ -5,6 +5,7 @@
 #'
 #' @author Qianzhi Zhang
 #' @importFrom dplyr if_else
+#' @importFrom tidyr pivot_wider
 calcPlConsumption <- function() {
   # ---------------------------------------------------------------------------
   # Load & clean OECD regional use data (1990–2019)
