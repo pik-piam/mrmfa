@@ -26,7 +26,8 @@ calcPlTrade(
 }
 \description{
 Reads UNCTAD plastics trade (exports or imports) data at regional level,
-fills 1990-2004 years with data of 2005, and aggregates to country level.
+backcasts data to 1950 to fill missing years 1950-2004 years,
+and aggregates to country level.
 }
 \author{
 Qianzhi Zhang
