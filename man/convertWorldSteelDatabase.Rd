@@ -4,7 +4,7 @@
 \alias{convertWorldSteelDatabase}
 \title{Convert World Steel Database}
 \usage{
-convertWorldSteelDatabase(x, subtype = "production")
+convertWorldSteelDatabase(x, subtype)
 }
 \arguments{
 \item{x}{Magpie object}
