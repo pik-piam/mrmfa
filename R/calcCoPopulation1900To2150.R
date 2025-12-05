@@ -44,7 +44,8 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2") {
     x = pop,
     weight = NULL,
     unit = "inhabitants",
-    description = "Population from 1900-2150 yearly for the SIMSON format"
+    description = "Population from 1900-2150 yearly",
+    note = "dimensions: (Time,Region,value)"
   )
 
   return(result)
