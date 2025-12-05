@@ -2,18 +2,20 @@
 % Please edit documentation in R/readWorldSteelDigitised.R
 \name{readWorldSteelDigitised}
 \alias{readWorldSteelDigitised}
-\title{Read Data from World Steel Association 1978-2022 yearbooks digitized to Excel sheets
-E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Yearbook-1982.pdf}
+\title{Read World Steel Digitised}
 \usage{
-readWorldSteelDigitised(subtype = "world_production")
+readWorldSteelDigitised(subtype)
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Available subtypes are:
+'worldProduction', 'production', 'productionByProcess', 'imports', 'exports',
+'scrapImports', 'scrapExports', 'scrapConsumption', historicScrapShare',
+'worldScrapConsumption', 'indirectTrade'}
 }
 \description{
 Read Data from World Steel Association 1978-2022 yearbooks digitized to Excel sheets
 E.g. from 1982: https://worldsteel.org/wp-content/uploads/Steel-Statistical-Yearbook-1982.pdf
 }
 \author{
-Merlin Jo Hosak
+Merlin Jo Hosak, Falk Benke
 }

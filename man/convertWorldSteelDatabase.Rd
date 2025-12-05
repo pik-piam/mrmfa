@@ -2,14 +2,17 @@
 % Please edit documentation in R/convertWorldSteelDatabase.R
 \name{convertWorldSteelDatabase}
 \alias{convertWorldSteelDatabase}
-\title{Convert data from WorldSteelAssociation Database}
+\title{Convert World Steel Database}
 \usage{
 convertWorldSteelDatabase(x, subtype = "production")
 }
 \arguments{
 \item{x}{Magpie object}
 
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{must be one of "production", "bofProduction", "eafProduction",
+"imports", "exports", "scrapImports",  "scrapExports", "indirectImports",
+"indirectExports", "pigIronProduction", "pigIronImports", "pigIronExports",
+"driProduction", "driImports", "driExports"}
 }
 \description{
 Convert data from WorldSteelAssociation Database

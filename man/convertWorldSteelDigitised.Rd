@@ -2,18 +2,21 @@
 % Please edit documentation in R/convertWorldSteelDigitised.R
 \name{convertWorldSteelDigitised}
 \alias{convertWorldSteelDigitised}
-\title{Convert data World Steel Association digitised 1978-2022 yearbooks.}
+\title{Convert World Steel Digitised}
 \usage{
-convertWorldSteelDigitised(x, subtype = "production")
+convertWorldSteelDigitised(x, subtype)
 }
 \arguments{
-\item{x}{Magpie object}
+\item{x}{MagPIE object}
 
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Available subtypes are:
+'worldProduction', 'production', 'productionByProcess', 'imports', 'exports',
+'scrapImports', 'scrapExports', 'scrapConsumption', historicScrapShare',
+'worldScrapConsumption', 'indirectTrade'}
 }
 \description{
 Convert data World Steel Association digitised 1978-2022 yearbooks.
 }
 \author{
-Merlin Jo Hosak
+Merlin Jo Hosak, Falk Benke
 }
