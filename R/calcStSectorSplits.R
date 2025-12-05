@@ -16,25 +16,25 @@ calcStSectorSplits <- function(subtype = "Pauliuk2013") {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "Pauliuk2013" = function() {
-      x <- readSource("Pauliuk2013", subtype = "sectorSplits", convert = FALSE)
+      x <- readSource("Pauliuk2013")
 
       final <- list(
         x = x,
         weight = NULL,
         unit = 1,
+        isocountries = FALSE,
         description = "Cooper 2014 Steel Lifetimes Mean & SD"
       )
 
       return(final)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste(
+    stop(
       "Invalid subtype -- supported subtypes are:",
-      names(switchboard)
-    ))
+      paste0(names(switchboard), collapse = ", ")
+    )
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())

@@ -1,12 +1,17 @@
-#' Calc steel recovery rate
+#' calculate Steel Recovery Rate
+#'
+#' @author Merlin Jo Hosak
+
 #' @description
 #' Function to load steel recovery rate data in the four main end-use sectors
 #' (construction, machinery, products, transport).
-#' @author Merlin Jo Hosak
+
 #' @param subtype Subtype of steel recovery rate data to load. Currently only
-#' 'WorldSteel' is available, see 
+#' 'WorldSteel' is available, see
 #' \link{readWorldSteelParameters} for details.
+#'
 calcStRecoveryRate <- function(subtype) {
+
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "WorldSteel" = function() {
@@ -16,19 +21,20 @@ calcStRecoveryRate <- function(subtype) {
         x = ws,
         weight = NULL,
         unit = 1,
-        description = "World Steel Association steel scrap recovery rate"
+        isocountries = FALSE,
+        description = "World Steel Association steel scrap recovery rate",
+        note = "dimensions: (Good,value)"
       )
 
       return(final)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste(
+    stop(
       "Invalid subtype -- supported subtypes are:",
-      names(switchboard)
-    ))
+      paste0(names(switchboard), collapse = ", ")
+    )
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())

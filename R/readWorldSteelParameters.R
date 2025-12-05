@@ -12,11 +12,12 @@
 #' \item 'scrapInBOFRate': Share of scrap used production in Basic Oxygen Furnaces
 #' }
 #' @author Merlin Jo Hosak
+#'
 readWorldSteelParameters <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "recoveryRate" = function() {
-      path <- "./v1.0/WorldSteelRecoveryRate.xlsx"
+      path <- file.path(".", "v1.0", "WorldSteelRecoveryRate.xlsx")
       df <- readxl::read_excel(path, sheet = "Data")
       m <- as.magpie(df)
       getSets(m) <- c("Region", "Year", "Parameter")
@@ -24,21 +25,20 @@ readWorldSteelParameters <- function(subtype) {
       return(m)
     },
     "scrapInBOFRate" = function() {
-      path <- "./v1.0/WorldSteelScrapInBOFRate.xlsx"
+      path <- file.path(".", "v1.0", "WorldSteelScrapInBOFRate.xlsx")
       df <- readxl::read_excel(path, sheet = "Data")
       m <- as.magpie(df)
       getSets(m) <- c("Region", "Year", "Parameter")
 
       return(m)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste(
+    stop(
       "Invalid subtype -- supported subtypes are:",
-      names(switchboard)
-    ))
+      paste0(names(switchboard), collapse = ", ")
+    )
   } else {
     # ---- load data and do whatever ----
     return(switchboard[[subtype]]())

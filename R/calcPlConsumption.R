@@ -5,6 +5,7 @@
 #'
 #' @author Qianzhi Zhang
 #' @importFrom dplyr if_else
+#' @importFrom tidyr pivot_wider
 calcPlConsumption <- function() {
   # ---------------------------------------------------------------------------
   # Load & clean OECD regional use data (1990–2019)
@@ -53,7 +54,7 @@ calcPlConsumption <- function() {
     as.data.frame() %>%
     dplyr::filter(.data$Region %in% target_regions)
   trade_data <- rbind(trade_data_region, trade_data_country) %>%
-    pivot_wider(names_from = "Data1", values_from = "Value") %>%
+    tidyr::pivot_wider(names_from = "Data1", values_from = "Value") %>%
     dplyr::mutate(
       net_import = .data$Imports - .data$Exports,
       Year = as.integer(as.character(.data$Year))

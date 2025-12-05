@@ -4,12 +4,10 @@
 \alias{convertOECD_GDP}
 \title{Convert OECD GDP}
 \usage{
-convertOECD_GDP(x, subtype = "gdpPC")
+convertOECD_GDP(x)
 }
 \arguments{
-\item{x}{Magpie object as read by readOECD_GDP}
-
-\item{subtype}{Specific dataset used by that source}
+\item{x}{MagPIE object}
 }
 \description{
 Convert OECD GDP per capita data from 1500-2016
