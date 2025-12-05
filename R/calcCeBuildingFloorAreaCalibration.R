@@ -1,7 +1,6 @@
 #' Calculates a factor to translate energy-related floor area to material-related floor area.
 #' Related to from net to gross floor area.
 #'
-#' @param plotting Type of plot to generate. Options are "floor area comparison" and "ratio over cement production". Defaults to no plot.
 #' @author Bennet Weiss
 calcCeBuildingFloorAreaCalibration <- function(plotting = NULL) {
 
@@ -29,7 +28,26 @@ calcCeBuildingFloorAreaCalibration <- function(plotting = NULL) {
   total_edgeb <- sum(edgeb_floor_area[availability_mask])
   correction_factor <- total_eubucco / total_edgeb
 
-  # ---Plotting---
+  # ---Output--- # TODO
+  description <- "PLACEHOLDER"
+  note <- "PLACEHOLDER"
+  output <- list(x = eubucco_floor_area, weight = NULL, unit = "PLACEHOLDER", description = description, note = note)
+  return(output)
+}
+
+#' Generates different plots of floor area data.
+#' @author Bennet Weiss
+#' @param plotting Type of plot to generate. Options are "floor area comparison" and "ratio over cement production". Defaults to no plot.
+plot_floorspace_data <- function(plotting) {
+
+  edgeb_floor_area <- calcOutput(
+    type = "CeEDGEBFloorSpace",
+    aggregate = FALSE
+  )[,2020]
+  edgeb_floor_area <- dimReduce(edgeb_floor_area) # remove year 2020 dimension
+
+  # EUBUCCO data for 2020 (m2)
+  eubucco_floor_area <- readSource("EUBUCCO")
 
   if (!is.null(plotting)) {
     if (plotting == "floor area comparison") {
@@ -51,7 +69,7 @@ calcCeBuildingFloorAreaCalibration <- function(plotting = NULL) {
 
       plot_floor_area_comparison(edgeb_floor_area, eubucco_floor_area, gem_floor_area, ghsoobat_floor_area)
 
-    } else if (plotting == "ratio over cement production") {
+    } else if (plotting == "ratio eubucco/edgeb over cement production") {
 
       cement_production <- calcOutput(
         type = "CeBinderProduction",
@@ -62,36 +80,32 @@ calcCeBuildingFloorAreaCalibration <- function(plotting = NULL) {
       plot_ratio_over_x(edgeb_floor_area, eubucco_floor_area, cement_production, "Cement Production (tonnes)")
 
     } else {
-      stop("Invalid plotting option. Choose either 'floor area comparison' or 'ratio over cement production'.")
+      stop("Invalid plotting option. Choose either 'floor area comparison' or 'ratio eubucco/edgeb over cement production'.")
     }
   }
-
-  # ---Output--- # TODO
-  description <- "PLACEHOLDER"
-  note <- "PLACEHOLDER"
-  output <- list(x = eubucco_floor_area, weight = NULL, unit = "PLACEHOLDER", description = description, note = note)
-  return(output)
 }
 
-#' Plots edge_b / eubucco ratio as function of GDP
+#' Plots edge_b / eubucco ratio as function of given x variable.
 #' @author Bennet Weiss
 #' @param edgeb EDGE-B floor area magpie object
 #' @param eubucco EUBUCCO floor area magpie object
 #' @param x magpie object to plot ratio against (e.g., Production, GDP)
 #' @param xlabel label for x axis
 plot_ratio_over_x <- function(edgeb, eubucco, x, xlabel) {
-  # TODO see if this works
-  ratio <- dimSums(eubucco / edgeb)
+
+  filename <- "../madrat_wd/figures/floor_area_ratio_eubucco_edgeb/floor_area_ratio_eubucco_edgeb.png"
+  ratio <- dimSums(eubucco) / dimSums(edgeb)
   ratio_df <- as.data.frame(ratio)
   x_df <- as.data.frame(x)
   ratio_df$x <- x_df$Value
   ratio_df <- ratio_df[ratio_df$Value > 0,]
 
-  ggplot2::ggplot(ratio_df, ggplot2::aes(x = x, y = Value)) +
+  plot <- ggplot2::ggplot(ratio_df, ggplot2::aes(x = x, y = Value)) +
     ggplot2::geom_point() +
     ggplot2::geom_smooth(method = "lm", se = FALSE) +
     ggplot2::labs(x = xlabel, y = "Floor-area ratio: EUBUCCO/EDGE-B") +
     ggplot2::theme_minimal()
+  ggplot2::ggsave(filename, plot = plot)
 
 }
 
@@ -99,8 +113,8 @@ plot_ratio_over_x <- function(edgeb, eubucco, x, xlabel) {
 #' Plots a comparison of floor area data from EDGE-B, EUBUCCO and GEM.
 #' @author Bennet Weiss
 plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem_floor_area, ghsoobat_floor_area) {
-  savefolder <- "figures/floor_area_comparison_2020_"
-  ylab <- "Floor Area (Million m2)"
+  savefolder <- "../madrat_wd/figures/floor_area_comparison_2020/floor_area_comparison_2020_"
+  ylab <- "Floor Area (m2)"
 
   # global plot
   filename <- paste0(savefolder, "global", ".png")
@@ -113,7 +127,7 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
   toolMplotMulti(floorlist, title = "Global", xlab = "", ylab = ylab,
                  filename = filename, ncol = length(floorlist), nrow = 1)
 
-  # TODO European plot (EUBUCCO Data)
+  # European plot (EUBUCCO Data)
   filename <- paste0(savefolder, "EU27", ".png")
   eubucco_mask <- !is.na(eubucco_floor_area)
   floorlist <- list(
