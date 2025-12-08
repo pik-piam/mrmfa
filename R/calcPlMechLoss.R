@@ -11,11 +11,13 @@ calcPlMechLoss <- function() {
   #    - Retrieve manufacturing sectors (excluding 'Total') and regional codes.
   # ---------------------------------------------------------------------------
   sector_map <- toolGetMapping(
-    "structuremappingPlasticManu.csv", type = "sectoral", where = "mrmfa"
+    "structuremappingPlasticManu.csv",
+    type = "sectoral", where = "mrmfa"
   )
   targets <- setdiff(unique(sector_map$Target), "Total")
   region_map <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   regions <- unique(region_map$RegionCode)
 
@@ -28,8 +30,8 @@ calcPlMechLoss <- function() {
   years <- 1990:2100
   bounds <- data.frame(
     Target = targets,
-    start  = 0.05,
-    end    = 0.05,
+    start = 0.05,
+    end = 0.05,
     stringsAsFactors = FALSE
   )
 
@@ -39,7 +41,7 @@ calcPlMechLoss <- function() {
   #    - Merge bounds and interpolate values beyond 2020 to 2100
   # ---------------------------------------------------------------------------
   traj_df <- expand.grid(
-    Year   = years,
+    Year = years,
     Target = targets,
     Region = regions,
     stringsAsFactors = FALSE
@@ -57,7 +59,8 @@ calcPlMechLoss <- function() {
   # ---------------------------------------------------------------------------
   x <- as.magpie(traj_df, spatial = 1, temporal = 2)
   x <- toolAggregate(
-    x, rel = region_map, dim = 1,
+    x,
+    rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode"
   )
 
@@ -65,7 +68,7 @@ calcPlMechLoss <- function() {
   # Prepare weight object and return
   # ---------------------------------------------------------------------------
   weight <- x
-  weight[,] <- 1
+  weight[, ] <- 1
 
   return(list(
     x           = x,
@@ -75,5 +78,3 @@ calcPlMechLoss <- function() {
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }
-
-

@@ -5,12 +5,14 @@
 #'
 #' @author Qianzhi Zhang
 #' @importFrom dplyr if_else
+#' @importFrom tidyr pivot_wider
 calcPlConsumption <- function() {
   # ---------------------------------------------------------------------------
   # Load & clean OECD regional use data (1990–2019)
   # ---------------------------------------------------------------------------
   use_region <- calcOutput(
-    "PlOECD", subtype = "Use_1990-2019_region", aggregate = TRUE
+    "PlOECD",
+    subtype = "Use_1990-2019_region", aggregate = TRUE
   ) %>%
     as.data.frame() %>%
     dplyr::select(-"Cell", -"Data1", -"Data2") %>%
@@ -36,7 +38,7 @@ calcPlConsumption <- function() {
   use_other <- use_region %>% dplyr::filter(!.data$Region %in% target_regions)
 
   prod_region_map <- c("China" = "CHA", "EU27+3" = "EUR", "North America" = "USA")
-  prod_data <- readSource("PlasticsEurope", subtype="PlasticProduction_region", convert=FALSE) %>%
+  prod_data <- readSource("PlasticsEurope", subtype = "PlasticProduction_region", convert = FALSE) %>%
     as.data.frame() %>%
     dplyr::mutate(
       Year = as.integer(as.character(.data$Year)),
@@ -45,16 +47,19 @@ calcPlConsumption <- function() {
     dplyr::filter(.data$Region %in% target_regions)
 
   # Calculate UNCTAD net imports for target regions
-  trade_data_region <- calcOutput("PlUNCTAD", subtype="Final_Region", aggregate=TRUE)%>%
-    as.data.frame()%>%
-    dplyr::filter(.data$Region %in% target_regions, .data$Region !="USA") # USA is included in trade_data_country
-  trade_data_country <- calcOutput("PlUNCTAD", subtype="Final_Country", aggregate=FALSE)%>%
-    as.data.frame()%>%
+  trade_data_region <- calcOutput("PlUNCTAD", subtype = "Final_Region", aggregate = TRUE) %>%
+    as.data.frame() %>%
+    dplyr::filter(.data$Region %in% target_regions, .data$Region != "USA") # USA is included in trade_data_country
+  trade_data_country <- calcOutput("PlUNCTAD", subtype = "Final_Country", aggregate = FALSE) %>%
+    as.data.frame() %>%
     dplyr::filter(.data$Region %in% target_regions)
-  trade_data <- rbind(trade_data_region, trade_data_country) %>% pivot_wider(names_from="Data1", values_from="Value") %>%
-    dplyr::mutate(net_import = .data$Imports - .data$Exports,
-                  Year = as.integer(as.character(.data$Year))) %>%
-    dplyr::select("Region","Year","net_import")
+  trade_data <- rbind(trade_data_region, trade_data_country) %>%
+    tidyr::pivot_wider(names_from = "Data1", values_from = "Value") %>%
+    dplyr::mutate(
+      net_import = .data$Imports - .data$Exports,
+      Year = as.integer(as.character(.data$Year))
+    ) %>%
+    dplyr::select("Region", "Year", "net_import")
 
   # Compute regional total use = production + net imports
   use_calc <- prod_data %>%
@@ -64,7 +69,8 @@ calcPlConsumption <- function() {
 
   # Calculate Canada's production by subtracting net imports from consumption (OECD data)
   can_data <- calcOutput(
-    "PlOECD", subtype = "Use_1990-2019_region", aggregate = FALSE
+    "PlOECD",
+    subtype = "Use_1990-2019_region", aggregate = FALSE
   ) %>%
     as.data.frame() %>%
     dplyr::select(-"Cell", -"Data1", -"Data2") %>%
@@ -79,14 +85,14 @@ calcPlConsumption <- function() {
     dplyr::left_join(use_calc, by = c("Region", "Year")) %>%
     dplyr::left_join(can_data, by = "Year") %>%
     dplyr::mutate(
-  # subtract Canada's production from North America production (net-import corrected for the USA) to get USA demand
+      # subtract Canada's production from North America production (net-import corrected for the USA) to get USA demand
       use_adj = if_else(.data$Region == "USA", .data$use - .data$can_prod, .data$use)
     ) %>%
     dplyr::group_by(.data$Region) %>%
     dplyr::mutate(
-  # data before 2005 is calculated from OECD data scaled by 2005 data
+      # data before 2005 is calculated from OECD data scaled by 2005 data
       use_adj_2005 = .data$use_adj[.data$Year == 2005],
-      Value        = if_else(.data$Year >= 2005, .data$use_adj, .data$use_adj_2005 * .data$ratio)
+      Value = if_else(.data$Year >= 2005, .data$use_adj, .data$use_adj_2005 * .data$ratio)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::select(dplyr::all_of(names(use_region)))
@@ -114,14 +120,17 @@ calcPlConsumption <- function() {
   # Aggregate to country level by GDP weights
   # ---------------------------------------------------------------------------
   map_df <- toolGetMapping(
-    "regionmappingH12.csv", type = "regional", where = "mappingfolder"
+    "regionmappingH12.csv",
+    type = "regional", where = "mappingfolder"
   )
   magpie_x <- as.magpie(final_region, spatial = 1, temporal = 2)
   gdp_ssp2 <- calcOutput(
-    "GDP", scenario="SSP2", average2020 = FALSE, aggregate = FALSE
+    "GDP",
+    scenario = "SSP2", average2020 = FALSE, aggregate = FALSE
   )[, paste0("y", 1990:2019), "SSP2"]
   x_final <- toolAggregate(
-    magpie_x, rel = map_df, dim = 1,
+    magpie_x,
+    rel = map_df, dim = 1,
     from = "RegionCode", to = "CountryCode",
     weight = gdp_ssp2[unique(map_df$CountryCode), , ]
   )
@@ -137,5 +146,3 @@ calcPlConsumption <- function() {
     note        = "dimensions: (Historic Time,Region,value)"
   ))
 }
-
-

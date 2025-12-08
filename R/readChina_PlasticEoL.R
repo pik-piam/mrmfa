@@ -41,8 +41,7 @@ readChina_PlasticEoL <- function() {
   magpie_data <- as.magpie(df, temporal = 1)
 
   magpie_data[is.na(magpie_data)] <- 0
-  getItems(magpie_data, dim=1) <- "CHA"
+  getItems(magpie_data, dim = 1) <- "CHA"
 
   return(magpie_data)
 }
-

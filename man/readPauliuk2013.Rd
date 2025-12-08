@@ -2,15 +2,17 @@
 % Please edit documentation in R/readPauliuk2013.R
 \name{readPauliuk2013}
 \alias{readPauliuk2013}
-\title{TODOMERLIN: document}
+\title{Read Pauliuk et al. (2013)}
 \usage{
-readPauliuk2013(subtype = "sectorSplits")
-}
-\arguments{
-\item{subtype}{TODOMERLIN: document}
+readPauliuk2013()
 }
 \description{
-TODOMERLIN: document
+Read data from Pauliuk et al. (2013) papers 'Steel all over the world:
+Estimating in-use stocks of iron for 200 countries' and 'The steel scrap
+age'
+Currently only 'sectorSplits' is available, other potentially relevant data is
+estimated stock saturation levels and times for various world regions
+as well as stock sector splits.
 }
 \author{
 Merlin Jo Hosak

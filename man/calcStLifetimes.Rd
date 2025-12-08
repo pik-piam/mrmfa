@@ -2,15 +2,19 @@
 % Please edit documentation in R/calcStLifetimes.R
 \name{calcStLifetimes}
 \alias{calcStLifetimes}
-\title{TODOMERLIN: document}
+\title{Calc Steel Lifetimes}
 \usage{
-calcStLifetimes(subtype)
+calcStLifetimes(subtype, unit)
 }
 \arguments{
-\item{subtype}{TODOMERLIN: document}
+\item{subtype}{Subtype of steel lifetimes data to load. Currently, only
+'Cooper2014' is available. Other options might include Pauliuk or Wittig
+(see respective folders).}
+
+\item{unit}{'mean' to return mean lifetimes, 'std' to return standard deviation}
 }
 \description{
-TODOMERLIN: document
+Function to load steel lifetimes data in years.
 }
 \author{
 Merlin Jo Hosak

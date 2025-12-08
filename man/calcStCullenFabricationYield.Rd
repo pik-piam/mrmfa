@@ -2,12 +2,13 @@
 % Please edit documentation in R/calcStCullenFabricationYield.R
 \name{calcStCullenFabricationYield}
 \alias{calcStCullenFabricationYield}
-\title{TODOMERLIN: document}
+\title{Load Cullen 2012 fabrication yield}
 \usage{
 calcStCullenFabricationYield()
 }
 \description{
-TODOMERLIN: document
+Function to load fabrication yield data from Cullen et al. (2012).
+Using the function \link{readCullen2012}.
 }
 \author{
 Merlin Jo Hosak

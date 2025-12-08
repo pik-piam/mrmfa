@@ -4,15 +4,15 @@
 \alias{calcCoGDP1900To2150}
 \title{Get GDP from 1900-2150}
 \usage{
-calcCoGDP1900To2150(scenario = "SSP2", per_capita = TRUE)
+calcCoGDP1900To2150(scenario = "SSP2", perCapita = FALSE)
 }
 \arguments{
 \item{scenario}{Scenario to use for future GDP data (default: SSP2).}
 
-\item{per_capita}{If TRUE, GDP is returned as per capita (default: TRUE).}
+\item{perCapita}{If TRUE, GDP is returned as per capita (default: FALSE).}
 }
 \value{
-List with Magpie object of GDP and metadata in calcOutput format.
+List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
 }
 \description{
 Calc GDP (PPP) from 1900-2150 yearly for the REMIND-MFA format on a country
@@ -26,7 +26,7 @@ convert GDP per capita to total GDP.
 GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 GDP datasets that use a different base year, which however does not matter
 as only the relative values are used
-(see \link[=toolInterpolate]{toolInterpolate}).
+(see \link{toolInterpolate2D}).
 }
 \author{
 Merlin Jo Hosak
