@@ -6,14 +6,19 @@ calcCeWasteSizeSplit <- function(){
 
   x <- readSource("Cao2024", subtype = "waste_size_split")
 
-  # create new magpie object and fill with ones
-  weight <- new.magpie(cells_and_regions = NULL)
-  weight <- toolCountryFill(weight, fill = 1, verbosity = 2)
-
+  weight <- toolCumulativeCementProduction(castto = x)
   unit <- "ratio"
   description <- paste(
     "Concrete/mortar waste particle size split.",
     "Data from Cao2024."
   )
-  output <- list(x = x, weight = weight, unit = unit, description = description)
+  note <- "dimensions: (Region,Waste Type,Waste Size,value)"
+
+  output <- list(
+    x = x,
+    weight = weight,
+    unit = unit,
+    description = description,
+    note = note
+  )
 }

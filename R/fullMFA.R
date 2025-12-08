@@ -91,31 +91,33 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- CEMENT -----------
   if (runSection("cement")) {
+    start_historic <- 1900
+    end_historic <- 2023
     # Production
-    calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = 1900:2023, subtype = "cement")
+    calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
     # Trade
-    calcOutput("CeMaterialTrade", file = "ce_cement_trade.cs4r", years = 1900:2023, subtype = "cement")
-    calcOutput("CeMaterialTrade", file = "ce_clinker_trade.cs4r", years = 1900:2023, subtype = "clinker")
+    calcOutput("CeMaterialTrade", file = "ce_cement_trade.cs4r", years = start_historic:end_historic, subtype = "cement")
+    calcOutput("CeMaterialTrade", file = "ce_clinker_trade.cs4r", years = start_historic:end_historic, subtype = "clinker")
     # Parameters
     calcOutput("CeBuiltLifespan", file = "ce_use_lifetime_mean.cs4r")
-    calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = 1900:2023)
-    calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction")
-    calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production")
+    calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = start_historic:end_historic)
+    calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction", aggregate = FALSE)
+    calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
     calcOutput("CeProductApplicationSplit", file = "ce_product_application_split.cs4r")
-    calcOutput("CeProductCementContent", file = "ce_product_cement_content.cs4r")
+    calcOutput("CeProductCementContent", file = "ce_product_cement_content.cs4r", aggregate = FALSE)
     calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")
     calcOutput("CeStockTypeSplit", file = "ce_stock_type_split.cs4r")
     # Carbonation
-    calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r")
-    calcOutput("CeCaOContent", file = "ce_ckd_cao_ratio.cs4r", subtype = "CKD")
-    calcOutput("CeCaOContent", file = "ce_clinker_cao_ratio.cs4r", subtype = "clinker")
+    calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
+    calcOutput("CeCaOContent", file = "ce_ckd_cao_ratio.cs4r", subtype = "CKD", aggregate = FALSE)
+    calcOutput("CeCaOContent", file = "ce_clinker_cao_ratio.cs4r", subtype = "clinker", aggregate = FALSE)
     calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_buried.cs4r", subtype = "base_buried")
-    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_coating.cs4r", subtype = "coating")
-    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_co2.cs4r", subtype = "co2")
-    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_additives.cs4r", subtype = "additives")
+    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_coating.cs4r", subtype = "coating", aggregate = FALSE)
+    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_co2.cs4r", subtype = "co2", aggregate = FALSE)
+    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_additives.cs4r", subtype = "additives", aggregate = FALSE)
     calcOutput("CeCarbonationRate", file = "ce_carbonation_rate.cs4r")
-    calcOutput("CeCKDLandfillShare", file = "ce_ckd_landfill_share.cs4r")
-    calcOutput("CeProductThickness", file = "ce_product_thickness.cs4r")
+    calcOutput("CeCKDLandfillShare", file = "ce_ckd_landfill_share.cs4r", aggregate = FALSE)
+    calcOutput("CeProductThickness", file = "ce_product_thickness.cs4r", aggregate = FALSE)
     calcOutput("CeWasteSizeSplit", file = "ce_waste_size_share.cs4r")
     calcOutput("CeWasteSplit", file = "ce_waste_type_split.cs4r")
   }

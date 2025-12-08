@@ -5,21 +5,25 @@
 calcCeCaOContent <- function(subtype){
 
   if (subtype == "CKD"){
-    x <- readSource("Cao2024", subtype = "CKD_cao_content")
+    x <- readSource("Cao2024", subtype = "CKD_cao_content", convert = FALSE)
   } else if (subtype == "clinker") {
-    x <- readSource("Cao2024", subtype = "clinker_cao_content")
+    x <- readSource("Cao2024", subtype = "clinker_cao_content", convert = FALSE)
   } else {
     stop(paste("Subtype ", subtype, " not implemented."))
   }
-
-  # create new magpie object and fill with ones
-  weight <- new.magpie(cells_and_regions = NULL)
-  weight <- toolCountryFill(weight, fill = 1, verbosity = 2)
 
   unit <- "ratio"
   description <- paste(
     "Share of CaO in ", subtype, ".",
     "Data from Cao2024."
   )
-  output <- list(x = x, weight = weight, unit = unit, description = description)
+  note <- "dimensions: (value)"
+  output <- list(
+    x = x,
+    weight = NULL,
+    unit = unit,
+    description = description,
+    note = note,
+    isocountries = FALSE
+  )
 }

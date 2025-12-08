@@ -12,21 +12,36 @@ calcCeCarbonationRate <- function(subtype = "base"){
     base_buried = "carbonation_rate_buried"
   )
 
-  x <- readSource("Cao2024", subtype = full_name[[subtype]])
   unit <- "factor"
+  note <- "dimensions: (value)"
+  weight <- NULL
+  isocountries <- FALSE
+  convert <- FALSE
 
   if (subtype %in% c("base", "base_buried")) {
-    x <- x * 1e-3 # convert from mm/sqrt(yr) to m/sqrt(yr)
     unit <- "m/sqrt(a)"
+    note <- "dimensions: (Region,Product Application,value)"
+    # use aggregated cement production as weight
+    isocountries <- TRUE
+    convert <- TRUE
   }
 
-  # create new magpie object and fill with ones
-  weight <- new.magpie(cells_and_regions = NULL)
-  weight <- toolCountryFill(weight, fill = 1, verbosity = 2)
+  x <- readSource("Cao2024", subtype = full_name[[subtype]], convert = convert)
+  if (convert) {
+    weight <- toolCumulativeCementProduction(castto = x)
+    x <- x * 1e-3 # convert from mm/sqrt(yr) to m/sqrt(yr)
+  }
 
   description <- paste(
     "Carbonation rate ", subtype, " of concrete of different strength classes.",
     "Data from Cao2024."
   )
-  output <- list(x = x, weight = weight, unit = unit, description = description)
+  output <- list(
+    x = x,
+    weight = weight,
+    unit = unit,
+    description = description,
+    note = note,
+    isocountries = isocountries
+  )
 }
