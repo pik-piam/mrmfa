@@ -58,7 +58,7 @@ calcPlWasteTrade <- function(subtype) {
         .fns  = ~ .x * .scale
       )
     ) %>%
-    dplyr::select(-.scale)              # drop helper column
+    dplyr::select(-".scale")              # drop helper column
   full_df <- dplyr::bind_rows(hist_df, future_df) %>%
     dplyr::arrange(.data$Region, .data$Year)
 

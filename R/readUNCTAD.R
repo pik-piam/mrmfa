@@ -24,15 +24,15 @@ readUNCTAD <- function() {
   # ---------------------------------------------------------------------------
   data <- read_csv("US_PlasticsTradebyPartner.csv") %>%
     select(1,3,5,7,9,13) %>%
-    filter(`Partner Label` == "World" | `Economy Label` == "World") %>%
+    filter(.data$`Partner Label` == "World" | .data$`Economy Label` == "World") %>%
     dplyr::rename(Region = "Economy Label", Partner_Region = "Partner Label", Flow = "Flow Label", Product = "Product Label")
 
   # due to splitting of Sudan in 2011, there is "Sudan" with NA entries before 2011 and "Sudan (...2011)" with NA entries after 2011; aggregate them into one region
   data_clean <- data %>%
-    mutate(Region = case_when(.data$Region=="Sudan (...2011)" ~ "Sudan", .default = Region),
+    mutate(Region = case_when(.data$Region=="Sudan (...2011)" ~ "Sudan", .default = .data$Region),
            Partner_Region = case_when(.data$Partner_Region=="Sudan (...2011)" ~ "Sudan", .default = .data$Partner_Region)) %>%
     group_by(.data$Region, .data$Year, .data$Partner_Region, .data$Flow, .data$Product) %>%
-    summarise(Value = sum(`Metric tons in thousands`, na.rm=T)) %>% dplyr::ungroup()
+    summarise(Value = sum(.data$`Metric tons in thousands`, na.rm=T)) %>% dplyr::ungroup()
 
   # data of interest: imports&exports from Region X to World
   # check data based on World to Region X exports and imports
@@ -48,7 +48,7 @@ readUNCTAD <- function() {
     mutate(
       # check whether difference between imports and exports is greater than 5x of median difference
       diff = .data$Value.check-.data$Value,
-      diff_median = abs(.data$diff/median(.data$diff)) > 5,
+      diff_median = abs(.data$diff/stats::median(.data$diff)) > 5,
       # check whether difference is greater than 20%
       diff_rel = is.finite(abs(.data$diff/.data$Value)) & abs(.data$diff/.data$Value) > 0.2,
       # if both differences are higher than the threshold, the value is considered implausible; implausible values are interpolated

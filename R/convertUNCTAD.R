@@ -29,7 +29,7 @@ convertUNCTAD <- function(x) {
   # convert historical countries by using toolISOhistorical
   # get new countries that will be added to the dataset
   countries <- getItems(x, dim=1)
-  new_countries <- read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
+  new_countries <- utils::read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
   new_countries <- new_countries[new_countries$fromISO %in% countries, "toISO"]
   missing_countries <- setdiff(new_countries, countries)
   # if missing country list is not empty extend x
