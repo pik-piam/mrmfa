@@ -9,7 +9,10 @@
 #'
 #' @importFrom tibble as_tibble_row
 #' @importFrom dplyr bind_rows
-#'
+#' @importFrom dplyr across
+#' @importFrom dplyr everything
+#' @importFrom utils write.csv
+#' @importFrom madrat getSourceFolder
 getSources_mrmfa <- function(){
   calcFunctions <- getDependencies("fullMFA", direction = "din")
   # get mapping of calcFunctions to parameters in fullMFA
@@ -72,7 +75,7 @@ getSources_mrmfa <- function(){
   table <- bind_rows(lapply(rows, tibble::as_tibble_row))
   # summarize dataframe by concatenating the sources, sourcefolders and bibtex entries for each calcFunction
   table_summary <- table %>%
-    group_by(CalcFunction) %>%
+    group_by(.data$CalcFunction) %>%
     summarise(across(
       everything(),
       ~ {
@@ -85,9 +88,9 @@ getSources_mrmfa <- function(){
     select("Filename", "CalcFunction", "Source", "Bibtex")
 
   # export as csv file
-  write.csv(table_final, "mrmfa_sources.csv", row.names=FALSE)
+  write.csv(table_final, "inst/mrmfa_sources.csv", row.names=FALSE)
   # export bibtex list to .bib file, remove duplicates
-  writeLines(unique(bibtex_list), "mrmfa_sources.bib")
+  writeLines(unique(bibtex_list), "inst/mrmfa_sources.bib")
 }
 
 # Get the SOURCE_INFO.txt from the newest version of the source folder
