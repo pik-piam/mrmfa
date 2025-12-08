@@ -35,7 +35,7 @@ readXi2016 <- function(subtype) {
   names(data_china) <- c("value", "stock_type")
   data_china <- aggregate(`value` ~ stock_type, data = data_china, sum)
 
-  data_china$Region <- "CHN"
+  data_china$region <- "CHN"
 
   # prepare USA data
   stock_type_mapping_usa <- c(
@@ -72,11 +72,11 @@ readXi2016 <- function(subtype) {
   )
   data_usa <- rbind(data_usa, new_rows)
 
-  data_usa$Region <- "USA"
+  data_usa$region <- "USA"
 
   # combine china and USA
   data <- rbind(data_usa, data_china)
-  data <- data[, c("Region", "stock_type", "value")]
+  data <- data[, c("region", "stock_type", "value")]
   x <- as.magpie(data, spatial = 1)
   return(x)
 }

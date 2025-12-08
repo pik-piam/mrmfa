@@ -173,7 +173,12 @@ readCao2024 <- function(subtype) {
 
   x <- calculate_means(data, long_names, dim_members, dim, normalize = normalize,
                       fmean = fraction_mean, groups = groups)
+  x <- dplyr::rename(x, "region" = "Region")
   x <- as.magpie(x, spatial = 1)
+
+  # if all regional entries are the same, they will be reduced to global
+  x <- dimReduce(x)
+
   return(x)
 }
 
