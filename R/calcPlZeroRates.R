@@ -15,7 +15,8 @@ calcPlZeroRates <- function() {
     names = NULL,
     fill = 0,
   )
-
+  weight <- x
+  weight[, ] <- 1
   return(list(
     x           = x,
     weight      = weight,
