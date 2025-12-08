@@ -30,8 +30,7 @@ calcPlUNCTAD <- function(subtype) {
     "United States of America" = "USA"
   )
   map_df <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
-  gdp_ssp2 <- calcOutput("GDP", scenario = "SSP2", average2020 = FALSE, naming = "scenario", aggregate = FALSE)
-  gdp_ssp2 <- gdp_ssp2[, paste0("y", 2005:2022), "SSP2"]
+  gdp_ssp2 <- calcOutput("CoGDP1900To2150", scenario="SSP2", perCapita=FALSE, aggregate=FALSE)[, paste0("y", 2005:2023),]
 
   # ---------------------------------------------------------------------------
   # Helper: build region-level flows for given product and tag
