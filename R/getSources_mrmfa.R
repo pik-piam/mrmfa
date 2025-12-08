@@ -12,7 +12,6 @@
 #' @importFrom dplyr across
 #' @importFrom dplyr everything
 #' @importFrom utils write.csv
-#' @importFrom madrat getSourceFolder
 getSources_mrmfa <- function(){
   calcFunctions <- getDependencies("fullMFA", direction = "din")
   # get mapping of calcFunctions to parameters in fullMFA
@@ -39,7 +38,7 @@ getSources_mrmfa <- function(){
         # skip GDP sources for non-common parameters
         if (j %in% GDP_sources$source & !(i %in% mapping$CalcFunction[startsWith(mapping$Filename, "co_")])) next
         # get source folders and bibtex entries for each source
-        sourceFolder <- getSourceFolder(j, subtype = NULL)
+        sourceFolder <- madrat:::getSourceFolder(j, subtype = NULL)
         sourceFile   <- find_source_info(sourceFolder)
 
         bibtex_entries <- character(0)
