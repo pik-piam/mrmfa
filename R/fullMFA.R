@@ -10,6 +10,9 @@
 #' @param scenario SSP scenario used for population and GDP drivers
 #' @param gdpPerCapita bool if GDP driver should be returned as per capita values
 #' @param runSections Character vector selecting which parts to run.
+#' @param start_historic Start year for historic data (default: 1900)
+#' @param end_historic End year for historic data (default: 2023)
+#' @param end_future End year for future data (default: 2100)
 #' Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
@@ -20,7 +23,8 @@
 #' fullMFA()
 #' }
 #'
-fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, runSections = NULL) {
+fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, runSections = NULL,
+                    start_historic = 1900, end_historic = 2023, end_future = 2100) {
   # prepare section selector
   validSections <- c("drivers", "steel", "cement", "plastic")
 
@@ -40,8 +44,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- DRIVERS -------------
   if (runSection("drivers")) {
-    calcOutput("CoPopulation1900To2150", file = "co_population.cs4r", scenario = scenario)
-    calcOutput("CoGDP1900To2150", file = "co_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita)
+    calcOutput("CoPopulation1900To2150", file = "co_population.cs4r", scenario = scenario, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "co_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
   }
 
   #  ------------- STEEL ----------------
@@ -91,8 +95,6 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- CEMENT -----------
   if (runSection("cement")) {
-    start_historic <- 1900
-    end_historic <- 2023
     # Production
     calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
     # Trade
