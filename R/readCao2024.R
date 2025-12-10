@@ -229,7 +229,6 @@ calculate_means <- function(data, long_names, dim_members = NULL, dim = NULL,
 
   # Normalize rows (exclude region)
   if (normalize) {
-    # o
     if (is.null(groups)) {
       err <- abs(rowSums(X) - 1)
       if (any(err > tol, na.rm = TRUE) && warn){

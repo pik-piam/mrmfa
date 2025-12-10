@@ -1,4 +1,4 @@
-#' Calculates the lifetimes of residential and non-residential buildings, as well as of civil engeneering.
+#' Calculates the lifetimes of residential and non-residential buildings, as well as of civil engineering.
 #' @author Bennet Weiss
 calcCeBuiltLifespan <- function() {
   data <- readSource("PostedBuiltLifespan")
