@@ -24,7 +24,7 @@ calcPlWasteTrade <- function(subtype) {
     stop("Invalid subtype. Choose 'export' or 'import'.")
   }
 
-  trade <- calcOutput("PlUNCTAD", subtype = "Waste_Region")
+  trade <- calcOutput("PlUNCTAD", subtype = "Waste")
   trade_filtered <- collapseNames(trade[, , getNames(trade, dim=1)==datatype])
 
   consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood"), dim = 3))

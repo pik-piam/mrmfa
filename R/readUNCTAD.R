@@ -17,6 +17,7 @@
 #'
 #' @importFrom readxl read_excel
 #' @importFrom readr read_csv
+#' @importFrom dplyr if_else
 #'
 readUNCTAD <- function() {
   # ---------------------------------------------------------------------------

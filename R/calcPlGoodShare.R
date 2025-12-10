@@ -24,35 +24,6 @@ calcPlGoodShare <- function() {
     dplyr::ungroup()
 
   # ---------------------------------------------------------------------------
-  # Replace shares for EU with EU plastic share reference data
-  # - Read PlasticEurope shares
-  # - Map sectors of EU shares to sectors of OECD shares,
-  #   for mapping "Agriculture" and "Others" to "Others" and "Textiles" use weights from OECD data
-  # ---------------------------------------------------------------------------
-  eu_share <- readSource("PlasticsEurope", subtype = "PlasticShare_EU", convert = FALSE)
-
-  sector_map <- toolGetMapping(
-    "structuremappingPlasticShare.csv",
-    type = "sectoral", where = "mrmfa"
-  )
-  weights_eu <- as.magpie(
-    regional_df[c("Region", "Year", "Data2", "Value_sum")],
-    spatial = 1, temporal = 2
-  )
-  eu_share_agg <- toolAggregate(
-    eu_share / 100,
-    rel = sector_map, dim = 3,
-    weight = weights_eu["EUR", "y2019", ],
-    from = "Source", to = "Target"
-  )
-
-  regional_share <- as.magpie(
-    regional_df[c("Region", "Year", "Data2", "share")],
-    spatial = 1, temporal = 2
-  )
-  regional_share["EUR", "y2019", ] <- eu_share_agg["EUR", "y2019", ]
-
-  # ---------------------------------------------------------------------------
   # Aggregate shares to country level
   # ---------------------------------------------------------------------------
   region_map <- toolGetMapping(
