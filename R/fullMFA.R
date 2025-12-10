@@ -122,6 +122,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r") # fix 0.05
     calcOutput("PlLifetime", subtype = "Lifetime_mean", aggregate = FALSE, file = "pl_lifetime_mean.cs4r")
     calcOutput("PlLifetime", subtype = "Lifetime_std", aggregate = FALSE, file = "pl_lifetime_std.cs4r")
+    calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_materials.cs4r")
     # Historic EoL shares
     calcOutput("PlEoL_shares", subtype = "Collected", file = "pl_collection_rate.cs4r")
     calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_mechanical_recycling_rate.cs4r")
