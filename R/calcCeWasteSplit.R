@@ -5,7 +5,7 @@ calcCeWasteSplit <- function(){
 
   x <- readSource("Cao2024", subtype = "waste_split")
 
-  weight <- toolCumulativeCementProduction(castto = x)
+  weight <- toolCeCumulativeCementProduction(castto = x)
   unit <- "ratio"
   description <- paste(
     "Concrete/mortar waste split.",

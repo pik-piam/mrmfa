@@ -17,7 +17,7 @@ calcCeBuiltLifespan <- function() {
     "Documentation can be found in Posted (https://github.com/PhilippVerpoort/posted)"
   )
   note <- "dimensions: (Historic Time,Region,Stock Type,value)"
-  weight <- toolCumulativeCementProduction(data_final)
+  weight <- toolCeCumulativeCementProduction(data_final)
 
   output <- list(
     x = data_final,

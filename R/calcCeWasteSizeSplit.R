@@ -6,7 +6,7 @@ calcCeWasteSizeSplit <- function(){
 
   x <- readSource("Cao2024", subtype = "waste_size_split")
 
-  weight <- toolCumulativeCementProduction(castto = x)
+  weight <- toolCeCumulativeCementProduction(castto = x)
   unit <- "ratio"
   description <- paste(
     "Concrete/mortar waste particle size split.",

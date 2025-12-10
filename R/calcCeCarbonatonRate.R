@@ -28,7 +28,7 @@ calcCeCarbonationRate <- function(subtype = "base"){
 
   x <- readSource("Cao2024", subtype = full_name[[subtype]], convert = convert)
   if (convert) {
-    weight <- toolCumulativeCementProduction(castto = x)
+    weight <- toolCeCumulativeCementProduction(castto = x)
     x <- x * 1e-3 # convert from mm/sqrt(yr) to m/sqrt(yr)
   }
 

@@ -4,7 +4,7 @@
 calcCeProductMaterialSplit <- function(){
   x <- readSource("Cao2024", subtype = "product_material_split")
 
-  weight <- toolCumulativeCementProduction(x)
+  weight <- toolCeCumulativeCementProduction(x)
 
   unit <- "ratio"
   description <- paste(

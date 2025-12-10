@@ -5,7 +5,7 @@
 #' @author Bennet Weiss
 #' @param dimsto magpie object that provides the desired dimensions.
 #' Defaults to NULL, in which case no dimension casting is performed.
-toolCumulativeCementProduction <- function(castto = NULL) {
+toolCeCumulativeCementProduction <- function(castto = NULL) {
   cement_production <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
   cumulative_cement_production <- dimSums(cement_production, dim = 2)
   if (!is.null(castto)){

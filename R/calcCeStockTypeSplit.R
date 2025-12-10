@@ -3,7 +3,7 @@
 calcCeStockTypeSplit <- function() {
   x <- readSource("Xi2016")
 
-  weight <- toolCumulativeCementProduction(castto = x)
+  weight <- toolCeCumulativeCementProduction(castto = x)
   unit <- "ratio"
   description <- paste(
     "Split to sort cement consumption into stock types Res, Com, Ind, and Civ.",
