@@ -24,9 +24,9 @@ calcCeClinkerRatio <- function() {
   ratio[ratio < 0.6 | ratio > 0.99] <- NA
   ratio <- replace_non_finite(ratio, NA)
 
-  # replace data with GNR values where not at least n_NA values are available
-  # Andrew (2019) used GNR values where no other data was available
-  country_mask <- toolMaskNACountries(ratio[, getYears(ratio_GNR)], n_noNA = 5)
+  # replace data with GNR values where not at least n_valid values are available.
+  # Andrew (2019) used GNR values where no other data was available.
+  country_mask <- toolMaskNACountries(ratio[, getYears(ratio_GNR)], n_valid = 5)
   ratio[country_mask, ] <- NA
   ratio[, getYears(ratio_GNR)][country_mask, ] <- ratio_GNR[country_mask, ]
 
