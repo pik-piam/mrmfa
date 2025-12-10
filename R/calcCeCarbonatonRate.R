@@ -44,4 +44,5 @@ calcCeCarbonationRate <- function(subtype = "base"){
     note = note,
     isocountries = isocountries
   )
+  return(output)
 }

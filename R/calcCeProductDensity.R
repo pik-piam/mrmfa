@@ -20,7 +20,7 @@ calcCeProductDensity <- function() {
 
   x <- new.magpie(names = c("concrete", "mortar"), fill = c(rho_concrete, rho_mortar))
 
-  unit <- "t (tonnes)"
+  unit <- "t/m³"
   description <- "Density of cement products concrete and mortar."
   note <- "dimensions: (Product Material,value)"
 
@@ -32,4 +32,5 @@ calcCeProductDensity <- function() {
     note = note,
     isocountries = FALSE
   )
+  return(output)
 }

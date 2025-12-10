@@ -20,4 +20,5 @@ calcCeProductThickness <- function(){
     note = note,
     isocountries = FALSE
   )
+  return(output)
 }

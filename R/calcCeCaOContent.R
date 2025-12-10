@@ -26,4 +26,5 @@ calcCeCaOContent <- function(subtype){
     note = note,
     isocountries = FALSE
   )
+  return(output)
 }

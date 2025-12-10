@@ -18,6 +18,7 @@ calcCeProductCementContent <- function(){
     unit = unit,
     description = description,
     note = note,
-    noisocountries = FALSE
+    isocountries = FALSE
   )
+  return(output)
 }

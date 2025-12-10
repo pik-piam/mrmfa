@@ -20,4 +20,5 @@ calcCeProductMaterialSplit <- function(){
     description = description,
     note = note
   )
+  return(output)
 }

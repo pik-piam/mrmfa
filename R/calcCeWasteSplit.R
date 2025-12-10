@@ -20,4 +20,5 @@ calcCeWasteSplit <- function(){
     description = description,
     note = note
   )
+  return(output)
 }

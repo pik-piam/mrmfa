@@ -3,7 +3,7 @@
 #' Assumes time dimension is in 2nd position.
 #'
 #' @author Bennet Weiss
-#' @param dimsto magpie object that provides the desired dimensions.
+#' @param castto magpie object that provides the desired dimensions.
 #' Defaults to NULL, in which case no dimension casting is performed.
 toolCeCumulativeCementProduction <- function(castto = NULL) {
   cement_production <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
