@@ -17,8 +17,9 @@
 #'   }
 #' @author Qianzhi Zhang
 calcPlTrade <- function(
-    category = c("final", "primary", "intermediate", "manufactured"),
-    flow_label = c("Exports", "Imports")) {
+  category = c("final", "primary", "intermediate", "manufactured"),
+  flow_label = c("Exports", "Imports")
+) {
   # ---------------------------------------------------------------------------
   # Match inputs and map to UNCTAD subtype identifier
   # ---------------------------------------------------------------------------

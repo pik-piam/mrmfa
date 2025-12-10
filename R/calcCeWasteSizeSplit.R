@@ -2,8 +2,7 @@
 #' Size categories defined by particle radius.
 #'
 #' @author Bennet Weiss
-calcCeWasteSizeSplit <- function(){
-
+calcCeWasteSizeSplit <- function() {
   x <- readSource("Cao2024", subtype = "waste_size_split")
 
   weight <- toolCeCumulativeCementProduction(castto = x)

@@ -8,7 +8,7 @@
 toolCeCumulativeCementProduction <- function(castto = NULL) {
   cement_production <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
   cumulative_cement_production <- dimSums(cement_production, dim = 2)
-  if (!is.null(castto)){
+  if (!is.null(castto)) {
     cumulative_cement_production <- magpie_expand(cumulative_cement_production, castto)
   }
   return(cumulative_cement_production)

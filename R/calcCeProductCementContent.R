@@ -1,7 +1,7 @@
 #' Calculate strength class distribution of concrete.
 #'
 #' @author Bennet Weiss
-calcCeProductCementContent <- function(){
+calcCeProductCementContent <- function() {
   x <- readSource("Cao2024", subtype = "product_cement_content", convert = FALSE)
   x <- x * 1e-3 # convert from kg to tonnes
 

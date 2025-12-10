@@ -10,7 +10,6 @@
 #'
 #' @author Merlin Jo Hosak
 calcStDRIData <- function(subtype) {
-
   if (subtype == "production") {
     driData <- readSource("WorldSteelDatabase", subtype = "driProduction")
   } else if (subtype == "imports") {

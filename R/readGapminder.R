@@ -2,7 +2,6 @@
 #' @description Read Gapminder population data from 1800-2100 in yearly resolution.
 #' @author Merlin Jo Hosak
 readGapminder <- function() {
-
   version <- "v1.0"
   path <- file.path(".", version, "GM-Population - Dataset - v8.xlsx")
   x <- readxl::read_excel(path = path, sheet = "Unpivot-countries-year") %>%
@@ -14,5 +13,4 @@ readGapminder <- function() {
   getItems(x, dim = 1)[getItems(x, dim = 1) == "HOS"] <- "VAT"
 
   return(x)
-
 }

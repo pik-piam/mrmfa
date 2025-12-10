@@ -11,7 +11,6 @@
 #' \link{readWorldSteelParameters} for details.
 #'
 calcStRecoveryRate <- function(subtype) {
-
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
     "WorldSteel" = function() {

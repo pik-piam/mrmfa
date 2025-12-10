@@ -50,7 +50,6 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- STEEL ----------------
   if (runSection("steel")) {
-
     # Production
     calcOutput("StProduction", file = "st_steel_production.cs4r")
     calcOutput("StProductionByProcess", file = "st_steel_production_by_process.cs4r")
@@ -90,7 +89,6 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("StDRIData", file = "st_dri_production.cs4r", subtype = "production")
     calcOutput("StDRIData", file = "st_dri_imports.cs4r", subtype = "imports")
     calcOutput("StDRIData", file = "st_dri_exports.cs4r", subtype = "exports")
-
   }
 
   #  ------------- CEMENT -----------

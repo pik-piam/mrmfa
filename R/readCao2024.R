@@ -1,4 +1,4 @@
-#readSource("Cao2024", subtype="waste_concrete_size_split")
+# readSource("Cao2024", subtype="waste_concrete_size_split")
 
 #' Read data received on 04.08.2025, personal communication.
 #' Data used for Kaufmann et al. (2024), DOI: 10.1088/1748-9326/ad236b
@@ -28,13 +28,13 @@ readCao2024 <- function(subtype) {
     )
     dim_members <- c("concrete", "mortar")
     dim <- "Product Material"
-    normalize = TRUE
+    normalize <- TRUE
   } else if (subtype == "product_application_split") {
     long_names <- c(
       "distribution of concrete by strength class ≤C15 (distribution)",
       "distribution of concrete by strength class C16-C23 (distribution)",
       "distribution of concrete by strength class C23-C35 (distribution)",
-      "distribution of concrete by strength class >C35 (distribution)",#
+      "distribution of concrete by strength class >C35 (distribution)", #
       # Warning: this only works as long as mortar cement content is the same across all applications
       # Split has different units for concrete and mortar:
       # for concrete based on concrete, for mortar based on cement
@@ -46,8 +46,8 @@ readCao2024 <- function(subtype) {
     )
     dim_members <- c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance")
     dim <- "Product Application"
-    normalize = TRUE
-    groups <- c(rep("concrete",4), rep("mortar",3))
+    normalize <- TRUE
+    groups <- c(rep("concrete", 4), rep("mortar", 3))
   } else if (subtype == "carbonation_rate") {
     long_names <- c(
       "compressive strength class and exposure conditions (βc sec) ≤C15 (distribution)",
@@ -68,7 +68,7 @@ readCao2024 <- function(subtype) {
   } else if (subtype == "carbonation_rate_factor_coating") {
     long_names <- c("coating and cover (βCC) (distribution)")
   } else if (subtype == "carbonation_rate_buried") {
-    long_names <-c(
+    long_names <- c(
       "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
       "carbonation rate coefficient of buried concrete in strength class i (kli) C16-C23",
       "carbonation rate coefficient of buried concrete in strength class i (kli) C23-C35",
@@ -155,7 +155,7 @@ readCao2024 <- function(subtype) {
     )
     dim <- c("Concrete Waste Type", "Particle Size")
     normalize <- TRUE
-    groups <- c(rep("new concrete",4), rep("aggregates",4), rep("landfill",4), rep("asphalt",4))
+    groups <- c(rep("new concrete", 4), rep("aggregates", 4), rep("landfill", 4), rep("asphalt", 4))
   } else if (subtype == "CKD_landfill_share") {
     long_names <- c("percentage of CKD sent to landfill (distribution)")
   } else if (subtype == "clinker_cao_content") {
@@ -163,16 +163,17 @@ readCao2024 <- function(subtype) {
   } else if (subtype == "CKD_cao_content") {
     long_names <- c("CaO content in CKD (distribution)")
 
-  # ------------- From here on not used ----------------------------------------------
-
+    # ------------- From here on not used ----------------------------------------------
   } else {
     long_names <- c(
       "ratio of CO2 element to CaO (Mr)" # I can calculate this myself
     )
   }
 
-  x <- calculate_means(data, long_names, dim_members, dim, normalize = normalize,
-                      fmean = fraction_mean, groups = groups)
+  x <- calculate_means(data, long_names, dim_members, dim,
+    normalize = normalize,
+    fmean = fraction_mean, groups = groups
+  )
   x <- dplyr::rename(x, "region" = "Region")
   x <- as.magpie(x, spatial = 1)
 
@@ -202,13 +203,16 @@ calculate_means <- function(data, long_names, dim_members = NULL, dim = NULL,
     # Check dimensions match
     total_combinations <- prod(sapply(dim_members, length))
     if (length(long_names) != total_combinations) {
-      stop("Number of long_names (", length(long_names), ") must match total combinations of dimensions (",
-           total_combinations, ")")
+      stop(
+        "Number of long_names (", length(long_names), ") must match total combinations of dimensions (",
+        total_combinations, ")"
+      )
     }
   } else {
     # Single dimension case
-    if (!is.null(dim_members) && length(dim_members) != length(long_names))
+    if (!is.null(dim_members) && length(dim_members) != length(long_names)) {
       stop("dim_members must have the same length as long_names")
+    }
   }
 
   if (!is.null(groups) && length(groups) != length(long_names)) {
@@ -231,7 +235,7 @@ calculate_means <- function(data, long_names, dim_members = NULL, dim = NULL,
   if (normalize) {
     if (is.null(groups)) {
       err <- abs(rowSums(X) - 1)
-      if (any(err > tol, na.rm = TRUE) && warn){
+      if (any(err > tol, na.rm = TRUE) && warn) {
         warning("Before normalizing: some rows deviate from 1 by more than tol.")
       }
       rs <- rowSums(X) # calculate sum for each row
@@ -242,15 +246,16 @@ calculate_means <- function(data, long_names, dim_members = NULL, dim = NULL,
     } else {
       for (g in unique(groups)) {
         idx <- which(groups == g)
-        err <- abs(rowSums(X[, idx, drop=FALSE]) - 1)
+        err <- abs(rowSums(X[, idx, drop = FALSE]) - 1)
         if (any(err > tol, na.rm = TRUE) && warn) {
           warning(sprintf("Before normalizing: Group '%s' some rows deviate from 1 by more than tol.", g))
         }
-        rs <- rowSums(X[, idx, drop=FALSE])
-        X[, idx] <- sweep(X[, idx, drop=FALSE], 1, rs, "/")
-        err <- abs(rowSums(X[, idx, drop=FALSE]) - 1)
-        if (any(err > tol, na.rm = TRUE))
+        rs <- rowSums(X[, idx, drop = FALSE])
+        X[, idx] <- sweep(X[, idx, drop = FALSE], 1, rs, "/")
+        err <- abs(rowSums(X[, idx, drop = FALSE]) - 1)
+        if (any(err > tol, na.rm = TRUE)) {
           warning(sprintf("After normalizing: Group '%s' some rows deviate from 1 by more than tol.", g))
+        }
       }
     }
   }
@@ -289,10 +294,11 @@ calculate_means <- function(data, long_names, dim_members = NULL, dim = NULL,
       rownames(out) <- NULL
       out <- out[, c("Region", dim, "value")]
     }
-  } else out <- X
+  } else {
+    out <- X
+  }
 
   return(out)
-
 }
 
 #' Function to calculate the mean by extracting the distribution function.
@@ -300,8 +306,7 @@ calculate_means <- function(data, long_names, dim_members = NULL, dim = NULL,
 #' @param data original input from dataframe.
 #' @param start_column_name label of first column of variable.
 calculate_mean_single <- function(data, start_column_name, fmean = FALSE) {
-
-  if (!fmean){
+  if (!fmean) {
     mean_functions <- list(
       "Weibull" = mean_trunc_weibull,
       "Uniform" = mean_uniform,
@@ -358,8 +363,9 @@ calculate_mean_single <- function(data, start_column_name, fmean = FALSE) {
 mean_trunc_weibull <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
 
-  if (!is.data.frame(parameters) || ncol(parameters) != 4L)
+  if (!is.data.frame(parameters) || ncol(parameters) != 4L) {
     stop("parameters must be a data.frame/matrix (4 columns) or a length-4 vector/list.")
+  }
 
   scale <- as.numeric(parameters[[1]])
   shape <- as.numeric(parameters[[2]])
@@ -392,8 +398,9 @@ mean_trunc_weibull <- function(parameters) {
 mean_uniform <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
 
-  if (!is.data.frame(parameters) || ncol(parameters) != 2L)
+  if (!is.data.frame(parameters) || ncol(parameters) != 2L) {
     stop("parameters must be a data.frame/matrix (2 columns) or a length-2 vector/list.")
+  }
 
   b <- as.numeric(parameters[[1]])
   a <- as.numeric(parameters[[2]])
@@ -409,36 +416,44 @@ mean_uniform <- function(parameters) {
 
 mean_triangular <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
-  if (!is.data.frame(parameters) || ncol(parameters) != 3L)
+  if (!is.data.frame(parameters) || ncol(parameters) != 3L) {
     stop("parameters must be a data.frame/matrix (3 columns: mode,max,min) or a length-3 vector/list.")
+  }
   mode <- as.numeric(parameters[[1]])
-  b    <- as.numeric(parameters[[2]])  # max
-  a    <- as.numeric(parameters[[3]])  # min
+  b <- as.numeric(parameters[[2]]) # max
+  a <- as.numeric(parameters[[3]]) # min
 
   bad <- !is.finite(a) | !is.finite(b) | !is.finite(mode) |
-         !(b > a) | !(mode > a & mode < b)
-  if (any(bad))
-    stop(sprintf("Invalid triangular parameter rows (need a < mode < b): %s",
-                 paste(which(bad), collapse = ", ")))
+    !(b > a) | !(mode > a & mode < b)
+  if (any(bad)) {
+    stop(sprintf(
+      "Invalid triangular parameter rows (need a < mode < b): %s",
+      paste(which(bad), collapse = ", ")
+    ))
+  }
 
   (a + b + mode) / 3
 }
 
 mean_trunc_norm <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
-  if (!is.data.frame(parameters) || ncol(parameters) != 4L)
+  if (!is.data.frame(parameters) || ncol(parameters) != 4L) {
     stop("parameters must be a data.frame/matrix (4 columns: mean, std, min, max) or a length-4 vector/list.")
+  }
 
-  mu <- as.numeric(parameters[[1]])   # mean of original distribution
-  sigma <- as.numeric(parameters[[2]])  # std of original distribution
-  a <- as.numeric(parameters[[3]])   # min (lower bound)
-  b <- as.numeric(parameters[[4]])   # max (upper bound)
+  mu <- as.numeric(parameters[[1]]) # mean of original distribution
+  sigma <- as.numeric(parameters[[2]]) # std of original distribution
+  a <- as.numeric(parameters[[3]]) # min (lower bound)
+  b <- as.numeric(parameters[[4]]) # max (upper bound)
 
   bad <- !is.finite(a) | !is.finite(b) | !is.finite(mu) | !is.finite(sigma) |
     !(b > a) | !(sigma > 0)
-  if (any(bad))
-    stop(sprintf("Invalid truncated normal parameters (need a < b and sigma > 0): %s",
-                 paste(which(bad), collapse = ", ")))
+  if (any(bad)) {
+    stop(sprintf(
+      "Invalid truncated normal parameters (need a < b and sigma > 0): %s",
+      paste(which(bad), collapse = ", ")
+    ))
+  }
 
   alpha <- (a - mu) / sigma
   beta <- (b - mu) / sigma
@@ -457,23 +472,29 @@ mean_trunc_norm <- function(parameters) {
 #' Returns 1 / E[1/X | a≤X≤b].
 fmean_trunc_weibull <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
-  if (!is.data.frame(parameters) || ncol(parameters) != 4L)
+  if (!is.data.frame(parameters) || ncol(parameters) != 4L) {
     stop("parameters must be a data.frame/matrix (4 columns) or a length-4 vector/list.")
+  }
   scale <- as.numeric(parameters[[1]])
   shape <- as.numeric(parameters[[2]])
   a <- as.numeric(parameters[[3]])
   b <- as.numeric(parameters[[4]])
   bad <- !is.finite(shape) | !is.finite(scale) | shape <= 0 | scale <= 0 |
     !is.finite(a) | !is.finite(b) | a < 0 | !(b > a)
-  if (any(bad)) stop(sprintf("Invalid parameter rows: %s", paste(which(bad), collapse=", ")))
+  if (any(bad)) stop(sprintf("Invalid parameter rows: %s", paste(which(bad), collapse = ", ")))
 
   out <- numeric(length(shape))
   for (i in seq_along(shape)) {
-    k <- shape[i]; lambda <- scale[i]; ai <- a[i]; bi <- b[i]
-    ua <- (ai / lambda)^k; ub <- (bi / lambda)^k
-    den <- exp(-ua) - exp(-ub)              # F(b)-F(a)
-    if (ai == 0 && k <= 1)
+    k <- shape[i]
+    lambda <- scale[i]
+    ai <- a[i]
+    bi <- b[i]
+    ua <- (ai / lambda)^k
+    ub <- (bi / lambda)^k
+    den <- exp(-ua) - exp(-ub) # F(b)-F(a)
+    if (ai == 0 && k <= 1) {
       stop(sprintf("Row %d: E[1/X] diverges (a=0, shape<=1).", i))
+    }
 
     # Compute numerator of E[1/X] (call it numEInv); then harmonic mean = den / numEInv.
     if (k > 1) {
@@ -484,7 +505,7 @@ fmean_trunc_weibull <- function(parameters) {
       f_rec <- function(x) (k / lambda) * (x / lambda)^(k - 1) * exp(-(x / lambda)^k) / x
       numEInv <- integrate(f_rec, lower = ai, upper = bi, rel.tol = 1e-8)$value
     }
-    out[i] <- den / numEInv   # 1 / (numEInv / den)
+    out[i] <- den / numEInv # 1 / (numEInv / den)
   }
   out
 }
@@ -494,12 +515,12 @@ fmean_trunc_weibull <- function(parameters) {
 #' Returns (b - a)/(log b - log a).
 fmean_uniform <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
-  if (!is.data.frame(parameters) || ncol(parameters) != 2L)
+  if (!is.data.frame(parameters) || ncol(parameters) != 2L) {
     stop("parameters must be a data.frame/matrix (2 columns) or a length-2 vector/list.")
+  }
   b <- as.numeric(parameters[[1]])
   a <- as.numeric(parameters[[2]])
   bad <- !is.finite(a) | !is.finite(b) | !(b > a) | a <= 0
-  if (any(bad)) stop(sprintf("Invalid parameter rows (need 0 < a < b): %s", paste(which(bad), collapse=", ")))
+  if (any(bad)) stop(sprintf("Invalid parameter rows (need 0 < a < b): %s", paste(which(bad), collapse = ", ")))
   (b - a) / (log(b) - log(a))
 }
-

@@ -11,7 +11,6 @@
 #'
 #'
 toolMerge2D <- function(a, b, fill = NA) {
-
   if (!(is.magpie(a) && is.magpie(b))) {
     stop("Both a and b must be magpie objects")
   }

@@ -1,7 +1,7 @@
 #' Calculate share of cao available for carbonation.
 #'
 #' @author Bennet Weiss
-calcCeCaOCarbonationShare <- function(){
+calcCeCaOCarbonationShare <- function() {
   x <- readSource("Cao2024", subtype = "cao_carbonation_share", convert = FALSE)
 
   unit <- "ratio"

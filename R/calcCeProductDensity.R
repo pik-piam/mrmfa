@@ -3,10 +3,9 @@
 #' @author Bennet Weiss
 #'
 calcCeProductDensity <- function() {
-
   # TODO find a source to read in this data from.
   # https://www.oekobaudat.de/OEKOBAU.DAT/resource/sources/bb51b371-e826-43e4-a795-1ba33e20f3a0/Beton_der_Druckfestigkeitsklasse_C_2025_10521.pdf?version=00.02.000
-  rho_concrete <- 2.3 #C20/25
+  rho_concrete <- 2.3 # C20/25
   # https://oekobaudat.de/OEKOBAU.DAT/datasetdetail/productFlow.xhtml?uuid=0df9d60c-1c62-4a62-b290-567a4626fce6&version=24.01.000
   rho_mortar <- 2.0 # general mortar
 

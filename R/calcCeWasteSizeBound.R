@@ -5,23 +5,22 @@
 #' Can be upper (subtype = "max") oder lower (subtype ="min") bound.
 #'
 calcCeWasteSizeBound <- function(subtype) {
-
   # TODO Source: Cao -> how do we handle this?
   vals_min <- c(
-    0, 5, 10, 20,      # new concrete
-    0, 1, 10, 30,      # aggregates
-    0, 5, 30, 50,      # landfill
-    0, 5, 10, 20       # asphalt
+    0, 5, 10, 20, # new concrete
+    0, 1, 10, 30, # aggregates
+    0, 5, 30, 50, # landfill
+    0, 5, 10, 20 # asphalt
   )
 
   vals_max <- c(
-    5, 10, 20, 32,      # new concrete
-    1, 10, 30, 60,      # aggregates
-    10, 30, 50, 100,    # landfill
-    5, 10, 20, 32       # asphalt
+    5, 10, 20, 32, # new concrete
+    1, 10, 30, 60, # aggregates
+    10, 30, 50, 100, # landfill
+    5, 10, 20, 32 # asphalt
   )
 
-  dimnames = list(
+  dimnames <- list(
     c("new concrete", "aggregates", "landfill", "asphalt"),
     c("A", "B", "C", "D")
   )
@@ -30,7 +29,7 @@ calcCeWasteSizeBound <- function(subtype) {
     vals_min,
     dim = c(4, 4),
     dimnames = dimnames
-    )
+  )
 
   arr_max <- array(
     vals_max,

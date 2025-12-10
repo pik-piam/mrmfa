@@ -8,18 +8,18 @@ readXi2016 <- function(subtype) {
   path <- file.path("v1", "Supplement.xlsx")
   # sheet SI data 2: split of mortar share across different use types (only relevant for china)
   # sheet SI data 5: split of cement across these same use types
-    # China: clear differentiation between Res/Com/Ind/Civ possible
-    # USA: Com/Ind differentiation not possible, Res/Civ possible
-      # split could be inferred from China
+  # China: clear differentiation between Res/Com/Ind/Civ possible
+  # USA: Com/Ind differentiation not possible, Res/Civ possible
+  # split could be inferred from China
   # Sheet SI data 6: concrete strength split, for China also as function of use type
-    # TODO check ERMCO
+  # TODO check ERMCO
 
   # prepare China data
   stock_type_mapping_china <- c(
-    "Residential building"= "Res",
+    "Residential building" = "Res",
     "Office building" = "Com",
     "Commercial building" = "Com",
-    "Hospital"= "Com",
+    "Hospital" = "Com",
     "Education, culture and research building" = "Com",
     "Industrial building" = "Ind",
     "Railway, Road, tunnel，and bridge" = "Civ",
@@ -29,7 +29,7 @@ readXi2016 <- function(subtype) {
   )
 
   # cut out unnecessary aggregation of buildings (1st row)
-  data_china <- readxl::read_xlsx(path, sheet = "SI data 5", range="A18:B29")[-1, ]
+  data_china <- readxl::read_xlsx(path, sheet = "SI data 5", range = "A18:B29")[-1, ]
   data_china$stock_type <- stock_type_mapping_china[data_china[["Cement consumption types"]]]
   data_china <- data_china[, -1]
   names(data_china) <- c("value", "stock_type")
@@ -40,7 +40,7 @@ readXi2016 <- function(subtype) {
   # prepare USA data
   stock_type_mapping_usa <- c(
     "Residential buildings" = "Res",
-    "Commercial and Industrial buildings" = "Com/Ind",   # also Ind, but proportion Civ/Ind taken from China
+    "Commercial and Industrial buildings" = "Com/Ind", # also Ind, but proportion Civ/Ind taken from China
     "Water and waste management" = "Civ",
     "Streets and highway" = "Civ",
     "Public buildings" = "Com/Ind",
@@ -50,8 +50,8 @@ readXi2016 <- function(subtype) {
   )
 
   # cut out temporal data and keep only first and last column
-  data_usa <- readxl::read_xlsx(path, sheet = "SI data 5", range="A5:H13")
-  data_usa <- data_usa[ , c(1, ncol(data_usa))]
+  data_usa <- readxl::read_xlsx(path, sheet = "SI data 5", range = "A5:H13")
+  data_usa <- data_usa[, c(1, ncol(data_usa))]
   data_usa$stock_type <- stock_type_mapping_usa[data_usa[["Concrete utilization category"]]]
   data_usa <- data_usa[, -1]
   names(data_usa) <- c("value", "stock_type")

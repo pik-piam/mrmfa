@@ -2,7 +2,7 @@
 #'
 #' @author Bennet Weiss
 #' @param subtype Loss type: can be "cement_loss_construction" or "clinker_loss_production"
-calcCeCementLosses <- function(subtype){
+calcCeCementLosses <- function(subtype) {
   x <- readSource("Cao2024", subtype = subtype, convert = FALSE)
 
   unit <- "ratio"

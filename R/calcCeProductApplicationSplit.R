@@ -1,7 +1,7 @@
 #' Calculate strength class distribution of concrete.
 #'
 #' @author Bennet Weiss
-calcCeProductApplicationSplit <- function(){
+calcCeProductApplicationSplit <- function() {
   x <- readSource("Cao2024", subtype = "product_application_split")
 
   weight <- toolCeCumulativeCementProduction(castto = x)

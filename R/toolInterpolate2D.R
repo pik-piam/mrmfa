@@ -9,7 +9,6 @@
 #' @return A 2D magpie object with interpolated values
 #' @author Merlin Jo Hosak
 toolInterpolate2D <- function(x, method = "linear", ...) {
-
   # turn into data frame with same index
   df <- magclass::as.data.frame(x)
   df <- df[, c("Region", "Year", "Value")]

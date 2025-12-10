@@ -2,7 +2,7 @@
 #'
 #' @author Bennet Weiss
 #' @param x Magpie object
-convertXi2016 <- function(x){
+convertXi2016 <- function(x) {
   # create empty country list
   x_out <- toolCountryFill(x, verbosity = 2)
 
@@ -26,8 +26,8 @@ convertXi2016 <- function(x){
   x_out[caz_countries, , ] <- x["USA", , ]
 
   # set all other countries to China values
-  for (stock_type in getItems(x, dim=3)) {
-    x_out[,,stock_type][is.na(x_out[,,stock_type])] <- x["CHN",,stock_type]
+  for (stock_type in getItems(x, dim = 3)) {
+    x_out[, , stock_type][is.na(x_out[, , stock_type])] <- x["CHN", , stock_type]
   }
 
   return(x_out)

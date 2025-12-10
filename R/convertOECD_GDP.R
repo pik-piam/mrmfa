@@ -3,7 +3,6 @@
 #' @author Merlin Jo Hosak
 #' @param x MagPIE object
 convertOECD_GDP <- function(x) {
-
   countries <- getItems(x, dim = 1)
 
   # replace underscores with dots (special character in magclass)
@@ -14,8 +13,8 @@ convertOECD_GDP <- function(x) {
   names(additionalIsoMappings) <- m$from
 
   getItems(x, dim = 1) <- toolCountry2isocode(countries,
-                                              mapping = additionalIsoMappings,
-                                              ignoreCountries = c("Others"), warn = TRUE
+    mapping = additionalIsoMappings,
+    ignoreCountries = c("Others"), warn = TRUE
   )
 
   x <- x[!is.na(getItems(x, dim = 1)), ] # remove rows without index (empty)

@@ -3,7 +3,6 @@
 #' @author Bennet Weiss
 #'
 calcCeCementRatio <- function() {
-
   # TODO read-in this data from ODYM-RECC
   # 13% cement in concrete and mortar
   # used in ODYM RECC 2.4

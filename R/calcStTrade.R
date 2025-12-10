@@ -13,11 +13,9 @@
 #' @return Steel trade across all regions from 1900-2022 as magpie within
 #' list of metadata.
 calcStTrade <- function(subtype = "imports") {
-
   # helper functions ----
 
   .splitIndirectTrade <- function(trade, shares) {
-
     # remove regions containing only NAs
     remove <- magpply(shares, function(y) all(is.na(y)), MARGIN = 1)
     shares <- shares[!remove, , ]
@@ -75,8 +73,7 @@ calcStTrade <- function(subtype = "imports") {
     # Split indirect trade into direct trade
     trade <- .splitIndirectTrade(trade, shares = shares)
     note <- "dimensions: (Historic Time,Region,Good,value)"
-  }
-  else {
+  } else {
     note <- "dimensions: (Historic Time,Region,value)"
   }
 
@@ -89,7 +86,7 @@ calcStTrade <- function(subtype = "imports") {
     weight = NULL,
     unit = "Tonnes",
     description = paste0("Steel trade: ", subtype, " from 1900-2021 yearly."),
-    note        = note
+    note = note
   )
 
   return(trade)

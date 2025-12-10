@@ -3,14 +3,13 @@
 #' @author Bennet Weiss
 #'
 calcCeProductMaterialApplicationTransform <- function() {
-
   # TODO Necessary transform: how do we handle this?
   vals <- c(
-    1, 1, 1, 1, 0, 0, 0,   # concrete
-    0, 0, 0, 0, 1, 1, 1    # mortar
+    1, 1, 1, 1, 0, 0, 0, # concrete
+    0, 0, 0, 0, 1, 1, 1 # mortar
   )
 
-  dimnames = list(
+  dimnames <- list(
     c("concrete", "mortar"),
     c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance")
   )

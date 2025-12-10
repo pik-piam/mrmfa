@@ -1,7 +1,7 @@
 #' Calculate share of CKD that goes to landfill.
 #'
 #' @author Bennet Weiss
-calcCeCKDLandfillShare <- function(){
+calcCeCKDLandfillShare <- function() {
   x <- readSource("Cao2024", subtype = "CKD_landfill_share", convert = FALSE)
 
   unit <- "ratio"

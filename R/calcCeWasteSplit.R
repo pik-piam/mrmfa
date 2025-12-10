@@ -1,8 +1,7 @@
 #' Calculate where concrete/mortar waste goes.
 #'
 #' @author Bennet Weiss
-calcCeWasteSplit <- function(){
-
+calcCeWasteSplit <- function() {
   x <- readSource("Cao2024", subtype = "waste_split")
 
   weight <- toolCeCumulativeCementProduction(castto = x)

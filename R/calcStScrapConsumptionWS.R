@@ -51,5 +51,4 @@ calcStScrapConsumptionWS <- function() {
   )
 
   return(result)
-
 }

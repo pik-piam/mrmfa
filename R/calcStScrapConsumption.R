@@ -39,7 +39,6 @@ calcStScrapConsumption <- function(subtype) {
   }
 
   .forecastRestWithWorldData <- function(scAssumptions) {
-
     # FIXME: this forecasting should be revisited and reworked, produces negative values as is
 
     # get global scrap consumption
@@ -73,11 +72,14 @@ calcStScrapConsumption <- function(subtype) {
 
     # forecast
     scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest, restWorldSC,
-                                                   doForecast = TRUE, doMakeZeroNA = TRUE)
+      doForecast = TRUE, doMakeZeroNA = TRUE
+    )
 
     # backcast
-    scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest,
-                                                   restWorldSC[, seq(1900, 2008, 1), ])
+    scAssumptionsRest <- toolBackcastByReference2D(
+      scAssumptionsRest,
+      restWorldSC[, seq(1900, 2008, 1), ]
+    )
 
     # update scAssumptions
     scAssumptions[restWorldCountries, , ] <- scAssumptionsRest
@@ -143,11 +145,12 @@ calcStScrapConsumption <- function(subtype) {
       return(result)
     },
     "noAssumptions" = function() {
-
       # Load countries that are not as important within a region and where hence NAs
       # should be set to 0 to avoid NA as region aggregation
-      f <- toolGetMapping("scrap_consumption_countries_2_zero.csv", where = "mrmfa",
-                          returnPathOnly = TRUE)
+      f <- toolGetMapping("scrap_consumption_countries_2_zero.csv",
+        where = "mrmfa",
+        returnPathOnly = TRUE
+      )
       countries2zero <- utils::read.csv2(f, comment.char = "#")$Countries2Zero
 
       tmp <- scLinear[countries2zero, , ]
@@ -161,7 +164,6 @@ calcStScrapConsumption <- function(subtype) {
         out <- toolAggregate(x, rel = rel, to = to)
 
         if ("EUR" %in% getItems(out, dim = 1)) {
-
           eu28 <- eu28[, !is.na(eu28), ] # select only years with data
           out["EUR", getYears(eu28), ] <- eu28
         }

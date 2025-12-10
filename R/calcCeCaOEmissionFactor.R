@@ -3,12 +3,11 @@
 #'
 #' @author Bennet Weiss
 calcCeCaOEmissionFactor <- function() {
-
   # TODO: how will this kind of input data be cited?
 
   # Atomic weights (g/mol) based on IUPAC standard
-  mw_C  <- 12.011
-  mw_O  <- 15.999
+  mw_C <- 12.011
+  mw_O <- 15.999
   mw_Ca <- 40.078
 
   # Molecular weights
