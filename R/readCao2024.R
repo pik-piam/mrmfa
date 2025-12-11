@@ -1,5 +1,3 @@
-# readSource("Cao2024", subtype="waste_concrete_size_split")
-
 #' Read data received on 04.08.2025, personal communication.
 #' Data used for Kaufmann et al. (2024), DOI: 10.1088/1748-9326/ad236b
 #' "Society’s material stocks as carbon pool: an economy-wide quantification of global carbon stocks from 1900–2015"
@@ -34,12 +32,7 @@ readCao2024 <- function(subtype) {
       "distribution of concrete by strength class ≤C15 (distribution)",
       "distribution of concrete by strength class C16-C23 (distribution)",
       "distribution of concrete by strength class C23-C35 (distribution)",
-      "distribution of concrete by strength class >C35 (distribution)", #
-      # Warning: this only works as long as mortar cement content is the same across all applications
-      # Split has different units for concrete and mortar:
-      # for concrete based on concrete, for mortar based on cement
-      # TODO find a way to fix this. Maybe check where the data actually comes from?
-      # Update: They are not so clear on this, but it seems that it should be per mortar, not per cement.
+      "distribution of concrete by strength class >C35 (distribution)",
       "percentage of mortar cement used for rendering, palstering and decorating (distribution)",
       "percentage of mortar cement used for masonry (distribution)",
       "percentage of mortar cement used for maintenance and repairing (distribution)"
@@ -54,7 +47,7 @@ readCao2024 <- function(subtype) {
       "compressive strength class and exposure conditions (βc sec) C16-C23 (distribution)",
       "compressive strength class and exposure conditions (βc sec) C23-C35 (distribution)",
       "compressive strength class and exposure conditions (βc sec) >C35 (distribution)",
-      # TODO replace this hack to fill over mortar dim_members
+      # TODO Hack to fill over mortar dim_members
       "carbonation rate coefficient of cement mortar (km) (distribution)",
       "carbonation rate coefficient of cement mortar (km) (distribution)",
       "carbonation rate coefficient of cement mortar (km) (distribution)"
@@ -73,7 +66,7 @@ readCao2024 <- function(subtype) {
       "carbonation rate coefficient of buried concrete in strength class i (kli) C16-C23",
       "carbonation rate coefficient of buried concrete in strength class i (kli) C23-C35",
       "carbonation rate coefficient of buried concrete in strength class i (kli) >C35",
-      # TODO replace this hack: Cement content of mortar assumed to be the same as C15
+      # TODO Hack: Carbonation rate of mortar assumed to be the same as C15
       # However, not important as mortar has fully carbonated anyways after in-use
       "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
       "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
@@ -83,7 +76,7 @@ readCao2024 <- function(subtype) {
     dim <- "Product Application"
   } else if (subtype == "product_thickness") {
     long_names <- c(
-      # TODO replace this hack to fill over concrete dim_members
+      # TODO Hack to fill over concrete dim_members
       "wall thickness (distribution)",
       "wall thickness (distribution)",
       "wall thickness (distribution)",
@@ -101,7 +94,7 @@ readCao2024 <- function(subtype) {
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) C16-C23 (distribution)",
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) C23-C35 (distribution)",
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) >C35 (distribution)",
-      # TODO replace this hack: Cement content of mortar assumed to be the same as C15
+      # TODO hack: Cement content of mortar assumed to be the same as C15
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)"
@@ -165,9 +158,8 @@ readCao2024 <- function(subtype) {
 
     # ------------- From here on not used ----------------------------------------------
   } else {
-    long_names <- c(
-      "ratio of CO2 element to CaO (Mr)" # I can calculate this myself
-    )
+    long_names <- c("ratio of CO2 element to CaO (Mr)")
+    # TODO this should be used
   }
 
   x <- calculate_means(data, long_names, dim_members, dim,
