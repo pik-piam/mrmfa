@@ -1,34 +1,15 @@
-#' Read data received on 04.08.2025, personal communication.
-#' Data used for Kaufmann et al. (2024), DOI: 10.1088/1748-9326/ad236b
-#' "Society’s material stocks as carbon pool: an economy-wide quantification of global carbon stocks from 1900–2015"
-#' The data is given as probability density functions.
-#' For further use, they are translated to means before turned to magclass object.
-#'
-#' @author Bennet Weiss
-#' @param subtype Variable to be read in.
-readCao2024 <- function(subtype) {
-  path <- file.path("v1", "data_cement_GAS_EoL_MISO_9regions.xlsx")
-  data <- suppressMessages(readxl::read_xlsx(path, sheet = "Uptake"))
-  data <- head(data, 11) # remove rows after row 11
-  data <- data[-1, , drop = FALSE] # remove row 2
-
-  # parameters for data gathering
-  normalize <- FALSE
-  dim_members <- NULL
-  dim <- NULL
-  fraction_mean <- FALSE
-  groups <- NULL
-
-  if (subtype == "product_material_split") {
-    long_names <- c(
+cao2024_specs <- list(
+  product_material_split = list(
+    long_names = c(
       "cement for concrete (distribution function)",
       "cement for mortar (distribution)"
-    )
-    dim_members <- c("concrete", "mortar")
-    dim <- "Product Material"
-    normalize <- TRUE
-  } else if (subtype == "product_application_split") {
-    long_names <- c(
+    ),
+    dim_members = c("concrete", "mortar"),
+    dim = "Product Material",
+    normalize = TRUE
+  ),
+  product_application_split = list(
+    long_names = c(
       "distribution of concrete by strength class ≤C15 (distribution)",
       "distribution of concrete by strength class C16-C23 (distribution)",
       "distribution of concrete by strength class C23-C35 (distribution)",
@@ -36,13 +17,14 @@ readCao2024 <- function(subtype) {
       "percentage of mortar cement used for rendering, palstering and decorating (distribution)",
       "percentage of mortar cement used for masonry (distribution)",
       "percentage of mortar cement used for maintenance and repairing (distribution)"
-    )
-    dim_members <- c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance")
-    dim <- "Product Application"
-    normalize <- TRUE
-    groups <- c(rep("concrete", 4), rep("mortar", 3))
-  } else if (subtype == "carbonation_rate") {
-    long_names <- c(
+    ),
+    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+    dim = "Product Application",
+    normalize = TRUE,
+    groups = c(rep("concrete", 4), rep("mortar", 3))
+  ),
+  carbonation_rate = list(
+    long_names = c(
       "compressive strength class and exposure conditions (βc sec) ≤C15 (distribution)",
       "compressive strength class and exposure conditions (βc sec) C16-C23 (distribution)",
       "compressive strength class and exposure conditions (βc sec) C23-C35 (distribution)",
@@ -51,17 +33,21 @@ readCao2024 <- function(subtype) {
       "carbonation rate coefficient of cement mortar (km) (distribution)",
       "carbonation rate coefficient of cement mortar (km) (distribution)",
       "carbonation rate coefficient of cement mortar (km) (distribution)"
-    )
-    dim_members <- c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance")
-    dim <- "Product Application"
-  } else if (subtype == "carbonation_rate_factor_additives") {
-    long_names <- c("cement additives (βad) (distribution)")
-  } else if (subtype == "carbonation_rate_factor_co2") {
-    long_names <- c("CO2 concentration (βCO2) (distribution)")
-  } else if (subtype == "carbonation_rate_factor_coating") {
-    long_names <- c("coating and cover (βCC) (distribution)")
-  } else if (subtype == "carbonation_rate_buried") {
-    long_names <- c(
+    ),
+    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+    dim = "Product Application"
+  ),
+  carbonation_rate_factor_additives = list(
+    long_names = c("cement additives (βad) (distribution)")
+  ),
+  carbonation_rate_factor_co2 = list(
+    long_names = c("CO2 concentration (βCO2) (distribution)")
+  ),
+  carbonation_rate_factor_coating = list(
+    long_names = c("coating and cover (βCC) (distribution)")
+  ),
+  carbonation_rate_buried = list(
+    long_names = c(
       "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
       "carbonation rate coefficient of buried concrete in strength class i (kli) C16-C23",
       "carbonation rate coefficient of buried concrete in strength class i (kli) C23-C35",
@@ -71,11 +57,12 @@ readCao2024 <- function(subtype) {
       "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
       "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
       "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15"
-    )
-    dim_members <- c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance")
-    dim <- "Product Application"
-  } else if (subtype == "product_thickness") {
-    long_names <- c(
+    ),
+    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+    dim = "Product Application"
+  ),
+  product_thickness = list(
+    long_names = c(
       # TODO Hack to fill over concrete dim_members
       "wall thickness (distribution)",
       "wall thickness (distribution)",
@@ -84,45 +71,51 @@ readCao2024 <- function(subtype) {
       "thickness of mortar cement used for rendering, palstering and decorating (distribution)",
       "thickness of mortar cement used for masonry (distribution)",
       "thickness of mortar cement used for maintenance and repairing (distribution)"
-    )
-    dim_members <- c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance")
-    dim <- "Product Application"
-    fraction_mean <- TRUE
-  } else if (subtype == "product_cement_content") {
-    long_names <- c(
+    ),
+    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+    dim = "Product Application",
+    fraction_mean = TRUE
+  ),
+  product_cement_content = list(
+    long_names = c(
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) C16-C23 (distribution)",
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) C23-C35 (distribution)",
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) >C35 (distribution)",
-      # TODO hack: Cement content of mortar assumed to be the same as C15
+      # TODO replace this hack: Cement content of mortar assumed to be the same as C15
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
       "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)"
-    )
-    dim_members <- c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance")
-    dim <- "Product Application"
-  } else if (subtype == "cao_carbonation_share") {
-    long_names <- c(
+    ),
+    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+    dim = "Product Application"
+  ),
+  cao_carbonation_share = list(
+    long_names = c(
       "proportion of CaO within fully carbonated cement that converts to CaCO3 for concrete cement (γ) (distribution)",
       "proportion of CaO within fully carbonated cement that converts to CaCO3 for mortar cement (γ1) (distribution)"
-    )
-    dim_members <- c("concrete", "mortar")
-    dim <- "Product Material"
-  } else if (subtype == "cement_loss_construction") {
-    long_names <- c("cement wasted during construction (distribution)")
-  } else if (subtype == "clinker_loss_production") {
-    long_names <- c("CKD generation rate of clinker (distribution)")
-  } else if (subtype == "waste_split") {
-    long_names <- c(
+    ),
+    dim_members = c("concrete", "mortar"),
+    dim = "Product Material"
+  ),
+  cement_loss_construction = list(
+    long_names = c("cement wasted during construction (distribution)")
+  ),
+  clinker_loss_production = list(
+    long_names = c("CKD generation rate of clinker (distribution)")
+  ),
+  waste_split = list(
+    long_names = c(
       "fate of waste concrete (for new concrete)",
       "fate of waste concrete (for road base, backfills materials and other use)",
       "fate of waste concrete (landfill, dumped and stacking)",
       "fate of waste concrete (asphalt concrete)"
-    )
-    dim_members <- c("new concrete", "aggregates", "landfill", "asphalt")
-    dim <- "Concrete Waste Type"
-  } else if (subtype == "waste_size_split") {
-    long_names <- c(
+    ),
+    dim_members = c("new concrete", "aggregates", "landfill", "asphalt"),
+    dim = "Concrete Waste Type"
+  ),
+  waste_size_split = list(
+    long_names = c(
       "percentage of waste concrete (for new concrete) with particle size <5mm (min)",
       "percentage of waste concrete (for new concrete) with particle size 5-10mm (min)",
       "percentage of waste concrete (for new concrete) with particle size 10-20mm (min)",
@@ -139,27 +132,60 @@ readCao2024 <- function(subtype) {
       "percentage of waste concrete (asphalt concrete) with particle size 5-10mm (min)",
       "percentage of waste concrete (asphalt concrete) with particle size 10-20mm (min)",
       "percentage of waste concrete (asphalt concrete) with particle size 20-40mm (min)"
-    )
-    waste_types <- c("new concrete", "aggregates", "landfill", "asphalt")
-    particle_sizes <- c("A", "B", "C", "D")
-    dim_members <- list(
-      "Concrete Waste Type" = waste_types,
-      "Particle Size" = particle_sizes
-    )
-    dim <- c("Concrete Waste Type", "Particle Size")
-    normalize <- TRUE
-    groups <- c(rep("new concrete", 4), rep("aggregates", 4), rep("landfill", 4), rep("asphalt", 4))
-  } else if (subtype == "CKD_landfill_share") {
-    long_names <- c("percentage of CKD sent to landfill (distribution)")
-  } else if (subtype == "clinker_cao_content") {
-    long_names <- c("average CaO content of clinker in cement (fCaO) (distribution)")
-  } else if (subtype == "CKD_cao_content") {
-    long_names <- c("CaO content in CKD (distribution)")
+    ),
+    dim_members = list(
+      "Concrete Waste Type" = c("new concrete", "aggregates", "landfill", "asphalt"),
+      "Particle Size" = c("A", "B", "C", "D")
+    ),
+    dim = c("Concrete Waste Type", "Particle Size"),
+    normalize = TRUE,
+    groups = c(rep("new concrete", 4), rep("aggregates", 4), rep("landfill", 4), rep("asphalt", 4))
+  ),
+  CKD_landfill_share = list(
+    long_names = c("percentage of CKD sent to landfill (distribution)")
+  ),
+  clinker_cao_content = list(
+    long_names = c("average CaO content of clinker in cement (fCaO) (distribution)")
+  ),
+  CKD_cao_content = list(
+    long_names = c("CaO content in CKD (distribution)")
+  )
+)
 
-    # ------------- From here on not used ----------------------------------------------
-  } else {
+#' Read data received on 04.08.2025, personal communication.
+#' Data used for Kaufmann et al. (2024), DOI: 10.1088/1748-9326/ad236b
+#' "Society’s material stocks as carbon pool: an economy-wide quantification of global carbon stocks from 1900–2015"
+#' The data is given as probability density functions.
+#' For further use, they are translated to means before turned to magclass object.
+#'
+#' @author Bennet Weiss
+#' @param subtype Variable to be read in.
+
+readCao2024 <- function(subtype) {
+  path <- file.path("v1", "data_cement_GAS_EoL_MISO_9regions.xlsx")
+  data <- suppressMessages(readxl::read_xlsx(path, sheet = "Uptake"))
+  data <- head(data, 11) # remove rows after row 11
+  data <- data[-1, , drop = FALSE] # remove row 2
+
+  # parameters for data gathering
+  normalize <- FALSE
+  dim_members <- NULL
+  dim <- NULL
+  fraction_mean <- FALSE
+  groups <- NULL
+
+  spec <- cao2024_specs[[subtype]]
+
+  if (is.null(spec)) {
     long_names <- c("ratio of CO2 element to CaO (Mr)")
     # TODO this should be used
+  } else {
+    long_names <- spec$long_names
+    if (!is.null(spec$dim_members)) dim_members <- spec$dim_members
+    if (!is.null(spec$dim)) dim <- spec$dim
+    normalize <- isTRUE(spec$normalize)
+    fraction_mean <- isTRUE(spec$fraction_mean)
+    if (!is.null(spec$groups)) groups <- spec$groups
   }
 
   x <- calculate_means(data, long_names, dim_members, dim,
