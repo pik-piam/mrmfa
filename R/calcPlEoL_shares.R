@@ -92,11 +92,10 @@ calcPlEoL_shares <- function(subtype) {
     share_new = 0
   )
   target_collection <- full_data %>% filter(Year==2000, Data1=="Collected") %>% mutate(Year=1980)
-  full_data <- rbind(full_data, target, target_collection)
+  backcast_data <- rbind(full_data, target, target_collection)
 
-  x <- as.magpie(full_data, spatial = 1, temporal = 2)
-
-  x_backcast <- time_interpolate(x, interpolated_year = 1950:2000, integrate_interpolated_years = TRUE, extrapolation_type="constant")
+  x_backcast <- as.magpie(backcast_data, spatial = 1, temporal = 2)
+  x_backcast <- time_interpolate(x_backcast, interpolated_year = 1950:2000, integrate_interpolated_years = TRUE, extrapolation_type="constant")
   x_backcast[, 1950:2000, "Landfilled"] <- 1 - (x_backcast[, 1950:2000, "Recycled"]+x_backcast[, 1950:2000, "Incinerated"])
 
   # ---------------------------------------------------------------------------
@@ -104,7 +103,7 @@ calcPlEoL_shares <- function(subtype) {
   # ---------------------------------------------------------------------------
   region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
   x <- toolAggregate(
-    x,
+    x_backcast,
     rel = region_map, dim = 1,
     from = "RegionCode", to = "CountryCode"
   )
