@@ -20,7 +20,7 @@ calcPlEoL_shares <- function(subtype) {
   # ---------------------------------------------------------------------------
   # Calculate EoL shares from OECD data
   # - OECD data (1990–2019)
-  # - data before 2000 all 0, so assume value of year 2000 for 1990-1999
+  # - data before 2000 all 0, so exclude
   # - calculate shares
   # ---------------------------------------------------------------------------
   oecd_raw <- calcOutput("PlOECD", subtype = "WasteEOL_1990-2019_region", aggregate = TRUE) %>%
@@ -29,12 +29,8 @@ calcPlEoL_shares <- function(subtype) {
     select(-"Cell", -"Data2") %>%
     mutate(Year = as.integer(as.character(.data$Year)))
   oecd <- oecd_raw %>%
-    group_by(.data$Region, .data$Data1) %>%
+    filter(Year >=2000)%>%
     mutate(
-      Value = if_else(.data$Year < 2000,
-        first(.data$Value[.data$Year == 2000]),
-        .data$Value
-      ),
       Data1 = case_when(.data$Data1 %in% c("Mismanaged", "Littered") ~ "Uncollected", TRUE ~ .data$Data1)
     ) %>%
     group_by(.data$Region, .data$Data1, .data$Year) %>%
@@ -83,11 +79,30 @@ calcPlEoL_shares <- function(subtype) {
       Data1 = case_when(.data$Data1 == "Uncollected" ~ "Collected", TRUE ~ .data$Data1)
     ) %>%
     select("Region", "Year", "Data1", "share_new")
+
   # ---------------------------------------------------------------------------
-  # Convert to MagPIE and apply regional-to-country mapping.
+  # Backcast EoL rates to 1950, assuming 100% landfilling before 1980 (based on Geyer et al. 2017 SI fig.S5),
+  # linearly interpolating between 1980-2000,
+  # and assuming constant collection rates before 2000
+  # ---------------------------------------------------------------------------
+  target <- expand.grid(
+    Region = unique(full_data$Region),
+    Year   = 1980,
+    Data1 = c("Recycled","Incinerated"),
+    share_new = 0
+  )
+  target_collection <- full_data %>% filter(Year==2000, Data1=="Collected") %>% mutate(Year=1980)
+  full_data <- rbind(full_data, target, target_collection)
+
+  x <- as.magpie(full_data, spatial = 1, temporal = 2)
+
+  x_backcast <- time_interpolate(x, interpolated_year = 1950:2000, integrate_interpolated_years = TRUE, extrapolation_type="constant")
+  x_backcast[, 1950:2000, "Landfilled"] <- 1 - (x_backcast[, 1950:2000, "Recycled"]+x_backcast[, 1950:2000, "Incinerated"])
+
+  # ---------------------------------------------------------------------------
+  # Apply regional-to-country mapping.
   # ---------------------------------------------------------------------------
   region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
-  x <- as.magpie(full_data, spatial = 1, temporal = 2)
   x <- toolAggregate(
     x,
     rel = region_map, dim = 1,
