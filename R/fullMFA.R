@@ -122,7 +122,6 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CeWasteSplit", file = "ce_waste_type_split.cs4r")
     calcOutput("CeCaOEmissionFactor", file = "ce_cao_emission_factor.cs4r", aggregate = FALSE)
     calcOutput("CeProductDensity", file = "ce_product_density.cs4r", aggregate = FALSE)
-    calcOutput("CeCementRatio", file = "ce_cement_ratio.cs4r", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_min.cs4r", subtype = "min", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_max.cs4r", subtype = "max", aggregate = FALSE)
     calcOutput("CeProductMaterialApplicationTransform", file = "co_product_material_application_transform.cs4r", aggregate = FALSE)
