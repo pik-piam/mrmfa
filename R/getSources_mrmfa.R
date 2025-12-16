@@ -17,7 +17,7 @@ getSources_mrmfa <- function(){
   # get mapping of calcFunctions to parameters in fullMFA
   mapping <- extract_calc_output_calls(fullMFA)
   # get GDP sources to exclude for all but the common parameters (only used for weighting)
-  GDP_sources <- getSources("calcGDP")
+  GDP_sources <- getSources("calcCoGDP1900To2150")
 
   rows <- list()
   bibtex_list <- character(0)
