@@ -23,6 +23,11 @@ calcPlGoodShare <- function() {
     dplyr::mutate(share = .data$Value_sum / sum(.data$Value_sum, na.rm = TRUE)) %>%
     dplyr::ungroup()
 
+  regional_share <- as.magpie(
+    regional_df[c("Region", "Year", "Data2", "share")],
+    spatial = 1, temporal = 2
+  )
+
   # ---------------------------------------------------------------------------
   # Aggregate shares to country level
   # ---------------------------------------------------------------------------
