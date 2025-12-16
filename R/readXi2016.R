@@ -12,7 +12,6 @@ readXi2016 <- function(subtype) {
   # USA: Com/Ind differentiation not possible, Res/Civ possible
   # split could be inferred from China
   # Sheet SI data 6: concrete strength split, for China also as function of use type
-  # TODO check ERMCO
 
   # prepare China data
   stock_type_mapping_china <- c(
@@ -25,7 +24,7 @@ readXi2016 <- function(subtype) {
     "Railway, Road, tunnel，and bridge" = "Civ",
     "Other Civil Engineering" = "Civ",
     "Dam, power station, and dock" = "Civ",
-    "Other building" = "Com" # TODO this could also be added to Civ?
+    "Other building" = "Com"
   )
 
   # cut out unnecessary aggregation of buildings (1st row)

@@ -1,9 +1,14 @@
 #' Calculate kg Co2 emissions generated per one kg of CaO
-#' Based on stoichiometric calculations.
+#' @description Calculates the stoichiometric CO2 emission factor for Calcium Oxide (CaO) production.
+#' @details
+#' The emission factor is derived from the reaction CaCO3 -> CaO + CO2.
+#' Atomic weights are based on IUPAC Conventional Atomic Weights.
+#' - Carbon (C): 12.011 g/mol
+#' - Oxygen (O): 15.999 g/mol
+#' - Calcium (Ca): 40.078 g/mol
 #'
 #' @author Bennet Weiss
 calcCeCaOEmissionFactor <- function() {
-  # TODO: how will this kind of input data be cited?
 
   # Atomic weights (g/mol) based on IUPAC standard
   mw_C <- 12.011

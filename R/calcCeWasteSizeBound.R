@@ -1,11 +1,12 @@
-#' Calculate the share of cement in a cement product.
+#' Calculate the size bounds of waste particles for different waste types.
+#' Based on categorization from Cao2024
 #'
 #' @author Bennet Weiss
 #' @param subtype Type of Bound.
 #' Can be upper (subtype = "max") oder lower (subtype ="min") bound.
 #'
 calcCeWasteSizeBound <- function(subtype) {
-  # TODO Source: Cao -> how do we handle this?
+
   vals_min <- c(
     0, 5, 10, 20, # new concrete
     0, 1, 10, 30, # aggregates

@@ -42,6 +42,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     return(invisible(NULL))
   }
 
+  # nolint start
+
   #  ------------- DRIVERS -------------
   if (runSection("drivers")) {
     calcOutput("CoPopulation1900To2150", file = "co_population.cs4r", scenario = scenario, years = start_historic:end_future)
@@ -160,6 +162,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("PlChemReRate", file = "pl_chemical_recycling_rate.cs4r")
     calcOutput("PlBioRate", file = "pl_bio_production_rate.cs4r")
     calcOutput("PlDACRate", file = "pl_daccu_production_rate.cs4r")
+    # nolint end
+
     # TODO
     # carbon content materials, and emission capture rate
   }

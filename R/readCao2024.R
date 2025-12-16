@@ -12,8 +12,8 @@
 #' "product_cement_content", "cao_carbonation_share", "cement_loss_construction", "clinker_loss_production",
 #' "waste_split", "waste_size_split", "CKD_landfill_share", "clinker_cao_content", "CKD_cao_content"
 
+# nolint start
 readCao2024 <- function(subtype) {
-
   cao2024_specs <- list(
     product_material_split = list(
       long_names = c(
@@ -45,7 +45,7 @@ readCao2024 <- function(subtype) {
         "compressive strength class and exposure conditions (βc sec) C16-C23 (distribution)",
         "compressive strength class and exposure conditions (βc sec) C23-C35 (distribution)",
         "compressive strength class and exposure conditions (βc sec) >C35 (distribution)",
-        # TODO Hack to fill over mortar dim_members
+        # Hack to fill over mortar dim_members
         "carbonation rate coefficient of cement mortar (km) (distribution)",
         "carbonation rate coefficient of cement mortar (km) (distribution)",
         "carbonation rate coefficient of cement mortar (km) (distribution)"
@@ -68,7 +68,7 @@ readCao2024 <- function(subtype) {
         "carbonation rate coefficient of buried concrete in strength class i (kli) C16-C23",
         "carbonation rate coefficient of buried concrete in strength class i (kli) C23-C35",
         "carbonation rate coefficient of buried concrete in strength class i (kli) >C35",
-        # TODO Hack: Carbonation rate of mortar assumed to be the same as C15
+        # Hack: Carbonation rate of mortar assumed to be the same as C15
         # However, not important as mortar has fully carbonated anyways after in-use
         "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
         "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
@@ -79,7 +79,7 @@ readCao2024 <- function(subtype) {
     ),
     product_thickness = list(
       long_names = c(
-        # TODO Hack to fill over concrete dim_members
+        # Hack to fill over concrete dim_members
         "wall thickness (distribution)",
         "wall thickness (distribution)",
         "wall thickness (distribution)",
@@ -98,7 +98,7 @@ readCao2024 <- function(subtype) {
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) C16-C23 (distribution)",
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) C23-C35 (distribution)",
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) >C35 (distribution)",
-        # TODO replace this hack: Cement content of mortar assumed to be the same as C15
+        # Hack: Cement content of mortar assumed to be the same as C15
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)"
@@ -183,9 +183,9 @@ readCao2024 <- function(subtype) {
   spec <- cao2024_specs[[subtype]]
 
   if (is.null(spec)) {
+    # this is not used.
     long_names <- c("ratio of CO2 element to CaO (Mr)")
-    # TODO this should be used
-  } else {
+      } else {
     long_names <- spec$long_names
     if (!is.null(spec$dim_members)) dim_members <- spec$dim_members
     if (!is.null(spec$dim)) dim <- spec$dim
@@ -220,7 +220,7 @@ readCao2024 <- function(subtype) {
 #' @param groups optional vector (same length as long_names) giving group IDs.
 #' @param warn Bool flag to activate warning if underlying data is not normalized.
 toolCeCalculateMeans <- function(data, long_names, dim_members = NULL, dim = NULL,
-                            normalize = FALSE, tol = 3e-2, fmean = FALSE, groups = NULL, warn = FALSE) {
+                                 normalize = FALSE, tol = 3e-2, fmean = FALSE, groups = NULL, warn = FALSE) {
   # Check if we have multiple dimensions
   multi_dim <- is.list(dim_members) && !is.data.frame(dim_members)
 
@@ -567,3 +567,5 @@ toolFmeanUniform <- function(parameters) {
   if (any(bad)) stop(sprintf("Invalid parameter rows (need 0 < a < b): %s", paste(which(bad), collapse = ", ")))
   (b - a) / (log(b) - log(a))
 }
+
+# nolint end

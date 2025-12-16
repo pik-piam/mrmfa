@@ -4,7 +4,6 @@ calcCeBuiltLifespan <- function() {
   data <- readSource("PostedBuiltLifespan")
 
   # Split NonRes into Com and Ind and remove NonRes category
-  # TODO: reflect this in POSTED instead of here
   data_new <- add_columns(data, addnm = c("Com", "Ind"), dim = 3.1)
   data_new[, , "Com"] <- data[, , "NonRes"]
   data_new[, , "Ind"] <- data[, , "NonRes"]
