@@ -1,157 +1,3 @@
-cao2024_specs <- list(
-  product_material_split = list(
-    long_names = c(
-      "cement for concrete (distribution function)",
-      "cement for mortar (distribution)"
-    ),
-    dim_members = c("concrete", "mortar"),
-    dim = "Product Material",
-    normalize = TRUE
-  ),
-  product_application_split = list(
-    long_names = c(
-      "distribution of concrete by strength class ≤C15 (distribution)",
-      "distribution of concrete by strength class C16-C23 (distribution)",
-      "distribution of concrete by strength class C23-C35 (distribution)",
-      "distribution of concrete by strength class >C35 (distribution)",
-      "percentage of mortar cement used for rendering, palstering and decorating (distribution)",
-      "percentage of mortar cement used for masonry (distribution)",
-      "percentage of mortar cement used for maintenance and repairing (distribution)"
-    ),
-    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
-    dim = "Product Application",
-    normalize = TRUE,
-    groups = c(rep("concrete", 4), rep("mortar", 3))
-  ),
-  carbonation_rate = list(
-    long_names = c(
-      "compressive strength class and exposure conditions (βc sec) ≤C15 (distribution)",
-      "compressive strength class and exposure conditions (βc sec) C16-C23 (distribution)",
-      "compressive strength class and exposure conditions (βc sec) C23-C35 (distribution)",
-      "compressive strength class and exposure conditions (βc sec) >C35 (distribution)",
-      # TODO Hack to fill over mortar dim_members
-      "carbonation rate coefficient of cement mortar (km) (distribution)",
-      "carbonation rate coefficient of cement mortar (km) (distribution)",
-      "carbonation rate coefficient of cement mortar (km) (distribution)"
-    ),
-    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
-    dim = "Product Application"
-  ),
-  carbonation_rate_factor_additives = list(
-    long_names = c("cement additives (βad) (distribution)")
-  ),
-  carbonation_rate_factor_co2 = list(
-    long_names = c("CO2 concentration (βCO2) (distribution)")
-  ),
-  carbonation_rate_factor_coating = list(
-    long_names = c("coating and cover (βCC) (distribution)")
-  ),
-  carbonation_rate_buried = list(
-    long_names = c(
-      "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
-      "carbonation rate coefficient of buried concrete in strength class i (kli) C16-C23",
-      "carbonation rate coefficient of buried concrete in strength class i (kli) C23-C35",
-      "carbonation rate coefficient of buried concrete in strength class i (kli) >C35",
-      # TODO Hack: Carbonation rate of mortar assumed to be the same as C15
-      # However, not important as mortar has fully carbonated anyways after in-use
-      "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
-      "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
-      "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15"
-    ),
-    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
-    dim = "Product Application"
-  ),
-  product_thickness = list(
-    long_names = c(
-      # TODO Hack to fill over concrete dim_members
-      "wall thickness (distribution)",
-      "wall thickness (distribution)",
-      "wall thickness (distribution)",
-      "wall thickness (distribution)",
-      "thickness of mortar cement used for rendering, palstering and decorating (distribution)",
-      "thickness of mortar cement used for masonry (distribution)",
-      "thickness of mortar cement used for maintenance and repairing (distribution)"
-    ),
-    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
-    dim = "Product Application",
-    fraction_mean = TRUE
-  ),
-  product_cement_content = list(
-    long_names = c(
-      "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
-      "cement content of concrete in different strength classes (kg cement/m3) (Ci) C16-C23 (distribution)",
-      "cement content of concrete in different strength classes (kg cement/m3) (Ci) C23-C35 (distribution)",
-      "cement content of concrete in different strength classes (kg cement/m3) (Ci) >C35 (distribution)",
-      # TODO replace this hack: Cement content of mortar assumed to be the same as C15
-      "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
-      "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
-      "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)"
-    ),
-    dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
-    dim = "Product Application"
-  ),
-  cao_carbonation_share = list(
-    long_names = c(
-      "proportion of CaO within fully carbonated cement that converts to CaCO3 for concrete cement (γ) (distribution)",
-      "proportion of CaO within fully carbonated cement that converts to CaCO3 for mortar cement (γ1) (distribution)"
-    ),
-    dim_members = c("concrete", "mortar"),
-    dim = "Product Material"
-  ),
-  cement_loss_construction = list(
-    long_names = c("cement wasted during construction (distribution)")
-  ),
-  clinker_loss_production = list(
-    long_names = c("CKD generation rate of clinker (distribution)")
-  ),
-  waste_split = list(
-    long_names = c(
-      "fate of waste concrete (for new concrete)",
-      "fate of waste concrete (for road base, backfills materials and other use)",
-      "fate of waste concrete (landfill, dumped and stacking)",
-      "fate of waste concrete (asphalt concrete)"
-    ),
-    dim_members = c("new concrete", "aggregates", "landfill", "asphalt"),
-    dim = "Concrete Waste Type"
-  ),
-  waste_size_split = list(
-    long_names = c(
-      "percentage of waste concrete (for new concrete) with particle size <5mm (min)",
-      "percentage of waste concrete (for new concrete) with particle size 5-10mm (min)",
-      "percentage of waste concrete (for new concrete) with particle size 10-20mm (min)",
-      "percentage of waste concrete (for new concrete) with particle size 20-40mm (min)",
-      "percentage of waste concrete (for road base, backfills materials and other use) with particle size <1mm (min)",
-      "percentage of waste concrete (for road base, backfills materials and other use) with particle size 1-10mm (min)",
-      "percentage of waste concrete (for road base, backfills materials and other use) with particle size 10-30mm (min)",
-      "percentage of waste concrete (for road base, backfills materials and other use) with particle size 30-53mm (min)",
-      "percentage of waste concrete (landfill, dumped and stacking) with particle size <10mm (min)",
-      "percentage of waste concrete (landfill, dumped and stacking) with particle size 10-30mm (min)",
-      "percentage of waste concrete (landfill, dumped and stacking) with particle size 30-50mm (min)",
-      "percentage of waste concrete (landfill, dumped and stacking) with particle size >50mm (min)",
-      "percentage of waste concrete (asphalt concrete) with particle size <5mm (min)",
-      "percentage of waste concrete (asphalt concrete) with particle size 5-10mm (min)",
-      "percentage of waste concrete (asphalt concrete) with particle size 10-20mm (min)",
-      "percentage of waste concrete (asphalt concrete) with particle size 20-40mm (min)"
-    ),
-    dim_members = list(
-      "Concrete Waste Type" = c("new concrete", "aggregates", "landfill", "asphalt"),
-      "Particle Size" = c("A", "B", "C", "D")
-    ),
-    dim = c("Concrete Waste Type", "Particle Size"),
-    normalize = TRUE,
-    groups = c(rep("new concrete", 4), rep("aggregates", 4), rep("landfill", 4), rep("asphalt", 4))
-  ),
-  CKD_landfill_share = list(
-    long_names = c("percentage of CKD sent to landfill (distribution)")
-  ),
-  clinker_cao_content = list(
-    long_names = c("average CaO content of clinker in cement (fCaO) (distribution)")
-  ),
-  CKD_cao_content = list(
-    long_names = c("CaO content in CKD (distribution)")
-  )
-)
-
 #' Read data received on 04.08.2025, personal communication.
 #' Data used for Kaufmann et al. (2024), DOI: 10.1088/1748-9326/ad236b
 #' "Society’s material stocks as carbon pool: an economy-wide quantification of global carbon stocks from 1900–2015"
@@ -160,8 +6,168 @@ cao2024_specs <- list(
 #'
 #' @author Bennet Weiss
 #' @param subtype Variable to be read in.
+#' Supported subtypes are:
+#' "product_material_split", "product_application_split", "carbonation_rate", "carbonation_rate_factor_additives",
+#' "carbonation_rate_factor_co2", "carbonation_rate_factor_coating", "carbonation_rate_buried", "product_thickness",
+#' "product_cement_content", "cao_carbonation_share", "cement_loss_construction", "clinker_loss_production",
+#' "waste_split", "waste_size_split", "CKD_landfill_share", "clinker_cao_content", "CKD_cao_content"
 
 readCao2024 <- function(subtype) {
+
+  cao2024_specs <- list(
+    product_material_split = list(
+      long_names = c(
+        "cement for concrete (distribution function)",
+        "cement for mortar (distribution)"
+      ),
+      dim_members = c("concrete", "mortar"),
+      dim = "Product Material",
+      normalize = TRUE
+    ),
+    product_application_split = list(
+      long_names = c(
+        "distribution of concrete by strength class ≤C15 (distribution)",
+        "distribution of concrete by strength class C16-C23 (distribution)",
+        "distribution of concrete by strength class C23-C35 (distribution)",
+        "distribution of concrete by strength class >C35 (distribution)",
+        "percentage of mortar cement used for rendering, palstering and decorating (distribution)",
+        "percentage of mortar cement used for masonry (distribution)",
+        "percentage of mortar cement used for maintenance and repairing (distribution)"
+      ),
+      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim = "Product Application",
+      normalize = TRUE,
+      groups = c(rep("concrete", 4), rep("mortar", 3))
+    ),
+    carbonation_rate = list(
+      long_names = c(
+        "compressive strength class and exposure conditions (βc sec) ≤C15 (distribution)",
+        "compressive strength class and exposure conditions (βc sec) C16-C23 (distribution)",
+        "compressive strength class and exposure conditions (βc sec) C23-C35 (distribution)",
+        "compressive strength class and exposure conditions (βc sec) >C35 (distribution)",
+        # TODO Hack to fill over mortar dim_members
+        "carbonation rate coefficient of cement mortar (km) (distribution)",
+        "carbonation rate coefficient of cement mortar (km) (distribution)",
+        "carbonation rate coefficient of cement mortar (km) (distribution)"
+      ),
+      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim = "Product Application"
+    ),
+    carbonation_rate_factor_additives = list(
+      long_names = c("cement additives (βad) (distribution)")
+    ),
+    carbonation_rate_factor_co2 = list(
+      long_names = c("CO2 concentration (βCO2) (distribution)")
+    ),
+    carbonation_rate_factor_coating = list(
+      long_names = c("coating and cover (βCC) (distribution)")
+    ),
+    carbonation_rate_buried = list(
+      long_names = c(
+        "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
+        "carbonation rate coefficient of buried concrete in strength class i (kli) C16-C23",
+        "carbonation rate coefficient of buried concrete in strength class i (kli) C23-C35",
+        "carbonation rate coefficient of buried concrete in strength class i (kli) >C35",
+        # TODO Hack: Carbonation rate of mortar assumed to be the same as C15
+        # However, not important as mortar has fully carbonated anyways after in-use
+        "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
+        "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
+        "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15"
+      ),
+      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim = "Product Application"
+    ),
+    product_thickness = list(
+      long_names = c(
+        # TODO Hack to fill over concrete dim_members
+        "wall thickness (distribution)",
+        "wall thickness (distribution)",
+        "wall thickness (distribution)",
+        "wall thickness (distribution)",
+        "thickness of mortar cement used for rendering, palstering and decorating (distribution)",
+        "thickness of mortar cement used for masonry (distribution)",
+        "thickness of mortar cement used for maintenance and repairing (distribution)"
+      ),
+      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim = "Product Application",
+      fraction_mean = TRUE
+    ),
+    product_cement_content = list(
+      long_names = c(
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) C16-C23 (distribution)",
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) C23-C35 (distribution)",
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) >C35 (distribution)",
+        # TODO replace this hack: Cement content of mortar assumed to be the same as C15
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)"
+      ),
+      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim = "Product Application"
+    ),
+    cao_carbonation_share = list(
+      long_names = c(
+        "proportion of CaO within fully carbonated cement that converts to CaCO3 for concrete cement (γ) (distribution)",
+        "proportion of CaO within fully carbonated cement that converts to CaCO3 for mortar cement (γ1) (distribution)"
+      ),
+      dim_members = c("concrete", "mortar"),
+      dim = "Product Material"
+    ),
+    cement_loss_construction = list(
+      long_names = c("cement wasted during construction (distribution)")
+    ),
+    clinker_loss_production = list(
+      long_names = c("CKD generation rate of clinker (distribution)")
+    ),
+    waste_split = list(
+      long_names = c(
+        "fate of waste concrete (for new concrete)",
+        "fate of waste concrete (for road base, backfills materials and other use)",
+        "fate of waste concrete (landfill, dumped and stacking)",
+        "fate of waste concrete (asphalt concrete)"
+      ),
+      dim_members = c("new concrete", "aggregates", "landfill", "asphalt"),
+      dim = "Concrete Waste Type"
+    ),
+    waste_size_split = list(
+      long_names = c(
+        "percentage of waste concrete (for new concrete) with particle size <5mm (min)",
+        "percentage of waste concrete (for new concrete) with particle size 5-10mm (min)",
+        "percentage of waste concrete (for new concrete) with particle size 10-20mm (min)",
+        "percentage of waste concrete (for new concrete) with particle size 20-40mm (min)",
+        "percentage of waste concrete (for road base, backfills materials and other use) with particle size <1mm (min)",
+        "percentage of waste concrete (for road base, backfills materials and other use) with particle size 1-10mm (min)",
+        "percentage of waste concrete (for road base, backfills materials and other use) with particle size 10-30mm (min)",
+        "percentage of waste concrete (for road base, backfills materials and other use) with particle size 30-53mm (min)",
+        "percentage of waste concrete (landfill, dumped and stacking) with particle size <10mm (min)",
+        "percentage of waste concrete (landfill, dumped and stacking) with particle size 10-30mm (min)",
+        "percentage of waste concrete (landfill, dumped and stacking) with particle size 30-50mm (min)",
+        "percentage of waste concrete (landfill, dumped and stacking) with particle size >50mm (min)",
+        "percentage of waste concrete (asphalt concrete) with particle size <5mm (min)",
+        "percentage of waste concrete (asphalt concrete) with particle size 5-10mm (min)",
+        "percentage of waste concrete (asphalt concrete) with particle size 10-20mm (min)",
+        "percentage of waste concrete (asphalt concrete) with particle size 20-40mm (min)"
+      ),
+      dim_members = list(
+        "Concrete Waste Type" = c("new concrete", "aggregates", "landfill", "asphalt"),
+        "Particle Size" = c("A", "B", "C", "D")
+      ),
+      dim = c("Concrete Waste Type", "Particle Size"),
+      normalize = TRUE,
+      groups = c(rep("new concrete", 4), rep("aggregates", 4), rep("landfill", 4), rep("asphalt", 4))
+    ),
+    CKD_landfill_share = list(
+      long_names = c("percentage of CKD sent to landfill (distribution)")
+    ),
+    clinker_cao_content = list(
+      long_names = c("average CaO content of clinker in cement (fCaO) (distribution)")
+    ),
+    CKD_cao_content = list(
+      long_names = c("CaO content in CKD (distribution)")
+    )
+  )
+
   path <- file.path("v1", "data_cement_GAS_EoL_MISO_9regions.xlsx")
   data <- suppressMessages(readxl::read_xlsx(path, sheet = "Uptake"))
   data <- head(data, 11) # remove rows after row 11
@@ -210,9 +216,10 @@ readCao2024 <- function(subtype) {
 #' @param dim name of the dimension.
 #' @param normalize Bool if normalization step should be performed.
 #' @param tol Tolerance for check of normalization within rounding errors. Only performed if normalize = TRUE.
+#' @param fmean Bool if fraction mean should be calculated.
 #' @param groups optional vector (same length as long_names) giving group IDs.
 #' @param warn Bool flag to activate warning if underlying data is not normalized.
-calculate_means <- function(data, long_names, dim_members = NULL, dim = NULL,
+toolCeCalculateMeans <- function(data, long_names, dim_members = NULL, dim = NULL,
                             normalize = FALSE, tol = 3e-2, fmean = FALSE, groups = NULL, warn = FALSE) {
   # Check if we have multiple dimensions
   multi_dim <- is.list(dim_members) && !is.data.frame(dim_members)
@@ -321,9 +328,11 @@ calculate_means <- function(data, long_names, dim_members = NULL, dim = NULL,
 
 #' Function to calculate the mean by extracting the distribution function.
 #'
+#' @author Bennet Weiss
 #' @param data original input from dataframe.
 #' @param start_column_name label of first column of variable.
-calculate_mean_single <- function(data, start_column_name, fmean = FALSE) {
+#' @param fmean Bool if fraction mean should be calculated.
+toolCeCalculateMeanSingle <- function(data, start_column_name, fmean = FALSE) {
   if (!fmean) {
     mean_functions <- list(
       "Weibull" = mean_trunc_weibull,
@@ -377,8 +386,9 @@ calculate_mean_single <- function(data, start_column_name, fmean = FALSE) {
 
 #' Calculate the mean based on parameters from a truncated Weibull distribution.
 #'
-#' @param parmaters Array of the four parameters (scale, shape, min, max) of a Weibull distribution
-mean_trunc_weibull <- function(parameters) {
+#' @author Bennet Weiss
+#' @param parameters Array of the four parameters (scale, shape, min, max) of a Weibull distribution
+toolMeanTruncWeibull <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
 
   if (!is.data.frame(parameters) || ncol(parameters) != 4L) {
@@ -412,8 +422,9 @@ mean_trunc_weibull <- function(parameters) {
 
 #' Calculate the mean based on parameters from a uniform distribution.
 #'
-#' @param parameters Array of the two parameters (min, max) of a uniform distribution
-mean_uniform <- function(parameters) {
+#' @author Bennet Weiss
+#' @param parameters Array of the two parameters (max, min) of a uniform distribution
+toolMeanUniform <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
 
   if (!is.data.frame(parameters) || ncol(parameters) != 2L) {
@@ -432,7 +443,11 @@ mean_uniform <- function(parameters) {
   return((a + b) / 2)
 }
 
-mean_triangular <- function(parameters) {
+#' Calculate the mean based on parameters from a triangular distribution.
+#'
+#' @author Bennet Weiss
+#' @param parameters Array of the three parameters (mode, max, min) of a triangular distribution
+toolMeanTriangular <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
   if (!is.data.frame(parameters) || ncol(parameters) != 3L) {
     stop("parameters must be a data.frame/matrix (3 columns: mode,max,min) or a length-3 vector/list.")
@@ -453,7 +468,11 @@ mean_triangular <- function(parameters) {
   (a + b + mode) / 3
 }
 
-mean_trunc_norm <- function(parameters) {
+#' Calculate the mean based on parameters from a truncated normal distribution.
+#'
+#' @author Bennet Weiss
+#' @param parameters Array of the four parameters (mean, std, min, max) of a truncated normal distribution
+toolMeanTruncNorm <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
   if (!is.data.frame(parameters) || ncol(parameters) != 4L) {
     stop("parameters must be a data.frame/matrix (4 columns: mean, std, min, max) or a length-4 vector/list.")
@@ -488,7 +507,10 @@ mean_trunc_norm <- function(parameters) {
 #' Conditional harmonic mean (1 / E[1/X]) for truncated Weibull on [a,b].
 #' Parameters: (scale, shape, min, max). Requires (shape>1 or a>0). Diverges if a=0 & shape<=1.
 #' Returns 1 / E[1/X | a≤X≤b].
-fmean_trunc_weibull <- function(parameters) {
+#'
+#' @author Bennet Weiss
+#' @param parameters Array of the four parameters (scale, shape, min, max) of a Weibull distribution
+toolFmeanTruncWeibull <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
   if (!is.data.frame(parameters) || ncol(parameters) != 4L) {
     stop("parameters must be a data.frame/matrix (4 columns) or a length-4 vector/list.")
@@ -531,7 +553,10 @@ fmean_trunc_weibull <- function(parameters) {
 #' Conditional harmonic mean (1 / E[1/X]) for Uniform(a,b).
 #' Parameters layout kept: col1 = b (max), col2 = a (min). Requires 0 < a < b.
 #' Returns (b - a)/(log b - log a).
-fmean_uniform <- function(parameters) {
+#'
+#' @author Bennet Weiss
+#' @param parameters Array of the two parameters (max, min) of a uniform distribution
+toolFmeanUniform <- function(parameters) {
   parameters <- as.data.frame(parameters, optional = TRUE)
   if (!is.data.frame(parameters) || ncol(parameters) != 2L) {
     stop("parameters must be a data.frame/matrix (2 columns) or a length-2 vector/list.")
