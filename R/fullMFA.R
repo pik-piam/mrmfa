@@ -132,14 +132,5 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("PlZeroRates", file = "pl_bio_production_rate.cs4r")
     calcOutput("PlZeroRates", file = "pl_daccu_production_rate.cs4r")
     calcOutput("PlZeroRates", file = "pl_emission_capture_rate.cs4r")
-    # parameter extrapolations were moved to the MFA
-    # # EoL shares including extrapolations (to be moved to the MFA soon)
-    # calcOutput("PlCollRate", file = "pl_collection_rate.cs4r")
-    # calcOutput("PlMechReRate", file = "pl_mechanical_recycling_rate.cs4r")
-    # calcOutput("PlIncinRate", file = "pl_incineration_rate.cs4r")
-    # # Future rates (historic = 0)
-    # calcOutput("PlChemReRate", file = "pl_chemical_recycling_rate.cs4r")
-    # calcOutput("PlBioRate", file = "pl_bio_production_rate.cs4r")
-    # calcOutput("PlDACRate", file = "pl_daccu_production_rate.cs4r")
   }
 }
