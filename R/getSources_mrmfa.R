@@ -12,6 +12,7 @@
 #' @importFrom dplyr across
 #' @importFrom dplyr everything
 #' @importFrom utils write.csv
+#' @export
 getSources_mrmfa <- function(){
   calcFunctions <- getDependencies("fullMFA", direction = "din")
   # get mapping of calcFunctions to parameters in fullMFA
