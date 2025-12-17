@@ -72,6 +72,12 @@ calcStTrade <- function(subtype = "imports") {
     }
     # Split indirect trade into direct trade
     trade <- .splitIndirectTrade(trade, shares = shares)
+    trade <- time_interpolate(
+      trade, 
+      seq(2020, 2022), 
+      integrate_interpolated_years = TRUE, 
+      extrapolation_type = "constant"
+    )
     note <- "dimensions: (Historic Time,Region,Good,value)"
   } else {
     note <- "dimensions: (Historic Time,Region,value)"

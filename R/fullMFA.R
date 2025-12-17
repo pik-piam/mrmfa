@@ -134,14 +134,14 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     # Consumption
     calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
     # Trade
-    calcOutput("PlTrade", category = "final", flow_label = "Exports", file = "pl_final_his_exports.cs4r")
-    calcOutput("PlTrade", category = "final", flow_label = "Imports", file = "pl_final_his_imports.cs4r")
-    calcOutput("PlTrade", category = "primary", flow_label = "Exports", file = "pl_primary_his_exports.cs4r")
-    calcOutput("PlTrade", category = "primary", flow_label = "Imports", file = "pl_primary_his_imports.cs4r")
-    calcOutput("PlTrade", category = "intermediate", flow_label = "Exports", file = "pl_intermediate_his_exports.cs4r")
-    calcOutput("PlTrade", category = "intermediate", flow_label = "Imports", file = "pl_intermediate_his_imports.cs4r")
-    calcOutput("PlTrade", category = "manufactured", flow_label = "Exports", file = "pl_manufactured_his_exports.cs4r")
-    calcOutput("PlTrade", category = "manufactured", flow_label = "Imports", file = "pl_manufactured_his_imports.cs4r")
+    calcOutput("PlTrade", category = "Final", flow_label = "Exports", file = "pl_final_his_exports.cs4r")
+    calcOutput("PlTrade", category = "Final", flow_label = "Imports", file = "pl_final_his_imports.cs4r")
+    calcOutput("PlTrade", category = "Primary", flow_label = "Exports", file = "pl_primary_his_exports.cs4r")
+    calcOutput("PlTrade", category = "Primary", flow_label = "Imports", file = "pl_primary_his_imports.cs4r")
+    calcOutput("PlTrade", category = "Intermediate", flow_label = "Exports", file = "pl_intermediate_his_exports.cs4r")
+    calcOutput("PlTrade", category = "Intermediate", flow_label = "Imports", file = "pl_intermediate_his_imports.cs4r")
+    calcOutput("PlTrade", category = "Manufactured", flow_label = "Exports", file = "pl_manufactured_his_exports.cs4r")
+    calcOutput("PlTrade", category = "Manufactured", flow_label = "Imports", file = "pl_manufactured_his_imports.cs4r")
     calcOutput("PlWasteTrade", subtype = "export", file = "pl_waste_exports.cs4r")
     calcOutput("PlWasteTrade", subtype = "import", file = "pl_waste_imports.cs4r")
     # Parameters
@@ -150,21 +150,17 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r") # fix 0.05
     calcOutput("PlLifetime", subtype = "Lifetime_mean", aggregate = FALSE, file = "pl_lifetime_mean.cs4r")
     calcOutput("PlLifetime", subtype = "Lifetime_std", aggregate = FALSE, file = "pl_lifetime_std.cs4r")
+    calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_materials.cs4r")
     # Historic EoL shares
-    calcOutput("PlEoL_shares", subtype = "Collected", file = "pl_hist_collection_rate.cs4r")
-    calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_hist_mechanical_recycling_rate.cs4r")
-    calcOutput("PlEoL_shares", subtype = "Incinerated", file = "pl_hist_incineration_rate.cs4r")
-    # EoL shares including extrapolations (to be moved to the MFA soon)
-    calcOutput("PlCollRate", file = "pl_collection_rate.cs4r")
-    calcOutput("PlMechReRate", file = "pl_mechanical_recycling_rate.cs4r")
-    calcOutput("PlIncinRate", file = "pl_incineration_rate.cs4r")
-    # Future rates (historic = 0)
-    calcOutput("PlChemReRate", file = "pl_chemical_recycling_rate.cs4r")
-    calcOutput("PlBioRate", file = "pl_bio_production_rate.cs4r")
-    calcOutput("PlDACRate", file = "pl_daccu_production_rate.cs4r")
-    # nolint end
-
-    # TODO
-    # carbon content materials, and emission capture rate
+    calcOutput("PlEoL_shares", subtype = "Collected", file = "pl_collection_rate.cs4r")
+    calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_mechanical_recycling_rate.cs4r")
+    calcOutput("PlEoL_shares", subtype = "Incinerated", file = "pl_incineration_rate.cs4r")
+    # Rates that are historically zero
+    calcOutput("PlZeroRates", file = "pl_chemical_recycling_rate.cs4r")
+    calcOutput("PlZeroRates", file = "pl_bio_production_rate.cs4r")
+    calcOutput("PlZeroRates", file = "pl_daccu_production_rate.cs4r")
+    calcOutput("PlZeroRates", file = "pl_emission_capture_rate.cs4r")
   }
+
+  # nolint end
 }

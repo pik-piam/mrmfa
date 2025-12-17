@@ -9,21 +9,16 @@ calcPlUNCTAD(subtype)
 \arguments{
 \item{subtype}{Character; scenario to read. Options:
 \itemize{
-  \item Final_Region         - Imports/exports of final plastics by region
-  \item Final_Country        - Imports/exports of final plastics by country
-  \item Waste_Region         - Plastic waste flows by region
-  \item Waste_Country        - Plastic waste flows by country
-  \item Primary_Region       - Imports/exports of primary plastics by region
-  \item Primary_Country      - Imports/exports of primary plastics by country
-  \item Intermediate_Region  - Imports/exports of intermediate forms of plastic by region
-  \item Intermediate_Country - Imports/exports of intermediate forms of plastic by country
-  \item Manufactured_Region  - Imports/exports of intermediate manufactured plastic goods by region
-  \item Manufactured_Country - Imports/exports of intermediate manufactured plastic goods by country
+  \item Final        - Imports/exports of final plastics by country
+  \item Waste        - Plastic waste imports/exports by country
+  \item Primary      - Imports/exports of primary plastics by country
+  \item Intermediate - Imports/exports of intermediate forms of plastic by country
+  \item Manufactured - Imports/exports of intermediate manufactured plastic goods by country
 }}
 }
 \description{
 Read and aggregate UNCTAD plastic trade data (imports/exports) for multiple plastic categories
-at regional or country level, with overrides for key economies.
+at country level.
 }
 \author{
 Qianzhi Zhang

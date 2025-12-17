@@ -5,17 +5,17 @@
 \title{Calculate Country-Level Plastics Trade for Various Categories}
 \usage{
 calcPlTrade(
-  category = c("final", "primary", "intermediate", "manufactured"),
+  category = c("Final", "Primary", "Intermediate", "Manufactured"),
   flow_label = c("Exports", "Imports")
 )
 }
 \arguments{
 \item{category}{Character; product category:
 \itemize{
-  \item "final"        - Final plastics
-  \item "primary"      - Primary plastics
-  \item "intermediate" - Intermediate forms of plastic
-  \item "manufactured" - Intermediate manufactured plastic goods
+  \item "Final"        - Final plastics
+  \item "Primary"      - Primary plastics
+  \item "Intermediate" - Intermediate forms of plastic
+  \item "Manufactured" - Intermediate manufactured plastic goods
 }}
 
 \item{flow_label}{Character; trade flow:
@@ -26,7 +26,8 @@ calcPlTrade(
 }
 \description{
 Reads UNCTAD plastics trade (exports or imports) data at regional level,
-fills 1990-2004 years with data of 2005, and aggregates to country level.
+backcasts data to 1950 to fill missing years 1950-2004 years,
+and aggregates to country level.
 }
 \author{
 Qianzhi Zhang
