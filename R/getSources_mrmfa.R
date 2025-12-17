@@ -88,9 +88,9 @@ getSources_mrmfa <- function(){
     select("Filename", "CalcFunction", "Source", "Bibtex")
 
   # export as csv file
-  write.csv(table_final, "inst/mrmfa_sources.csv", row.names=FALSE)
+  write.csv(table_final, "mrmfa_sources.csv", row.names=FALSE)
   # export bibtex list to .bib file, remove duplicates
-  writeLines(unique(bibtex_list), "inst/mrmfa_sources.bib")
+  writeLines(unique(bibtex_list), "mrmfa_sources.bib")
 }
 
 # Get the SOURCE_INFO.txt from the newest version of the source folder
