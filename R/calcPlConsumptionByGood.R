@@ -54,7 +54,8 @@ calcPlConsumptionByGood <- function() {
     "regionmappingH12.csv",
     type = "regional", where = "mappingfolder"
   )
-  gdp_weights <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)[, paste0("y", 1950:2019), ]
+  gdp_weights <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)
+  gdp_weights <- gdp_weights[, paste0("y", 1950:2019), ]
 
   x <- toolAggregate(
     x,

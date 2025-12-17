@@ -10,7 +10,10 @@ calcPlCarbonContent <- function() {
 
   data_final <- mbind(data, other_elements)
 
-  description <- "Carbon contents of plastic types. Data from stochiometric calculations and rough estimates for broader categories"
+  description <- paste(
+    "Carbon contents of plastic types. ",
+    "Data from stochiometric calculations and rough estimates for broader categories"
+  )
   output <- list(
     x = data_final,
     weight = NULL,
