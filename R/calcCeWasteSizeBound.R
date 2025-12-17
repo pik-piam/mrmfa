@@ -6,7 +6,6 @@
 #' Can be upper (subtype = "max") oder lower (subtype ="min") bound.
 #'
 calcCeWasteSizeBound <- function(subtype) {
-
   vals_min <- c(
     0, 5, 10, 20, # new concrete
     0, 1, 10, 30, # aggregates

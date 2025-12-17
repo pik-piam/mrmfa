@@ -185,7 +185,7 @@ readCao2024 <- function(subtype) {
   if (is.null(spec)) {
     # this is not used.
     long_names <- c("ratio of CO2 element to CaO (Mr)")
-      } else {
+  } else {
     long_names <- spec$long_names
     if (!is.null(spec$dim_members)) dim_members <- spec$dim_members
     if (!is.null(spec$dim)) dim <- spec$dim

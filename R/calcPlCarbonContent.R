@@ -5,7 +5,7 @@ calcPlCarbonContent <- function() {
   data <- add_dimension(data_raw, dim = 3.2, add = "Element", nm = "C")
 
   # calculate non-carbon contents
-  other_elements = 1 - data
+  other_elements <- 1 - data
   getNames(other_elements, dim = "Element") <- "Other Elements"
 
   data_final <- mbind(data, other_elements)

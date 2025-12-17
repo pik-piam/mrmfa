@@ -4,7 +4,6 @@
 #' @author Leonie Schweiger
 #'
 calcPlZeroRates <- function() {
-
   region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
   regions <- unique(region_map$CountryCode)
   years <- 1950:2019

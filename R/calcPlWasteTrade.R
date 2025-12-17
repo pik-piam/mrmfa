@@ -17,26 +17,28 @@ calcPlWasteTrade <- function(subtype) {
   # Load regional plastic waste trade data and backcast to 1950 using consumption data
   # ---------------------------------------------------------------------------
   if (subtype == "export") {
-    datatype = "Exports"
+    datatype <- "Exports"
   } else if (subtype == "import") {
-    datatype = "Imports"
+    datatype <- "Imports"
   } else {
     stop("Invalid subtype. Choose 'export' or 'import'.")
   }
 
   trade <- calcOutput("PlUNCTAD", subtype = "Waste")
-  trade_filtered <- collapseNames(trade[, , getNames(trade, dim=1)==datatype])
+  trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == datatype])
 
   consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood"), dim = 3))
   hist_df <- toolBackcastByReference2D(trade_filtered, consumption) %>%
     as.data.frame() %>%
-    dplyr::mutate(Year = as.integer(as.character(.data$Year)))%>%
-    dplyr::select(-"Cell",-"Data1")
+    dplyr::mutate(Year = as.integer(as.character(.data$Year))) %>%
+    dplyr::select(-"Cell", -"Data1")
 
   # ---------------------------------------------------------------------------
   # Fill future years (2024-2100) with 2023 values
   # ---------------------------------------------------------------------------
-  base_2023 <- hist_df %>% dplyr::filter(.data$Year == 2023) %>% dplyr::select(-"Year")
+  base_2023 <- hist_df %>%
+    dplyr::filter(.data$Year == 2023) %>%
+    dplyr::select(-"Year")
   future_years <- 2024:2100
   future_df <- tidyr::expand_grid(
     Region = unique(hist_df$Region),
@@ -47,7 +49,7 @@ calcPlWasteTrade <- function(subtype) {
     # scale factor: linear decline from 1 (at 2022) to 0 at 2030; 0 afterwards
     dplyr::mutate(
       .scale = dplyr::case_when(
-        Year <= 2030 ~ (2030 - Year) / (2030 - 2023),  # 2024→6/7, …, 2030→0
+        Year <= 2030 ~ (2030 - Year) / (2030 - 2023), # 2024→6/7, …, 2030→0
         TRUE ~ 0
       )
     ) %>%
@@ -58,7 +60,7 @@ calcPlWasteTrade <- function(subtype) {
         .fns  = ~ .x * .scale
       )
     ) %>%
-    dplyr::select(-".scale")              # drop helper column
+    dplyr::select(-".scale") # drop helper column
   full_df <- dplyr::bind_rows(hist_df, future_df) %>%
     dplyr::arrange(.data$Region, .data$Year)
 
@@ -68,7 +70,7 @@ calcPlWasteTrade <- function(subtype) {
   x <- as.magpie(full_df %>% dplyr::select("Region", "Year", "Value"), spatial = 1, temporal = 2)
   region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
 
-  gdp_ssp2 <- calcOutput("CoGDP1900To2150", scenario="SSP2", perCapita=FALSE, aggregate=FALSE)[, "y2019",]
+  gdp_ssp2 <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)[, "y2019", ]
   x <- toolAggregate(x,
     rel = region_map, dim = 1, from = "RegionCode", to = "CountryCode",
     weight = gdp_ssp2[unique(region_map$CountryCode), , ]

@@ -13,7 +13,7 @@
 #' @importFrom dplyr everything
 #' @importFrom utils write.csv
 #' @export
-getSources_mrmfa <- function(){
+getSources_mrmfa <- function() {
   calcFunctions <- getDependencies("fullMFA", direction = "din")
   # get mapping of calcFunctions to parameters in fullMFA
   mapping <- extract_calc_output_calls(fullMFA)
@@ -40,22 +40,22 @@ getSources_mrmfa <- function(){
         if (j %in% GDP_sources$source & !(i %in% mapping$CalcFunction[startsWith(mapping$Filename, "co_")])) next
         # get source folders and bibtex entries for each source
         sourceFolder <- madrat:::getSourceFolder(j, subtype = NULL)
-        sourceFile   <- find_source_info(sourceFolder)
+        sourceFile <- find_source_info(sourceFolder)
 
         bibtex_entries <- character(0)
-        bibtex_keys    <- character(0)
+        bibtex_keys <- character(0)
 
         if (file.exists(sourceFile)) {
           # Read all text
           sourceInfo <- paste(readLines(sourceFile, warn = FALSE), collapse = "\n")
 
           # Extract all BibTeX entries
-          bibtex_entries <- extract_bib_entries_from_text(sourceInfo)  # character vector
+          bibtex_entries <- extract_bib_entries_from_text(sourceInfo) # character vector
           # Add BibTex entries to list of all BibTex entries
           bibtex_list <- c(bibtex_list, bibtex_entries)
 
           # Extract keys for each entry
-          bibtex_keys <- get_bibtex_key(bibtex_entries)                # character vector
+          bibtex_keys <- get_bibtex_key(bibtex_entries) # character vector
         }
 
         # Wrap keys in square brackets and join into a single string
@@ -79,16 +79,16 @@ getSources_mrmfa <- function(){
     summarise(across(
       everything(),
       ~ {
-        vals <- .x[.x != "" & !is.na(.x)]     # keep only non-empty values
+        vals <- .x[.x != "" & !is.na(.x)] # keep only non-empty values
         if (length(vals) == 0) "" else paste(vals, collapse = ", ")
       }
     ))
   # map calc functions to parameters by parsing fullMFA
-  table_final <- merge(mapping, table_summary, by="CalcFunction") %>%
+  table_final <- merge(mapping, table_summary, by = "CalcFunction") %>%
     select("Filename", "CalcFunction", "Source", "Bibtex")
 
   # export as csv file
-  write.csv(table_final, "mrmfa_sources.csv", row.names=FALSE)
+  write.csv(table_final, "mrmfa_sources.csv", row.names = FALSE)
   # export bibtex list to .bib file, remove duplicates
   writeLines(unique(bibtex_list), "mrmfa_sources.bib")
 }
@@ -144,19 +144,23 @@ extract_bib_entries_from_text <- function(text) {
       # find next '{' or '(' after @
       j <- i + 1
       while (j <= n && !(chars[j] %in% c("{", "("))) j <- j + 1
-      if (j > n) { i <- i + 1; next }
+      if (j > n) {
+        i <- i + 1
+        next
+      }
       open_char <- chars[j]
       close_char <- if (open_char == "{") "}" else ")"
       depth <- 1
       k <- j + 1
       # walk forward tracking depth
       while (k <= n && depth > 0) {
-        if (chars[k] == open_char) depth <- depth + 1
-        else if (chars[k] == close_char) depth <- depth - 1
+        if (chars[k] == open_char) {
+          depth <- depth + 1
+        } else if (chars[k] == close_char) depth <- depth - 1
         k <- k + 1
       }
       if (depth == 0) {
-        entry <- paste(chars[start:(k-1)], collapse = "")
+        entry <- paste(chars[start:(k - 1)], collapse = "")
         entries <- c(entries, entry)
         i <- k
         next
@@ -177,7 +181,9 @@ extract_bib_entries_from_text <- function(text) {
 get_bibtex_key <- function(entry) {
   sapply(entry, function(e) {
     m <- regexpr("@[a-zA-Z]+\\{([^,]+),", e, perl = TRUE)
-    if (m == -1) return(NA_character_)
+    if (m == -1) {
+      return(NA_character_)
+    }
     key <- regmatches(e, m)
     sub("@[a-zA-Z]+\\{([^,]+),", "\\1", key, perl = TRUE)
   }, USE.NAMES = FALSE)
@@ -199,11 +205,10 @@ extract_calc_output_calls <- function(func) {
   # Extract function names and filenames
   extract <- lapply(captures, function(x) {
     m <- regmatches(x, regexec(pattern, x, perl = TRUE))[[1]]
-    data.frame(CalcFunction = paste("calc",m[2], sep=""), Filename = m[3], stringsAsFactors = FALSE)
+    data.frame(CalcFunction = paste("calc", m[2], sep = ""), Filename = m[3], stringsAsFactors = FALSE)
   })
 
   # Combine into one data.frame
   mapping_df <- do.call(rbind, extract)
   return(mapping_df)
 }
-

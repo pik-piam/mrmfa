@@ -9,7 +9,6 @@
 #'
 #' @author Bennet Weiss
 calcCeCaOEmissionFactor <- function() {
-
   # Atomic weights (g/mol) based on IUPAC standard
   mw_C <- 12.011
   mw_O <- 15.999
