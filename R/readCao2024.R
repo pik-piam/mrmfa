@@ -194,7 +194,7 @@ readCao2024 <- function(subtype) {
     if (!is.null(spec$groups)) groups <- spec$groups
   }
 
-  x <- calculate_means(data, long_names, dim_members, dim,
+  x <- toolCeCalculateMeans(data, long_names, dim_members, dim,
     normalize = normalize,
     fmean = fraction_mean, groups = groups
   )
@@ -245,7 +245,7 @@ toolCeCalculateMeans <- function(data, long_names, dim_members = NULL, dim = NUL
   }
 
   # Collect means (assumes calculate_mean(data, name) returns a numeric vector)
-  cols <- lapply(long_names, function(nm) as.numeric(calculate_mean_single(data, nm, fmean = fmean)))
+  cols <- lapply(long_names, function(nm) as.numeric(toolCeCalculateMeanSingle(data, nm, fmean = fmean)))
   X <- as.data.frame(cols, check.names = FALSE)
 
   if (multi_dim) {
@@ -335,15 +335,15 @@ toolCeCalculateMeans <- function(data, long_names, dim_members = NULL, dim = NUL
 toolCeCalculateMeanSingle <- function(data, start_column_name, fmean = FALSE) {
   if (!fmean) {
     mean_functions <- list(
-      "Weibull" = mean_trunc_weibull,
-      "Uniform" = mean_uniform,
-      "Triangular" = mean_triangular,
-      "Normal" = mean_trunc_norm
+      "Weibull" = toolMeanTruncWeibull,
+      "Uniform" = toolMeanUniform,
+      "Triangular" = toolMeanTriangular,
+      "Normal" = toolMeanTruncNorm
     )
   } else {
     mean_functions <- list(
-      "Weibull" = fmean_trunc_weibull,
-      "Uniform" = fmean_uniform
+      "Weibull" = toolFmeanTruncWeibull,
+      "Uniform" = toolFmeanUniform
     )
   }
 
