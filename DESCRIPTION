@@ -12,7 +12,7 @@ Authors@R: c(
     person("Qianzhi", "Zhang", , "qianzhi.zhang@pik-potsdam.de", role = "aut")
   )
 Description: The mrmfa packages contains data preprocessing for the REMIND MFA.
-License: LGPL-3
+License: LGPL-3 | file LICENSE
 URL: https://github.com/pik-piam/mrmfa
 Depends:
     R (>= 2.10.0),
