@@ -5,17 +5,17 @@
 \title{Calculate Country-Level Plastics Trade for Various Categories}
 \usage{
 calcPlTrade(
-  category = c("final", "primary", "intermediate", "manufactured"),
+  category = c("Final", "Primary", "Intermediate", "Manufactured"),
   flow_label = c("Exports", "Imports")
 )
 }
 \arguments{
 \item{category}{Character; product category:
 \itemize{
-  \item "final"        - Final plastics
-  \item "primary"      - Primary plastics
-  \item "intermediate" - Intermediate forms of plastic
-  \item "manufactured" - Intermediate manufactured plastic goods
+  \item "Final"        - Final plastics
+  \item "Primary"      - Primary plastics
+  \item "Intermediate" - Intermediate forms of plastic
+  \item "Manufactured" - Intermediate manufactured plastic goods
 }}
 
 \item{flow_label}{Character; trade flow:

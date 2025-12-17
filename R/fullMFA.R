@@ -106,14 +106,14 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     # Consumption
     calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
     # Trade
-    calcOutput("PlTrade", category = "final", flow_label = "Exports", file = "pl_final_his_exports.cs4r")
-    calcOutput("PlTrade", category = "final", flow_label = "Imports", file = "pl_final_his_imports.cs4r")
-    calcOutput("PlTrade", category = "primary", flow_label = "Exports", file = "pl_primary_his_exports.cs4r")
-    calcOutput("PlTrade", category = "primary", flow_label = "Imports", file = "pl_primary_his_imports.cs4r")
-    calcOutput("PlTrade", category = "intermediate", flow_label = "Exports", file = "pl_intermediate_his_exports.cs4r")
-    calcOutput("PlTrade", category = "intermediate", flow_label = "Imports", file = "pl_intermediate_his_imports.cs4r")
-    calcOutput("PlTrade", category = "manufactured", flow_label = "Exports", file = "pl_manufactured_his_exports.cs4r")
-    calcOutput("PlTrade", category = "manufactured", flow_label = "Imports", file = "pl_manufactured_his_imports.cs4r")
+    calcOutput("PlTrade", category = "Final", flow_label = "Exports", file = "pl_final_his_exports.cs4r")
+    calcOutput("PlTrade", category = "Final", flow_label = "Imports", file = "pl_final_his_imports.cs4r")
+    calcOutput("PlTrade", category = "Primary", flow_label = "Exports", file = "pl_primary_his_exports.cs4r")
+    calcOutput("PlTrade", category = "Primary", flow_label = "Imports", file = "pl_primary_his_imports.cs4r")
+    calcOutput("PlTrade", category = "Intermediate", flow_label = "Exports", file = "pl_intermediate_his_exports.cs4r")
+    calcOutput("PlTrade", category = "Intermediate", flow_label = "Imports", file = "pl_intermediate_his_imports.cs4r")
+    calcOutput("PlTrade", category = "Manufactured", flow_label = "Exports", file = "pl_manufactured_his_exports.cs4r")
+    calcOutput("PlTrade", category = "Manufactured", flow_label = "Imports", file = "pl_manufactured_his_imports.cs4r")
     calcOutput("PlWasteTrade", subtype = "export", file = "pl_waste_exports.cs4r")
     calcOutput("PlWasteTrade", subtype = "import", file = "pl_waste_imports.cs4r")
     # Parameters

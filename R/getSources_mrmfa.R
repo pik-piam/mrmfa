@@ -12,12 +12,13 @@
 #' @importFrom dplyr across
 #' @importFrom dplyr everything
 #' @importFrom utils write.csv
+#' @export
 getSources_mrmfa <- function(){
   calcFunctions <- getDependencies("fullMFA", direction = "din")
   # get mapping of calcFunctions to parameters in fullMFA
   mapping <- extract_calc_output_calls(fullMFA)
   # get GDP sources to exclude for all but the common parameters (only used for weighting)
-  GDP_sources <- getSources("calcGDP")
+  GDP_sources <- getSources("calcCoGDP1900To2150")
 
   rows <- list()
   bibtex_list <- character(0)
@@ -87,9 +88,9 @@ getSources_mrmfa <- function(){
     select("Filename", "CalcFunction", "Source", "Bibtex")
 
   # export as csv file
-  write.csv(table_final, "inst/mrmfa_sources.csv", row.names=FALSE)
+  write.csv(table_final, "mrmfa_sources.csv", row.names=FALSE)
   # export bibtex list to .bib file, remove duplicates
-  writeLines(unique(bibtex_list), "inst/mrmfa_sources.bib")
+  writeLines(unique(bibtex_list), "mrmfa_sources.bib")
 }
 
 # Get the SOURCE_INFO.txt from the newest version of the source folder

@@ -6,10 +6,10 @@
 #'
 #' @param category Character; product category:
 #'   \itemize{
-#'     \item "final"        - Final plastics
-#'     \item "primary"      - Primary plastics
-#'     \item "intermediate" - Intermediate forms of plastic
-#'     \item "manufactured" - Intermediate manufactured plastic goods
+#'     \item "Final"        - Final plastics
+#'     \item "Primary"      - Primary plastics
+#'     \item "Intermediate" - Intermediate forms of plastic
+#'     \item "Manufactured" - Intermediate manufactured plastic goods
 #'   }
 #' @param flow_label Character; trade flow:
 #'   \itemize{
@@ -18,25 +18,18 @@
 #'   }
 #' @author Qianzhi Zhang
 calcPlTrade <- function(
-    category = c("final", "primary", "intermediate", "manufactured"),
+    category = c("Final", "Primary", "Intermediate", "Manufactured"),
     flow_label = c("Exports", "Imports")) {
   # ---------------------------------------------------------------------------
   # Match inputs and map to UNCTAD subtype identifier
   # ---------------------------------------------------------------------------
   category <- match.arg(category)
   flow_label <- match.arg(flow_label)
-  subtype_map <- list(
-    final        = "Final_Region",
-    primary      = "Primary_Region",
-    intermediate = "Intermediate_Region",
-    manufactured = "Manufactured_Region"
-  )
-  subtype_region <- subtype_map[[category]]
 
   # ---------------------------------------------------------------------------
   # Load regional trade data for the selected category and backcast to 1950
   # ---------------------------------------------------------------------------
-  trade <- calcOutput("PlUNCTAD", subtype = subtype_region)
+  trade <- calcOutput("PlUNCTAD", subtype = category)
   trade_filtered <- collapseNames(trade[, , getNames(trade, dim=1)==flow_label])
 
   consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood"), dim = 3))

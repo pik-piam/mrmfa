@@ -17,12 +17,13 @@
 #'
 #' @importFrom readxl read_excel
 #' @importFrom readr read_csv
+#' @importFrom dplyr if_else
 #'
 readUNCTAD <- function() {
   # ---------------------------------------------------------------------------
   # Read Data from Excel
   # ---------------------------------------------------------------------------
-  data <- read_csv("US_PlasticsTradebyPartner.csv") %>%
+  data <- read_csv("v2/US_PlasticsTradebyPartner.csv") %>%
     select(1,3,5,7,9,13) %>%
     filter(.data$`Partner Label` == "World" | .data$`Economy Label` == "World") %>%
     dplyr::rename(Region = "Economy Label", Partner_Region = "Partner Label", Flow = "Flow Label", Product = "Product Label")
