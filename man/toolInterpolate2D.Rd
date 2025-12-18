@@ -9,7 +9,8 @@ toolInterpolate2D(x, method = "linear", ...)
 \arguments{
 \item{x}{A 2D magpie object (regions x years) with missing values to interpolate}
 
-\item{method}{3 interpolation methods are supported: 'linear' (default), 'spline', and 'constant' (last observation carried forward).}
+\item{method}{3 interpolation methods are supported:
+'linear' (default), 'spline', and 'constant' (last observation carried forward).}
 
 \item{...}{Additional arguments passed to interpolation functions}
 }
