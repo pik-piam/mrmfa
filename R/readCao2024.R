@@ -26,7 +26,7 @@ readCao2024 <- function(subtype) {
     ),
     product_application_split = list(
       long_names = c(
-        "distribution of concrete by strength class ≤C15 (distribution)",
+        "distribution of concrete by strength class \u2264C15 (distribution)",
         "distribution of concrete by strength class C16-C23 (distribution)",
         "distribution of concrete by strength class C23-C35 (distribution)",
         "distribution of concrete by strength class >C35 (distribution)",
@@ -41,10 +41,10 @@ readCao2024 <- function(subtype) {
     ),
     carbonation_rate = list(
       long_names = c(
-        "compressive strength class and exposure conditions (βc sec) ≤C15 (distribution)",
-        "compressive strength class and exposure conditions (βc sec) C16-C23 (distribution)",
-        "compressive strength class and exposure conditions (βc sec) C23-C35 (distribution)",
-        "compressive strength class and exposure conditions (βc sec) >C35 (distribution)",
+        "compressive strength class and exposure conditions (\u03B2c sec) \u2264C15 (distribution)",
+        "compressive strength class and exposure conditions (\u03B2c sec) C16-C23 (distribution)",
+        "compressive strength class and exposure conditions (\u03B2c sec) C23-C35 (distribution)",
+        "compressive strength class and exposure conditions (\u03B2c sec) >C35 (distribution)",
         # Hack to fill over mortar dim_members
         "carbonation rate coefficient of cement mortar (km) (distribution)",
         "carbonation rate coefficient of cement mortar (km) (distribution)",
@@ -54,25 +54,25 @@ readCao2024 <- function(subtype) {
       dim = "Product Application"
     ),
     carbonation_rate_factor_additives = list(
-      long_names = c("cement additives (βad) (distribution)")
+      long_names = c("cement additives (\u03B2ad) (distribution)")
     ),
     carbonation_rate_factor_co2 = list(
-      long_names = c("CO2 concentration (βCO2) (distribution)")
+      long_names = c("CO2 concentration (\u03B2CO2) (distribution)")
     ),
     carbonation_rate_factor_coating = list(
-      long_names = c("coating and cover (βCC) (distribution)")
+      long_names = c("coating and cover (\u03B2CC) (distribution)")
     ),
     carbonation_rate_buried = list(
       long_names = c(
-        "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
+        "carbonation rate coefficient of buried concrete in strength class i (kli) \u2264C15",
         "carbonation rate coefficient of buried concrete in strength class i (kli) C16-C23",
         "carbonation rate coefficient of buried concrete in strength class i (kli) C23-C35",
         "carbonation rate coefficient of buried concrete in strength class i (kli) >C35",
         # Hack: Carbonation rate of mortar assumed to be the same as C15
         # However, not important as mortar has fully carbonated anyways after in-use
-        "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
-        "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15",
-        "carbonation rate coefficient of buried concrete in strength class i (kli) ≤C15"
+        "carbonation rate coefficient of buried concrete in strength class i (kli) \u2264C15",
+        "carbonation rate coefficient of buried concrete in strength class i (kli) \u2264C15",
+        "carbonation rate coefficient of buried concrete in strength class i (kli) \u2264C15"
       ),
       dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
       dim = "Product Application"
@@ -94,22 +94,22 @@ readCao2024 <- function(subtype) {
     ),
     product_cement_content = list(
       long_names = c(
-        "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) \u2264C15 (distribution)",
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) C16-C23 (distribution)",
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) C23-C35 (distribution)",
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) >C35 (distribution)",
         # Hack: Cement content of mortar assumed to be the same as C15
-        "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
-        "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)",
-        "cement content of concrete in different strength classes (kg cement/m3) (Ci) ≤C15 (distribution)"
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) \u2264C15 (distribution)",
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) \u2264C15 (distribution)",
+        "cement content of concrete in different strength classes (kg cement/m3) (Ci) \u2264C15 (distribution)"
       ),
       dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
       dim = "Product Application"
     ),
     cao_carbonation_share = list(
       long_names = c(
-        "proportion of CaO within fully carbonated cement that converts to CaCO3 for concrete cement (γ) (distribution)",
-        "proportion of CaO within fully carbonated cement that converts to CaCO3 for mortar cement (γ1) (distribution)"
+        "proportion of CaO within fully carbonated cement that converts to CaCO3 for concrete cement (\u03B3) (distribution)",
+        "proportion of CaO within fully carbonated cement that converts to CaCO3 for mortar cement (\u03B31) (distribution)"
       ),
       dim_members = c("concrete", "mortar"),
       dim = "Product Material"
@@ -413,7 +413,7 @@ toolMeanTruncWeibull <- function(parameters) {
   ub <- (b / lambda)^k
   s <- 1 + 1 / k
 
-  # numerator: λ [γ(s, ub) - γ(s, ua)]  where γ is lower incomplete gamma
+  # numerator: \u03BB [\u03B3(s, ub) - \u03B3(s, ua)]  where \u03B3 is lower incomplete gamma
   num <- lambda * gamma(s) * (stats::pgamma(ub, shape = s, rate = 1) - stats::pgamma(ua, shape = s, rate = 1))
   # denominator: F(b) - F(a) = exp(-ua) - exp(-ub)
   den <- exp(-ua) - exp(-ub)
@@ -506,7 +506,7 @@ toolMeanTruncNorm <- function(parameters) {
 
 #' Conditional harmonic mean (1 / E[1/X]) for truncated Weibull on [a,b].
 #' Parameters: (scale, shape, min, max). Requires (shape>1 or a>0). Diverges if a=0 & shape<=1.
-#' Returns 1 / E[1/X | a≤X≤b].
+#' Returns 1 / E[1/X | a\u2264X\u2264b].
 #'
 #' @author Bennet Weiss
 #' @param parameters Array of the four parameters (scale, shape, min, max) of a Weibull distribution
