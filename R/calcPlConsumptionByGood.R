@@ -22,7 +22,7 @@ calcPlConsumptionByGood <- function() {
   # Load global production data 1950-2015 (Geyer et al. 2017 as reference)
   # Backcast total use data to 1950
   # ---------------------------------------------------------------------------
-  total <- calcOutput("PlOECD", subtype="Use_1990-2019_region", aggregate = TRUE)
+  total <- calcOutput("PlOECD", subtype = "Use_1990-2019_region", aggregate = TRUE)
   Geyer <- readSource("Geyer", subtype = "Prod_1950-2015", convert = FALSE)
   total_df <- toolBackcastByReference2D(total, Geyer) %>%
     as.data.frame() %>%
@@ -54,7 +54,8 @@ calcPlConsumptionByGood <- function() {
     "regionmappingH12.csv",
     type = "regional", where = "mappingfolder"
   )
-  gdp_weights <- calcOutput("CoGDP1900To2150", scenario="SSP2", perCapita=FALSE, aggregate=FALSE)[, paste0("y", 1950:2019),]
+  gdp_weights <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)
+  gdp_weights <- gdp_weights[, paste0("y", 1950:2019), ]
 
   x <- toolAggregate(
     x,

@@ -17,11 +17,9 @@
 #' @return Steel production by process across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
 calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(0.2, 0, 0.8))) {
-
   # Internal functions ----
 
   .cleanMergeProcessData <- function(byProcessData, CurrentData) {
-
     getNames(byProcessData) <- "value"
     data <- mbind(byProcessData, CurrentData)
     data <- toolInterpolate2D(data, method = "linear")

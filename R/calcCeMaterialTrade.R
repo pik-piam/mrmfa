@@ -54,8 +54,8 @@ calcCeMaterialTrade <- function(subtype) {
   if (subtype == "cement") {
     description <- paste(
       description_general, "\n",
-      "1. For 1988 - 1999 and 2023-2024: ", description_chatham, "\n",
-      "2. For 2000 - 2022: ", description_comtrade, "\n",
+      "1. For 1988 - 1999 and 2023-2024: ", description_comtrade, "\n",
+      "2. For 2000 - 2022: ", description_chatham, "\n",
       "3. For USA, 1900 - 1990: ", description_usgs, "\n"
     )
   } else if (subtype == "clinker") {

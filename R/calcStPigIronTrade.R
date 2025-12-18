@@ -10,7 +10,6 @@
 #' @author Merlin Jo Hosak
 #'
 calcStPigIronTrade <- function(subtype) {
-
   tradeData <- calcOutput("StPigIronPreliminaryData", subtype = subtype, aggregate = FALSE)
   production <- calcOutput("StPigIronPreliminaryData", subtype = "production", aggregate = FALSE)
 

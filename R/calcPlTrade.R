@@ -18,8 +18,9 @@
 #'   }
 #' @author Qianzhi Zhang
 calcPlTrade <- function(
-    category = c("Final", "Primary", "Intermediate", "Manufactured"),
-    flow_label = c("Exports", "Imports")) {
+  category = c("Final", "Primary", "Intermediate", "Manufactured"),
+  flow_label = c("Exports", "Imports")
+) {
   # ---------------------------------------------------------------------------
   # Match inputs and map to UNCTAD subtype identifier
   # ---------------------------------------------------------------------------
@@ -30,13 +31,13 @@ calcPlTrade <- function(
   # Load regional trade data for the selected category and backcast to 1950
   # ---------------------------------------------------------------------------
   trade <- calcOutput("PlUNCTAD", subtype = category)
-  trade_filtered <- collapseNames(trade[, , getNames(trade, dim=1)==flow_label])
+  trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
 
   consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood"), dim = 3))
   hist_df <- toolBackcastByReference2D(trade_filtered, consumption) %>%
     as.data.frame() %>%
-    dplyr::mutate(Year = as.integer(as.character(.data$Year)))%>%
-    dplyr::select(-"Cell",-"Data1")
+    dplyr::mutate(Year = as.integer(as.character(.data$Year))) %>%
+    dplyr::select(-"Cell", -"Data1")
 
   # ---------------------------------------------------------------------------
   # Convert to MagPIE and aggregate to country level using GDP weights
@@ -49,7 +50,7 @@ calcPlTrade <- function(
     "regionmappingH12.csv",
     type = "regional", where = "mappingfolder"
   )
-  gdp_ssp2 <- calcOutput("CoGDP1900To2150", scenario="SSP2", perCapita=FALSE, aggregate=FALSE)[, paste0("y", 1950:2023),]
+  gdp_ssp2 <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)[, paste0("y", 1950:2023), ]
   x <- toolAggregate(
     x,
     rel    = region_map,

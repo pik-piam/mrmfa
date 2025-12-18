@@ -4,14 +4,12 @@
 #' @param x Magpie object
 #' @inherit readWorldSteelDatabase
 convertWorldSteelDatabase <- function(x, subtype) {
-
   # TODO: for some subtypes, we split BLX and SCG according to fixed rules, for others we use
   # toolISOhistorical. Should this be unified?
 
   # Special case for splitting BLX and SCG ----
 
   if (subtype %in% c("indirectImports", "indirectExports")) {
-
     x <- add_columns(x, addnm = c("BEL", "LUX", "SRB", "MNE"), dim = 1)
 
     # distribute Belgium Luxemburg 80/20 %
@@ -23,11 +21,9 @@ convertWorldSteelDatabase <- function(x, subtype) {
     x["SRB", ] <- x["SCG", ] * 0.9
     x["MNE", ] <- x["SCG", ] * 0.1
     x <- x["SCG", , , invert = TRUE]
-
   }
 
   if (any(c("BLX", "YUG", "SCG") %in% getItems(x, dim = 1))) {
-
     # Add historical mapping for Yugoslavia with last year being 2005
     # instead of 1991 as there is some aggregated data in this dataset
     # for the years 2002-2005 for Yugoslavia. Similar for Belgium and Luxembourg.

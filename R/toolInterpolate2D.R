@@ -4,12 +4,12 @@
 #' object along the time dimension (years).
 #'
 #' @param x A 2D magpie object (regions x years) with missing values to interpolate
-#' @param method 3 interpolation methods are supported: 'linear' (default), 'spline', and 'constant' (last observation carried forward).
+#' @param method 3 interpolation methods are supported:
+#'  'linear' (default), 'spline', and 'constant' (last observation carried forward).
 #' @param ... Additional arguments passed to interpolation functions
 #' @return A 2D magpie object with interpolated values
 #' @author Merlin Jo Hosak
 toolInterpolate2D <- function(x, method = "linear", ...) {
-
   # turn into data frame with same index
   df <- magclass::as.data.frame(x)
   df <- df[, c("Region", "Year", "Value")]

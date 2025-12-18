@@ -9,13 +9,13 @@ toolRemoveNA <- function(x) {
   return(x_clean)
 }
 
-#' Create mask for countries that have >= n_noNA NA values.
+#' Create mask for countries that have less than n_valid values which are not NA.
 #' @author Bennet Weiss
 #' @param x Magpie object
-#' @param n_noNA Minimum values not NA values of a country to be included in the mask
-toolMaskNACountries <- function(x, n_noNA = 5) {
+#' @param n_valid Threshold minimum number of valid (not NA) values.
+toolMaskNACountries <- function(x, n_valid = 5) {
   arr <- as.array(x)
   counts <- apply(!is.na(arr), 1, sum)
-  mask <- names(counts[counts < n_noNA])
+  mask <- names(counts[counts < n_valid])
   return(mask)
 }

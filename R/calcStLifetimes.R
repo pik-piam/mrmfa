@@ -11,13 +11,11 @@ calcStLifetimes <- function(subtype, unit) {
   switchboard <- list(
     "Cooper2014" = function() {
       cooperLifetimes <- readSource("Cooper2014")
-      if (unit=="mean"){
-        x <- collapseDim(mselect(cooperLifetimes, unit="Mean"), dim=3.2)
-      }
-      else if (unit=="std"){
-        x <- collapseDim(mselect(cooperLifetimes, unit="Standard Deviation"), dim=3.2)
-      }
-      else {
+      if (unit == "mean") {
+        x <- collapseDim(mselect(cooperLifetimes, unit = "Mean"), dim = 3.2)
+      } else if (unit == "std") {
+        x <- collapseDim(mselect(cooperLifetimes, unit = "Standard Deviation"), dim = 3.2)
+      } else {
         stop(
           "Invalid unit -- supported units are: 'mean', 'std'"
         )

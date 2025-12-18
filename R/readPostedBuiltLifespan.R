@@ -1,6 +1,6 @@
 #' Read Data as prepared by Posted
 #'
-#' https://github.com/PhilippVerpoort/posted
+#' https://github.com/bennet21/posted/tree/lifetimes
 #' Data sources can be found in Posted.
 #' @importFrom dplyr all_of select
 #' @importFrom tidyr separate unnest

@@ -278,7 +278,6 @@ readWorldSteelDigitised <- function(subtype) {
       return(x)
     },
     "historicScrapShare" = function() {
-
       filenames <- c("specific_scrap_consumption_70s.xlsx")
       x <- .readCommonSourceFormat(filenames, type = "scrap_consumption", version = version)
       x <- x * 1e-3 # convert from kg/t to t/t (actual share)

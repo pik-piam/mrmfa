@@ -4,12 +4,12 @@
 #' based on a specified subtype, and returns a cleaned magpie object.
 #'
 #' @param subtype Character string specifying the dataset and scope.
-#'        Valid formats include:
-#'        - "Use_2019_region" (plastic use in Mt, dimensions: region, application, polymer)
-#'        - "Use_1990-2019_region" (plastic use in Mt, dimensions: region, year)
-#'        - "Use_1990-2019_world" (plastic use in Mt, dimensions: year, application, polymer, type (primary/secondary))
-#'        - "WasteEOL_1990-2019_region" (plastic waste in Mt, dimensions: region, year, EOL fate, collected for recycling)
-#'        - "WasteType_2019_region" (plastic waste in Mt, dimensions: region, application, polymer)
+#'  Valid formats include:
+#'  - "Use_2019_region" (plastic use in Mt, dimensions: region, application, polymer)
+#'  - "Use_1990-2019_region" (plastic use in Mt, dimensions: region, year)
+#'  - "Use_1990-2019_world" (plastic use in Mt, dimensions: year, application, polymer, type (primary/secondary))
+#'  - "WasteEOL_1990-2019_region" (plastic waste in Mt, dimensions: region, year, EOL fate, collected for recycling)
+#'  - "WasteType_2019_region" (plastic waste in Mt, dimensions: region, application, polymer)
 #'
 #' @return magpie object of the OECD Plastic data
 #'

@@ -7,7 +7,6 @@
 #' @return Steel Production across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
 calcStProduction <- function() {
-
   # steel production from 1969 - 2009
   prodRecent <- readSource("WorldSteelDigitised", subtype = "production")
   prodRecent <- toolInterpolate2D(prodRecent, method = "linear")
@@ -54,7 +53,7 @@ calcStProduction <- function() {
     weight = NULL,
     unit = "Tonnes",
     description = "Steel production from 1900-2022 yearly",
-    note        = "dimensions: (Historic Time,Region,value)"
+    note = "dimensions: (Historic Time,Region,value)"
   )
 
   return(result)

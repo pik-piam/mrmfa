@@ -32,7 +32,7 @@ convertOECD_Plastic <- function(x) {
   # ---------------------------------------------------------------------------
   if (subtype == "Use_1990-2019_region") {
     # GDP weights for 1990-2019
-    GDP <- calcOutput("CoGDP1900To2150", scenario="SSP2", perCapita=FALSE, aggregate=FALSE)[, paste0("y", 1990:2019),]
+    GDP <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)[, paste0("y", 1990:2019), ]
     # Regional-to-country mapping
     map <- toolGetMapping("regionmappingOECDPlastic.csv", type = "regional", where = "mrmfa") %>%
       filter(.data$OECDPlasticReg != "rest")
@@ -49,7 +49,7 @@ convertOECD_Plastic <- function(x) {
     x <- toolAggregate(x, rel = use_map, dim = 3.2, from = "Source", to = "Target")
     x <- toolAggregate(x, rel = manu_map, dim = 3.1, from = "Source", to = "Target")
     # GDP weights for 2019
-    GDP2019 <- calcOutput("CoGDP1900To2150", scenario="SSP2", perCapita=FALSE, aggregate=FALSE)[, "y2019",]
+    GDP2019 <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)[, "y2019", ]
     region_map <- toolGetMapping("regionmappingOECDPlastic.csv", type = "regional", where = "mrmfa") %>%
       filter(.data$OECDPlasticReg != "rest")
     x <- toolAggregate(x,
@@ -64,7 +64,7 @@ convertOECD_Plastic <- function(x) {
     x <- toolAggregate(x, rel = use_map16, dim = 3.2, from = "Source", to = "Target")
     x <- toolAggregate(x, rel = manu_map16, dim = 3.1, from = "Source", to = "Target")
     # GDP weights for 1990-2019
-    GDP <- calcOutput("CoGDP1900To2150", scenario="SSP2", perCapita=FALSE, aggregate=FALSE)[, paste0("y", 1990:2019),]
+    GDP <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)[, paste0("y", 1990:2019), ]
     region_map <- toolGetMapping("regionmappingOECDPlastic.csv", type = "regional", where = "mrmfa") %>%
       filter(.data$OECDPlasticReg != "rest")
     x <- toolAggregate(x,
@@ -74,7 +74,7 @@ convertOECD_Plastic <- function(x) {
     )
   } else if (subtype == "WasteEOL_1990-2019_region") {
     # GDP weights for 1990-2019
-    GDP <- calcOutput("CoGDP1900To2150", scenario="SSP2", perCapita=FALSE, aggregate=FALSE)[, paste0("y", 1990:2019),]
+    GDP <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)[, paste0("y", 1990:2019), ]
     region_map <- toolGetMapping("regionmappingOECDPlastic.csv", type = "regional", where = "mrmfa") %>%
       filter(.data$OECDPlasticReg != "rest")
     x <- toolAggregate(x,

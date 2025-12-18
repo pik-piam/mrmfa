@@ -2,7 +2,6 @@
 #' @inherit readIEDC
 #' @param x MagPIE object
 convertIEDC <- function(x, subtype) {
-
   countries <- getItems(x, dim = 1)
 
   # replace underscores with dots (special character in magclass)

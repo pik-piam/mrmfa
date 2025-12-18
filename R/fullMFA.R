@@ -10,6 +10,9 @@
 #' @param scenario SSP scenario used for population and GDP drivers
 #' @param gdpPerCapita bool if GDP driver should be returned as per capita values
 #' @param runSections Character vector selecting which parts to run.
+#' @param start_historic Start year for historic data (default: 1900)
+#' @param end_historic End year for historic data (default: 2023)
+#' @param end_future End year for future data (default: 2100)
 #' Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
@@ -20,7 +23,8 @@
 #' fullMFA()
 #' }
 #'
-fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, runSections = NULL) {
+fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, runSections = NULL,
+                    start_historic = 1900, end_historic = 2023, end_future = 2100) {
   # prepare section selector
   validSections <- c("drivers", "steel", "cement", "plastic")
 
@@ -38,15 +42,16 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     return(invisible(NULL))
   }
 
+  # nolint start
+
   #  ------------- DRIVERS -------------
   if (runSection("drivers")) {
-    calcOutput("CoPopulation1900To2150", file = "co_population.cs4r", scenario = scenario)
-    calcOutput("CoGDP1900To2150", file = "co_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita)
+    calcOutput("CoPopulation1900To2150", file = "co_population.cs4r", scenario = scenario, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "co_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
   }
 
   #  ------------- STEEL ----------------
   if (runSection("steel")) {
-
     # Production
     calcOutput("StProduction", file = "st_steel_production.cs4r")
     calcOutput("StProductionByProcess", file = "st_steel_production_by_process.cs4r")
@@ -86,19 +91,43 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("StDRIData", file = "st_dri_production.cs4r", subtype = "production")
     calcOutput("StDRIData", file = "st_dri_imports.cs4r", subtype = "imports")
     calcOutput("StDRIData", file = "st_dri_exports.cs4r", subtype = "exports")
-
   }
 
   #  ------------- CEMENT -----------
   if (runSection("cement")) {
     # Production
-    calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = 1900:2023, subtype = "cement")
+    calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
     # Trade
-    calcOutput("CeMaterialTrade", file = "ce_cement_trade.cs4r", years = 1900:2023, subtype = "cement")
-    calcOutput("CeMaterialTrade", file = "ce_clinker_trade.cs4r", years = 1900:2023, subtype = "clinker")
+    calcOutput("CeMaterialTrade", file = "ce_cement_trade.cs4r", years = start_historic:end_historic, subtype = "cement")
+    calcOutput("CeMaterialTrade", file = "ce_clinker_trade.cs4r", years = start_historic:end_historic, subtype = "clinker")
     # Parameters
     calcOutput("CeBuiltLifespan", file = "ce_use_lifetime_mean.cs4r")
-    calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = 1900:2023)
+    calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = start_historic:end_historic)
+    calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction", aggregate = FALSE)
+    calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
+    calcOutput("CeProductApplicationSplit", file = "ce_product_application_split.cs4r")
+    calcOutput("CeProductCementContent", file = "ce_product_cement_content.cs4r", aggregate = FALSE)
+    calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")
+    calcOutput("CeStockTypeSplit", file = "ce_stock_type_split.cs4r")
+    calcOutput("CeStockSaturationLevel", file = "ce_stock_saturation_level.cs4r")
+    # Carbonation
+    calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
+    calcOutput("CeCaOContent", file = "ce_ckd_cao_ratio.cs4r", subtype = "CKD", aggregate = FALSE)
+    calcOutput("CeCaOContent", file = "ce_clinker_cao_ratio.cs4r", subtype = "clinker", aggregate = FALSE)
+    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_buried.cs4r", subtype = "base_buried")
+    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_coating.cs4r", subtype = "coating", aggregate = FALSE)
+    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_co2.cs4r", subtype = "co2", aggregate = FALSE)
+    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate_additives.cs4r", subtype = "additives", aggregate = FALSE)
+    calcOutput("CeCarbonationRate", file = "ce_carbonation_rate.cs4r")
+    calcOutput("CeCKDLandfillShare", file = "ce_ckd_landfill_share.cs4r", aggregate = FALSE)
+    calcOutput("CeProductThickness", file = "ce_product_thickness.cs4r", aggregate = FALSE)
+    calcOutput("CeWasteSizeSplit", file = "ce_waste_size_share.cs4r")
+    calcOutput("CeWasteSplit", file = "ce_waste_type_split.cs4r")
+    calcOutput("CeCaOEmissionFactor", file = "ce_cao_emission_factor.cs4r", aggregate = FALSE)
+    calcOutput("CeProductDensity", file = "ce_product_density.cs4r", aggregate = FALSE)
+    calcOutput("CeWasteSizeBound", file = "ce_waste_size_min.cs4r", subtype = "min", aggregate = FALSE)
+    calcOutput("CeWasteSizeBound", file = "ce_waste_size_max.cs4r", subtype = "max", aggregate = FALSE)
+    calcOutput("CeProductMaterialApplicationTransform", file = "ce_product_material_application_transform.cs4r", aggregate = FALSE)
   }
 
   #  ------------- PLASTIC -----------
@@ -133,4 +162,6 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("PlZeroRates", file = "pl_daccu_production_rate.cs4r")
     calcOutput("PlZeroRates", file = "pl_emission_capture_rate.cs4r")
   }
+
+  # nolint end
 }

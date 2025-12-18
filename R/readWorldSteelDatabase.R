@@ -13,7 +13,6 @@
 #'
 readWorldSteelDatabase <- function(subtype = "production") {
   .readCommonSourceFormat <- function(name, version = "v1.0") {
-
     # read data from Excel file
     path <- file.path(".", version, name)
 
