@@ -413,7 +413,7 @@ toolMeanTruncWeibull <- function(parameters) {
   ub <- (b / lambda)^k
   s <- 1 + 1 / k
 
-  # numerator: \u03BB [\u03B3(s, ub) - \u03B3(s, ua)]  where \u03B3 is lower incomplete gamma
+  # numerator: lambda [gamma(s, ub) - gamma(s, ua)]  where gamma is lower incomplete gamma
   num <- lambda * gamma(s) * (stats::pgamma(ub, shape = s, rate = 1) - stats::pgamma(ua, shape = s, rate = 1))
   # denominator: F(b) - F(a) = exp(-ua) - exp(-ub)
   den <- exp(-ua) - exp(-ub)
@@ -506,7 +506,7 @@ toolMeanTruncNorm <- function(parameters) {
 
 #' Conditional harmonic mean (1 / E[1/X]) for truncated Weibull on [a,b].
 #' Parameters: (scale, shape, min, max). Requires (shape>1 or a>0). Diverges if a=0 & shape<=1.
-#' Returns 1 / E[1/X | a\u2264X\u2264b].
+#' Returns 1 / E[1/X | a<=X<=b].
 #'
 #' @author Bennet Weiss
 #' @param parameters Array of the four parameters (scale, shape, min, max) of a Weibull distribution
