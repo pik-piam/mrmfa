@@ -1,6 +1,6 @@
 #' Read data received on 04.08.2025, personal communication.
 #' Data used for Kaufmann et al. (2024), DOI: 10.1088/1748-9326/ad236b
-#' "Society’s material stocks as carbon pool: an economy-wide quantification of global carbon stocks from 1900–2015"
+#' "Society's material stocks as carbon pool: an economy-wide quantification of global carbon stocks from 1900-2015"
 #' The data is given as probability density functions.
 #' For further use, they are translated to means before turned to magclass object.
 #'
@@ -170,7 +170,7 @@ readCao2024 <- function(subtype) {
 
   path <- file.path("v1", "data_cement_GAS_EoL_MISO_9regions.xlsx")
   data <- suppressMessages(readxl::read_xlsx(path, sheet = "Uptake"))
-  data <- head(data, 11) # remove rows after row 11
+  data <- utils::head(data, 11) # remove rows after row 11
   data <- data[-1, , drop = FALSE] # remove row 2
 
   # parameters for data gathering
@@ -293,7 +293,7 @@ toolCeCalculateMeans <- function(data, long_names, dim_members = NULL, dim = NUL
     if (multi_dim) {
       out <- tidyr::pivot_longer(
         X,
-        cols = starts_with("col"),
+        cols = dplyr::starts_with("col"),
         names_to = "Column",
         values_to = "value"
       )
@@ -414,7 +414,7 @@ toolMeanTruncWeibull <- function(parameters) {
   s <- 1 + 1 / k
 
   # numerator: λ [γ(s, ub) - γ(s, ua)]  where γ is lower incomplete gamma
-  num <- lambda * gamma(s) * (pgamma(ub, shape = s, rate = 1) - pgamma(ua, shape = s, rate = 1))
+  num <- lambda * gamma(s) * (stats::pgamma(ub, shape = s, rate = 1) - stats::pgamma(ua, shape = s, rate = 1))
   # denominator: F(b) - F(a) = exp(-ua) - exp(-ub)
   den <- exp(-ua) - exp(-ub)
   return(num / den)
@@ -497,8 +497,8 @@ toolMeanTruncNorm <- function(parameters) {
 
   # Calculate the truncated normal mean
   # using the formula: mu + sigma * (pdf(alpha) - pdf(beta)) / (cdf(beta) - cdf(alpha))
-  Z <- pnorm(beta) - pnorm(alpha)
-  truncated_mean <- mu + sigma * (dnorm(alpha) - dnorm(beta)) / Z
+  Z <- stats::pnorm(beta) - stats::pnorm(alpha)
+  truncated_mean <- mu + sigma * (stats::dnorm(alpha) - stats::dnorm(beta)) / Z
 
   return(truncated_mean)
 }
@@ -540,10 +540,10 @@ toolFmeanTruncWeibull <- function(parameters) {
     if (k > 1) {
       s <- 1 - 1 / k
       numEInv <- (1 / lambda) * gamma(s) *
-        (pgamma(ub, shape = s, rate = 1) - pgamma(ua, shape = s, rate = 1))
+        (stats::pgamma(ub, shape = s, rate = 1) - stats::pgamma(ua, shape = s, rate = 1))
     } else {
       f_rec <- function(x) (k / lambda) * (x / lambda)^(k - 1) * exp(-(x / lambda)^k) / x
-      numEInv <- integrate(f_rec, lower = ai, upper = bi, rel.tol = 1e-8)$value
+      numEInv <- stats::integrate(f_rec, lower = ai, upper = bi, rel.tol = 1e-8)$value
     }
     out[i] <- den / numEInv # 1 / (numEInv / den)
   }

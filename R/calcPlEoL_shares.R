@@ -29,7 +29,7 @@ calcPlEoL_shares <- function(subtype) {
     select(-"Cell", -"Data2") %>%
     mutate(Year = as.integer(as.character(.data$Year)))
   oecd <- oecd_raw %>%
-    filter(Year >= 2000) %>%
+    filter(.data$Year >= 2000) %>%
     mutate(
       Data1 = case_when(.data$Data1 %in% c("Mismanaged", "Littered") ~ "Uncollected", TRUE ~ .data$Data1)
     ) %>%
@@ -92,7 +92,7 @@ calcPlEoL_shares <- function(subtype) {
     share_new = 0
   )
   target_collection <- full_data %>%
-    filter(Year == 2000, Data1 == "Collected") %>%
+    filter(.data$Year == 2000, .data$Data1 == "Collected") %>%
     mutate(Year = 1980)
   backcast_data <- rbind(full_data, target, target_collection)
 

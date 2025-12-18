@@ -21,7 +21,7 @@ readXi2016 <- function(subtype) {
     "Hospital" = "Com",
     "Education, culture and research building" = "Com",
     "Industrial building" = "Ind",
-    "Railway, Road, tunnel，and bridge" = "Civ",
+    "Railway, Road, tunnel, and bridge" = "Civ",
     "Other Civil Engineering" = "Civ",
     "Dam, power station, and dock" = "Civ",
     "Other building" = "Com"
@@ -32,7 +32,7 @@ readXi2016 <- function(subtype) {
   data_china$stock_type <- stock_type_mapping_china[data_china[["Cement consumption types"]]]
   data_china <- data_china[, -1]
   names(data_china) <- c("value", "stock_type")
-  data_china <- aggregate(`value` ~ stock_type, data = data_china, sum)
+  data_china <- stats::aggregate(`value` ~ stock_type, data = data_china, sum)
 
   data_china$region <- "CHN"
 
