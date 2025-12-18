@@ -2,7 +2,7 @@
 #' Based on expert guess informed by historic saturation levels.
 #' @author Bennet Weiss
 calcCeStockSaturationLevel <- function() {
-  regionmapping <- toolGetMapping("h12.csv", type="regional")
+  regionmapping <- toolGetMapping("h12.csv", type = "regional")
 
   region_saturation <- c(
     CAZ = 18,
