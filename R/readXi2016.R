@@ -54,7 +54,7 @@ readXi2016 <- function(subtype) {
   data_usa$stock_type <- stock_type_mapping_usa[data_usa[["Concrete utilization category"]]]
   data_usa <- data_usa[, -1]
   names(data_usa) <- c("value", "stock_type")
-  data_usa <- aggregate(`value` ~ stock_type, data = data_usa, sum)
+  data_usa <- stats::aggregate(`value` ~ stock_type, data = data_usa, sum)
 
   # split Com/Ind row
   # get split from China
