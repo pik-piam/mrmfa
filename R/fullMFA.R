@@ -7,13 +7,11 @@
 #' @author Bennet Weiss
 #' @param rev Revision number for the data version
 #' @param dev Development version string
-#' @param scenario SSP scenario used for population and GDP drivers
-#' @param gdpPerCapita bool if GDP driver should be returned as per capita values
+#' @param scenario SSP scenario used for population and GDP.
+#' @param gdpPerCapita bool if GDP should be returned as per capita values.
 #' @param runSections Character vector selecting which parts to run.
-#' @param start_historic Start year for historic data (default: 1900)
-#' @param end_historic End year for historic data (default: 2023)
-#' @param end_future End year for future data (default: 2100)
-#' Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.
+#' Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
+#' #' @param end_future End year for future data (default: 2100).
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
 #' \code{\link[madrat]{calcOutput}}
