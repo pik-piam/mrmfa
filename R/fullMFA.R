@@ -58,12 +58,12 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     # calcOutput("StProductionByProcess", file = "st_steel_production_by_process.cs4r")
 
     # Trade
-    calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports", years = start_historic:end_future)
-    calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports", years = start_historic:end_future)
-    calcOutput("StTrade", file = "st_scrap_imports.cs4r", subtype = "scrapImports", years = start_historic:end_future)
-    calcOutput("StTrade", file = "st_scrap_exports.cs4r", subtype = "scrapExports", years = start_historic:end_future)
-    calcOutput("StTrade", file = "st_indirect_imports.cs4r", subtype = "indirectImports", years = start_historic:end_future)
-    calcOutput("StTrade", file = "st_indirect_exports.cs4r", subtype = "indirectExports", years = start_historic:end_future)
+    calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_scrap_imports.cs4r", subtype = "scrapImports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_scrap_exports.cs4r", subtype = "scrapExports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_indirect_imports.cs4r", subtype = "indirectImports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_indirect_exports.cs4r", subtype = "indirectExports", years = start_historic:end_historic)
 
     # Parameters
     calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
@@ -81,8 +81,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("StCullenStaticParameters", subtype = "formingYield", file = "st_forming_yield.cs4r", aggregate = FALSE)
 
     # Scrap consumption
-    calcOutput("StScrapConsumption", file = "st_scrap_consumption_no_assumptions.cs4r", subtype = "noAssumptions", warnNA = FALSE, years = start_historic:end_future)
-    calcOutput("StScrapConsumption", file = "st_scrap_consumption.cs4r", subtype = "assumptions", years = start_historic:end_future)
+    calcOutput("StScrapConsumption", file = "st_scrap_consumption_no_assumptions.cs4r", subtype = "noAssumptions", warnNA = FALSE, years = start_historic:end_historic)
+    calcOutput("StScrapConsumption", file = "st_scrap_consumption.cs4r", subtype = "assumptions", years = start_historic:end_historic)
 
     # Pig Iron
     # calcOutput("StPigIronProduction", file = "st_pig_iron_production.cs4r")
