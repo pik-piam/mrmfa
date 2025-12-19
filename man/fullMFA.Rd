@@ -10,8 +10,6 @@ fullMFA(
   scenario = "SSP2",
   gdpPerCapita = TRUE,
   runSections = NULL,
-  start_historic = 1900,
-  end_historic = 2023,
   end_future = 2100
 )
 }
@@ -26,12 +24,12 @@ fullMFA(
 
 \item{runSections}{Character vector selecting which parts to run.}
 
+\item{end_future}{End year for future data (default: 2100)
+Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.}
+
 \item{start_historic}{Start year for historic data (default: 1900)}
 
 \item{end_historic}{End year for historic data (default: 2023)}
-
-\item{end_future}{End year for future data (default: 2100)
-Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.}
 }
 \description{
 Function that produces the complete regional data sets required for the

@@ -24,9 +24,9 @@
 #' }
 #'
 fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, runSections = NULL,
-                    start_historic = 1900, end_historic = 2023, end_future = 2100) {
+                    end_future = 2100) {
   # prepare section selector
-  validSections <- c("drivers", "steel", "cement", "plastic")
+  validSections <- c("steel", "cement", "plastic")
 
   if (is.null(runSections)) {
     runSections <- validSections
@@ -44,14 +44,15 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   # nolint start
 
-  #  ------------- DRIVERS -------------
-  if (runSection("drivers")) {
-    calcOutput("CoPopulation1900To2150", file = "co_population.cs4r", scenario = scenario, years = start_historic:end_future)
-    calcOutput("CoGDP1900To2150", file = "co_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
-  }
-
   #  ------------- STEEL ----------------
   if (runSection("steel")) {
+    start_historic = 1900
+    end_historic = 2022
+
+    # common parameters
+    calcOutput("CoPopulation1900To2150", file = "st_population.cs4r", scenario = scenario, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "st_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
+
     # Production
     calcOutput("StProduction", file = "st_steel_production.cs4r")
     calcOutput("StProductionByProcess", file = "st_steel_production_by_process.cs4r")
@@ -95,6 +96,12 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- CEMENT -----------
   if (runSection("cement")) {
+    start_historic = 1900
+    end_historic = 2023
+
+    # common parameters
+    calcOutput("CoPopulation1900To2150", file = "ce_population.cs4r", scenario = scenario, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "ce_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
     # Production
     calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
     # Trade
@@ -132,6 +139,12 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- PLASTIC -----------
   if (runSection("plastic")) {
+    start_historic = 1950
+    end_historic = 2019
+
+    # common parameters
+    calcOutput("CoPopulation1900To2150", file = "pl_population.cs4r", scenario = scenario, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "pl_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
     # Consumption
     calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
     # Trade
