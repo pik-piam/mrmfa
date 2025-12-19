@@ -54,7 +54,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CoGDP1900To2150", file = "st_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
 
     # Production
-    calcOutput("StProduction", file = "st_production.cs4r", years = start_historic:end_future)
+    calcOutput("StProduction", file = "st_production.cs4r", years = start_historic:end_historic)
     # calcOutput("StProductionByProcess", file = "st_steel_production_by_process.cs4r")
 
     # Trade
