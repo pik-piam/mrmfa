@@ -74,7 +74,7 @@ calcPlMechLoss <- function() {
     x           = x,
     weight      = weight,
     unit        = "% Mechanical Recycling Loss",
-    description = "Mechanical recycling loss trajectories aggregated to country level for 1950-2100.",
+    description = "Uncontrolled loss rate of mechanical recycling based on Brown et al. 2023 (https://doi.org/10.1016/j.hazadv.2023.100309)",
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }

@@ -69,7 +69,7 @@ calcPlTrade <- function(
     weight = NULL,
     unit = "Mt Plastic",
     description = sprintf(
-      "Country-level %s plastics %s (1990-2023)", category, flow_label
+      "Country-level %s plastics %s (1950-2023)", category, flow_label
     ),
     note = "dimensions: (Historic Time,Region,value)"
   )
