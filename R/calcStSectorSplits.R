@@ -41,7 +41,7 @@ calcStSectorSplits <- function(subtype) {
     unit = 1,
     isocountries = FALSE,
     description = "Pauliuk 2013 steel sector splits", 
-    note <- "dimensions: (Good,value)"
+    note = "dimensions: (Good,value)"
   )
   
   return(final)
