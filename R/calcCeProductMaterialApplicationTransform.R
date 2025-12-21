@@ -13,9 +13,11 @@ calcCeProductMaterialApplicationTransform <- function() {
     c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance")
   )
 
-  arr <- array(
+  arr <- matrix(
     vals,
-    dim = c(2, 7),
+    nrow = 2,
+    ncol = 7,
+    byrow = TRUE,
     dimnames = dimnames
   )
 
