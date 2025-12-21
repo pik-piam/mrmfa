@@ -2,17 +2,26 @@
 #' Based on expert guess informed by historic saturation levels.
 #' @author Bennet Weiss
 calcCeStockSaturationLevel <- function() {
-  regionmapping <- toolGetMapping("h12.csv", type = "regional")
+  regionmapping <- toolGetMapping("regionmapping_21_EU11.csv", type = "regional")
 
   region_saturation <- c(
     CAZ = 18,
-    CHA = 30,
-    EUR = 24,
+    CHA = 35,
+    ENC = 16,
+    NES = 24,
+    EWN = 24,
+    ECS = 25,
+    ESC = 32,
+    ECE = 24,
+    FRA = 20,
+    DEU = 24,
+    UKI = 13,
+    NEN = 24,
+    ESW = 28,
     IND = 20,
     JPN = 18,
     LAM = 20,
     MEA = 20,
-    NEU = 24,
     OAS = 20,
     REF = 20,
     SSA = 20,
@@ -32,7 +41,7 @@ calcCeStockSaturationLevel <- function() {
   unit <- "tonnes cement per capita"
   description <- paste(
     "Regionally differentiated cement stock saturation level. ",
-    "Based on expert guess informed by historic saturation levels."
+    "Based on expert guess informed by historic saturation levels on EU21."
   )
   note <- "dimensions: (Region,value)"
 
