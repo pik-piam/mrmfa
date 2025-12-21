@@ -7,7 +7,7 @@
 readPostedBuiltLifespan()
 }
 \description{
-https://github.com/PhilippVerpoort/posted
+https://github.com/bennet21/posted/tree/lifetimes
 Data sources can be found in Posted.
 }
 \author{

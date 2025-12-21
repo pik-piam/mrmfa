@@ -3,7 +3,6 @@
 #' @author Bennet Weiss
 #'
 calcCeProductMaterialApplicationTransform <- function() {
-  # TODO Necessary transform: how do we handle this?
   vals <- c(
     1, 1, 1, 1, 0, 0, 0, # concrete
     0, 0, 0, 0, 1, 1, 1 # mortar

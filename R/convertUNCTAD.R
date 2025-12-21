@@ -25,8 +25,30 @@ convertUNCTAD <- function(x) {
       "State of Palestine" = "PSE"
     )
   )
-  # Exclude NA and fill missing country entries with 0.
+  # exclude NA regions
   x <- x[!is.na(getItems(x, 1)), , ]
+
+  # convert historical countries by using toolISOhistorical
+  # get new countries that will be added to the dataset
+  countries <- getItems(x, dim = 1)
+  new_countries <- utils::read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
+  new_countries <- new_countries[new_countries$fromISO %in% countries, "toISO"]
+  missing_countries <- setdiff(new_countries, countries)
+  # if missing country list is not empty extend x
+  if (length(missing_countries) > 0) {
+    missing_countries <- new.magpie(
+      cells_and_regions = missing_countries,
+      years = getItems(x, dim = 2),
+      names = getItems(x, dim = 3),
+      fill = 0,
+      sets = names(dimnames(x))
+    )
+
+    x <- mbind(x, missing_countries)
+  }
+  x <- toolISOhistorical(x, overwrite = TRUE)
+
+  # Fill missing country entries with 0.
   x <- toolCountryFill(x, fill = 0)
 
   # ---------------------------------------------------------------------------

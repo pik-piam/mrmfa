@@ -24,9 +24,9 @@
 #' }
 #'
 fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, runSections = NULL,
-                    start_historic = 1900, end_historic = 2023, end_future = 2100) {
+                    end_future = 2100) {
   # prepare section selector
-  validSections <- c("drivers", "steel", "cement", "plastic")
+  validSections <- c("steel", "cement", "plastic")
 
   if (is.null(runSections)) {
     runSections <- validSections
@@ -42,14 +42,17 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     return(invisible(NULL))
   }
 
-  #  ------------- DRIVERS -------------
-  if (runSection("drivers")) {
-    calcOutput("CoPopulation1900To2150", file = "co_population.cs4r", scenario = scenario, years = start_historic:end_future)
-    calcOutput("CoGDP1900To2150", file = "co_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
-  }
+  # nolint start
 
   #  ------------- STEEL ----------------
   if (runSection("steel")) {
+    start_historic = 1900
+    end_historic = 2022
+
+    # common parameters
+    calcOutput("CoPopulation1900To2150", file = "st_population.cs4r", scenario = scenario, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "st_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
+
     # Production
     calcOutput("StProduction", file = "st_steel_production.cs4r")
     calcOutput("StProductionByProcess", file = "st_steel_production_by_process.cs4r")
@@ -93,6 +96,12 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- CEMENT -----------
   if (runSection("cement")) {
+    start_historic = 1900
+    end_historic = 2023
+
+    # common parameters
+    calcOutput("CoPopulation1900To2150", file = "ce_population.cs4r", scenario = scenario, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "ce_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
     # Production
     calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
     # Trade
@@ -107,6 +116,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CeProductCementContent", file = "ce_product_cement_content.cs4r", aggregate = FALSE)
     calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")
     calcOutput("CeStockTypeSplit", file = "ce_stock_type_split.cs4r")
+    calcOutput("CeStockSaturationLevel", file = "ce_stock_saturation_level.cs4r")
     # Carbonation
     calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
     calcOutput("CeCaOContent", file = "ce_ckd_cao_ratio.cs4r", subtype = "CKD", aggregate = FALSE)
@@ -122,46 +132,49 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CeWasteSplit", file = "ce_waste_type_split.cs4r")
     calcOutput("CeCaOEmissionFactor", file = "ce_cao_emission_factor.cs4r", aggregate = FALSE)
     calcOutput("CeProductDensity", file = "ce_product_density.cs4r", aggregate = FALSE)
-    calcOutput("CeCementRatio", file = "ce_cement_ratio.cs4r", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_min.cs4r", subtype = "min", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_max.cs4r", subtype = "max", aggregate = FALSE)
-    calcOutput("CeProductMaterialApplicationTransform", file = "co_product_material_application_transform.cs4r", aggregate = FALSE)
+    calcOutput("CeProductMaterialApplicationTransform", file = "ce_product_material_application_transform.cs4r", aggregate = FALSE)
   }
 
   #  ------------- PLASTIC -----------
   if (runSection("plastic")) {
+    start_historic = 1950
+    end_historic = 2019
+
+    # common parameters
+    calcOutput("CoPopulation1900To2150", file = "pl_population.cs4r", scenario = scenario, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "pl_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
     # Consumption
     calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
     # Trade
-    calcOutput("PlTrade", category = "final", flow_label = "Exports", file = "pl_final_his_exports.cs4r")
-    calcOutput("PlTrade", category = "final", flow_label = "Imports", file = "pl_final_his_imports.cs4r")
-    calcOutput("PlTrade", category = "primary", flow_label = "Exports", file = "pl_primary_his_exports.cs4r")
-    calcOutput("PlTrade", category = "primary", flow_label = "Imports", file = "pl_primary_his_imports.cs4r")
-    calcOutput("PlTrade", category = "intermediate", flow_label = "Exports", file = "pl_intermediate_his_exports.cs4r")
-    calcOutput("PlTrade", category = "intermediate", flow_label = "Imports", file = "pl_intermediate_his_imports.cs4r")
-    calcOutput("PlTrade", category = "manufactured", flow_label = "Exports", file = "pl_manufactured_his_exports.cs4r")
-    calcOutput("PlTrade", category = "manufactured", flow_label = "Imports", file = "pl_manufactured_his_imports.cs4r")
-    calcOutput("PlWasteTrade", subtype = "export", file = "pl_waste_exports.cs4r")
-    calcOutput("PlWasteTrade", subtype = "import", file = "pl_waste_imports.cs4r")
+    calcOutput("PlTrade", category = "Final", flow_label = "Exports", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Final", flow_label = "Imports", file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Primary", flow_label = "Exports", file = "pl_primary_his_exports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Primary", flow_label = "Imports", file = "pl_primary_his_imports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Intermediate", flow_label = "Exports", file = "pl_intermediate_his_exports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Intermediate", flow_label = "Imports", file = "pl_intermediate_his_imports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Manufactured", flow_label = "Exports", file = "pl_manufactured_his_exports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Manufactured", flow_label = "Imports", file = "pl_manufactured_his_imports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlWasteTrade", subtype = "export", file = "pl_waste_exports.cs4r", years = start_historic:end_future)
+    calcOutput("PlWasteTrade", subtype = "import", file = "pl_waste_imports.cs4r", years = start_historic:end_future)
     # Parameters
     calcOutput("PlOECD_MGshare", file = "pl_material_shares_in_goods.cs4r")
-    calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r") # fix 0.79
-    calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r") # fix 0.05
+    calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", years = start_historic:end_future) # fix 0.79
+    calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r", years = start_historic:end_future) # fix 0.05
     calcOutput("PlLifetime", subtype = "Lifetime_mean", aggregate = FALSE, file = "pl_lifetime_mean.cs4r")
     calcOutput("PlLifetime", subtype = "Lifetime_std", aggregate = FALSE, file = "pl_lifetime_std.cs4r")
+    calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_materials.cs4r")
     # Historic EoL shares
-    calcOutput("PlEoL_shares", subtype = "Collected", file = "pl_hist_collection_rate.cs4r")
-    calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_hist_mechanical_recycling_rate.cs4r")
-    calcOutput("PlEoL_shares", subtype = "Incinerated", file = "pl_hist_incineration_rate.cs4r")
-    # EoL shares including extrapolations (to be moved to the MFA soon)
-    calcOutput("PlCollRate", file = "pl_collection_rate.cs4r")
-    calcOutput("PlMechReRate", file = "pl_mechanical_recycling_rate.cs4r")
-    calcOutput("PlIncinRate", file = "pl_incineration_rate.cs4r")
-    # Future rates (historic = 0)
-    calcOutput("PlChemReRate", file = "pl_chemical_recycling_rate.cs4r")
-    calcOutput("PlBioRate", file = "pl_bio_production_rate.cs4r")
-    calcOutput("PlDACRate", file = "pl_daccu_production_rate.cs4r")
-    # TODO
-    # carbon content materials, and emission capture rate
+    calcOutput("PlEoL_shares", subtype = "Collected", file = "pl_collection_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_mechanical_recycling_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlEoL_shares", subtype = "Incinerated", file = "pl_incineration_rate.cs4r", years = start_historic:end_historic)
+    # Rates that are historically zero
+    calcOutput("PlZeroRates", file = "pl_chemical_recycling_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlZeroRates", file = "pl_bio_production_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlZeroRates", file = "pl_daccu_production_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlZeroRates", file = "pl_emission_capture_rate.cs4r", years = start_historic:end_historic)
   }
+
+  # nolint end
 }
