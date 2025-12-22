@@ -116,6 +116,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CeStockTypeSplit", file = "ce_stock_type_split.cs4r")
     calcOutput("CeStockSaturationLevel", file = "ce_stock_saturation_level.cs4r")
     calcOutput("CeIndustrializedRegions", file = "ce_industrialized_regions.cs4r", round = 0)
+    calcOutput("CeLifetimeRelStd", file = "ce_use_lifetime_std.cs4r", aggregate = FALSE)
     # Carbonation
     calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
     calcOutput("CeCaOContent", file = "ce_ckd_cao_ratio.cs4r", subtype = "CKD", aggregate = FALSE)
