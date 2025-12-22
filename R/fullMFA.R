@@ -52,44 +52,45 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CoGDP1900To2150", file = "st_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
 
     # Production
-    calcOutput("StProduction", file = "st_steel_production.cs4r")
-    calcOutput("StProductionByProcess", file = "st_steel_production_by_process.cs4r")
+    calcOutput("StProduction", file = "st_production.cs4r", years = start_historic:end_historic)
+    # calcOutput("StProductionByProcess", file = "st_steel_production_by_process.cs4r")
 
     # Trade
-    calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports")
-    calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports")
-    calcOutput("StTrade", file = "st_scrap_imports.cs4r", subtype = "scrapImports")
-    calcOutput("StTrade", file = "st_scrap_exports.cs4r", subtype = "scrapExports")
-    calcOutput("StTrade", file = "st_indirect_imports.cs4r", subtype = "indirectImports")
-    calcOutput("StTrade", file = "st_indirect_exports.cs4r", subtype = "indirectExports")
+    calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_scrap_imports.cs4r", subtype = "scrapImports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_scrap_exports.cs4r", subtype = "scrapExports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_indirect_imports.cs4r", subtype = "indirectImports", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_indirect_exports.cs4r", subtype = "indirectExports", years = start_historic:end_historic)
 
     # Parameters
     calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
     calcOutput("StLifetimes", subtype = "Cooper2014", unit = "mean", file = "st_lifetime_mean.cs4r", aggregate = FALSE)
     calcOutput("StLifetimes", subtype = "Cooper2014", unit = "std", file = "st_lifetime_std.cs4r", aggregate = FALSE)
     calcOutput("StRecoveryRate", subtype = "WorldSteel", file = "st_recovery_rate.cs4r", aggregate = FALSE)
-    calcOutput("StSectorSplits", subtype = "Pauliuk2013", file = "st_sector_splits.cs4r", aggregate = FALSE) # FIXME: dimensions??
-
+    calcOutput("StSectorSplits", subtype = "high", file = "st_sector_split_high.cs4r", aggregate = FALSE)
+    calcOutput("StSectorSplits", subtype = "low", file = "st_sector_split_low.cs4r", aggregate = FALSE)
+    
     # Static Parameters
-    calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
+    # calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
     calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_BOF_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "productionLossRate", file = "st_production_loss_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "formingLossRate", file = "st_forming_loss_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "formingYield", file = "st_forming_yield.cs4r", aggregate = FALSE)
 
     # Scrap consumption
-    calcOutput("StScrapConsumption", file = "st_scrap_consumption_no_assumptions.cs4r", subtype = "noAssumptions", warnNA = FALSE)
-    calcOutput("StScrapConsumption", file = "st_scrap_consumption.cs4r", subtype = "assumptions")
+    calcOutput("StScrapConsumption", file = "st_scrap_consumption_no_assumptions.cs4r", subtype = "noAssumptions", warnNA = FALSE, years = start_historic:end_historic)
+    calcOutput("StScrapConsumption", file = "st_scrap_consumption.cs4r", subtype = "assumptions", years = start_historic:end_historic)
 
     # Pig Iron
-    calcOutput("StPigIronProduction", file = "st_pig_iron_production.cs4r")
-    calcOutput("StPigIronTrade", file = "st_pig_iron_imports.cs4r", subtype = "imports")
-    calcOutput("StPigIronTrade", file = "st_pig_iron_exports.cs4r", subtype = "exports")
+    # calcOutput("StPigIronProduction", file = "st_pig_iron_production.cs4r")
+    # calcOutput("StPigIronTrade", file = "st_pig_iron_imports.cs4r", subtype = "imports")
+    # calcOutput("StPigIronTrade", file = "st_pig_iron_exports.cs4r", subtype = "exports")
 
     # Direct reduced Iron
-    calcOutput("StDRIData", file = "st_dri_production.cs4r", subtype = "production")
-    calcOutput("StDRIData", file = "st_dri_imports.cs4r", subtype = "imports")
-    calcOutput("StDRIData", file = "st_dri_exports.cs4r", subtype = "exports")
+    # calcOutput("StDRIData", file = "st_dri_production.cs4r", subtype = "production")
+    # calcOutput("StDRIData", file = "st_dri_imports.cs4r", subtype = "imports")
+    # calcOutput("StDRIData", file = "st_dri_exports.cs4r", subtype = "exports")
   }
 
   #  ------------- CEMENT -----------
