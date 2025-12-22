@@ -25,15 +25,19 @@ calcCeWasteSizeBound <- function(subtype) {
     c("A", "B", "C", "D")
   )
 
-  arr_min <- array(
+  arr_min <- matrix(
     vals_min,
-    dim = c(4, 4),
+    nrow = 4,
+    ncol = 4,
+    byrow = TRUE,
     dimnames = dimnames
   )
 
-  arr_max <- array(
+  arr_max <- matrix(
     vals_max,
-    dim = c(4, 4),
+    nrow = 4,
+    ncol = 4,
+    byrow = TRUE,
     dimnames = dimnames
   )
 
