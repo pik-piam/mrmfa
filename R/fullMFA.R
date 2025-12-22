@@ -11,7 +11,7 @@
 #' @param gdpPerCapita bool if GDP should be returned as per capita values.
 #' @param runSections Character vector selecting which parts to run.
 #' Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
-#' #' @param end_future End year for future data (default: 2100).
+#' @param end_future End year for future data (default: 2100).
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
 #' \code{\link[madrat]{calcOutput}}
@@ -70,7 +70,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("StRecoveryRate", subtype = "WorldSteel", file = "st_recovery_rate.cs4r", aggregate = FALSE)
     calcOutput("StSectorSplits", subtype = "high", file = "st_sector_split_high.cs4r", aggregate = FALSE)
     calcOutput("StSectorSplits", subtype = "low", file = "st_sector_split_low.cs4r", aggregate = FALSE)
-    
+
     # Static Parameters
     # calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
     calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_BOF_rate.cs4r", aggregate = FALSE)
