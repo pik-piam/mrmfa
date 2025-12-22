@@ -4,12 +4,10 @@
 \alias{calcStSectorSplits}
 \title{Calc steel sector splits}
 \usage{
-calcStSectorSplits(subtype = "Pauliuk2013")
+calcStSectorSplits(subtype)
 }
 \arguments{
-\item{subtype}{Sector split source, currently using Pauliuk  et al. (2013).
-Other options is to use Pauliuk et al.'s stock sector splits or other
-MFAs.}
+\item{subtype}{Income bin; either "high" or "low"}
 }
 \description{
 Function to load steel sector splits data in the four main end-use sectors
