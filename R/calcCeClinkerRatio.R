@@ -41,7 +41,8 @@ calcCeClinkerRatio <- function() {
   # optimization for country_mask regions could be possible.
   for (i in seq_along(all_regions)) {
     region_ratio <- toolRemoveNA(ratio[all_regions[i], ])
-    years_to_interpolate <- all_years[!all_years %in% getYears(region_ratio)]
+    years_to_interpolate <- all_years[!all_years %in% getYears(region_ratio[i])]
+    if (length(years_to_interpolate) == 0) next
     ratio[all_regions[i], ] <- time_interpolate(region_ratio,
       years_to_interpolate,
       integrate_interpolated_years = TRUE
