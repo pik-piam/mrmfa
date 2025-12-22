@@ -8,9 +8,7 @@
 #' Research, the Iron and Steel Statistics Bureau and Dahlström et al. (2004)
 #' (see Metadata in File). See \link{readPauliuk2013} for
 #' preprocessing.
-#' @param subtype Sector split source, currently using Pauliuk  et al. (2013).
-#' Other options is to use Pauliuk et al.'s stock sector splits or other
-#' MFAs.
+#' @param subtype Income bin; either "high" or "low"
 #' @author Merlin Jo Hosak
 calcStSectorSplits <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
