@@ -7,13 +7,11 @@
 #' @author Bennet Weiss
 #' @param rev Revision number for the data version
 #' @param dev Development version string
-#' @param scenario SSP scenario used for population and GDP drivers
-#' @param gdpPerCapita bool if GDP driver should be returned as per capita values
+#' @param scenario SSP scenario used for population and GDP.
+#' @param gdpPerCapita bool if GDP should be returned as per capita values.
 #' @param runSections Character vector selecting which parts to run.
-#' @param start_historic Start year for historic data (default: 1900)
-#' @param end_historic End year for historic data (default: 2023)
-#' @param end_future End year for future data (default: 2100)
-#' Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.
+#' Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
+#' #' @param end_future End year for future data (default: 2100).
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
 #' \code{\link[madrat]{calcOutput}}
@@ -46,8 +44,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- STEEL ----------------
   if (runSection("steel")) {
-    start_historic = 1900
-    end_historic = 2022
+    start_historic <- 1900
+    end_historic <- 2022
 
     # common parameters
     calcOutput("CoPopulation1900To2150", file = "st_population.cs4r", scenario = scenario, years = start_historic:end_future)
@@ -96,8 +94,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- CEMENT -----------
   if (runSection("cement")) {
-    start_historic = 1900
-    end_historic = 2023
+    start_historic <- 1900
+    end_historic <- 2023
 
     # common parameters
     calcOutput("CoPopulation1900To2150", file = "ce_population.cs4r", scenario = scenario, years = start_historic:end_future)
@@ -108,7 +106,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CeMaterialTrade", file = "ce_cement_trade.cs4r", years = start_historic:end_historic, subtype = "cement")
     calcOutput("CeMaterialTrade", file = "ce_clinker_trade.cs4r", years = start_historic:end_historic, subtype = "clinker")
     # Parameters
-    calcOutput("CeBuiltLifespan", file = "ce_use_lifetime_mean.cs4r")
+    calcOutput("CeBuiltLifespan", file = "ce_use_lifetime_mean.cs4r", years = start_historic:end_historic)
     calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = start_historic:end_historic)
     calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction", aggregate = FALSE)
     calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
@@ -139,8 +137,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
 
   #  ------------- PLASTIC -----------
   if (runSection("plastic")) {
-    start_historic = 1950
-    end_historic = 2019
+    start_historic <- 1950
+    end_historic <- 2019
 
     # common parameters
     calcOutput("CoPopulation1900To2150", file = "pl_population.cs4r", scenario = scenario, years = start_historic:end_future)
