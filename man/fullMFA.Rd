@@ -23,8 +23,9 @@ fullMFA(
 \item{gdpPerCapita}{bool if GDP should be returned as per capita values.}
 
 \item{runSections}{Character vector selecting which parts to run.
-Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
-#' @param end_future End year for future data (default: 2100).}
+Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.}
+
+\item{end_future}{End year for future data (default: 2100).}
 }
 \description{
 Function that produces the complete regional data sets required for the
