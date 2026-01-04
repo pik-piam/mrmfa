@@ -1,7 +1,7 @@
 #' Calculate Country-Level Mechanical Recycling Yield Trajectories
 #'
 #' Generate time series of mechanical recycling yield (efficiency) trajectories by sector and region,
-#' then aggregate to countries for 1990-2100.
+#' then aggregate to countries for 1950-2100.
 #'
 #' @author Qianzhi Zhang
 #'
@@ -23,11 +23,11 @@ calcPlMechReYield <- function() {
 
   # ---------------------------------------------------------------------------
   # Define time horizon and yield bounds
-  #    - Years: 1990–2100
+  #    - Years: 1950–2100
   #    - Start and end yield fixed at 79% for all sectors.
   #      Source: weighted average (based on waste generation) of yields for different polymers, see POSTED
   # ---------------------------------------------------------------------------
-  years <- 1990:2100
+  years <- 1950:2100
   bounds <- data.frame(
     Target = targets,
     start = 0.79,
@@ -74,7 +74,7 @@ calcPlMechReYield <- function() {
     x           = x,
     weight      = weight,
     unit        = "% Mechanical recycling efficiency",
-    description = "Mechanical recycling yield trajectories aggregated to country level for 1990-2100.",
+    description = "Mechanical recycling yield trajectories aggregated to country level for 1950-2100.",
     note        = "dimensions: (Time,Region,Material,value)"
   ))
 }

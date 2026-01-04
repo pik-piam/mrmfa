@@ -1,7 +1,14 @@
-#' Calculates the lifetimes of residential and non-residential buildings, as well as of civil engeneering.
+#' Calculates the lifetimes of residential and non-residential buildings, as well as of civil engineering.
 #' @author Bennet Weiss
 calcCeBuiltLifespan <- function() {
   data <- readSource("PostedBuiltLifespan")
+
+  # Split NonRes into Com and Ind and remove NonRes category
+  data_new <- add_columns(data, addnm = c("Com", "Ind"), dim = 3.1)
+  data_new[, , "Com"] <- data[, , "NonRes"]
+  data_new[, , "Ind"] <- data[, , "NonRes"]
+  data_final <- data_new[, , "NonRes", invert = TRUE]
+
   unit <- "years (a)"
   description <- paste(
     "Lifetimes of residential and non-residential buildings, as well as of civil engeneering.",
@@ -9,10 +16,10 @@ calcCeBuiltLifespan <- function() {
     "Documentation can be found in Posted (https://github.com/PhilippVerpoort/posted)"
   )
   note <- "dimensions: (Historic Time,Region,Stock Type,value)"
-  weight <- data
-  weight[, , ] <- 1
+  weight <- toolCeCumulativeCementProduction(data_final)
+
   output <- list(
-    x = data,
+    x = data_final,
     weight = weight,
     unit = unit,
     description = description,

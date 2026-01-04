@@ -8,35 +8,40 @@
 #' Research, the Iron and Steel Statistics Bureau and Dahlström et al. (2004)
 #' (see Metadata in File). See \link{readPauliuk2013} for
 #' preprocessing.
-#' @param subtype Sector split source, currently using Pauliuk  et al. (2013).
-#' Other options is to use Pauliuk et al.'s stock sector splits or other
-#' MFAs.
+#' @param subtype Income bin; either "high" or "low"
 #' @author Merlin Jo Hosak
-calcStSectorSplits <- function(subtype = "Pauliuk2013") {
+calcStSectorSplits <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
-  switchboard <- list(
-    "Pauliuk2013" = function() {
-      x <- readSource("Pauliuk2013", subtype = "sectorSplits", convert = FALSE)
 
-      final <- list(
-        x = x,
-        weight = NULL,
-        unit = 1,
-        description = "Cooper 2014 Steel Lifetimes Mean & SD"
-      )
-
-      return(final)
-    },
-    NULL
-  )
-  # ---- check if the subtype called is available ----
-  if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste(
-      "Invalid subtype -- supported subtypes are:",
-      names(switchboard)
-    ))
-  } else {
-    # ---- load data and do whatever ----
-    return(switchboard[[subtype]]())
+  x <- readSource("Pauliuk2013")
+  
+  
+  
+  # if subtype is "low", extract rows where data is "India 1995-1999"
+  if (subtype == "low") {
+    x <- mselect(x, Parameter="India 1995-1999", collapseNames=TRUE)
   }
+  else if (subtype == "high") {
+    x <- mselect(x, Parameter="USA 2004", collapseNames=TRUE)
+  }
+  else {
+    stop("Invalid subtype -- supported subtypes are high and low")
+  }
+
+  # remove .data column
+  # x$Data1 <- NULL
+  print(x)
+  
+    
+  final <- list(
+    x = as.magpie(x),
+    weight = NULL,
+    unit = 1,
+    isocountries = FALSE,
+    description = "Pauliuk 2013 steel sector splits", 
+    note = "dimensions: (Good,value)"
+  )
+  
+  return(final)
+
 }

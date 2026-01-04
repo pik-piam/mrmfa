@@ -2,17 +2,17 @@
 % Please edit documentation in R/toolNAHandling.R
 \name{toolMaskNACountries}
 \alias{toolMaskNACountries}
-\title{Create mask for countries that have >= n_noNA NA values.}
+\title{Create mask for countries that have less than n_valid values which are not NA.}
 \usage{
-toolMaskNACountries(x, n_noNA = 5)
+toolMaskNACountries(x, n_valid = 5)
 }
 \arguments{
 \item{x}{Magpie object}
 
-\item{n_noNA}{Minimum values not NA values of a country to be included in the mask}
+\item{n_valid}{Threshold minimum number of valid (not NA) values.}
 }
 \description{
-Create mask for countries that have >= n_noNA NA values.
+Create mask for countries that have less than n_valid values which are not NA.
 }
 \author{
 Bennet Weiss

@@ -8,8 +8,9 @@ fullMFA(
   rev = 0,
   dev = "",
   scenario = "SSP2",
-  gdpPerCapita = FALSE,
-  runSections = NULL
+  gdpPerCapita = TRUE,
+  runSections = NULL,
+  end_future = 2100
 )
 }
 \arguments{
@@ -17,12 +18,14 @@ fullMFA(
 
 \item{dev}{Development version string}
 
-\item{scenario}{SSP scenario used for population and GDP drivers}
+\item{scenario}{SSP scenario used for population and GDP.}
 
-\item{gdpPerCapita}{bool if GDP driver should be returned as per capita values}
+\item{gdpPerCapita}{bool if GDP should be returned as per capita values.}
 
 \item{runSections}{Character vector selecting which parts to run.
-Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.}
+Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.}
+
+\item{end_future}{End year for future data (default: 2100).}
 }
 \description{
 Function that produces the complete regional data sets required for the

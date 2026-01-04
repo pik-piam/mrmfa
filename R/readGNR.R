@@ -1,8 +1,7 @@
 #' Read data from GNR
 #' Getting the Numbers Right (GNR) is a Project of the Global Cement and Concrete Association (GCCA)
 #' [GNR](https://gccassociation.org/sustainability-innovation/gnr-gcca-in-numbers/)
-#' Data not publically available. Data received from Abhishek Shukla, Sustainability Program Manager at GCCA.
-#' Data received on 21.01.2025, personal communication.
+#' Data not publically available. Data received on 21.01.2025, personal communication.
 #'
 #' @author Bennet Weiss
 #' @param subtype Variable to be read in. Currently, only "clinker_ratio" is supported.

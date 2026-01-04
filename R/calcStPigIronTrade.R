@@ -19,7 +19,8 @@ calcStPigIronTrade <- function(subtype) {
     x = final,
     weight = NULL,
     unit = "Tonnes",
-    description = paste("Pig iron data of type", subtype, "from 1900-2022 yearly for the SIMSON format")
+    description = paste0("Pig iron data of type '", subtype, "' from 1900-2022 yearly"),
+    note = "dimensions: (Historic Time,Region,value)"
   )
 
   return(result)

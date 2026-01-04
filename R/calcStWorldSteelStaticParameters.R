@@ -8,27 +8,29 @@
 calcStWorldSteelStaticParameters <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
-  "scrapInBOFrate" = function() {
+    "scrapInBOFrate" = function() {
       scrapInBOFRate <- readSource("WorldSteelParameters", subtype = "scrapInBOFRate")
+      getNames(scrapInBOFRate) <- NULL
 
       final <- list(
         x = scrapInBOFRate,
-        weights = NULL,
+        weight = NULL,
         description = "Scrap in BOF rate (according to the World Steel Association)",
-        unit = 1
+        unit = 1,
+        isocountries = FALSE,
+        note = "dimensions: (value)"
       )
       return(final)
-    },
-    NULL
+    }
   )
   # ---- check if the subtype called is available ----
   if (is_empty(intersect(subtype, names(switchboard)))) {
-    stop(paste(
+    stop(
       "Invalid subtype -- supported subtypes are:",
-      names(switchboard)
-    ))
+      paste0(names(switchboard), collapse = ", ")
+    )
   } else {
     # ---- load data and do whatever ----
-  return(switchboard[[subtype]]())
+    return(switchboard[[subtype]]())
   }
 }

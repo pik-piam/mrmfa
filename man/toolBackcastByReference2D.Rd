@@ -26,14 +26,15 @@ before calculating weights. Recommended to ensure more stable weight calculation
 
 \item{doForecast}{Logical, whether to do forecasting instead of backcasting.}
 
-\item{doMakeZeroNA}{Logical, whether to convert 0 values in final output to NA. As sometimes 0 is wrongly implicitly assumed.}
+\item{doMakeZeroNA}{Logical, whether to convert 0 values in final output to NA.
+As sometimes 0 is wrongly implicitly assumed.}
 }
 \description{
 This function backcasts (or forecasts) missing values in a 2D magpie object x
 based on reference data ref. The backcasting/forecasting is done by calculating
 ratios of x to ref for shared years, computing weights for these ratios based
-on their recency (linearly weighted),
-and applying these weights to scale ref for missing years in x.
+on their recency (linearly weighted), and applying these weights to scale ref
+for missing years in x.
 }
 \author{
 Merlin Jo Hosak

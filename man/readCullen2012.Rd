@@ -8,7 +8,7 @@ readCullen2012(subtype)
 }
 \arguments{
 \item{subtype}{Subtype of Cullen et al. (2012) data to load. Currently
-supported subtypes are flows & giMatrix.}
+supported subtypes are "flows" and "giMatrix".}
 }
 \description{
 Read data from supplementary material of Cullen et al. 2012 paper

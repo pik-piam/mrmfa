@@ -9,7 +9,7 @@ calcCeMaterialTrade <- function(subtype) {
   trade_comtrade <- readSource("UNComtrade", subtype = subtype)
   trade <- magpiesort(mbind(trade_chatham, trade_comtrade))
 
-  # add USGS trade data for US
+  # add pre-1987 data: USGS trade for US (only cement)
   if (subtype == "cement") {
     trade_usgs <- readSource("USGSDS140")
     # avoid time overlap with trade
@@ -17,6 +17,11 @@ calcCeMaterialTrade <- function(subtype) {
     trade <- magpiesort(mbind(trade, trade_usgs_cut))
     # add missing data for overlapping years manually
     trade["USA", c("y1988", "y1989", "y1990")] <- trade_usgs["USA", c("y1988", "y1989", "y1990")]
+  } else if (subtype == "clinker") {
+    trade <- add_columns(trade, addnm = paste0("y", seq(1900, 1987, 1)), dim = 2, fill = 0)
+    trade <- magpiesort(trade)
+  } else {
+    stop("Invalid subtype. Choose either 'cement' or 'clinker'.")
   }
 
   trade[is.na(trade)] <- 0
@@ -24,6 +29,7 @@ calcCeMaterialTrade <- function(subtype) {
   # balance trade
   production <- calcOutput("CeBinderProduction", subtype = subtype, aggregate = FALSE)[, getYears(trade)]
   total_production <- dimSums(production, dim = 1)
+  total_production[total_production == 0] <- 1 # to avoid division by zero
   trade_imbalance <- dimSums(trade, dim = 1)
   trade <- trade - trade_imbalance * production / total_production
 
@@ -48,8 +54,8 @@ calcCeMaterialTrade <- function(subtype) {
   if (subtype == "cement") {
     description <- paste(
       description_general, "\n",
-      "1. For 1988 - 1999 and 2023-2024: ", description_chatham, "\n",
-      "2. For 2000 - 2022: ", description_comtrade, "\n",
+      "1. For 1988 - 1999 and 2023-2024: ", description_comtrade, "\n",
+      "2. For 2000 - 2022: ", description_chatham, "\n",
       "3. For USA, 1900 - 1990: ", description_usgs, "\n"
     )
   } else if (subtype == "clinker") {

@@ -15,7 +15,8 @@ calcStPigIronProduction <- function() {
     x = data,
     weight = NULL,
     unit = "Tonnes",
-    description = "Pig iron production from 1900-2022 yearly for the SIMSON format"
+    description = "Pig iron production from 1900-2022 yearly",
+    note = "dimensions: (Historic Time,Region,value)"
   )
 
   return(result)
