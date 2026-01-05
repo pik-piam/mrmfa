@@ -100,12 +100,22 @@ calcBACI <- function(subtype, HS = "17") {
     # map UNEP-NGP sectors to sectors used in REMIND-MFA
     sector_map <- toolGetMapping("sectormappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
     y <- toolAggregate(x, rel = sector_map, dim = "sector", from = "Source", to = "Target")
+
     # map UNEP-NGP polymers to polymers used in REMIND-MFA
     polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
-    # use polymer use by application as weights
+    # use polymer use by application as weights (summarize over all Regions, as polymer share by sector is constant over all Regions in OECD data)
     MGshare <- calcOutput("PlOECD_MGshare") %>% as.data.frame(rev=3) %>%
-      rename(sector = Data2, polymer = Data1)
-    # weights <- as.magpie(MGshare, spatial = 1)
+      rename(sector = Data2, polymer = Data1) %>%
+      group_by(.data$sector, .data$polymer) %>%
+      summarize(value = sum(.value))
+    split <- merge(polymer_map, MGshare, by.y="polymer", by.x="Target") %>%
+      group_by(.data$sector, .data$Source) %>%
+      dplyr::mutate(
+        total = sum(.data$value, na.rm = TRUE),
+        weight = .data$value / .data$total
+      ) %>%
+      select(-"total", -"value")
+    weights <- as.magpie(split)
     # y <- toolAggregate(x, rel = polymer_map, dim = 3.3, from = "Source", to = "Target")
 
   }
