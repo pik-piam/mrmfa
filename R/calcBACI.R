@@ -85,7 +85,8 @@ calcBACI <- function(subtype, HS = "17") {
     df_plastics_UNEP <- rbind(df_plastics_k6, df_plastics_k4) %>%
       mutate(q_plastic = .value.x*.value.y) %>%
       group_by(t, Region, type, code, polymer, application, stage, sector, label) %>%
-      summarize(q=sum(q_plastic, na.rm=TRUE))
+      summarize(q=sum(q_plastic, na.rm=TRUE)) %>%
+      dplyr::ungroup()
     # which Codes are missing?
     diff <- setdiff(unique(UNEP_codes$code),unique(df_plastics_UNEP$code))
     missing <- UNEP_codes %>% filter(code %in%diff)
@@ -95,11 +96,24 @@ calcBACI <- function(subtype, HS = "17") {
         paste(capture.output(print(missing)), collapse = "\n")
       ))
     }
-    x <- as.magpie(df_plastics_UNEP, temporal = 1, spatial = 2)
+
+    # summarize df and include only relevant categories
+    df_plastics_UNEP_sum <- df_plastics_UNEP %>%
+      group_by(t, Region, type, polymer, stage, sector) %>%
+      dplyr::summarize(q=sum(q)) %>%
+      dplyr::ungroup()
 
     # map UNEP-NGP sectors to sectors used in REMIND-MFA
     sector_map <- toolGetMapping("sectormappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
-    y <- toolAggregate(x, rel = sector_map, dim = "sector", from = "Source", to = "Target")
+    new <- df_plastics_UNEP_sum %>%
+      left_join(sector_map, by = c("sector" = "Source")) %>%
+      select(-"sector") %>%
+      rename("sector" = "Target") %>%
+      group_by(t, Region, type, polymer, stage, sector) %>%
+      dplyr::summarize(q=sum(q)) %>%
+      dplyr::ungroup()
+
+    x <- as.magpie(new, temporal = 1, spatial = 2)
 
     # map UNEP-NGP polymers to polymers used in REMIND-MFA
     polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
