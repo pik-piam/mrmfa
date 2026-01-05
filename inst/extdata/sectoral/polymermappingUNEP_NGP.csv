@@ -1,0 +1,12 @@
+Source;Target
+Unknown;ABS_ASA_SAN, HDPE, PET, PP, PS, PUR, LDPE, PVC, Others
+PP;PP
+PS;PS
+PVC;PVC
+Other;Others, ABS_ASA_SAN, PUR
+Synthetic Rubber;Elastomers (tyres)
+LDPE;LDPE
+HDPE;HDPE
+PET;PET
+Polyester;Others
+Fibres;Fibres

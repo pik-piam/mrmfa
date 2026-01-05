@@ -48,7 +48,7 @@ calcBACI <- function(subtype, HS = "17") {
     missing <- product_groups %>% filter(Code %in%diff)
     if (length(diff)>0){
       warning(paste(
-        "The following product codes are missing in the BACI dataset:\n",
+        "The following UNCTAD product codes are missing in the BACI dataset:\n",
         paste(capture.output(print(missing)), collapse = "\n")
       ))
     }
@@ -72,9 +72,11 @@ calcBACI <- function(subtype, HS = "17") {
   }
 
   if (subtype == "plastics_UNEP"){
-    # get selected 4-digit and 6-digit COMTRADE codes from UNEP_NGP
-    UNEP_codes_k4 <- readSource("UNEP_NGP", subtype="k4") %>% as.data.frame(rev=3)
-    UNEP_codes_k6 <- readSource("UNEP_NGP", subtype="k6") %>% as.data.frame(rev=3)
+    # get selected 4-digit and 6-digit COMTRADE codes from UNEP_NGP; label all polymers in the textile sector as "Fibres"
+    UNEP_codes_k4 <- readSource("UNEP_NGP", subtype="k4") %>% as.data.frame(rev=3) %>%
+      mutate(polymer = case_when(sector=="Textile"~"Fibres", .default=polymer))
+    UNEP_codes_k6 <- readSource("UNEP_NGP", subtype="k6") %>% as.data.frame(rev=3)%>%
+      mutate(polymer = case_when(sector=="Textile"~"Fibres", .default=polymer))
     UNEP_codes <- readSource("UNEP_NGP", subtype="all") %>% as.data.frame(rev=3)
     # UNEP Codes contain 4 digit and 5/6 digit codes; in order to merge 4 digit codes, transform 6-digit codes in BACI database to 4 digits
     df_UNEP <- df %>% mutate(k4 = as.integer(as.integer(k/100)))
@@ -89,11 +91,22 @@ calcBACI <- function(subtype, HS = "17") {
     missing <- UNEP_codes %>% filter(code %in%diff)
     if (length(diff)>0){
       warning(paste(
-        "The following product codes are missing in the BACI dataset:\n",
+        "The following UNEP NGP product codes are missing in the BACI dataset:\n",
         paste(capture.output(print(missing)), collapse = "\n")
       ))
     }
     x <- as.magpie(df_plastics_UNEP, temporal = 1, spatial = 2)
+
+    # map UNEP-NGP sectors to sectors used in REMIND-MFA
+    sector_map <- toolGetMapping("sectormappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
+    y <- toolAggregate(x, rel = sector_map, dim = "sector", from = "Source", to = "Target")
+    # map UNEP-NGP polymers to polymers used in REMIND-MFA
+    polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
+    # use polymer use by application as weights
+    MGshare <- calcOutput("PlOECD_MGshare") %>% as.data.frame(rev=3) %>%
+      rename(sector = Data2, polymer = Data1)
+    # weights <- as.magpie(MGshare, spatial = 1)
+    # y <- toolAggregate(x, rel = polymer_map, dim = 3.3, from = "Source", to = "Target")
 
   }
 
