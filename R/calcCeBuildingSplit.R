@@ -2,8 +2,8 @@
 #'
 #' @author Bennet Weiss
 calcCeBuildingSplit <- function() {
-  floorArea <- calcOutput("BuildingFloorArea", aggregate = FALSE)
-  floorArea_byStockType <- calcOutput("BuildingFloorArea", subtype = "Stock_Type", aggregate = FALSE)
+  floorArea <- calcOutput("CeBuildingFloorArea", aggregate = FALSE)
+  floorArea_byStockType <- calcOutput("CeBuildingFloorArea", subtype = "Stock_Type", aggregate = FALSE)
   relFloorArea <- floorArea / floorArea_byStockType
 
   # output
@@ -17,10 +17,12 @@ calcCeBuildingSplit <- function() {
     "Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek, J., Hoyos, M., Martins, L., Paul, N., Rao, A., Silva, V. (2023).",
     "Global Building Exposure Model for Earthquake Risk Assessment. Earthquake Spectra. doi:10.1177/87552930231194048."
   )
+  note <- "dimensions: (Region,Stock Type,Structure,Function,value)"
   output <- list(
     x = relFloorArea,
     weight = weight,
     unit = unit,
-    description = description
+    description = description,
+    note = note
   )
 }

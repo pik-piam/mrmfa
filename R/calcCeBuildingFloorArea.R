@@ -14,6 +14,8 @@ calcCeBuildingFloorArea <- function(subtype = NULL, remove_ind = TRUE) {
   if (remove_ind) {
     df <- df[df$Stock_Type != "Ind", ]
   }
+
+  # transform back to magpie
   floorArea <- as.magpie(df, spatial = 1)
 
   if (is.null(subtype)){
