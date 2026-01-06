@@ -30,10 +30,10 @@ calcPlTrade <- function(
   # ---------------------------------------------------------------------------
   # Load regional trade data for the selected category and backcast to 1950
   # ---------------------------------------------------------------------------
-  trade <- calcOutput("PlUNCTAD", subtype = category)
+  trade <- calcOutput("PlUNCTAD", subtype = category, aggregate=FALSE)
   trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
 
-  consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood"), dim = 3))
+  consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate=FALSE), dim = 3))
   hist_df <- toolBackcastByReference2D(trade_filtered, consumption) %>%
     as.data.frame() %>%
     dplyr::mutate(Year = as.integer(as.character(.data$Year))) %>%
@@ -45,19 +45,6 @@ calcPlTrade <- function(
   x <- as.magpie(
     hist_df %>% dplyr::select("Region", "Year", "Value"),
     spatial = 1, temporal = 2
-  )
-  region_map <- toolGetMapping(
-    "regionmappingH12.csv",
-    type = "regional", where = "mappingfolder"
-  )
-  gdp_ssp2 <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)[, paste0("y", 1950:2023), ]
-  x <- toolAggregate(
-    x,
-    rel    = region_map,
-    dim    = 1,
-    from   = "RegionCode",
-    to     = "CountryCode",
-    weight = gdp_ssp2[unique(region_map$CountryCode), , ]
   )
   getNames(x) <- NULL
 
