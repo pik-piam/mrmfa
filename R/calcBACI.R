@@ -24,7 +24,7 @@
 #' @importFrom dplyr select filter rename summarize
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcBACI <- function(subtype, HS = "17") {
+calcBACI <- function(subtype, HS = "02") {
 
   # Read raw data
   BACI_data <- readSource("BACI", subtype = paste0("HS",HS), convert=FALSE)
@@ -32,8 +32,12 @@ calcBACI <- function(subtype, HS = "17") {
 
   if (subtype == "plastics_UNCTAD") {
     # get product groups from UNCTAD plastics trade data, if available for the respective HS revision, for the older ones where there is none, use the closest
-    if (file.exists(paste0("C:/Users/leoniesc/madrat/sources/UNCTAD_PlasticsHSCodes/DimHS20",HS,"/Products_Plastics_Hierarchy.xls"))) HS else "02"
-    UNCTAD_product_codes <- read_excel(paste0("C:/Users/leoniesc/madrat/sources/UNCTAD_PlasticsHSCodes/DimHS20",HS,"Products_Plastics_Hierarchy.xls"), skip = 2)
+    if (file.exists(paste0("C:/Users/leoniesc/madrat/sources/UNCTAD_PlasticsHSCodes/DimHS20",HS,"Products_Plastics_Hierarchy.xls"))) {
+      UNCTAD_path <- paste0("C:/Users/leoniesc/madrat/sources/UNCTAD_PlasticsHSCodes/DimHS20",HS,"Products_Plastics_Hierarchy.xls")
+    } else {
+      UNCTAD_path <- "C:/Users/leoniesc/madrat/sources/UNCTAD_PlasticsHSCodes/DimHS2002Products_Plastics_Hierarchy.xls"
+    }
+    UNCTAD_product_codes <- read_excel(UNCTAD_path, skip = 2)
     # Identify header rows
     is_header <- grepl("^P_", UNCTAD_product_codes[[1]])
     # Create a new variable from column 2 of header rows

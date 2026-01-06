@@ -16,37 +16,67 @@
 #'     \item "Exports" - Exports
 #'     \item "Imports" - Imports
 #'   }
+#' @param source Character; data source:
+#'   \itemize{
+#'     \item "UNCTAD" - UNCTAD (trade flows by time and region)
+#'     \item "BACI" - BACI (trade flows by time, region, sector and polymer)
+#'   }
 #' @author Qianzhi Zhang
 calcPlTrade <- function(
-  category = c("Final", "Primary", "Intermediate", "Manufactured"),
-  flow_label = c("Exports", "Imports")
+  category,
+  flow_label = c("Exports", "Imports"),
+  source = c("UNCTAD", "BACI")
 ) {
+
   # ---------------------------------------------------------------------------
-  # Match inputs and map to UNCTAD subtype identifier
+  # validate inputs
   # ---------------------------------------------------------------------------
-  category <- match.arg(category)
+  source <- match.arg(source)
   flow_label <- match.arg(flow_label)
 
-  # ---------------------------------------------------------------------------
-  # Load regional trade data for the selected category and backcast to 1950
-  # ---------------------------------------------------------------------------
-  trade <- calcOutput("PlUNCTAD", subtype = category, aggregate=FALSE)
-  trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
-
-  consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate=FALSE), dim = 3))
-  hist_df <- toolBackcastByReference2D(trade_filtered, consumption) %>%
-    as.data.frame() %>%
-    dplyr::mutate(Year = as.integer(as.character(.data$Year))) %>%
-    dplyr::select(-"Cell", -"Data1")
-
-  # ---------------------------------------------------------------------------
-  # Convert to MagPIE and aggregate to country level using GDP weights
-  # ---------------------------------------------------------------------------
-  x <- as.magpie(
-    hist_df %>% dplyr::select("Region", "Year", "Value"),
-    spatial = 1, temporal = 2
+  allowed_categories <- list(
+    UNCTAD = c("Final", "Primary", "Intermediate", "Manufactured"),
+    BACI   = c("Primary", "Application")
   )
-  getNames(x) <- NULL
+
+  if (missing(category)) {
+    stop("`category` must be provided.", call. = FALSE)
+  }
+
+  if (!category %in% allowed_categories[[source]]) {
+    warning(
+      sprintf(
+        "Invalid category '%s' for source '%s'. Allowed categories are: %s",
+        category, source,
+        paste(allowed_categories[[source]], collapse = ", ")
+      ),
+      call. = FALSE
+    )
+  }
+
+  # ---------------------------------------------------------------------------
+  # Load data
+  # ---------------------------------------------------------------------------
+  if (source=="UNCTAD") {
+    # Load trade data for the selected category and flow label
+    trade <- calcOutput("PlUNCTAD", subtype = category, aggregate=FALSE)
+    trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
+    # backcast trade data to 1950 based on historic plastic consumption
+    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate=FALSE), dim = 3))
+    x <- toolBackcastByReference2D(trade_filtered, consumption)
+
+    getNames(x) <- NULL
+    note <- "dimensions: (Historic Time,Region,value)"
+  }
+  else if (source=="BACI") {
+    # Load trade data for the selected category and flow label
+    trade <- calcOutput("BACI", subtype = "plastics_UNEP", aggregate=FALSE)
+    trade_filtered <- collapseNames(trade[, , list(type = tolower(flow_label), stage = category)])
+    # backcast trade data to 1950 based on historic plastic consumption
+    consumption <- calcOutput("PlConsumptionByGood", aggregate=FALSE)
+    x <- toolBackcastByReference(trade_filtered, consumption)
+  }
+
 
   # ---------------------------------------------------------------------------
   # Return results
@@ -56,8 +86,8 @@ calcPlTrade <- function(
     weight = NULL,
     unit = "Mt Plastic",
     description = sprintf(
-      "Country-level %s plastics %s (1950-2023)", category, flow_label
+      "%s plastics %s (1950-2023) from %s", category, flow_label, source
     ),
-    note = "dimensions: (Historic Time,Region,value)"
+    note = note
   )
 }
