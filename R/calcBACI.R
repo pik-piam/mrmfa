@@ -117,11 +117,11 @@ calcBACI <- function(subtype, HS = "17") {
         weight = .data$value / .data$total
       ) %>%
       select(-"total", -"value")
-    # TODO what about NaN for polymers that are not used in a specific sector according to OECD?
     new2 <- left_join(new1, split, by = c("polymer" = "Source", "sector")) %>%
       mutate("q" = .data$q * .data$weight)
+    # some weights are NaN for polymers that are not used in a specific sector according to OECD, throw a warning if these combination appear in the dataset
     nan <- new2 %>% filter(is.na(weight))
-    if (length(nan)>0){
+    if (nrow(nan)>0){
       warning(paste(
         "The following sector-polymer combinations cannot be mapped from the BACI data as they do not exist in the OECD dataset used for weighting:\n",
         paste(capture.output(print(nan)), collapse = "\n")
@@ -131,7 +131,10 @@ calcBACI <- function(subtype, HS = "17") {
     final <- new2 %>%
       select(-"polymer", -"weight") %>%
       rename("polymer" = "Target") %>%
-      dplyr::relocate("polymer", .after = "sector")
+      dplyr::relocate("polymer", .after = "sector") %>%
+      group_by(t, Region, type, polymer, stage, sector) %>%
+      dplyr::summarize(q=sum(q)) %>%
+      dplyr::ungroup()
 
     x <- as.magpie(final, temporal = 1, spatial = 2)
 
