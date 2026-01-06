@@ -54,21 +54,6 @@ calcBACI <- function(subtype, HS = "17") {
     }
 
     x <- as.magpie(df_plastics_UNCTAD, temporal = 1, spatial = 2)
-
-    # group_trade <- df_plastics_UNCTAD %>% group_by(Group,t,type,Region) %>%
-    #   summarize(value=sum(value))
-
-    # ggplot(group_trade, aes(x=t, y=value, color=Group))+
-    #   geom_line()+
-    #   facet_wrap(~Region, scales="free")
-
-    # # for comparison:
-    # primary_UNCTAD <- calcOutput("PlUNCTAD", subtype = "Primary", aggregate=FALSE) %>% as.data.frame()
-    # comparison_exports <- merge(primary_UNCTAD %>% filter(Data1=="Exports"), group_trade %>% filter(Group=="Plastics in primary forms", type=="exports"), by.x=c("Region","Year"), by.y=c("Region","t"), all.x=TRUE)
-    # comparison_imports <- merge(primary_UNCTAD %>% filter(Data1=="Imports"), group_trade %>% filter(Group=="Plastics in primary forms", type=="imports"), by.x=c("Region","Year"), by.y=c("Region","t"), all.x=TRUE)
-    # ggplot(comparison_exports, aes(x=value, y=Value))+geom_point()+scale_x_log10()+scale_y_log10()
-    # which countries are missing?
-    # diff <- setdiff(unique(primary_UNCTAD$Region),unique(df_plastics$Region))
   }
 
   if (subtype == "plastics_UNEP"){
@@ -77,7 +62,8 @@ calcBACI <- function(subtype, HS = "17") {
       mutate(polymer = case_when(sector=="Textile"~"Fibres", .default=polymer))
     UNEP_codes_k6 <- readSource("UNEP_NGP", subtype="k6") %>% as.data.frame(rev=3)%>%
       mutate(polymer = case_when(sector=="Textile"~"Fibres", .default=polymer))
-    UNEP_codes <- readSource("UNEP_NGP", subtype="all") %>% as.data.frame(rev=3)
+    UNEP_codes <- readSource("UNEP_NGP", subtype="all") %>% as.data.frame(rev=3)%>%
+      mutate(polymer = case_when(sector=="Textile"~"Fibres", .default=polymer))
     # UNEP Codes contain 4 digit and 5/6 digit codes; in order to merge 4 digit codes, transform 6-digit codes in BACI database to 4 digits
     df_UNEP <- df %>% mutate(k4 = as.integer(as.integer(k/100)))
     df_plastics_k4 <- merge(UNEP_codes_k4, df_UNEP, by.y="k4", by.x="code") %>% select(-k)
@@ -105,7 +91,7 @@ calcBACI <- function(subtype, HS = "17") {
 
     # map UNEP-NGP sectors to sectors used in REMIND-MFA
     sector_map <- toolGetMapping("sectormappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
-    new <- df_plastics_UNEP_sum %>%
+    new1 <- df_plastics_UNEP_sum %>%
       left_join(sector_map, by = c("sector" = "Source")) %>%
       select(-"sector") %>%
       rename("sector" = "Target") %>%
@@ -113,24 +99,41 @@ calcBACI <- function(subtype, HS = "17") {
       dplyr::summarize(q=sum(q)) %>%
       dplyr::ungroup()
 
-    x <- as.magpie(new, temporal = 1, spatial = 2)
-
     # map UNEP-NGP polymers to polymers used in REMIND-MFA
     polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
-    # use polymer use by application as weights (summarize over all Regions, as polymer share by sector is constant over all Regions in OECD data)
-    MGshare <- calcOutput("PlOECD_MGshare") %>% as.data.frame(rev=3) %>%
+    # use polymer use by sector as weights (summarize over all Regions, as polymer share by sector is constant over all Regions in OECD data)
+    # use total polymer use over all sectors as weights for "General" sector
+    use <- calcOutput("PlOECD",subtype = "Use_2019_region", aggregate = TRUE) %>% as.data.frame()
+    use_by_sector <- use %>%
       rename(sector = Data2, polymer = Data1) %>%
+      filter(polymer!="Total") %>%
       group_by(.data$sector, .data$polymer) %>%
-      summarize(value = sum(.value))
-    split <- merge(polymer_map, MGshare, by.y="polymer", by.x="Target") %>%
+      summarize(value = sum(Value)) %>%
+      mutate(sector = case_when(sector=="Total"~"General", .default=sector))
+    split <- merge(polymer_map, use_by_sector, by.y="polymer", by.x="Target") %>%
       group_by(.data$sector, .data$Source) %>%
       dplyr::mutate(
         total = sum(.data$value, na.rm = TRUE),
         weight = .data$value / .data$total
       ) %>%
       select(-"total", -"value")
-    weights <- as.magpie(split)
-    # y <- toolAggregate(x, rel = polymer_map, dim = 3.3, from = "Source", to = "Target")
+    # TODO what about NaN for polymers that are not used in a specific sector according to OECD?
+    new2 <- left_join(new1, split, by = c("polymer" = "Source", "sector")) %>%
+      mutate("q" = .data$q * .data$weight)
+    nan <- new2 %>% filter(is.na(weight))
+    if (length(nan)>0){
+      warning(paste(
+        "The following sector-polymer combinations cannot be mapped from the BACI data as they do not exist in the OECD dataset used for weighting:\n",
+        paste(capture.output(print(nan)), collapse = "\n")
+      ))
+    }
+
+    final <- new2 %>%
+      select(-"polymer", -"weight") %>%
+      rename("polymer" = "Target") %>%
+      dplyr::relocate("polymer", .after = "sector")
+
+    x <- as.magpie(final, temporal = 1, spatial = 2)
 
   }
 
@@ -144,3 +147,11 @@ calcBACI <- function(subtype, HS = "17") {
     description = "Plastic trade data from BACI"
   ))
 }
+
+UNCTAD_codes <- product_groups %>% mutate(k4 = as.integer(as.integer(Code/100)))
+k4 <- merge(UNCTAD_codes, UNEP_codes, by.x="k4", by.y="code")
+k6 <- merge(UNCTAD_codes, UNEP_codes, by.x="Code", by.y="code")
+all <- rbind(k4, k6)
+test <- merge(all, UNCTAD_codes, by=c("Code","Label","Group","k4"), all.x=T, all.y=T)
+test <- merge(test, UNEP_codes_k4, by.x=c("region", "k4", "polymer", "application", "stage", "sector", "label"), by.y=c("region", "code", "polymer", "application", "stage", "sector", "label"), all.x=T, all.y=T)
+test <- merge(test, UNEP_codes_k6, by.x=c("region", "Code", "polymer", "application", "stage", "sector", "label"), by.y=c("region", "code", "polymer", "application", "stage", "sector", "label"), all.x=T, all.y=T)
