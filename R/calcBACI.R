@@ -155,10 +155,10 @@ calcBACI <- function(subtype, HS = "02") {
   ))
 }
 
-UNCTAD_codes <- product_groups %>% mutate(k4 = as.integer(as.integer(Code/100)))
-k4 <- merge(UNCTAD_codes, UNEP_codes, by.x="k4", by.y="code")
-k6 <- merge(UNCTAD_codes, UNEP_codes, by.x="Code", by.y="code")
-all <- rbind(k4, k6)
-test <- merge(all, UNCTAD_codes, by=c("Code","Label","Group","k4"), all.x=T, all.y=T)
-test <- merge(test, UNEP_codes_k4, by.x=c("region", "k4", "polymer", "application", "stage", "sector", "label"), by.y=c("region", "code", "polymer", "application", "stage", "sector", "label"), all.x=T, all.y=T)
-test <- merge(test, UNEP_codes_k6, by.x=c("region", "Code", "polymer", "application", "stage", "sector", "label"), by.y=c("region", "code", "polymer", "application", "stage", "sector", "label"), all.x=T, all.y=T)
+# UNCTAD_codes <- product_groups %>% mutate(k4 = as.integer(as.integer(Code/100)))
+# k4 <- merge(UNCTAD_codes, UNEP_codes, by.x="k4", by.y="code")
+# k6 <- merge(UNCTAD_codes, UNEP_codes, by.x="Code", by.y="code")
+# all <- rbind(k4, k6)
+# test <- merge(all, UNCTAD_codes, by=c("Code","Label","Group","k4"), all.x=T, all.y=T)
+# test <- merge(test, UNEP_codes_k4, by.x=c("region", "k4", "polymer", "application", "stage", "sector", "label"), by.y=c("region", "code", "polymer", "application", "stage", "sector", "label"), all.x=T, all.y=T)
+# test <- merge(test, UNEP_codes_k6, by.x=c("region", "Code", "polymer", "application", "stage", "sector", "label"), by.y=c("region", "code", "polymer", "application", "stage", "sector", "label"), all.x=T, all.y=T)

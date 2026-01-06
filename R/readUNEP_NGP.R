@@ -21,10 +21,12 @@
 readUNEP_NGP <- function(subtype) {
 
   # Read selected COMTRADE codes from UNEP_NGP
-  SelectedCOMCodes <- read_excel("C:/Users/leoniesc/madrat/sources/UNEP_NGP/TOOL_T1.4a_v1.2_Trade data modelling.xlsx",
+  SelectedCOMCodes <- read_excel("TOOL_T1.4a_v1.2_Trade data modelling.xlsx",
                                  sheet = "SelectedCOMCodes", skip = 12) %>%
     dplyr::rename(code = "Code", polymer = "Polymer Type", application = "Application Type", stage = "Type", plastic_percentage = "Plastic percentage", sector = "Sector", label = "Extensive description on comtrade") %>%
     dplyr::select("code", "polymer", "application", "stage", "sector", "label", "plastic_percentage")
+  # remove duplicates in raw data
+  SelectedCOMCodes <- unique(SelectedCOMCodes)
 
   # ---------------------------------------------------------------------------
   # Convert to magpie object
