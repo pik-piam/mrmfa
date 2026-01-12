@@ -89,10 +89,10 @@ calcBACI <- function(subtype, HS = "02") {
 
     # remove data that is unreasonable (extreme outliers) and interpolate instead
     unreasonable <- data.frame(
-      Region = c("MEX", "USA", "NGA", "CHE"),
-      t   = c(2004, 2004, 2011, 2016),
-      type   = c("exports", "imports", "exports", "exports"),
-      code   = c(392310, 392310, 550320, 6309)
+      Region = c("MEX", "USA", "NGA", "NGA", "CHE"),
+      t   = c(2004, 2004, 2010, 2011, 2016),
+      type   = c("exports", "imports", "exports", "exports", "exports"),
+      code   = c(392310, 392310, 550320, 550320, 6309)
     )
     df_clean <- df_plastics_UNEP %>%
       left_join(
