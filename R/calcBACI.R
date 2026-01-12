@@ -21,7 +21,7 @@
 #' }
 #' @importFrom data.table rbindlist
 #' @importFrom readxl read_excel
-#' @importFrom dplyr select filter rename summarize
+#' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
 calcBACI <- function(subtype, HS = "02") {
@@ -87,15 +87,37 @@ calcBACI <- function(subtype, HS = "02") {
       ))
     }
 
+    # remove data that is unreasonable (extreme outliers) and interpolate instead
+    unreasonable <- data.frame(
+      Region = c("MEX", "USA", "NGA", "CHE"),
+      t   = c(2004, 2004, 2011, 2016),
+      type   = c("exports", "imports", "exports", "exports"),
+      code   = c(392310, 392310, 550320, 6309)
+    )
+    df_clean <- df_plastics_UNEP %>%
+      left_join(
+        unreasonable %>% mutate(flag_unreasonable = TRUE),
+        by = c("Region", "t", "type", "code")
+      ) %>%
+      mutate(value = case_when(flag_unreasonable ~ NA, .default = q)) %>%
+      #select(-flag_unreasonable) %>%
+      group_by(Region, type, code, polymer, application, stage, sector) %>%
+      arrange(t) %>%
+      mutate(value_interp = zoo::na.approx(value, x = t, na.rm = FALSE)) %>%
+      ungroup() %>%
+    # remove trade data of 220190 "Waters; other than mineral and aerated, (not containing added sugar or other sweetening matter nor flavoured), ice and snow"
+    # as this category unreasonably inflates trade of CHA region (traded between HKG and CHN in high volumes)
+      filter(code!=220190)
+
     # summarize df and include only relevant categories
-    df_plastics_UNEP_sum <- df_plastics_UNEP %>%
+    df_sum <- df_clean %>%
       group_by(t, Region, type, polymer, stage, sector) %>%
-      dplyr::summarize(q=sum(q)) %>%
+      dplyr::summarize(q=sum(value_interp)) %>%
       dplyr::ungroup()
 
     # map UNEP-NGP sectors to sectors used in REMIND-MFA
     sector_map <- toolGetMapping("sectormappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
-    new1 <- df_plastics_UNEP_sum %>%
+    new1 <- df_sum %>%
       left_join(sector_map, by = c("sector" = "Source")) %>%
       select(-"sector") %>%
       rename("sector" = "Target") %>%
