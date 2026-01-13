@@ -24,26 +24,6 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
                                     doForecast = FALSE, doMakeZeroNA = FALSE) {
   # internal functions ----
 
-  # check x and ref for right format
-  .validateInputParameters <- function(x, ref) {
-    if (!is.magpie(x)) {
-      stop("Input must be a magpie object.")
-    }
-
-    if (!is.magpie(ref)) {
-      stop("Reference data must be a magpie object.")
-    }
-
-    # check if x and ref share some years
-    if (length(intersect(getItems(x, dim = 2), getItems(ref, dim = 2))) == 0) {
-      stop("x and ref must share at least one year for backcasting.")
-    }
-
-    if (is.null(getItems(ref, dim = 1))) {
-      stop("no regions names found in reference")
-    }
-  }
-
   # matches reference regions to regions of x
   .adaptRefRegions <- function(x, ref) {
     newRef <- magclass::matchDim(ref, x, dim = 1)
@@ -58,7 +38,6 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
     return(newRef)
   }
 
-  # TODO: add documentation
   .calcBackcastWeights <- function(ratios, maxN = 5, doForecast = FALSE) {
     nSharedYears <- nyears(ratios)
 
@@ -109,8 +88,22 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
   x <- magpiesort(x)
   ref <- magpiesort(ref)
 
-  # make sure structure of input objects is supported
-  .validateInputParameters(x, ref)
+  if (!is.magpie(x)) {
+    stop("Input must be a magpie object.")
+  }
+
+  if (!is.magpie(ref)) {
+    stop("Reference data must be a magpie object.")
+  }
+
+  # check if x and ref share some years
+  if (length(intersect(getItems(x, dim = 2), getItems(ref, dim = 2))) == 0) {
+    stop("x and ref must share at least one year for backcasting.")
+  }
+
+  if (is.null(getItems(ref, dim = 1))) {
+    stop("no regions names found in reference")
+  }
 
   # adjust regions in ref to match x
   ref <- .adaptRefRegions(x, ref)

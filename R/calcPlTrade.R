@@ -75,7 +75,14 @@ calcPlTrade <- function(
 
     # backcast trade data to 1950 based on historic plastic consumption
     consumption <- calcOutput("PlConsumptionByGood", aggregate = FALSE)
-    x <- toolBackcastByReference(trade_filtered, consumption)
+
+    if (length(getNames(trade_filtered, dim = 2)) == 1 &&
+               getNames(trade_filtered, dim = 2) == "General") {
+      x <- toolBackcastByReference(trade_filtered,  dimSums(consumption, dim = 3))
+    } else {
+      x <- toolBackcastByReference(trade_filtered, consumption)
+    }
+
     note <- "dimensions: (Historic Time,Region,Material,Good,value)"
 
     # remove sector column for Primary category ("General" for all)
