@@ -48,6 +48,9 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
 
     names(baseWeights) <- getYears(ratios)
 
+
+    # set up totalWeights as a magpie object with linear weights 1..n with increasing
+    # number moving into the past (backcasting)
     totalWeights <- ratios
     totalWeights[, , ] <- NA
 
@@ -55,16 +58,16 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
       totalWeights[, y, ] <- baseWeights[y]
     }
 
-    # TODO: not sure if this works as intended in all cases, should be
-    # investigated further, as the original author is no longer around
-
-    # Ensure linear weights start end at one
+    # start with weight 1 for latest year with data, increasing by 1
+    # for each year with data moving into the past (backcasting)
     totalWeights[is.na(ratios)] <- nSharedYears + 1
     totalWeights[ratios == Inf] <- nSharedYears + 1
     rowMin <- magpply(totalWeights, min, MARGIN = c(1, 3))
     totalWeights <- totalWeights - rowMin + 1
 
-    # Ensure not more than maxN weights are used
+    # ensure not more than maxN weights are used
+    # if there are more than maxN weights, the oldest year with data gets weight maxN,
+    # decreasing by 1 for each year until 0, cut off years get NA (backcasting)
     totalWeights[is.na(ratios)] <- -1
     totalWeights[ratios == Inf] <- -1
     rowMax <- magpply(totalWeights, max, MARGIN = c(1, 3))
@@ -73,10 +76,10 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
     totalWeights <- totalWeights + offset
     totalWeights[totalWeights < 1] <- NA # ensure positive weights
 
-    # Remove weights for years where there is no data in x or ref (and hence ratios)
+    # remove weights for years where there is no data in x or ref (and hence ratios)
     totalWeights[is.na(ratios)] <- NA
 
-    # Normalize weights
+    # normalize weights
     sums <- dimSums(totalWeights, dim = 2, na.rm = TRUE)
     normalizedWeights <- totalWeights / sums
 
