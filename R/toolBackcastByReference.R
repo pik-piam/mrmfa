@@ -26,15 +26,26 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
 
   # matches reference regions to regions of x
   .adaptRefRegions <- function(x, ref) {
-    newRef <- magclass::matchDim(ref, x, dim = 1)
+
+    xRegions <- getItems(x, dim = 1)
     refRegions <- getItems(ref, dim = 1)
+
+    newRef <- new.magpie(
+      cells_and_regions = xRegions,
+      years = getItems(ref, dim = 2),
+      names = getNames(ref),
+      fill = NA,
+      sets = names(dimnames(ref))
+    )
+
+    # if GLO is in ref, initialise adjusted ref with GLO values
     if ("GLO" %in% refRegions) {
-      # if GLO is in ref, copy it to all regions
       newRef[, , ] <- ref["GLO", , ]
-      xRegions <- getItems(x, dim = 1)
-      # fill rest of new ref with existing ref data
-      newRef[refRegions %in% xRegions, , ] <- ref[refRegions %in% xRegions, , ]
     }
+
+    # fill rest of new ref with existing ref data
+    newRef[refRegions %in% xRegions, , ] <- ref[refRegions %in% xRegions, , ]
+
     return(newRef)
   }
 
@@ -144,6 +155,9 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
     # cut ref if it extends to the future over x (not necessary for backcasting)
     ref <- ref[, refYears <= max(xYears), ]
   }
+
+  # update refYears after cutting
+  refYears <- getItems(ref, dim = 2)
 
   # scale the reference values ----
   sharedYears <- intersect(xYears, refYears)
