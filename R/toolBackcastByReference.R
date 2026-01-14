@@ -48,7 +48,6 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
 
     names(baseWeights) <- getYears(ratios)
 
-
     # set up totalWeights as a magpie object with linear weights 1..n with increasing
     # number moving into the past (backcasting)
     totalWeights <- ratios
@@ -79,7 +78,7 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
     # remove weights for years where there is no data in x or ref (and hence ratios)
     totalWeights[is.na(ratios)] <- NA
 
-    # normalize weights
+    # normalize weights (weights sum up to 1)
     sums <- dimSums(totalWeights, dim = 2, na.rm = TRUE)
     normalizedWeights <- totalWeights / sums
 
@@ -152,8 +151,9 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
   # calculate ratio between x and ref for shared years
   ratios <- x[, sharedYears, ] / ref[, sharedYears, ]
 
-  # ratios of overlapping years are weighted (with later years weighted higher
-  # than earlier years for backcasting), only maxN overlapping years are considered
+  # ratios of overlapping years are weighted, with earlier years weighted higher
+  # than later years for (backcasting)
+  # at most maxN overlapping years are considered, summing up to 1
   weights <- .calcBackcastWeights(ratios, maxN = maxN, doForecast = doForecast)
 
   # calculate weighted average of ratios
@@ -163,7 +163,6 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
   scaledRef <- ref * finalRatio
 
   # fill missing values with scaled reference values ----
-
   final <- new.magpie(
     cells_and_regions = getItems(x, dim = 1),
     years = sort(union(refYears, xYears)),
@@ -172,13 +171,12 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
     sets = names(dimnames(x))
   )
 
-  # fill with x
+  # initialize with x where data is available
   final[, xYears, ] <- x[, xYears, ]
-
-  refExtended <- final # simple copy of structure
+  refExtended <- final
   refExtended[, refYears, ] <- scaledRef[, refYears, ]
 
-  # fill final with refExtended where final is NA
+  # fill gaps with scaled reference values
   final[is.na(final)] <- refExtended[is.na(final)]
 
   if (doMakeZeroNA) {

@@ -171,6 +171,7 @@ toolBackcastByReference2D <- function(x,
   nSharedYears <- length(sharedYears)
 
   # calculate ratios and weights
+
   ratios <- x[, sharedYears, ] / ref[, sharedYears, ]
   weights <- .calcBackcastWeights(ratios, nSharedYears, maxN = maxN, doForecast = doForecast)
 
