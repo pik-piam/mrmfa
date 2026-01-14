@@ -59,55 +59,38 @@ calcPlTrade <- function(
   # ---------------------------------------------------------------------------
   # Load data
   # ---------------------------------------------------------------------------
-  if (source=="UNCTAD") {
+  if (source == "UNCTAD") {
     # Load trade data for the selected category and flow label
-    trade <- calcOutput("PlUNCTAD", subtype = category, aggregate=FALSE)
+    trade <- calcOutput("PlUNCTAD", subtype = category, aggregate = FALSE)
     trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
     # backcast trade data to 1950 based on historic plastic consumption
-    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate=FALSE), dim = 3))
+    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate = FALSE), dim = 3))
     x <- toolBackcastByReference2D(trade_filtered, consumption)
 
     getNames(x) <- NULL
     note <- "dimensions: (Historic Time,Region,value)"
-  }
-  else if (source=="BACI") {
+  } else if (source == "BACI") {
     # Load trade data for the selected category and flow label
-    trade <- calcOutput("BACI", subtype = "plastics_UNEP", aggregate=FALSE)
+    trade <- calcOutput("BACI", subtype = "plastics_UNEP", aggregate = FALSE)
     trade_filtered <- collapseNames(trade[, , list(type = tolower(flow_label), stage = category)], preservedim = 4)
 
     # backcast trade data to 1950 based on historic plastic consumption
-    consumption <- calcOutput("PlConsumptionByGood", aggregate=FALSE)
-    # loop over dimensions in trade_filtered to use 2D backcast tool
-    subset_list <- list()
-    k <- 1
-    for (s in getNames(trade_filtered, dim = 2)) {
-      if (s == "General") {
-        consumption_s <- collapseNames(dimSums(consumption, dim = 3))
-      } else{
-        consumption_s <- collapseNames(consumption[, , getNames(consumption, dim =1) == s])
-      }
-      for (p in getNames(trade_filtered, dim=1)) {
-        if (!(paste(p,s,sep=".") %in% getNames(trade_filtered))) next
-        subset <- collapseNames(trade_filtered[, , list(sector = s, polymer = p)])
-        subset_b <- toolBackcastByReference2D(subset, consumption_s)
-        subset_b <- add_dimension(subset_b, dim = 3.2, add = "sector", nm = s)
-        subset_b <- add_dimension(subset_b, dim = 3.1, add = "polymer", nm = p)
+    consumption <- calcOutput("PlConsumptionByGood", aggregate = FALSE)
 
-        subset_list[[k]] <- subset_b
-        k <- k + 1
-      }
+    if (length(getNames(trade_filtered, dim = 2)) == 1 && getNames(trade_filtered, dim = 2) == "General") {
+      x <- toolBackcastByReference(trade_filtered,  dimSums(consumption, dim = 3))
+    } else {
+      x <- toolBackcastByReference(trade_filtered, consumption)
     }
-    x <- do.call(mbind, subset_list)
+
     note <- "dimensions: (Historic Time,Region,Material,Good,value)"
 
     # remove sector column for Primary category ("General" for all)
-    if (category %in% c("Primary","Waste")) {
+    if (category %in% c("Primary", "Waste")) {
       x <- collapseNames(x)
       note <- "dimensions: (Historic Time,Region,Material,value)"
     }
-
   }
-
 
   # ---------------------------------------------------------------------------
   # Return results
