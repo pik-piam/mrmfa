@@ -4,33 +4,73 @@
 calcCeFloorspaceCorrectionFactor <- function(plotting = NULL) {
 
   # ---Read and prepare data---
+  # Correction is not differentiated by sector, hence the use of dimSums
 
   # EDGE-B data for 2020 (m2)
   # TODO check if 2020 data is scenario agnostic (as it should be)
-  edgeb_floor_area <- calcOutput(
+  edgeb_floorspace <- dimSums(calcOutput(
     type = "CeFloorspaceEDGEB",
     aggregate = FALSE
-  )[,2020]
-  edgeb_floor_area <- dimReduce(edgeb_floor_area) # remove year 2020 dimension
-
+  )[,2020])
+  edgeb_floorspace <- dimReduce(edgeb_floorspace) # remove year 2020 dimension
   # EUBUCCO data for 2020 (m2)
-  eubucco_floor_area <- readSource("EUBUCCO")
+  eubucco_floorspace <- dimSums(readSource("EUBUCCO"))
+  # GHS-OBAT data for 2020 (m2)
+  ghsoobat_floorspace <- dimSums(calcOutput("CeFloorspaceGHSOBAT", aggregate = FALSE))
 
-  # ---Calculate correction factor (in progress)---
+  # combined floorspace: EUBUCCO within EU27, GHS-OBAT outside
+  not_eubucco_mask <- is.na(eubucco_floorspace)
+  combined_floorspace <- eubucco_floorspace
+  combined_floorspace[not_eubucco_mask] <- ghsoobat_floorspace[not_eubucco_mask]
 
-  # TODO: a correction factor differentiated by countries
-  ratio <- eubucco_floor_area / edgeb_floor_area
+  # ---Calculate correction factor ---
+  ratio <- combined_floorspace / edgeb_floorspace
 
-  #
-  availability_mask <- (eubucco_floor_area > 0)
-  total_eubucco <- sum(eubucco_floor_area[availability_mask])
-  total_edgeb <- sum(edgeb_floor_area[availability_mask])
-  correction_factor <- total_eubucco / total_edgeb
+  # ---Outlier detection---
+  # below GEM => set to mean
+  # below 1 => 1
+  # up to upper bound => keep
+  # above upper bound => set to mean
 
-  # ---Output--- # TODO
-  description <- "PLACEHOLDER"
-  note <- "PLACEHOLDER"
-  output <- list(x = eubucco_floor_area, weight = NULL, unit = "PLACEHOLDER", description = description, note = note)
+  # Sort out countries where GEM floorspace is higher
+  # (indication of underestimation, e.g. CHN, KOR)
+  gem_floorspace <- dimSums(calcOutput(
+    type = "CeFloorspaceGEM",
+    aggregate = FALSE,
+    subtype = "Stock_Type"
+  ))
+  gem_mask <- (combined_floorspace <= gem_floorspace)
+
+  # Set ratios below 1 to 1
+  ratio[ratio < 1] <- 1
+
+  # Upper bound: Interquartile range method on trustworthy EUBUCCO data
+  q1 = quantile(ratio[!not_eubucco_mask], 0.25)
+  q3 = quantile(ratio[!not_eubucco_mask], 0.75)
+  iqr = q3 - q1
+  upper_bound = q3 + 1 * iqr
+  outlier_mask <- (ratio > upper_bound)
+
+  mean_mask <- gem_mask | outlier_mask
+
+  # Set outliers to mean
+  mean_ratio <- dimSums(combined_floorspace * !mean_mask, dim=1) / dimSums(edgeb_floorspace * !mean_mask, dim=1)
+  ratio[mean_mask] <- mean_ratio
+
+  # ---Output---
+  description <- paste(
+    "EDGE-B Floorspace Correction Factor.",
+    "Translates energy-related floorspace from EDGE-B to material-related floorspace.",
+    "EDGE-B Floorspace upscaled to EUBUCCO and GHS-OBAT data, applying outlier correction."
+  )
+  note <- "dimensions: (Region,value)"
+  output <- list(
+    x = ratio,
+    weight = NULL,
+    unit = "ratio",
+    description = description,
+    note = note
+  )
   return(output)
 }
 
@@ -57,14 +97,8 @@ plot_floorspace_data <- function(plotting) {
         aggregate = FALSE,
         subtype = "Stock_Type"
       )
-      # rename
-      expected_names <- c("Com", "Res")
-      stopifnot(identical(getNames(gem_floor_area), expected_names))
-      gem_floor_area <- setNames(gem_floor_area, c("commercial", "residential"))
-
       # GHS-OBAT data for 2020 (m2)
       ghsoobat_floor_area <- calcOutput("CeFloorspaceGHSOBAT", aggregate = FALSE)
-      ghsoobat_floor_area <- setNames(ghsoobat_floor_area, c("residential", "commercial"))
 
       plot_floor_area_comparison(edgeb_floor_area, eubucco_floor_area, gem_floor_area, ghsoobat_floor_area)
 
