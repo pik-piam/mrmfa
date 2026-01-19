@@ -1,7 +1,7 @@
 #' Calculate Floor Area from CeGHS-OBAT Data
 #'
 #' @author Bennet Weiss
-calcCeGHSOBATFloorArea <- function() {
+calcCeFloorspaceGHSOBAT <- function() {
   # 0. get building volume from GHS-OBAT
   buildings_surface <- readSource("GHSOBAT", subtype = "surface") * 1e4 # from hectare to m2
   buildings_height <- readSource("GHSOBAT", subtype = "height") # in m
@@ -9,7 +9,7 @@ calcCeGHSOBATFloorArea <- function() {
 
   # 1. Remove industrial buildings from nonres to get commercial buildings
   # Country-specific industry share comes from GEM
-  GEM_floor_area <- calcOutput("CeBuildingFloorArea", subtype = "Stock_Type",
+  GEM_floor_area <- calcOutput("CeFloorspaceGEM", subtype = "Stock_Type",
                                remove_ind = FALSE, aggregate = FALSE)
   com_share <- GEM_floor_area[,,"Com"] / (GEM_floor_area[,, "Com"] + GEM_floor_area[,, "Ind"])
   com_share <- mean(com_share, na.rm = TRUE) # global average if NA TODO: weighted averages

@@ -1,9 +1,9 @@
-#' Calculate total building floor area from GEM, optionally grouped by subtype.
+#' Calculate total floorspace of buildings from GEM, optionally grouped by subtype.
 #'
-#' @param subtype Floor Area grouped by: "Stock_Type", "Structure", "Function", NULL (i.e. all).
+#' @param subtype Floorspace grouped by: "Stock_Type", "Structure", "Function", NULL (i.e. all).
 #' @param remove_ind Logical, if TRUE (default), industrial buildings are removed from the dataset.
 #' @author Bennet Weiss
-calcCeBuildingFloorArea <- function(subtype = NULL, remove_ind = TRUE) {
+calcCeFloorspaceGEM <- function(subtype = NULL, remove_ind = TRUE) {
   possible_subtypes <- c("Stock_Type", "Structure", "Function")
 
   data <- readSource("GEM")

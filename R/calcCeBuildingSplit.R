@@ -2,8 +2,8 @@
 #'
 #' @author Bennet Weiss
 calcCeBuildingSplit <- function() {
-  floorArea <- calcOutput("CeBuildingFloorArea", aggregate = FALSE)
-  floorArea_byStockType <- calcOutput("CeBuildingFloorArea", subtype = "Stock_Type", aggregate = FALSE)
+  floorArea <- calcOutput("CeFloorspaceGEM", aggregate = FALSE)
+  floorArea_byStockType <- calcOutput("CeFloorspaceGEM", subtype = "Stock_Type", aggregate = FALSE)
   relFloorArea <- floorArea / floorArea_byStockType
 
   # output

@@ -6,7 +6,7 @@ calcCeBuildingsMI <- function(subtype = "concrete") {
   x <- x / 1000 # convert kg to t
 
   # use floor area for weight
-  weight <- calcOutput("CeBuildingFloorArea", subtype = c("Function", "Structure"), aggregate = FALSE)
+  weight <- calcOutput("CeFloorspaceGEM", subtype = c("Function", "Structure"), aggregate = FALSE)
   weight[weight == 0] <- 1e-9 # hack to avoid weight sum of 0 in some cases (TODO is there a better way?)
   description <- paste(
     "Material Intensity of buildings by stock type, function and structure.",

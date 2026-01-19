@@ -1,15 +1,14 @@
-#' Calculates a factor to translate energy-related floor area to material-related floor area.
-#' Related to from net to gross floor area.
+#' Calculates a calibration factor to translate energy-related floorspace from EDGE B to material-related floorspace.
 #'
 #' @author Bennet Weiss
-calcCeBuildingFloorAreaCalibration <- function(plotting = NULL) {
+calcCeFloorspaceCorrectionFactor <- function(plotting = NULL) {
 
   # ---Read and prepare data---
 
   # EDGE-B data for 2020 (m2)
   # TODO check if 2020 data is scenario agnostic (as it should be)
   edgeb_floor_area <- calcOutput(
-    type = "CeEDGEBFloorSpace",
+    type = "CeFloorspaceEDGEB",
     aggregate = FALSE
   )[,2020]
   edgeb_floor_area <- dimReduce(edgeb_floor_area) # remove year 2020 dimension
@@ -41,7 +40,7 @@ calcCeBuildingFloorAreaCalibration <- function(plotting = NULL) {
 plot_floorspace_data <- function(plotting) {
 
   edgeb_floor_area <- calcOutput(
-    type = "CeEDGEBFloorSpace",
+    type = "CeFloorspaceEDGEB",
     aggregate = FALSE
   )[,2020]
   edgeb_floor_area <- dimReduce(edgeb_floor_area) # remove year 2020 dimension
@@ -54,7 +53,7 @@ plot_floorspace_data <- function(plotting) {
 
       # GEM data for 2021 (m2)
       gem_floor_area <- calcOutput(
-        type = "CeBuildingFloorArea",
+        type = "CeFloorspaceGEM",
         aggregate = FALSE,
         subtype = "Stock_Type"
       )
@@ -64,7 +63,7 @@ plot_floorspace_data <- function(plotting) {
       gem_floor_area <- setNames(gem_floor_area, c("commercial", "residential"))
 
       # GHS-OBAT data for 2020 (m2)
-      ghsoobat_floor_area <- calcOutput("CeGHSOBATFloorArea", aggregate = FALSE)
+      ghsoobat_floor_area <- calcOutput("CeFloorspaceGHSOBAT", aggregate = FALSE)
       ghsoobat_floor_area <- setNames(ghsoobat_floor_area, c("residential", "commercial"))
 
       plot_floor_area_comparison(edgeb_floor_area, eubucco_floor_area, gem_floor_area, ghsoobat_floor_area)
