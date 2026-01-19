@@ -1,11 +1,15 @@
-#' Calculate Floor Area from CeGHS-OBAT Data
+#' Calculate Floor Area from CeGHS-OBAT Data.
+#' The data only provides total footprint of buildings and their average height.
+#' Floor height data is approximated from EUBUCCO to convert to floor area.
 #'
+#' @param floor_height Scalar providing the manual floor height for calculation.
+#' Defaults to NULL, in which case the average floor height is inferred from EUBUCCO data.
 #' @author Bennet Weiss
-calcCeFloorspaceGHSOBAT <- function() {
+calcCeFloorspaceGHSOBAT <- function(floor_height = NULL) {
   # 0. get building volume from GHS-OBAT
-  buildings_surface <- readSource("GHSOBAT", subtype = "surface") * 1e4 # from hectare to m2
+  buildings_footprint <- readSource("GHSOBAT", subtype = "surface") * 1e4 # from hectare to m2
   buildings_height <- readSource("GHSOBAT", subtype = "height") # in m
-  buildings_volume <- buildings_surface * buildings_height # in m3
+  buildings_volume <- buildings_footprint * buildings_height
 
   # 1. Remove industrial buildings from nonres to get commercial buildings
   # Country-specific industry share comes from GEM
@@ -15,18 +19,22 @@ calcCeFloorspaceGHSOBAT <- function() {
   com_share <- mean(com_share, na.rm = TRUE) # global average if NA TODO: weighted averages
   buildings_volume[,, "non_residential"] <- buildings_volume[,, "non_residential"] * com_share
 
-  # 2. TODO Get floor height from EUBUCCO - one value for all EU data
-  # TODO see if it makes sense to differentiate com/res.
-  # eubucco_floor_area <- readSource("EUBUCCO")
-  # TODO sum EU eubucco/GHS-OBAT
-  # floor_height <- eubucco_floor_area_eu_total / buildings_surface_eu_total # in m
-  floor_height <- 3
+  # 2. Rename variables
+  getItems(buildings_volume, dim = 3) <- c("Res", "Com")
 
-  # 3. Calculate floor area
+  # 3. Calculate average floor height from EUBUCCO data if not provided
+  if (is.null(floor_height)){
+    eubucco_floorspace <- readSource("EUBUCCO")
+    eubucco_floorspace_eu <- dimSums(eubucco_floorspace, dim=c(1,3), na.rm = TRUE)
+    eubucco_mask <- !is.na(eubucco_floorspace)
+    buildings_volume_eu <- buildings_volume * eubucco_mask
+    buildings_volume_eu <- dimSums(buildings_volume_eu, dim=c(1,3))
+
+    floor_height <- buildings_volume_eu / eubucco_floorspace_eu
+  }
+
+  # 4. Calculate floor area
   floor_area <- buildings_volume / floor_height
-
-  # 4. Rename
-  getItems(floor_area, dim = 3) <- c("Res", "Com")
 
   # 5. Output
   description <- paste(

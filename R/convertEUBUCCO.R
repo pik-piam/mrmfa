@@ -11,6 +11,9 @@ convertEUBUCCO <- function(x) {
   # remove unused variables
   x <- x[,,list(Variable = c("commercial and industry", "industry")), invert = TRUE]
 
+  # rename variables
+  getItems(x, dim = 3) <- c("Res", "Com")
+
   # only European countries in dataset
   x <- toolCountryFill(x, verbosity = 2)
 
