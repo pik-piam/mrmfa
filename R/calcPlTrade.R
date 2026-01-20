@@ -65,8 +65,7 @@ calcPlTrade <- function(
     trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
     # backcast trade data to 1950 based on historic plastic consumption
     consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate = FALSE), dim = 3))
-    x <- toolBackcastByReference2D(trade_filtered, consumption)
-
+    x <- toolBackcastByReference(trade_filtered, consumption)
     getNames(x) <- NULL
     note <- "dimensions: (Historic Time,Region,value)"
   } else if (source == "BACI") {
