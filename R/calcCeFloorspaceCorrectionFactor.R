@@ -1,7 +1,7 @@
 #' Calculates a calibration factor to translate energy-related floorspace from EDGE B to material-related floorspace.
 #'
 #' @author Bennet Weiss
-calcCeFloorspaceCorrectionFactor <- function(plotting = NULL) {
+calcCeFloorspaceCorrectionFactor <- function() {
 
   # ---Read and prepare data---
   # Correction is not differentiated by sector, hence the use of dimSums
@@ -76,7 +76,9 @@ calcCeFloorspaceCorrectionFactor <- function(plotting = NULL) {
 
 #' Generates different plots of floor area data.
 #' @author Bennet Weiss
-#' @param plotting Type of plot to generate. Options are "floor area comparison" and "ratio over cement production". Defaults to no plot.
+#' @param plotting Type of plot to generate.
+#'                 Options are "floor area comparison" and "ratio eubucco/edgeb over cement production".
+#'                 Defaults to no plot.
 plot_floorspace_data <- function(plotting) {
 
   edgeb_floor_area <- calcOutput(

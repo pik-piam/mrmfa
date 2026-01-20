@@ -28,22 +28,18 @@ calcCeFloorspaceEDGEB <- function(scenario = "SSP2") {
                                         integrate_interpolated_years = FALSE,
                                         extrapolation_type = "linear")
 
-  # Correct Floorspace
-  correction_factor <- calcOutput("CeFloorspaceCorrectionFactor", aggregate = FALSE)
-  corrected_floorspace <- floorspace_annual * correction_factor
-
   # Output
   description <- paste(
     "Floor area calculated from EDGE-B",
-    "Linearly interpolated.",
-    "Corrected with CeFloorspaceCorrectionFactor."
+    "Linearly interpolated."
   )
   note <- "dimensions: (Time,Region,Stock Type,value)"
   output <- list(
-    x = corrected_floorspace,
+    x = floorspace_annual,
     weight = NULL,
     unit = "m2",
     description = description,
     note = note
   )
+  return(output)
 }
