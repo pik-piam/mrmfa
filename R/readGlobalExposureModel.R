@@ -6,7 +6,7 @@
 #' Repository on: https://zenodo.org/records/8223926
 #' Available on Github: https://github.com/gem/global_exposure_model
 #' @author Bennet Weiss.
-readGEM <- function() {
+readGlobalExposureModel <- function() {
   # issues with this approach:
   # - I am omitting Mixed or unspecified housing types at the beginning, which may lead to errors.
 

@@ -6,7 +6,7 @@
 calcCeFloorspaceGEM <- function(subtype = NULL, remove_ind = TRUE) {
   possible_subtypes <- c("Stock_Type", "Structure", "Function")
 
-  data <- readSource("GEM")
+  data <- readSource("GlobalExposureModel")
 
   # transform to df for easier handling
   df <- as.data.frame(data, rev = 3)
