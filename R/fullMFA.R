@@ -137,9 +137,10 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_max.cs4r", subtype = "max", aggregate = FALSE)
     calcOutput("CeProductMaterialApplicationTransform", file = "ce_product_material_application_transform.cs4r", aggregate = FALSE)
     # Service demand / bottom-up
-    calcOutput("CeFloorspace", file = "ce_floorspace.cs4r", years = start_historic:end_future)
+    calcOutput("CeFloorspace", file = "ce_floorspace.cs4r", years = start_historic:end_future, correct = FALSE)
     calcOutput("CeBuildingsMI", file = "ce_concrete_building_mi.cs4r", subtype = "concrete")
-    calcOutput("CeBuildingSplit", file = "ce_building_split.cs4r")
+    calcOutput("CeBuildingsSplit", file = "ce_function_buildings_split.cs4r", subtype = "Function")
+    calcOutput("CeBuildingsSplit", file = "ce_structure_buildings_split.cs4r", subtype = "Structure")
   }
 
   #  ------------- PLASTIC -----------
