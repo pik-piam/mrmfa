@@ -29,11 +29,11 @@ calcStPigIronPreliminaryData <- function(subtype) {
   # global trend is derived only from countries without NAs in any years
   noNACountries <- getItems(iedc, dim = 1)[rowSums(is.na(iedc)) == 0]
   globalTrend <- colSums(iedc[noNACountries, , ])
-  iedc <- toolBackcastByReference2D(iedc, globalTrend, doForecast = TRUE)
-  iedc <- toolBackcastByReference2D(iedc, globalTrend)
+  iedc <- toolBackcastByReference(iedc, globalTrend, doForecast = TRUE)
+  iedc <- toolBackcastByReference(iedc, globalTrend)
 
   # backcast World Steel data with IEDC data
-  final <- toolBackcastByReference2D(ws, iedc, doMakeZeroNA = TRUE)
+  final <- toolBackcastByReference(ws, iedc, doMakeZeroNA = TRUE)
 
   # assume 0 pig iron data in remaining cells
   final[is.na(final)] <- 0
