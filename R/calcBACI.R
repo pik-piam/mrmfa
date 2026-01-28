@@ -31,25 +31,12 @@ calcBACI <- function(subtype, HS = "02") {
   df <- BACI_data %>% as.data.frame(rev=3)
 
   if (subtype == "plastics_UNCTAD") {
-    # get product groups from UNCTAD plastics trade data, if available for the respective HS revision, for the older ones where there is none, use the closest
-    if (file.exists(paste0("C:/Users/leoniesc/madrat/sources/UNCTAD_PlasticsHSCodes/DimHS20",HS,"Products_Plastics_Hierarchy.xls"))) {
-      UNCTAD_path <- paste0("C:/Users/leoniesc/madrat/sources/UNCTAD_PlasticsHSCodes/DimHS20",HS,"Products_Plastics_Hierarchy.xls")
-    } else {
-      UNCTAD_path <- "C:/Users/leoniesc/madrat/sources/UNCTAD_PlasticsHSCodes/DimHS2002Products_Plastics_Hierarchy.xls"
-    }
-    UNCTAD_product_codes <- read_excel(UNCTAD_path, skip = 2)
-    # Identify header rows
-    is_header <- grepl("^P_", UNCTAD_product_codes[[1]])
-    # Create a new variable from column 2 of header rows
-    UNCTAD_product_codes$Group <- UNCTAD_product_codes[[2]][is_header][cumsum(is_header)]
-    # Remove the header rows
-    product_groups <- UNCTAD_product_codes[!is_header, ]
-    product_groups$Code <- as.integer(product_groups$Code)
+    UNCTAD_codes <- readSource("UNCTAD_PlasticsHSCodes", subtype=HS) %>% as.data.frame(rev=3) %>% rename(Code=.value)
     # merge UNCTAD codes with BACI data
-    df_plastics_UNCTAD <- merge(product_groups, df, by.y="k", by.x="Code")
+    df_plastics_UNCTAD <- merge(UNCTAD_codes, df, by.y="k", by.x="Code") %>% select(t, Region, type, Code, Group, .value)
     # which Codes are missing?
-    diff <- setdiff(unique(product_groups$Code),unique(df_plastics_UNCTAD$Code))
-    missing <- product_groups %>% filter(Code %in%diff)
+    diff <- setdiff(unique(UNCTAD_codes$Code),unique(df_plastics_UNCTAD$Code))
+    missing <- UNCTAD_codes %>% filter(Code %in%diff)
     if (length(diff)>0){
       warning(paste(
         "The following UNCTAD product codes are missing in the BACI dataset:\n",
