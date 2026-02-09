@@ -32,10 +32,10 @@ readUNEP_NGP <- function(subtype) {
   # Convert to magpie object
   # ---------------------------------------------------------------------------
   if(subtype=="k4"){
-    magpie_data <- as.magpie(SelectedCOMCodes%>% filter(code<10000), spatial=0, temporal=0)
+    magpie_data <- as.magpie(SelectedCOMCodes%>% filter(.data$code<10000), spatial=0, temporal=0)
   }
   if(subtype=="k6"){
-    magpie_data <- as.magpie(SelectedCOMCodes%>% filter(code>10000), spatial=0, temporal=0)
+    magpie_data <- as.magpie(SelectedCOMCodes%>% filter(.data$code>10000), spatial=0, temporal=0)
   }
   if(subtype=="all"){
     magpie_data <- as.magpie(SelectedCOMCodes, spatial=0, temporal=0)
