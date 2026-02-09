@@ -54,6 +54,11 @@ readBACI <- function(subset = "02", subtype) {
     pattern = paste0("^BACI_HS", subset,"_Y[0-9]{4}_V[0-9]+\\.csv$"),
     full.names = TRUE
   )
+  # Read country codes of the dataset
+  country_codes <- read.csv(file.path(data_path,"country_codes_V202501.csv")) %>% select("country_code","country_iso3") %>%
+    # country code 490 (country_iso3="S19") is used as a proxy for trade statistics for Taiwan (see https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html)
+    mutate(country_iso3 = case_when(.data$country_iso3=="S19"~"TWN", .default=.data$country_iso3))
+
   df_all <- NULL
 
   for (f in files[1:2]) {
@@ -63,7 +68,7 @@ readBACI <- function(subset = "02", subtype) {
     if (subtype == "plastics_UNCTAD") {
       # merge UNCTAD codes with BACI data
       df_filtered <- merge(df, codes, by.x="k", by.y="code") %>% select("t", "i", "j", "k", "Group", "q")
-      }
+    }
 
     if (subtype == "plastics_UNEP"){
       # UNEP Codes contain 4 digit and 5/6 digit codes; in order to merge 4 digit codes, transform 6-digit codes in BACI database to 4 digits
@@ -76,7 +81,13 @@ readBACI <- function(subset = "02", subtype) {
         group_by(.data$t, .data$i, .data$j, .data$k, .data$polymer, .data$stage, .data$sector) %>%
         summarize(q=sum(.data$q_plastic, na.rm=TRUE)) %>%
         ungroup()
-      }
+    }
+
+    df_filtered <- df_filtered %>%
+      merge(country_codes, by.x="i", by.y="country_code") %>% rename(exporter = "country_iso3")%>%
+      merge(country_codes, by.x="j", by.y="country_code") %>% rename(importer = "country_iso3")%>%
+      mutate(value=.data$q/1000000) %>% #report quantity in Mt
+      select(-"i", -"j", -"q")
 
     df_all <- rbind(
       df_all,
@@ -96,15 +107,5 @@ readBACI <- function(subset = "02", subtype) {
     ))
   }
 
-  # Read country codes of the dataset and merge with dataset
-  country_codes <- read.csv(file.path(data_path,"country_codes_V202501.csv")) %>% select("country_code","country_iso3") %>%
-    # country code 490 (country_iso3="S19") is used as a proxy for trade statistics for Taiwan (see https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html)
-    mutate(country_iso3 = case_when(.data$country_iso3=="S19"~"TWN", .default=.data$country_iso3))
-  df_merge <- df_all %>%
-    merge(country_codes, by.x="i", by.y="country_code") %>% rename(exporter = "country_iso3")%>%
-    merge(country_codes, by.x="j", by.y="country_code") %>% rename(importer = "country_iso3")%>%
-    mutate(value=.data$q/1000000) %>% #report quantity in Mt
-    select(-"i", -"j", -"q")
-
-  return(quitte::madrat_mule(df_merge))
+  return(quitte::madrat_mule(df_all))
 }
