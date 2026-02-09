@@ -56,7 +56,7 @@ readBACI <- function(subset = "02", subtype) {
   )
   df_all <- NULL
 
-  for (f in files) {
+  for (f in files[1:2]) {
     df <- data.table::fread(f)
 
     # filter HS codes that are relevant for the scope defined in subtype
