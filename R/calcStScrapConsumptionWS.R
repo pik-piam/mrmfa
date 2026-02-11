@@ -30,7 +30,7 @@ calcStScrapConsumptionWS <- function() {
   scrapConsumptionWS[getItems(current, dim = 1), getItems(current, dim = 2), ] <- current
 
   # interpolate missing values ----
-  scrapConsumptionWS <- toolInterpolate2D(scrapConsumptionWS)
+  scrapConsumptionWS <- toolInterpolate(scrapConsumptionWS)
 
   # split historic regions ----
   historicalMap <- utils::read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))

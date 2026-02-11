@@ -43,7 +43,7 @@ calcStTrade <- function(subtype = "imports") {
   database <- readSource("WorldSteelDatabase", subtype = subtype)
 
   # Interpolate and Extrapolate
-  database <- toolInterpolate2D(database)
+  database <- toolInterpolate(database)
 
   if (indirect) {
     trade <- database
@@ -59,7 +59,7 @@ calcStTrade <- function(subtype = "imports") {
   trade <- toolBackcastByReference2D(trade, ref = production)
 
   # use constant (last observation carried forward) interpolation for remaining NaN values in the future
-  trade <- toolInterpolate2D(trade, method = "constant")
+  trade <- toolInterpolate(trade, type = "constant")
 
   # Split indirect trade
   if (indirect) {

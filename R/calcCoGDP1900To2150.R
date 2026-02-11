@@ -11,7 +11,7 @@
 #' GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 #' GDP datasets that use a different base year, which however does not matter
 #' as only the relative values are used
-#' (see \link{toolInterpolate2D}).
+#' (see \link{toolInterpolate}).
 #' @author Merlin Jo Hosak
 #' @param scenario Scenario to use for future GDP data (default: SSP2).
 #' @param perCapita If TRUE, GDP is returned as per capita (default: FALSE).
@@ -21,12 +21,12 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
   pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE)
 
   gdpHistPC <- readSource("OECD_GDP")
-  gdpHistPC <- toolInterpolate2D(gdpHistPC, method = "linear")
+  gdpHistPC <- toolInterpolate(gdpHistPC, type = "linear")
 
   gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE)
   gdpRecent <- gdpRecent * 1e6 # convert to million USD
   getItems(gdpRecent, dim = 3) <- "value"
-  gdpRecent <- time_interpolate(gdpRecent, seq(1965, 2150, 1))
+  gdpRecent <- toolInterpolate(gdpRecent, seq(1965, 2150, 1))
 
   # convert historic data from per capita to total
   # data before 1900 irrelevant (don't cut off before because it helps for interpolation)
