@@ -81,33 +81,37 @@ calcBACI <- function(subtype, HS = "02") {
   x <- replace_non_finite(x, replace = 0)
 
   # define a custom aggregation function that filters out all intra-regional trade
-  # it returns both imports and exports for each region in the region mapping
-  # i.e. sum up values once for all exporter countries within a region (label as exports) and once for all importer countries within a region (label as imports)
-  # before that make sure that exporter_region != importer_region for every entry
+  # and returns both imports and exports for each region in the region mapping
   .customAggregate <- function(x, rel) {
 
-    df <- tibble::as_tibble(x) %>%
+    df <- tibble::as_tibble(x)
+
+    # get grouping variables
+    group_vars = setdiff(colnames(df), c("t","importer","exporter","value"))
+
+    # make sure that exporter_region != importer_region for every entry
+    df <- df %>%
       left_join(rel[,c("country", "region")], by = c("importer" = "country")) %>%
       left_join(rel[,c("country", "region")], by = c("exporter" = "country")) %>%
-      select("t", "importer" = "region.x", "exporter" = "region.y", "Group", "value") %>%
+      select("t", "importer" = "region.x", "exporter" = "region.y", all_of(group_vars), "value") %>%
       filter(.data$importer != .data$exporter)
 
     imports <- df %>%
-      group_by(.data$t, .data$importer, .data$Group) %>%
+      group_by(.data$t, .data$importer, across(all_of(group_vars))) %>%
       summarize(value = sum(.data$value, na.rm=TRUE)) %>%
       ungroup() %>%
       rename("region" = "importer") %>%
       mutate("type" = "Imports")
 
     exports <- df %>%
-      group_by(.data$t, .data$exporter, .data$Group) %>%
+      group_by(.data$t, .data$exporter, across(all_of(group_vars))) %>%
       summarize(value = sum(.data$value, na.rm=TRUE)) %>%
       ungroup() %>%
       rename("region" = "exporter") %>%
       mutate("type" = "Exports")
 
     x <- rbind(imports, exports) %>%
-      select("period" = "t", "region", "group" = "Group", "type", "value") %>%
+      select("period" = "t", "region", "type", all_of(group_vars), "value") %>%
       as.magpie()
 
     return(x)
