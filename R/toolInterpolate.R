@@ -95,7 +95,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
 
   interpolation_methods <- list(
     "linear" = function(...) zoo::na.approx(..., rule = 2),
-    "constant" = zoo::na.locf,
+    "constant" = function(...) zoo::na.locf(..., rule = 2),
     "spline" = zoo::na.spline,
     "monotone" = function(...) zoo::na.spline(..., method = "monoH.FC")
   )
@@ -134,6 +134,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
   df <- tibble::rownames_to_column(df, "Region")
   x_interpolated <- as.magpie(df, spatial = "Region")
   getNames(x_interpolated) <- getNames(x)
+  getSets(x_interpolated) <- getSets(x)
 
   return(x_interpolated)
 }
