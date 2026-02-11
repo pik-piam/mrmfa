@@ -18,18 +18,13 @@ fullMFA(
 
 \item{dev}{Development version string}
 
-\item{scenario}{SSP scenario used for population and GDP drivers}
+\item{scenario}{SSP scenario used for population and GDP.}
 
-\item{gdpPerCapita}{bool if GDP driver should be returned as per capita values}
+\item{gdpPerCapita}{bool if GDP should be returned as per capita values.}
 
-\item{runSections}{Character vector selecting which parts to run.}
-
-\item{end_future}{End year for future data (default: 2100)
-Allowed values (see validSections): c("drivers", "steel", "cement", "plastic"). NULL (default) runs all.}
-
-\item{start_historic}{Start year for historic data (default: 1900)}
-
-\item{end_historic}{End year for historic data (default: 2023)}
+\item{runSections}{Character vector selecting which parts to run.
+Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
+#' @param end_future End year for future data (default: 2100).}
 }
 \description{
 Function that produces the complete regional data sets required for the
