@@ -27,13 +27,13 @@ readBACI <- function(subset = "02", subtype) {
   available <- c("92", "02", "17", "22")
   if (is_empty(intersect(subset, available))) {
     stop(
-      "Invalid subset -- supported subtypes are:",
+      "Invalid subset -- supported HS revisions are:",
       paste0(available, collapse = ", ")
     )}
 
   # read HS codes that are relevant for the scope defined in subtype
   if (subtype == "plastics_UNCTAD") {
-    codes <- readSource("UNCTAD_PlasticsHSCodes", subtype=paste0("HS",subset)) %>% as.data.frame(rev=3) %>% rename(code=".value")
+    codes <- readSource("UNCTAD_PlasticsHSCodes", subtype=subset) %>% as.data.frame(rev=3) %>% rename(code=".value")
   } else if (subtype == "plastics_UNEP"){
     # get selected 4-digit and 6-digit COMTRADE codes from UNEP_NGP; label all polymers in the textile sector as "Fibres"
     UNEP_codes_k4 <- readSource("UNEP_NGP", subtype="k4") %>% as.data.frame(rev=3) %>%
@@ -100,42 +100,36 @@ readBACI <- function(subset = "02", subtype) {
     ))
   }
 
-  # clean data and retain only relevant dimensions
-  if(subtype == "plastics_UNCTAD"){
-    # summarize by group
-    df_final <- df_all %>% group_by(.data$t, .data$exporter, .data$importer, .data$Group) %>%
-      summarize(value=sum(.data$value, na.rm=T)) %>%
-      ungroup()
+  # get grouping variables
+  group_vars = setdiff(colnames(df_all), c("t","k","importer","exporter","value"))
+  # remove data that is unreasonable (extreme outliers) and interpolate instead
+  unreasonable <- data.frame(
+    exporter = c("MEX", "NGA", "NGA", "CHE"),
+    importer = c("USA", "ATG", "ATG", "MOZ"),
+    t   = c(2004, 2010, 2011, 2016),
+    k   = c(392310, 550320, 550320, 6309),
+    flag_unreasonable = TRUE
+  )
+  df_clean <- df_all %>%
+    # remove trade data of 220190 "Waters; other than mineral and aerated, (not containing added sugar or other sweetening matter nor flavoured), ice and snow"
+    # as this category unreasonably inflates trade between HKG and CHN
+    filter(.data$k!=220190) %>%
+    left_join(
+      unreasonable,
+      by = c("t", "exporter", "importer", "k")
+    ) %>%
+    mutate(value = case_when(.data$flag_unreasonable ~ NA, .default = .data$value)) %>%
+    group_by(.data$exporter, .data$importer, .data$k, across(all_of(group_vars))) %>%
+    dplyr::arrange(.data$t) %>%
+    mutate(value_interp = zoo::na.approx(.data$value, x = .data$t, na.rm = FALSE)) %>%
+    ungroup()
 
-  } else if(subtype == "plastics_UNEP"){
-    # remove data that is unreasonable (extreme outliers) and interpolate instead
-    unreasonable <- data.frame(
-      exporter = c("MEX", "NGA", "NGA", "CHE"),
-      importer = c("USA", "ATG", "ATG", "MOZ"),
-      t   = c(2004, 2010, 2011, 2016),
-      k   = c(392310, 550320, 550320, 6309),
-      flag_unreasonable = TRUE
-    )
-    df_clean <- df_all %>%
-      left_join(
-        unreasonable,
-        by = c("t", "exporter", "importer", "k")
-      ) %>%
-      mutate(value = case_when(.data$flag_unreasonable ~ NA, .default = .data$value)) %>%
-      group_by(.data$exporter, .data$importer, .data$k, .data$polymer, .data$stage, .data$sector) %>%
-      dplyr::arrange(.data$t) %>%
-      mutate(value_interp = zoo::na.approx(.data$value, x = .data$t, na.rm = FALSE)) %>%
-      ungroup() %>%
-      # remove trade data of 220190 "Waters; other than mineral and aerated, (not containing added sugar or other sweetening matter nor flavoured), ice and snow"
-      # as this category unreasonably inflates trade between HKG and CHN
-      filter(.data$k!=220190)
-
-    # summarize df and include only relevant categories
-    df_final <- df_clean %>%
-      group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$stage, .data$sector) %>%
-      summarize(value=sum(.data$value_interp)) %>%
-      ungroup()
-  }
+  # retain only relevant dimensions
+  group_vars2 = setdiff(group_vars, "k")
+  df_final <- df_clean %>%
+    group_by(.data$t, .data$exporter, .data$importer, across(all_of(group_vars))) %>%
+    summarize(value=sum(.data$value_interp)) %>%
+    ungroup()
 
   return(quitte::madrat_mule(df_final))
 }

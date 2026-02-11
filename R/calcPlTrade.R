@@ -1,8 +1,11 @@
 #' Calculate Country-Level Plastics Trade for Various Categories
 #'
-#' Reads UNCTAD plastics trade (exports or imports) data at regional level,
-#' backcasts data to 1950 to fill missing years 1950-2004 years,
-#' and aggregates to country level.
+#' Reads plastics trade (exports or imports) data at regional level,
+#' and backcasts data to 1950 to fill missing years.
+#' Note that aggregation to regions is done in the calc functions called by this function,
+#' as the source BACI has bilateral trade data that allows to filter out intraregional trade
+#' by a custom aggregation function.
+#' Therefore, we operate already at the regional aggregation level here (isocountries=FALSE).
 #'
 #' @param category Character; product category:
 #'   \itemize{
@@ -61,10 +64,10 @@ calcPlTrade <- function(
   # ---------------------------------------------------------------------------
   if (source=="UNCTAD") {
     # Load trade data for the selected category and flow label
-    trade <- calcOutput("PlUNCTAD", subtype = category, aggregate=FALSE)
+    trade <- calcOutput("PlUNCTAD", subtype = category, aggregate=TRUE)
     trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
     # backcast trade data to 1950 based on historic plastic consumption
-    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate=FALSE), dim = 3))
+    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate=TRUE), dim = 3))
     x <- toolBackcastByReference2D(trade_filtered, consumption)
 
     getNames(x) <- NULL
@@ -72,11 +75,11 @@ calcPlTrade <- function(
   }
   else if (source=="BACI") {
     # Load trade data for the selected category and flow label
-    trade <- calcOutput("BACI", subtype = "plastics_UNEP", aggregate=FALSE)
-    trade_filtered <- collapseNames(trade[, , list(type = tolower(flow_label), stage = category)], preservedim = 4)
+    trade <- calcOutput("BACI", subtype = "plastics_UNEP", aggregate=TRUE)
+    trade_filtered <- collapseNames(trade[, , list(type = flow_label, stage = category)], preservedim = 4)
 
     # backcast trade data to 1950 based on historic plastic consumption
-    consumption <- calcOutput("PlConsumptionByGood", aggregate=FALSE)
+    consumption <- calcOutput("PlConsumptionByGood", aggregate=TRUE)
     # loop over dimensions in trade_filtered to use 2D backcast tool
     subset_list <- list()
     k <- 1
@@ -116,6 +119,7 @@ calcPlTrade <- function(
     x = x,
     weight = NULL,
     unit = "Mt Plastic",
+    isocountries = FALSE,
     description = sprintf(
       "%s plastics %s (1950-2023) from %s", category, flow_label, source
     ),

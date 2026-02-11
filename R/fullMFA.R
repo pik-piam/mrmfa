@@ -159,12 +159,12 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     # calcOutput("PlTrade", category = "Manufactured", flow_label = "Imports", source = "UNCTAD", file = "pl_manufactured_his_imports.cs4r", years = start_historic:end_historic)
     # calcOutput("PlWasteTrade", subtype = "export", file = "pl_waste_exports.cs4r", years = start_historic:end_future)
     # calcOutput("PlWasteTrade", subtype = "import", file = "pl_waste_imports.cs4r", years = start_historic:end_future)
-    calcOutput("PlTrade", category = "Application", flow_label = "Exports", source = "BACI", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Application", flow_label = "Imports", source = "BACI", file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Primary", flow_label = "Exports", source = "BACI", file = "pl_primary_his_exports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Primary", flow_label = "Imports", source = "BACI", file = "pl_primary_his_imports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Waste", flow_label = "Exports", source = "BACI", file = "pl_waste_his_exports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Waste", flow_label = "Imports", source = "BACI", file = "pl_waste_his_imports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Application", flow_label = "Exports", source = "BACI", aggregate=FALSE, file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Application", flow_label = "Imports", source = "BACI", aggregate=FALSE, file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Primary", flow_label = "Exports", source = "BACI", aggregate=FALSE, file = "pl_primary_his_exports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Primary", flow_label = "Imports", source = "BACI", aggregate=FALSE, file = "pl_primary_his_imports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Waste", flow_label = "Exports", source = "BACI", aggregate=FALSE, file = "pl_waste_his_exports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Waste", flow_label = "Imports", source = "BACI", aggregate=FALSE, file = "pl_waste_his_imports.cs4r", years = start_historic:end_historic)
     # Parameters
     calcOutput("PlOECD_MGshare", file = "pl_material_shares_in_goods.cs4r")
     calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", years = start_historic:end_future) # fix 0.79
