@@ -28,50 +28,15 @@ calcBACI <- function(subtype, HS = "02") {
   BACI_data <- readSource("BACI", subtype = subtype, subset = HS)
   df <- quitte::madrat_mule(BACI_data)
 
-  if (subtype == "plastics_UNCTAD") {
-    # summarize by group
-    final <- df %>% group_by(.data$t, .data$exporter, .data$importer, .data$Group) %>%
-      summarize(value=sum(.data$value, na.rm=T)) %>%
-      ungroup()
-  }
-
-  if (subtype == "plastics_UNEP"){
-    # remove data that is unreasonable (extreme outliers) and interpolate instead
-    unreasonable <- data.frame(
-      exporter = c("MEX", "NGA", "NGA", "CHE"),
-      importer = c("USA", "ATG", "ATG", "MOZ"),
-      t   = c(2004, 2010, 2011, 2016),
-      k   = c(392310, 550320, 550320, 6309)
-    )
-    df_clean <- df %>%
-      left_join(
-        unreasonable %>% mutate(flag_unreasonable = TRUE),
-        by = c("t", "exporter", "importer", "k")
-      ) %>%
-      mutate(value = case_when(.data$flag_unreasonable ~ NA, .default = .data$value)) %>%
-      group_by(.data$exporter, .data$importer, .data$k, .data$polymer, .data$stage, .data$sector) %>%
-      dplyr::arrange(.data$t) %>%
-      mutate(value_interp = zoo::na.approx(.data$value, x = .data$t, na.rm = FALSE)) %>%
-      ungroup() %>%
-    # remove trade data of 220190 "Waters; other than mineral and aerated, (not containing added sugar or other sweetening matter nor flavoured), ice and snow"
-    # as this category unreasonably inflates trade between HKG and CHN
-      filter(.data$k!=220190)
-
-    # summarize df and include only relevant categories
-    df_sum <- df_clean %>%
-      group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$stage, .data$sector) %>%
-      summarize(value=sum(.data$value_interp)) %>%
-      ungroup()
-
+  if(subtype == "plastics_UNCTAD"){
+    final <- df
+  }else if (subtype == "plastics_UNEP"){
     # map UNEP-NGP sectors to sectors used in REMIND-MFA
     sector_map <- toolGetMapping("sectormappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
-    new1 <- df_sum %>%
+    new1 <- df %>%
       left_join(sector_map, by = c("sector" = "Source")) %>%
       select(-"sector") %>%
-      rename("sector" = "Target") %>%
-      group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$stage, .data$sector) %>%
-      summarize(value=sum(.data$value)) %>%
-      ungroup()
+      rename("sector" = "Target")
 
     # map UNEP-NGP polymers to polymers used in REMIND-MFA
     polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
@@ -111,20 +76,41 @@ calcBACI <- function(subtype, HS = "02") {
 
   }
 
-  x <- as.magpie(final, temporal = "t", spatial = c("exporter","importer"))
-  x <- toolCountryFill(x)
+  x <- as.magpie(final, temporal = "t", spatial = "importer")
+  x <- toolCountryFill(x, fill = NA, verbosity = 2)
   x <- replace_non_finite(x, replace = 0)
 
   # define a custom aggregation function that filters out all intra-regional trade
-  # it should return both imports and exports for each region in the region mapping
+  # it returns both imports and exports for each region in the region mapping
   # i.e. sum up values once for all exporter countries within a region (label as exports) and once for all importer countries within a region (label as imports)
   # before that make sure that exporter_region != importer_region for every entry
   .customAggregate <- function(x, rel) {
 
+    df <- tibble::as_tibble(x) %>%
+      left_join(rel[,c("country", "region")], by = c("importer" = "country")) %>%
+      left_join(rel[,c("country", "region")], by = c("exporter" = "country")) %>%
+      select("t", "importer" = "region.x", "exporter" = "region.y", "Group", "value") %>%
+      filter(.data$importer != .data$exporter)
 
-    out <- toolAggregate(x, rel = rel)
+    imports <- df %>%
+      group_by(.data$t, .data$importer, .data$Group) %>%
+      summarize(value = sum(.data$value, na.rm=TRUE)) %>%
+      ungroup() %>%
+      rename("region" = "importer") %>%
+      mutate("type" = "Imports")
 
-    return(out)
+    exports <- df %>%
+      group_by(.data$t, .data$exporter, .data$Group) %>%
+      summarize(value = sum(.data$value, na.rm=TRUE)) %>%
+      ungroup() %>%
+      rename("region" = "exporter") %>%
+      mutate("type" = "Exports")
+
+    x <- rbind(imports, exports) %>%
+      select("period" = "t", "region", "group" = "Group", "type", "value") %>%
+      as.magpie()
+
+    return(x)
   }
 
   return(list(

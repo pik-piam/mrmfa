@@ -61,16 +61,14 @@ readBACI <- function(subset = "02", subtype) {
 
   df_all <- NULL
 
-  for (f in files[1:2]) {
+  for (f in files) {
     df <- data.table::fread(f)
 
     # filter HS codes that are relevant for the scope defined in subtype
     if (subtype == "plastics_UNCTAD") {
       # merge UNCTAD codes with BACI data
       df_filtered <- merge(df, codes, by.x="k", by.y="code") %>% select("t", "i", "j", "k", "Group", "q")
-    }
-
-    if (subtype == "plastics_UNEP"){
+    } else if (subtype == "plastics_UNEP"){
       # UNEP Codes contain 4 digit and 5/6 digit codes; in order to merge 4 digit codes, transform 6-digit codes in BACI database to 4 digits
       df_UNEP <- df %>% mutate(k4 = as.integer(as.integer(.data$k/100)))
       df_plastics_k4 <- merge(UNEP_codes_k4, df_UNEP, by.y="k4", by.x="code") %>% select(-"k")
@@ -89,12 +87,7 @@ readBACI <- function(subset = "02", subtype) {
       mutate(value=.data$q/1000000) %>% #report quantity in Mt
       select(-"i", -"j", -"q")
 
-    df_all <- rbind(
-      df_all,
-      df_filtered,
-      use.names = TRUE,
-      fill = TRUE
-    )
+    df_all <- rbind(df_all, df_filtered)
   }
 
   # which Codes are missing?
@@ -107,5 +100,42 @@ readBACI <- function(subset = "02", subtype) {
     ))
   }
 
-  return(quitte::madrat_mule(df_all))
+  # clean data and retain only relevant dimensions
+  if(subtype == "plastics_UNCTAD"){
+    # summarize by group
+    df_final <- df_all %>% group_by(.data$t, .data$exporter, .data$importer, .data$Group) %>%
+      summarize(value=sum(.data$value, na.rm=T)) %>%
+      ungroup()
+
+  } else if(subtype == "plastics_UNEP"){
+    # remove data that is unreasonable (extreme outliers) and interpolate instead
+    unreasonable <- data.frame(
+      exporter = c("MEX", "NGA", "NGA", "CHE"),
+      importer = c("USA", "ATG", "ATG", "MOZ"),
+      t   = c(2004, 2010, 2011, 2016),
+      k   = c(392310, 550320, 550320, 6309),
+      flag_unreasonable = TRUE
+    )
+    df_clean <- df_all %>%
+      left_join(
+        unreasonable,
+        by = c("t", "exporter", "importer", "k")
+      ) %>%
+      mutate(value = case_when(.data$flag_unreasonable ~ NA, .default = .data$value)) %>%
+      group_by(.data$exporter, .data$importer, .data$k, .data$polymer, .data$stage, .data$sector) %>%
+      dplyr::arrange(.data$t) %>%
+      mutate(value_interp = zoo::na.approx(.data$value, x = .data$t, na.rm = FALSE)) %>%
+      ungroup() %>%
+      # remove trade data of 220190 "Waters; other than mineral and aerated, (not containing added sugar or other sweetening matter nor flavoured), ice and snow"
+      # as this category unreasonably inflates trade between HKG and CHN
+      filter(.data$k!=220190)
+
+    # summarize df and include only relevant categories
+    df_final <- df_clean %>%
+      group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$stage, .data$sector) %>%
+      summarize(value=sum(.data$value_interp)) %>%
+      ungroup()
+  }
+
+  return(quitte::madrat_mule(df_final))
 }
