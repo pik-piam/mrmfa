@@ -89,9 +89,9 @@ calcBACI <- function(subtype, HS = "02") {
       mutate(value = case_when(flag_unreasonable ~ NA, .default = q)) %>%
       #select(-flag_unreasonable) %>%
       group_by(Region, type, code, polymer, application, stage, sector) %>%
-      arrange(t) %>%
+      dplyr::arrange(t) %>%
       mutate(value_interp = zoo::na.approx(value, x = t, na.rm = FALSE)) %>%
-      ungroup() %>%
+      dplyr::ungroup() %>%
     # remove trade data of 220190 "Waters; other than mineral and aerated, (not containing added sugar or other sweetening matter nor flavoured), ice and snow"
     # as this category unreasonably inflates trade of CHA region (traded between HKG and CHN in high volumes)
       filter(code!=220190)
