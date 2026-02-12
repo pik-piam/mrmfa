@@ -6,8 +6,10 @@
 #'        - 17
 #'        - 22
 #' @param subtype Character string specifying the scope
-#'        - "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into primary, intermediate, manufactured, final and waste plastics
-#'        - "plastics_UNEP": plastics trade data for HS codes from UNEP NGP (estimated plastics mass based on estimated plastics percentages in goods)
+#'        - "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into
+#'          primary, intermediate, manufactured, final and waste plastics
+#'        - "plastics_UNEP": plastics trade data for HS codes from UNEP NGP
+#'          (estimated plastics mass based on estimated plastics percentages in goods)
 #'
 #' @return magpie object of the BACI trade data
 #'
@@ -136,7 +138,8 @@ readBACI <- function(subset = "02", subtype) {
     flag_unreasonable = TRUE
   )
   df_clean <- df_all %>%
-    # remove trade data of 220190 "Waters; other than mineral and aerated, (not containing added sugar or other sweetening matter nor flavoured), ice and snow"
+    # remove trade data of 220190 "Waters; other than mineral and aerated,
+    # (not containing added sugar or other sweetening matter nor flavoured), ice and snow"
     # as this category unreasonably inflates trade between HKG and CHN
     filter(.data$k != 220190) %>%
     left_join(

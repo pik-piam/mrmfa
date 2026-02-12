@@ -21,7 +21,7 @@
 #'     \item "Exports" - Exports
 #'     \item "Imports" - Imports
 #'   }
-#' @param source Character; data source:
+#' @param data_source Character; data source:
 #'   \itemize{
 #'     \item "UNCTAD" - UNCTAD (trade flows by time and region)
 #'     \item "BACI" - BACI (trade flows by time, region, sector and polymer)
@@ -30,13 +30,13 @@
 calcPlTrade <- function(
   category,
   flow_label = c("Exports", "Imports"),
-  source = c("UNCTAD", "BACI")
+  data_source = c("UNCTAD", "BACI")
 ) {
 
   # ---------------------------------------------------------------------------
   # validate inputs
   # ---------------------------------------------------------------------------
-  source <- match.arg(source)
+  data_source <- match.arg(data_source)
   flow_label <- match.arg(flow_label)
 
   allowed_categories <- list(
@@ -48,12 +48,12 @@ calcPlTrade <- function(
     stop("`category` must be provided.", call. = FALSE)
   }
 
-  if (!category %in% allowed_categories[[source]]) {
+  if (!category %in% allowed_categories[[data_source]]) {
     warning(
       sprintf(
-        "Invalid category '%s' for source '%s'. Allowed categories are: %s",
-        category, source,
-        paste(allowed_categories[[source]], collapse = ", ")
+        "Invalid category '%s' for data_source '%s'. Allowed categories are: %s",
+        category, data_source,
+        paste(allowed_categories[[data_source]], collapse = ", ")
       ),
       call. = FALSE
     )
@@ -62,19 +62,19 @@ calcPlTrade <- function(
   # ---------------------------------------------------------------------------
   # Load data
   # ---------------------------------------------------------------------------
-  if (source == "UNCTAD") {
+  if (data_source == "UNCTAD") {
     # Load trade data for the selected category and flow label
-    trade <- calcOutput("PlUNCTAD", subtype = category, aggregate=TRUE)
+    trade <- calcOutput("PlUNCTAD", subtype = category, aggregate = TRUE)
     trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
     # backcast trade data to 1950 based on historic plastic consumption
-    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate=TRUE), dim = 3))
+    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate = TRUE), dim = 3))
     x <- toolBackcastByReference(trade_filtered, consumption)
 
     getNames(x) <- NULL
     note <- "dimensions: (Historic Time,Region,value)"
-  } else if (source == "BACI") {
+  } else if (data_source == "BACI") {
     # Load trade data for the selected category and flow label
-    trade <- calcOutput("BACI", subtype = "plastics_UNEP", aggregate=TRUE)
+    trade <- calcOutput("BACI", subtype = "plastics_UNEP", aggregate = TRUE)
     trade_filtered <- collapseNames(trade[, , list(type = flow_label, stage = category)], preservedim = 4)
 
     # backcast trade data to 1950 based on historic plastic consumption
@@ -104,7 +104,7 @@ calcPlTrade <- function(
     unit = "Mt Plastic",
     isocountries = FALSE,
     description = sprintf(
-      "%s plastics %s (1950-2023) from %s", category, flow_label, source
+      "%s plastics %s (1950-2023) from %s", category, flow_label, data_source
     ),
     note = note
   )

@@ -1,8 +1,10 @@
 #' Get BACI Trade data for specific product groups
 #'
 #' @param subtype Character string specifying the scope
-#'        - "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into primary, intermediate, manufactured, final and waste plastics
-#'        - "plastics_UNEP": plastics trade data for HS codes from UNEP NGP (estimated plastics mass based on estimated plastics percentages in goods)
+#'        - "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into
+#'          primary, intermediate, manufactured, final and waste plastics
+#'        - "plastics_UNEP": plastics trade data for HS codes from UNEP NGP
+#'          (estimated plastics mass based on estimated plastics percentages in goods)
 #' @param HS Character string specifying the year of the HS (Harmonized System) revision of the data
 #'        - 92
 #'        - 02
@@ -39,7 +41,8 @@ calcBACI <- function(subtype, HS = "02") {
 
     # map UNEP-NGP polymers to polymers used in REMIND-MFA
     polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
-    # use polymer use by sector as weights (summarize over all Regions, as polymer share by sector is constant over all Regions in OECD data)
+    # use polymer use by sector as weights (summarize over all Regions,
+    # as polymer share by sector is constant over all Regions in OECD data);
     # use total polymer use over all sectors as weights for "General" sector
     use <- calcOutput("PlOECD", subtype = "Use_2019_region", aggregate = TRUE) %>% as.data.frame()
     use_by_sector <- use %>%
@@ -62,7 +65,8 @@ calcBACI <- function(subtype, HS = "02") {
     nan <- new2 %>% filter(is.na(.data$weight))
     if (nrow(nan) > 0) {
       warning(paste(
-        "The following sector-polymer combinations cannot be mapped from the BACI data as they do not exist in the OECD dataset used for weighting:\n",
+        "The following sector-polymer combinations cannot be mapped from the BACI data
+        as they do not exist in the OECD dataset used for weighting:\n",
         paste(capture.output(print(nan)), collapse = "\n")
       ))
     }

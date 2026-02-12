@@ -8,8 +8,10 @@ calcBACI(subtype, HS = "02")
 }
 \arguments{
 \item{subtype}{Character string specifying the scope
-- "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into primary, intermediate, manufactured, final and waste plastics
-- "plastics_UNEP": plastics trade data for HS codes from UNEP NGP (estimated plastics mass based on estimated plastics percentages in goods)}
+- "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into
+  primary, intermediate, manufactured, final and waste plastics
+- "plastics_UNEP": plastics trade data for HS codes from UNEP NGP
+  (estimated plastics mass based on estimated plastics percentages in goods)}
 
 \item{HS}{Character string specifying the year of the HS (Harmonized System) revision of the data
 - 92

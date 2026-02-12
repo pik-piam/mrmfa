@@ -7,7 +7,7 @@
 calcPlTrade(
   category,
   flow_label = c("Exports", "Imports"),
-  source = c("UNCTAD", "BACI")
+  data_source = c("UNCTAD", "BACI")
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ calcPlTrade(
   \item "Imports" - Imports
 }}
 
-\item{source}{Character; data source:
+\item{data_source}{Character; data source:
 \itemize{
   \item "UNCTAD" - UNCTAD (trade flows by time and region)
   \item "BACI" - BACI (trade flows by time, region, sector and polymer)

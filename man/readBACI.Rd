@@ -14,8 +14,10 @@ readBACI(subset = "02", subtype)
 - 22}
 
 \item{subtype}{Character string specifying the scope
-- "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into primary, intermediate, manufactured, final and waste plastics
-- "plastics_UNEP": plastics trade data for HS codes from UNEP NGP (estimated plastics mass based on estimated plastics percentages in goods)}
+- "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into
+  primary, intermediate, manufactured, final and waste plastics
+- "plastics_UNEP": plastics trade data for HS codes from UNEP NGP
+  (estimated plastics mass based on estimated plastics percentages in goods)}
 }
 \value{
 magpie object of the BACI trade data
