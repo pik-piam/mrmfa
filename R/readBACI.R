@@ -33,16 +33,31 @@ readBACI <- function(subset = "02", subtype) {
 
   # read HS codes that are relevant for the scope defined in subtype
   if (subtype == "plastics_UNCTAD") {
-    codes <- readSource("UNCTAD_PlasticsHSCodes", subtype=subset) %>% as.data.frame(rev=3) %>% rename(code=".value")
+    # if an older HS revision than 2002 is used, use the oldest available (2002)
+    if(!(subset %in% c("02","07","12","17","22"))){
+      HS = "02"
+    }
+    UNCTAD_path <- paste0("UNCTAD_PlasticsHSCodes/DimHS20",HS,"Products_Plastics_Hierarchy.xls")
+    UNCTAD_product_codes <- read_excel(UNCTAD_path, skip = 2)
+    # Identify header rows
+    is_header <- grepl("^P_", UNCTAD_product_codes[[1]])
+    # Create a new variable from column 2 of header rows
+    UNCTAD_product_codes$Group <- UNCTAD_product_codes[[2]][is_header][cumsum(is_header)]
+    # Remove the header rows
+    codes <- UNCTAD_product_codes[!is_header, ] %>%
+      dplyr::rename(code="Code", group="Group")
+    codes$code <- as.integer(codes$code)
   } else if (subtype == "plastics_UNEP"){
-    # get selected 4-digit and 6-digit COMTRADE codes from UNEP_NGP; label all polymers in the textile sector as "Fibres"
-    UNEP_codes_k4 <- readSource("UNEP_NGP", subtype="k4") %>% as.data.frame(rev=3) %>%
+    codes <- read_excel("UNEP_NGP/TOOL_T1.4a_v1.2_Trade data modelling.xlsx",
+                        sheet = "SelectedCOMCodes", skip = 12) %>%
+      dplyr::rename(code = "Code", polymer = "Polymer Type", application = "Application Type", stage = "Type", plastic_percentage = "Plastic percentage", sector = "Sector", label = "Extensive description on comtrade") %>%
+      dplyr::select("code", "polymer", "application", "stage", "sector", "label", "plastic_percentage")
+    # remove duplicates in raw data; label all polymers in the textile sector as "Fibres"
+    codes <- unique(codes) %>%
       mutate(polymer = case_when(.data$sector=="Textile"~"Fibres", .default=.data$polymer))
-    UNEP_codes_k6 <- readSource("UNEP_NGP", subtype="k6") %>% as.data.frame(rev=3)%>%
-      mutate(polymer = case_when(.data$sector=="Textile"~"Fibres", .default=.data$polymer))
-    # get all codes to check which are missing
-    codes <- readSource("UNEP_NGP", subtype="all") %>% as.data.frame(rev=3)%>%
-      mutate(polymer = case_when(.data$sector=="Textile"~"Fibres", .default=.data$polymer))
+    # get selected 4-digit and 6-digit COMTRADE codes from UNEP_NGP
+    UNEP_codes_k4 <- codes %>% filter(.data$code<10000)
+    UNEP_codes_k6 <- codes %>% filter(.data$code>10000)
   } else {
     stop("Invalid subtype. Choose either 'plastics_UNCTAD' or 'plastics_UNEP'.")
   }
@@ -67,7 +82,7 @@ readBACI <- function(subset = "02", subtype) {
     # filter HS codes that are relevant for the scope defined in subtype
     if (subtype == "plastics_UNCTAD") {
       # merge UNCTAD codes with BACI data
-      df_filtered <- merge(df, codes, by.x="k", by.y="code") %>% select("t", "i", "j", "k", "Group", "q")
+      df_filtered <- merge(df, codes, by.x="k", by.y="code") %>% select("t", "i", "j", "k", "group", "q")
     } else if (subtype == "plastics_UNEP"){
       # UNEP Codes contain 4 digit and 5/6 digit codes; in order to merge 4 digit codes, transform 6-digit codes in BACI database to 4 digits
       df_UNEP <- df %>% mutate(k4 = as.integer(as.integer(.data$k/100)))
