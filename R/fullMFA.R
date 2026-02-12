@@ -11,7 +11,7 @@
 #' @param gdpPerCapita bool if GDP should be returned as per capita values.
 #' @param runSections Character vector selecting which parts to run.
 #' Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
-#' #' @param end_future End year for future data (default: 2100).
+#' @param end_future End year for future data (default: 2100).
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
 #' \code{\link[madrat]{calcOutput}}
