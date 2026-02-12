@@ -37,8 +37,8 @@ readBACI <- function(subset = "02", subtype) {
     if(!(subset %in% c("02","07","12","17","22"))){
       HS = "02"
     }
-    UNCTAD_path <- paste0("UNCTAD_PlasticsHSCodes/DimHS20",HS,"Products_Plastics_Hierarchy.xls")
-    UNCTAD_product_codes <- read_excel(UNCTAD_path, skip = 2)
+    UNCTAD_revision <- paste0("DimHS20",HS,"Products_Plastics_Hierarchy.xls")
+    UNCTAD_product_codes <- read_excel(file.path("UNCTAD_PlasticsHSCodes", UNCTAD_revision), skip = 2)
     # Identify header rows
     is_header <- grepl("^P_", UNCTAD_product_codes[[1]])
     # Create a new variable from column 2 of header rows
@@ -48,7 +48,7 @@ readBACI <- function(subset = "02", subtype) {
       dplyr::rename(code="Code", group="Group")
     codes$code <- as.integer(codes$code)
   } else if (subtype == "plastics_UNEP"){
-    codes <- read_excel("UNEP_NGP/TOOL_T1.4a_v1.2_Trade data modelling.xlsx",
+    codes <- read_excel(file.path("UNEP_NGP","TOOL_T1.4a_v1.2_Trade data modelling.xlsx"),
                         sheet = "SelectedCOMCodes", skip = 12) %>%
       dplyr::rename(code = "Code", polymer = "Polymer Type", application = "Application Type", stage = "Type", plastic_percentage = "Plastic percentage", sector = "Sector", label = "Extensive description on comtrade") %>%
       dplyr::select("code", "polymer", "application", "stage", "sector", "label", "plastic_percentage")
@@ -90,7 +90,7 @@ readBACI <- function(subset = "02", subtype) {
       df_plastics_k6 <- merge(UNEP_codes_k6, df_UNEP, by.y="k", by.x="code")%>% select(-"k4")
       # merge filtered data with 4 and 6 digit codes, calculate plastics content
       df_filtered <- rbind(df_plastics_k6, df_plastics_k4) %>% rename(k = "code") %>%
-        mutate(q_plastic = .data$.value*.data$q) %>%
+        mutate(q_plastic = .data$plastic_percentage*.data$q) %>%
         group_by(.data$t, .data$i, .data$j, .data$k, .data$polymer, .data$stage, .data$sector) %>%
         summarize(q=sum(.data$q_plastic, na.rm=TRUE)) %>%
         ungroup()
