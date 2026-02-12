@@ -77,6 +77,14 @@ calcBACI <- function(subtype, HS = "02") {
       ungroup()
   }
 
+  # historical ISO countries SCG and ANT split into SRB & MNE in 2006 and SXM & CUW in 2011, respectively
+  # for simplicity, their trades are assigned to their major successor countries SRB and CUW before the split year
+  # as they account for >90% of the total plastics trade volume of successor countries
+  df$exporter[df$exporter == "SCG"] <- "SRB"
+  df$importer[df$importer == "SCG"] <- "SRB"
+  df$exporter[df$exporter == "ANT"] <- "CUW"
+  df$importer[df$importer == "ANT"] <- "CUW"
+
   x <- as.magpie(df, temporal = "t", spatial = "importer")
   x <- toolCountryFill(x, fill = NA, verbosity = 2)
   x <- replace_non_finite(x, replace = 0)
