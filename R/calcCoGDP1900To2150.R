@@ -12,45 +12,60 @@
 #' GDP datasets that use a different base year, which however does not matter
 #' as only the relative values are used
 #' (see \link{toolInterpolate}).
-#' @author Merlin Jo Hosak
+#' @author Merlin Jo Hosak, Bennet Weiss
 #' @param scenario Scenario to use for future GDP data (default: SSP2).
 #' @param perCapita If TRUE, GDP is returned as per capita (default: FALSE).
+#' @param smooth If TRUE, data is smoothed using spline interpolation (default: TRUE).
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
-calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
+calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = TRUE) {
+  startyear <- 1900
+  endyear <- 2150
+
   # load data
   pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE)
 
+  # Historic GDP data that goes way back in time, with 1 year timestep
   gdpHistPC <- readSource("OECD_GDP")
-  gdpHistPC <- toolInterpolate(gdpHistPC, type = "linear")
+  most_recent_hist_year <- tail(getYears(gdpHistPC, as.integer = TRUE), 1)
+  gdpHistPC <- toolInterpolate(gdpHistPC, type = "monotone", maxgap = 20)
 
+  # Historic and Future GDP data, with 5 year timestep, does not go back as far in time
   gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE)
-  gdpRecent <- gdpRecent * 1e6 # convert to million USD
+  gdpRecent <- gdpRecent * 1e6 # convert from million USD to USD
   getItems(gdpRecent, dim = 3) <- "value"
-  gdpRecent <- toolInterpolate(gdpRecent, seq(1965, 2150, 1))
+  original_years <- getYears(gdpRecent)
 
   # convert historic data from per capita to total
-  # data before 1900 irrelevant (don't cut off before because it helps for interpolation)
-  hist <- pop[, seq(1900, 2016, 1), ] * gdpHistPC[, seq(1900, 2016, 1), ]
+  # data before startyear irrelevant (not cut off before because it helps for interpolation)
+  hist <- pop[, startyear:most_recent_hist_year, ] * gdpHistPC[, startyear:most_recent_hist_year, ]
 
-  # extrapolate data with OECD data as reference where data is available
+  # backcast data with OECD data as reference where data is available
   gdp <- toolBackcastByReference2D(gdpRecent, ref = hist, doInterpolate = FALSE) # Interpolation already done
 
-  # extrapolate GDP data by global total for regions without OECD data
+  # backcast GDP data by global total for regions without OECD data
 
-  ## get GDP of regions that have data up to 1900
+  ## get GDP of regions that have data back to startyear
   regions <- getItems(gdp, dim = 1)
-  regionsNotNA <- regions[!is.na(gdp[, 1900, ])]
+  regionsNotNA <- regions[!is.na(gdp[, startyear, ])]
 
   ## sum over these regions
-  sumGDPfrom1900 <- dimSums(gdp[regionsNotNA, , ], dim = 1)
-  getItems(sumGDPfrom1900, dim = 1) <- "GLO"
+  sumAvaliableGDP <- dimSums(gdp[regionsNotNA, , ], dim = 1)
+  getItems(sumAvaliableGDP, dim = 1) <- "GLO"
 
-  # extrapolate missing regions with the global average
-  gdp <- toolBackcastByReference2D(gdp, ref = sumGDPfrom1900)
+  ## backcast missing regions with the global average
+  gdp <- toolBackcastByReference2D(gdp, ref = sumAvaliableGDP)
+
+  if (smooth) {
+    # smooth data and interpolate missing data. No NAs expected due to global backcasting.
+    gdp <- toolTimeSpline(gdp, targetYears = seq(startyear, endyear, 1), peggedYears = original_years)
+  } else {
+    # just interpolate missing years without smoothing
+    gdp <- toolInterpolate(gdp, years = seq(startyear, endyear, 1), type = "monotone")
+  }
 
   # finalize for calcOutput
   unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
-  description <- "GDP from 1900-2150 yearly"
+  description <- paste0("GDP from ", startyear, "-", endyear, " yearly")
   weight <- NULL
   getNames(gdp) <- NULL
 
@@ -58,7 +73,7 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
   if (perCapita) {
     gdp <- gdp / pop
     unit <- paste0(unit, " per capita")
-    description <- "GDP per capita from 1900-2150 yearly"
+    description <- paste0("GDP per capita from ", startyear, "-", endyear, " yearly")
     weight <- pop
   }
 
