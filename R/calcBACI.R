@@ -23,11 +23,12 @@
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
+#' @importFrom quitte madrat_mule
 #'
 calcBACI <- function(subtype, HS = "02") {
   # Read raw data
-  BACI_data <- readSource("BACI", subtype = subtype, subset = HS)
-  df <- quitte::madrat_mule(BACI_data)
+  df <- readSource("BACI", subtype = subtype, subset = HS) %>%
+    madrat_mule()
 
   if (subtype == "plastics_UNCTAD") {
     final <- df
