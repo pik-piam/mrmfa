@@ -36,7 +36,7 @@ readBACI <- function(subset = "02", subtype) {
     # if an older HS revision than 2002 is used, use the oldest available (2002)
     if(!(subset %in% c("02","07","12","17","22"))){
       HS = "02"
-    }
+    } else{HS=subset}
     UNCTAD_revision <- paste0("DimHS20",HS,"Products_Plastics_Hierarchy.xls")
     UNCTAD_product_codes <- read_excel(file.path("UNCTAD_PlasticsHSCodes", UNCTAD_revision), skip = 2)
     # Identify header rows
@@ -50,8 +50,7 @@ readBACI <- function(subset = "02", subtype) {
   } else if (subtype == "plastics_UNEP"){
     codes <- read_excel(file.path("UNEP_NGP","TOOL_T1.4a_v1.2_Trade data modelling.xlsx"),
                         sheet = "SelectedCOMCodes", skip = 12) %>%
-      dplyr::rename(code = "Code", polymer = "Polymer Type", application = "Application Type", stage = "Type", plastic_percentage = "Plastic percentage", sector = "Sector", label = "Extensive description on comtrade") %>%
-      dplyr::select("code", "polymer", "application", "stage", "sector", "label", "plastic_percentage")
+      dplyr::select("code" = "Code", "polymer" = "Polymer Type", "application" = "Application Type", "stage" ="Type", "sector" = "Sector", "label" = "Extensive description on comtrade", "plastic_percentage" = "Plastic percentage")
     # remove duplicates in raw data; label all polymers in the textile sector as "Fibres"
     codes <- unique(codes) %>%
       mutate(polymer = case_when(.data$sector=="Textile"~"Fibres", .default=.data$polymer))
