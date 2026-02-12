@@ -9,18 +9,18 @@
 #' mrdrivers for current and future population data according to a specific
 #' scenario (see \code{vignette("scenarios")} for more information).
 #'
-#' @author Merlin Jo Hosak
+#' @author Merlin Jo Hosak, Bennet Weiss
 #' @param scenario Scenario to use for future population data (default: SSP2).
+#' @param smooth If TRUE, data is smoothed using spline interpolation (default: TRUE).
 #' @return List with Magpie object of population and metadata in calcOutput
 #' format.
-calcCoPopulation1900To2150 <- function(scenario = "SSP2") {
+calcCoPopulation1900To2150 <- function(scenario = "SSP2", smooth = TRUE) {
+
   # The mrdrivers calcPopulation function provides population data from 1960 on
+  # 1 year steps until 2030, 5 year steps thereafter.
   current <- calcOutput("Population", scenario = scenario, aggregate = FALSE)
   current <- current * 1e6 # convert from millions to inhabitants
-
-  # get yearly resolution for future
-  future <- time_interpolate(current, seq(2030, 2150, 1))
-  current <- mbind(current[, seq(1960, 2029, 1), ], future)
+  original_years <- getYears(current)
 
   # The Gapminder dataset reaches from 1800 to 2100, but lacks a few small
   # regions and lacks scenario information. Hence it is only used for
@@ -30,15 +30,21 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2") {
   # extrapolate with Gapminder dataset as reference data for countries where such data exists
   pop <- toolBackcastByReference2D(x = current, ref = hist)
 
-  # The UN_PopDiv dataset reaches from 1900 to 2150, in 5 year steps and is
-  # therefore interpolated to 1 year resolution. It is used to extrapolate
-  # 20th century data for the remaining regions.
+  # The UN_PopDiv dataset reaches from 1900 to 2150, in 10 year steps.
+  # It is used to extrapolate 20th century data for the remaining regions.
   worldHist <- readSource("UNWorldPopulation")
-  worldHist <- time_interpolate(worldHist, seq(1900, 2150, 1))
-  worldHist <- worldHist * 1e3 # convert from thousands to inhabitants
+  worldHist <- toolInterpolate(worldHist, years=seq(1900, 2150, 1), type = "monotone")[, 1900:2000, ]
 
   # extrapolate with world average as reference data for other countries
   pop <- toolBackcastByReference2D(x = pop, ref = worldHist)
+
+  if (smooth) {
+    # smooth data and interpolate mising years. No NAs expected due to global backcasting.
+    pop <- toolTimeSpline(pop, targetYears = seq(1900, 2150, 1), peggedYears = original_years)
+  } else {
+    # just interpolate missing years without smoothing
+    pop <- toolInterpolate(pop, years = seq(1900, 2150, 1), type = "monotone")
+  }
 
   result <- list(
     x = pop,
