@@ -68,7 +68,7 @@ calcBACI <- function(subtype, HS = "02") {
       warning(paste(
         "The following sector-polymer combinations cannot be mapped from the BACI data
         as they do not exist in the OECD dataset used for weighting:\n",
-        paste(capture.output(print(nan)), collapse = "\n")
+        paste(utils::capture.output(print(nan)), collapse = "\n")
       ))
     }
 

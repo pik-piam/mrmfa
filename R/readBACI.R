@@ -76,7 +76,7 @@ readBACI <- function(subset = "02", subtype) {
     full.names = TRUE
   )
   # Read country codes of the dataset
-  country_codes <- read.csv(file.path(data_path, "country_codes_V202501.csv")) %>%
+  country_codes <- utils::read.csv(file.path(data_path, "country_codes_V202501.csv")) %>%
     select("country_code", "country_iso3") %>%
     # country code 490 (country_iso3="S19") is used as a proxy for trade statistics for Taiwan
     # (see https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html)
@@ -123,7 +123,7 @@ readBACI <- function(subset = "02", subtype) {
   if (length(diff) > 0) {
     warning(paste(
       "The following product codes are missing in the BACI dataset:\n",
-      paste(capture.output(print(missing)), collapse = "\n")
+      paste(utils::capture.output(print(missing)), collapse = "\n")
     ))
   }
 
