@@ -106,7 +106,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
 
   # interpolate
   df_transposed_interpolated <-
-    interpolation_methods[[type]](df_transposed, na.rm = FALSE)#, ...)
+    interpolation_methods[[type]](df_transposed, na.rm = FALSE, ...)
 
   # Remove interpolation outside of data range if extrapolation is FALSE
   remove_extrapolation <- function(orig_mat, interp_mat) {
