@@ -23,19 +23,16 @@
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
-#' @importFrom quitte madrat_mule
 #'
 calcBACI <- function(subtype, HS = "02") {
   # Read raw data
   df <- readSource("BACI", subtype = subtype, subset = HS) %>%
-    madrat_mule()
+    quitte::madrat_mule()
 
-  if (subtype == "plastics_UNCTAD") {
-    final <- df
-  } else if (subtype == "plastics_UNEP") {
+  if (subtype == "plastics_UNEP") {
     # map UNEP-NGP sectors to sectors used in REMIND-MFA
     sector_map <- toolGetMapping("sectormappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
-    new1 <- df %>%
+    df <- df %>%
       left_join(sector_map, by = c("sector" = "Source")) %>%
       select(-"sector") %>%
       rename("sector" = "Target")
@@ -59,11 +56,11 @@ calcBACI <- function(subtype, HS = "02") {
         weight = .data$value / .data$total
       ) %>%
       select(-"total", -"value")
-    new2 <- left_join(new1, split, by = c("polymer" = "Source", "sector")) %>%
+    df <- left_join(df, split, by = c("polymer" = "Source", "sector")) %>%
       mutate(value = .data$value * .data$weight)
     # some weights are NaN for polymers that are not used in a specific sector according to OECD,
     # throw a warning if these combination appear in the dataset
-    nan <- new2 %>% filter(is.na(.data$weight))
+    nan <- df %>% filter(is.na(.data$weight))
     if (nrow(nan) > 0) {
       warning(paste(
         "The following sector-polymer combinations cannot be mapped from the BACI data
@@ -72,7 +69,7 @@ calcBACI <- function(subtype, HS = "02") {
       ))
     }
 
-    final <- new2 %>%
+    df <- df %>%
       select(-"polymer", -"weight") %>%
       rename("polymer" = "Target") %>%
       group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$stage, .data$sector) %>%
@@ -80,7 +77,7 @@ calcBACI <- function(subtype, HS = "02") {
       ungroup()
   }
 
-  x <- as.magpie(final, temporal = "t", spatial = "importer")
+  x <- as.magpie(df, temporal = "t", spatial = "importer")
   x <- toolCountryFill(x, fill = NA, verbosity = 2)
   x <- replace_non_finite(x, replace = 0)
 
