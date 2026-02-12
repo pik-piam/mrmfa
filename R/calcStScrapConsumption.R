@@ -113,7 +113,7 @@ calcStScrapConsumption <- function(subtype) {
     getItems(scrapConsumptionBIR, dim = 2),
   ] <- scrapConsumptionBIR
 
-  scLinear <- toolInterpolate2D(scrapConsumption)
+  scLinear <- toolInterpolate(scrapConsumption)
 
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(

@@ -151,8 +151,8 @@ toolBackcastByReference2D <- function(x,
   if (doInterpolate) {
     # Interpolate missing values in x and ref
     # Recommended so that the weight calculation is regular and more stable
-    x <- toolInterpolate2D(x)
-    ref <- toolInterpolate2D(ref)
+    x <- toolInterpolate(x)
+    ref <- toolInterpolate(ref)
   }
 
   xYears <- getItems(x, dim = 2)

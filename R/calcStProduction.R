@@ -9,11 +9,11 @@
 calcStProduction <- function() {
   # steel production from 1969 - 2009
   prodRecent <- readSource("WorldSteelDigitised", subtype = "production")
-  prodRecent <- toolInterpolate2D(prodRecent, method = "linear")
+  prodRecent <- toolInterpolate(prodRecent, type = "linear")
 
   # steel production from 2003 - 2022
   prodCurrent <- readSource("WorldSteelDatabase", subtype = "production")
-  prodCurrent <- toolInterpolate2D(prodCurrent, method = "linear")
+  prodCurrent <- toolInterpolate(prodCurrent, type = "linear")
 
   # extrapolate current by recent for regions where data overlaps
   prod <- toolBackcastByReference2D(
@@ -46,7 +46,7 @@ calcStProduction <- function() {
 
   # use constant (last observation carried forward) interpolation for
   # remaining NaN values in the future
-  prod <- toolInterpolate2D(prod, method = "constant")
+  prod <- toolInterpolate(prod, type = "constant")
 
   result <- list(
     x = prod,
