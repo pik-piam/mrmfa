@@ -24,7 +24,8 @@ calcPlConsumptionByGood <- function() {
   # ---------------------------------------------------------------------------
   total <- calcOutput("PlOECD", subtype = "Use_1990-2019_region", aggregate = TRUE)
   Geyer <- readSource("Geyer", subtype = "Prod_1950-2015", convert = FALSE)
-  total_df <- toolBackcastByReference2D(total, Geyer) %>%
+
+  total_df <- toolBackcastByReference(total, Geyer) %>%
     as.data.frame() %>%
     dplyr::mutate(Year = as.integer(as.character(.data$Year))) %>%
     dplyr::select(-"Cell", -"Data1")

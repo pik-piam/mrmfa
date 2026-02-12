@@ -16,7 +16,7 @@ calcStProduction <- function() {
   prodCurrent <- toolInterpolate2D(prodCurrent, method = "linear")
 
   # extrapolate current by recent for regions where data overlaps
-  prod <- toolBackcastByReference2D(
+  prod <- toolBackcastByReference(
     prodCurrent,
     ref = prodRecent,
     doInterpolate = FALSE
@@ -30,7 +30,7 @@ calcStProduction <- function() {
 
   prodWorld <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
 
-  worldRef <- toolBackcastByReference2D(
+  worldRef <- toolBackcastByReference(
     prodWorld,
     ref = sumNonNaRegions,
     doForecast = TRUE,
@@ -38,7 +38,7 @@ calcStProduction <- function() {
   )
 
   # extrapolate remaining regions by world reference
-  prod <- toolBackcastByReference2D(
+  prod <- toolBackcastByReference(
     prod,
     ref = worldRef,
     doInterpolate = FALSE

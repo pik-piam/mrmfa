@@ -52,11 +52,11 @@ calcStTrade <- function(subtype = "imports") {
     # (potentially creating infinite/unrealistic values)
     digitised <- readSource("WorldSteelDigitised", subtype)
     digitised[digitised < 1] <- NA
-    trade <- toolBackcastByReference2D(database, ref = digitised)
+    trade <- toolBackcastByReference(database, ref = digitised)
   }
 
   production <- calcOutput("StProduction", aggregate = FALSE)
-  trade <- toolBackcastByReference2D(trade, ref = production)
+  trade <- toolBackcastByReference(trade, ref = production)
 
   # use constant (last observation carried forward) interpolation for remaining NaN values in the future
   trade <- toolInterpolate2D(trade, method = "constant")

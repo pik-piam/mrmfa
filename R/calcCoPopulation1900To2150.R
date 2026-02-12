@@ -28,7 +28,7 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2") {
   hist <- readSource("Gapminder")[, seq(1900, 2000, 1), ]
 
   # extrapolate with Gapminder dataset as reference data for countries where such data exists
-  pop <- toolBackcastByReference2D(x = current, ref = hist)
+  pop <- toolBackcastByReference(x = current, ref = hist)
 
   # The UN_PopDiv dataset reaches from 1900 to 2150, in 5 year steps and is
   # therefore interpolated to 1 year resolution. It is used to extrapolate
@@ -38,7 +38,7 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2") {
   worldHist <- worldHist * 1e3 # convert from thousands to inhabitants
 
   # extrapolate with world average as reference data for other countries
-  pop <- toolBackcastByReference2D(x = pop, ref = worldHist)
+  pop <- toolBackcastByReference(x = pop, ref = worldHist)
 
   result <- list(
     x = pop,

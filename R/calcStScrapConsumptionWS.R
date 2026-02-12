@@ -5,7 +5,7 @@ calcStScrapConsumptionWS <- function() {
   # get historic consumption ----
   prodHist <- readSource("WorldSteelDigitised", subtype = "production", convert = FALSE)
   prodHistGlobal <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
-  prodHist <- toolBackcastByReference2D(prodHist, prodHistGlobal)
+  prodHist <- toolBackcastByReference(prodHist, prodHistGlobal)
 
   historicShare <- readSource("WorldSteelDigitised", subtype = "historicScrapShare", convert = FALSE)
 
