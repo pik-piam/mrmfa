@@ -91,11 +91,17 @@ calcPlTrade <- function(
     x <- df %>%
       select("Year" = "t", "Region", all_of(group_vars), "value") %>%
       as.magpie()
-    x <- toolCountryFill(x, fill = NA, verbosity = 2)
-    x <- replace_non_finite(x, replace = 0)
 
     # backcast trade data to 1950 based on historic plastic consumption
     ref <- toolAggregate(reference, rel = rel)
+
+    # if some of the regions are missing in x due to the manual aggregation,
+    # fill with NA to match all the ref regions
+    missingRegions <- setdiff(getItems(ref, dim = 1), getItems(x, dim = 1))
+    if (length(missingRegions) > 0) {
+      x <- add_columns(x, addnm = missingRegions, dim = 1, fill = NA)
+    }
+
     if (dimExists("sector",x)) {
       x <- toolBackcastByReference(x, ref)
     } else {

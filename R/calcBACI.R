@@ -31,12 +31,12 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", HS = "02", category = "Plastics in primary forms")
+#' a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", category = "Plastics in primary forms", HS = "02")
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcBACI <- function(subtype, HS = "02", category) {
+calcBACI <- function(subtype, category, HS = "02") {
 
   # map category
   category <- switch(category,
