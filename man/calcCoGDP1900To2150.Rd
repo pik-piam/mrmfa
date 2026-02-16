@@ -4,12 +4,22 @@
 \alias{calcCoGDP1900To2150}
 \title{Get GDP from 1900-2150}
 \usage{
-calcCoGDP1900To2150(scenario = "SSP2", perCapita = FALSE)
+calcCoGDP1900To2150(
+  scenario = "SSP2",
+  perCapita = FALSE,
+  smooth = TRUE,
+  dof = 8
+)
 }
 \arguments{
 \item{scenario}{Scenario to use for future GDP data (default: SSP2).}
 
 \item{perCapita}{If TRUE, GDP is returned as per capita (default: FALSE).}
+
+\item{smooth}{If TRUE, data is smoothed using spline interpolation (default: TRUE).}
+
+\item{dof}{Degrees of freedom for spline interpolation (default: 8).
+Higher values lead to a closer fit to the original data, while lower values result in smoother curves.}
 }
 \value{
 List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
@@ -26,8 +36,8 @@ convert GDP per capita to total GDP.
 GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 GDP datasets that use a different base year, which however does not matter
 as only the relative values are used
-(see \link{toolInterpolate2D}).
+(see \link{toolInterpolate}).
 }
 \author{
-Merlin Jo Hosak
+Merlin Jo Hosak, Bennet Weiss
 }

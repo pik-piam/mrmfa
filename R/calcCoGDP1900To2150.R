@@ -16,6 +16,8 @@
 #' @param scenario Scenario to use for future GDP data (default: SSP2).
 #' @param perCapita If TRUE, GDP is returned as per capita (default: FALSE).
 #' @param smooth If TRUE, data is smoothed using spline interpolation (default: TRUE).
+#' @param dof Degrees of freedom for spline interpolation (default: 8).
+#' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
 calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = TRUE, dof = 8) {
   startyear <- 1900

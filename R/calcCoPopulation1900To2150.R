@@ -12,6 +12,8 @@
 #' @author Merlin Jo Hosak, Bennet Weiss
 #' @param scenario Scenario to use for future population data (default: SSP2).
 #' @param smooth If TRUE, data is smoothed using spline interpolation (default: TRUE).
+#' @param dof Degrees of freedom for spline interpolation (default: 8).
+#' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of population and metadata in calcOutput
 #' format.
 calcCoPopulation1900To2150 <- function(scenario = "SSP2", smooth = TRUE, dof = 8) {
