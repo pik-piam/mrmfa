@@ -72,11 +72,14 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
 
 #' Interpolate missing values in a 2D magpie object (internal)
 #'
-#' Interpolates missing values (NAs) in a 2D magpie object (regions x years) along the time dimension (years) using the specified method.
+#' Interpolates missing values (NAs) in a 2D magpie object (regions x years)
+#' along the time dimension (years) using the specified method.
 #'
 #' @param x A 2D magpie object (regions x years) with missing values to interpolate.
-#' @param type Interpolation method: one of 'linear', 'spline', 'monotone' (monotone cubic spline), or 'constant' (last observation carried forward).
-#' @param extrapolate Logical. Whether to allow extrapolation outside the range of available data. If FALSE, values outside the data range remain NA.
+#' @param type Interpolation method:
+#' one of 'linear', 'spline', 'monotone' (monotone cubic spline), or 'constant' (last observation carried forward).
+#' @param extrapolate Logical. Whether to allow extrapolation outside the range of available data.
+#' If FALSE, values outside the data range remain NA.
 #' @param ... Additional arguments passed to interpolation functions.
 #' @return A 2D magpie object with interpolated values.
 #' @author Merlin Jo Hosak, Bennet Weiss
