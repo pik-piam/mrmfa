@@ -23,7 +23,7 @@
 #'     \item "UNCTAD" - UNCTAD (trade flows by time and region)
 #'     \item "BACI" - BACI (trade flows by time, region, sector and polymer)
 #'   }
-#' @author Qianzhi Zhang
+#' @author Qianzhi Zhang, Leonie Schweiger
 calcPlTrade <- function(
   category,
   flow_label = c("Exports", "Imports"),
@@ -91,10 +91,10 @@ calcPlTrade <- function(
       as.magpie()
 
     # backcast trade data to 1950 based on historic plastic consumption
-    if (length(getNames(x, dim = 2)) == 1 && getNames(x, dim = 2) == "General") {
-      x <- toolBackcastByReference(x,  dimSums(reference, dim = 3))
-    } else {
+    if (dimExists("sector",x)) {
       x <- toolBackcastByReference(x, reference)
+    } else {
+      x <- toolBackcastByReference(x,  dimSums(reference, dim = 3))
     }
 
     return(x)

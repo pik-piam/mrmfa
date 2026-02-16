@@ -39,5 +39,5 @@ Note that as the source BACI has bilateral trade data that allows to filter out
 intraregional trade, aggregation is done by a custom aggregation function for this source.
 }
 \author{
-Qianzhi Zhang
+Qianzhi Zhang, Leonie Schweiger
 }
