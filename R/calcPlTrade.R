@@ -91,6 +91,8 @@ calcPlTrade <- function(
     x <- df %>%
       select("Year" = "t", "Region", all_of(group_vars), "value") %>%
       as.magpie()
+    x <- toolCountryFill(x, fill = NA, verbosity = 2)
+    x <- replace_non_finite(x, replace = 0)
 
     # backcast trade data to 1950 based on historic plastic consumption
     ref <- toolAggregate(reference, rel = rel)
