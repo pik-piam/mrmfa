@@ -12,15 +12,16 @@
 #'        - 22
 #' @param category Character string specifying the stage of trade, valid parameters depend on the subtype
 #'        for plastics_UNCTAD:
-#'        - Plastics in primary forms
-#'        - Intermediate forms of plastic
-#'        - Intermediate manufactured plastic goods
-#'        - Final manufactured plastics goods
-#'        - Plastic waste
+#'        - "Final"        - Final plastics
+#'        - "Primary"      - Primary plastics
+#'        - "Intermediate" - Intermediate forms of plastic
+#'        - "Manufactured" - Intermediate manufactured plastic goods
+#'        - "Application"  - Plastic goods
+#'        - "Waste"        - Plastic waste
 #'        for plastics_UNEP:
-#'        - Primary
-#'        - Application
-#'        - Waste
+#'        - "Primary"
+#'        - "Application"
+#'        - "Waste"
 #'
 #' @return magpie object of the BACI trade data
 #'
@@ -36,8 +37,20 @@
 #' @importFrom magclass as.magpie getComment<-
 #'
 calcBACI <- function(subtype, HS = "02", category) {
+
+  # map category
+  category <- switch(category,
+              "Primary" = case_when(subtype=="plastics_UNCTAD"~"Plastics in primary forms", .default="Primary"),
+              "Intermediate" = "Intermediate forms of plastic",
+              "Manufactured" = "Intermediate manufactured plastic goods",
+              "Final" = "Final manufactured plastics goods",
+              "Waste" = case_when(subtype=="plastics_UNCTAD"~"Plastic waste", .default="Waste"),
+              "Application" = "Application",
+              stop("Unsupported category: ", category)
+  )
+
   # Read raw data
-  df <- readSource("BACI", subtype = paste(subtype, category, sep="_"), subset = HS) %>%
+  df <- readSource("BACI", subtype = paste(subtype, category, sep="-"), subset = HS) %>%
     quitte::madrat_mule()
 
   if (subtype == "plastics_UNEP") {

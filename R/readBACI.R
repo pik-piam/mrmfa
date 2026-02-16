@@ -31,11 +31,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- readSource(type = "BACI", subtype = "plastics_UNEP", subset = "02")
+#' a <- readSource(type = "BACI", subtype = "plastics_UNEP-Primary", subset = "02")
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #'
-readBACI <- function(subset = "02", subtype) {
+readBACI <- function(subtype, subset = "02") {
   # check whether subset is one of the available HS revisions
   available <- c("92", "02", "17", "22")
   if (is_empty(intersect(subset, available))) {
@@ -46,12 +46,12 @@ readBACI <- function(subset = "02", subtype) {
   }
 
   # Parse subtype and validate
-  parts <- strsplit(subtype, "_")[[1]]
-  if (length(parts) != 3) {
-    stop("Subtype must have three components, e.g. 'plastics_UNEP_Primary'.")
+  parts <- strsplit(subtype, "-")[[1]]
+  if (length(parts) != 2) {
+    stop("Subtype must have two components, e.g. 'plastics_UNEP-Primary'.")
   }
-  key <- paste(parts[1], parts[2], sep = "_") # e.g., "plastics_UNEP"
-  category <- parts[3] # e.g., "Primary"
+  key <- parts[1] # e.g., "plastics_UNEP"
+  category <- parts[2] # e.g., "Primary"
 
   # read HS codes that are relevant for the scope defined in subtype
   if (key == "plastics_UNCTAD") {
@@ -107,13 +107,13 @@ readBACI <- function(subset = "02", subtype) {
 
   df_all <- NULL
 
-  for (f in files) {
+  for (f in files[1:2]) {
     df <- data.table::fread(f)
 
     # filter HS codes that are relevant for the scope defined in subtype
     if (key == "plastics_UNCTAD") {
       # merge UNCTAD codes with BACI data
-      df_filtered <- merge(df, codes, by.x = "k", by.y = "code") %>% select("t", "i", "j", "k", "group", "q")
+      df_filtered <- merge(df, codes, by.x = "k", by.y = "code") %>% select("t", "i", "j", "k", "q")
     } else if (key == "plastics_UNEP") {
       # UNEP Codes contain 4 digit and 5/6 digit codes;
       # in order to merge 4 digit codes, transform 6-digit codes in BACI database to 4 digits

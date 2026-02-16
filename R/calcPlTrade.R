@@ -21,13 +21,14 @@
 #' @param data_source Character; data source:
 #'   \itemize{
 #'     \item "UNCTAD" - UNCTAD (trade flows by time and region)
-#'     \item "BACI" - BACI (trade flows by time, region, sector and polymer)
+#'     \item "BACI_UNCTAD" - BACI with UNCTAD HS codes (trade flows by time and region)
+#'     \item "BACI_UNEP" - BACI with UNEP HS codes (trade flows by time, region, sector and polymer)
 #'   }
 #' @author Qianzhi Zhang, Leonie Schweiger
 calcPlTrade <- function(
   category,
   flow_label = c("Exports", "Imports"),
-  data_source = c("UNCTAD", "BACI")
+  data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP")
 ) {
 
   # ---------------------------------------------------------------------------
@@ -38,7 +39,8 @@ calcPlTrade <- function(
 
   allowed_categories <- list(
     UNCTAD = c("Final", "Primary", "Intermediate", "Manufactured"),
-    BACI   = c("Primary", "Application", "Waste")
+    BACI_UNCTAD = c("Final", "Primary", "Intermediate", "Manufactured", "Waste"),
+    BACI_UNEP   = c("Primary", "Application", "Waste")
   )
 
   if (missing(category)) {
@@ -116,20 +118,29 @@ calcPlTrade <- function(
     aggregationFunction = toolAggregate
     aggregationArguments = NULL
 
-  } else if (data_source == "BACI") {
+  } else {
     # Load trade data for the selected category
-    trade <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, aggregate = FALSE) %>%
-      quitte::madrat_mule()
+    if (data_source == "BACI_UNEP"){
+      trade <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, aggregate = FALSE) %>%
+        quitte::madrat_mule()
+    } else if (data_source == "BACI_UNCTAD"){
+      trade <- calcOutput("BACI", subtype = "plastics_UNCTAD", category = category, aggregate = FALSE) %>%
+        quitte::madrat_mule()
+    }
 
     x <- as.magpie(trade, temporal = "t", spatial = "importer")
     x <- toolCountryFill(x, fill = NA, verbosity = 2)
     x <- replace_non_finite(x, replace = 0)
 
-    note <- "dimensions: (Historic Time,Region,Material,Good,value)"
-    # remove sector column for Primary and Waste category ("General" for all)
-    if (category %in% c("Primary", "Waste")) {
-      x <- collapseNames(x)
-      note <- "dimensions: (Historic Time,Region,Material,value)"
+    if (data_source == "BACI_UNEP"){
+      note <- "dimensions: (Historic Time,Region,Material,Good,value)"
+      # remove sector column for Primary and Waste category ("General" for all)
+      if (category %in% c("Primary", "Waste")) {
+        x <- collapseNames(x)
+        note <- "dimensions: (Historic Time,Region,Material,value)"
+      }
+    } else if (data_source == "BACI_UNCTAD"){
+      note <- "dimensions: (Historic Time,Region,value)"
     }
 
     # reference used for backcasting

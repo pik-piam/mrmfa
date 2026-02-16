@@ -4,15 +4,9 @@
 \alias{readBACI}
 \title{Read BACI Trade data}
 \usage{
-readBACI(subset = "02", subtype)
+readBACI(subtype, subset = "02")
 }
 \arguments{
-\item{subset}{Character string specifying the HS (Harmonized System) revision of the data
-- 92
-- 02
-- 17
-- 22}
-
 \item{subtype}{Character string specifying the scope, combination of material HS codes and category
 material HS codes:
 - "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into
@@ -29,6 +23,12 @@ material HS codes:
   - Primary
   - Application
   - Waste}
+
+\item{subset}{Character string specifying the HS (Harmonized System) revision of the data
+- 92
+- 02
+- 17
+- 22}
 }
 \value{
 magpie object of the BACI trade data
@@ -38,7 +38,7 @@ Read BACI Trade data
 }
 \examples{
 \dontrun{
-a <- readSource(type = "BACI", subtype = "plastics_UNEP", subset = "02")
+a <- readSource(type = "BACI", subtype = "plastics_UNEP-Primary", subset = "02")
 }
 }
 \seealso{

@@ -7,7 +7,7 @@
 calcPlTrade(
   category,
   flow_label = c("Exports", "Imports"),
-  data_source = c("UNCTAD", "BACI")
+  data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP")
 )
 }
 \arguments{
@@ -30,7 +30,8 @@ calcPlTrade(
 \item{data_source}{Character; data source:
 \itemize{
   \item "UNCTAD" - UNCTAD (trade flows by time and region)
-  \item "BACI" - BACI (trade flows by time, region, sector and polymer)
+  \item "BACI_UNCTAD" - BACI with UNCTAD HS codes (trade flows by time and region)
+  \item "BACI_UNEP" - BACI with UNEP HS codes (trade flows by time, region, sector and polymer)
 }}
 }
 \description{

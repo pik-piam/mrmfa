@@ -21,15 +21,16 @@ calcBACI(subtype, HS = "02", category)
 
 \item{category}{Character string specifying the stage of trade, valid parameters depend on the subtype
 for plastics_UNCTAD:
-- Plastics in primary forms
-- Intermediate forms of plastic
-- Intermediate manufactured plastic goods
-- Final manufactured plastics goods
-- Plastic waste
+- "Final"        - Final plastics
+- "Primary"      - Primary plastics
+- "Intermediate" - Intermediate forms of plastic
+- "Manufactured" - Intermediate manufactured plastic goods
+- "Application"  - Plastic goods
+- "Waste"        - Plastic waste
 for plastics_UNEP:
-- Primary
-- Application
-- Waste}
+- "Primary"
+- "Application"
+- "Waste"}
 }
 \value{
 magpie object of the BACI trade data
