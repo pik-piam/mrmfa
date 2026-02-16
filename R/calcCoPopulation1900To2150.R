@@ -15,7 +15,6 @@
 #' @return List with Magpie object of population and metadata in calcOutput
 #' format.
 calcCoPopulation1900To2150 <- function(scenario = "SSP2", smooth = TRUE, dof = 8) {
-
   # The mrdrivers calcPopulation function provides population data from 1960 on
   # 1 year steps until 2030, 5 year steps thereafter.
   current <- calcOutput("Population", scenario = scenario, aggregate = FALSE)
@@ -35,14 +34,14 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2", smooth = TRUE, dof = 8
   # The UN_PopDiv dataset reaches from 1900 to 2150, in 10 year steps.
   # It is used to extrapolate 20th century data for the remaining regions.
   worldHist <- readSource("UNWorldPopulation")
-  worldHist <- toolInterpolate(worldHist, years=seq(1900, 2150, 1), type = "monotone")[, 1900:2000, ]
+  worldHist <- toolInterpolate(worldHist, years = seq(1900, 2150, 1), type = "monotone")[, 1900:2000, ]
 
   # extrapolate with world average as reference data for other countries
   pop <- toolBackcastByReference2D(x = pop, ref = worldHist)
 
   if (smooth) {
     # smooth data and interpolate mising years.
-    pop[,1900:2100] <- toolTimeSpline(pop[,1900:2100], dof = dof, peggedYears = c(1900, 2100))
+    pop[, 1900:2100] <- toolTimeSpline(pop[, 1900:2100], dof = dof, peggedYears = c(1900, 2100))
   }
 
   result <- list(

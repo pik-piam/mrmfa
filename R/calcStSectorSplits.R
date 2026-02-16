@@ -14,34 +14,30 @@ calcStSectorSplits <- function(subtype) {
   # ---- list all available subtypes with functions doing all the work ----
 
   x <- readSource("Pauliuk2013")
-  
-  
-  
+
+
   # if subtype is "low", extract rows where data is "India 1995-1999"
   if (subtype == "low") {
-    x <- mselect(x, Parameter="India 1995-1999", collapseNames=TRUE)
-  }
-  else if (subtype == "high") {
-    x <- mselect(x, Parameter="USA 2004", collapseNames=TRUE)
-  }
-  else {
+    x <- mselect(x, Parameter = "India 1995-1999", collapseNames = TRUE)
+  } else if (subtype == "high") {
+    x <- mselect(x, Parameter = "USA 2004", collapseNames = TRUE)
+  } else {
     stop("Invalid subtype -- supported subtypes are high and low")
   }
 
   # remove .data column
   # x$Data1 <- NULL
   print(x)
-  
-    
+
+
   final <- list(
     x = as.magpie(x),
     weight = NULL,
     unit = 1,
     isocountries = FALSE,
-    description = "Pauliuk 2013 steel sector splits", 
+    description = "Pauliuk 2013 steel sector splits",
     note = "dimensions: (Good,value)"
   )
-  
-  return(final)
 
+  return(final)
 }

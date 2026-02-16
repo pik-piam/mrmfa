@@ -10,7 +10,6 @@
 #' @return A magpie object with interpolated values for the specified years and all data slices.
 #' @author Bennet Weiss
 toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALSE, ...) {
-
   # Extract all names from the 3rd dimension
   data_names <- getNames(x)
 
@@ -22,7 +21,6 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
   x_interpolated <- NULL
   # Loop through each element in the data dimension
   for (dname in data_names) {
-
     # Extract the 2D slice for this specific data name.
     x_slice <- x[, , dname]
 
@@ -52,7 +50,6 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
 #' @return A 2D magpie object with interpolated values for the specified years.
 #' @author Bennet Weiss
 .toolInterpolateSlice <- function(x, years = NULL, type, extrapolate, ...) {
-
   # If years are provided, create a new magpie object with those years
   if (!is.null(years)) {
     # Create empty magclass and fill in existing data
@@ -62,7 +59,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
       names = getNames(x),
       fill = NA
     )
-    x_new[,getYears(x),] <- x
+    x_new[, getYears(x), ] <- x
   } else {
     x_new <- x
   }

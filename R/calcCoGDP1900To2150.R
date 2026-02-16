@@ -47,7 +47,7 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
 
   ## get GDP of regions that have complete data
   regions <- getItems(gdp, dim = 1)
-  regionsNotNA <- regions[!is.na(dimSums(gdp, dim = c(2,3)))]
+  regionsNotNA <- regions[!is.na(dimSums(gdp, dim = c(2, 3)))]
 
   ## sum over these regions
   sumAvaliableGDP <- dimSums(gdp[regionsNotNA, , ], dim = 1)
@@ -72,7 +72,7 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
 
   if (smooth) {
     # smooth data and interpolate missing data; ensure start and 2100 remain the same
-    gdp[,startyear:2100] <- toolTimeSpline(gdp[,startyear:2100], dof = dof, peggedYears = c(startyear, 2100))
+    gdp[, startyear:2100] <- toolTimeSpline(gdp[, startyear:2100], dof = dof, peggedYears = c(startyear, 2100))
   }
 
   result <- list(
