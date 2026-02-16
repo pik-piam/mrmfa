@@ -1,11 +1,8 @@
 #' Calculate Country-Level Plastics Trade for Various Categories
 #'
-#' Reads plastics trade (exports or imports) data at regional level,
-#' and backcasts data to 1950 to fill missing years.
-#' Note that aggregation to regions is done in the calc functions called by this function,
-#' as the source BACI has bilateral trade data that allows to filter out intraregional trade
-#' by a custom aggregation function.
-#' Therefore, we operate already at the regional aggregation level here (isocountries=FALSE).
+#' Reads plastics trade data and backcasts data to 1950 to fill missing years.
+#' Note that as the source BACI has bilateral trade data that allows to filter out
+#' intraregional trade, aggregation is done by a custom aggregation function for this source.
 #'
 #' @param category Character; product category:
 #'   \itemize{
@@ -59,40 +56,87 @@ calcPlTrade <- function(
     )
   }
 
+  # define a custom aggregation function that filters out all intra-regional trade
+  # and returns both imports and exports for each region in the region mapping
+  # in addition, data is backcasted to 1950 based on reference
+  .customAggregate <- function(x, rel, reference, flow_label) {
+    df <- tibble::as_tibble(x)
+
+    # get grouping variables
+    group_vars <- setdiff(colnames(df), c("t", "importer", "exporter", "value"))
+
+    # make sure that exporter_region != importer_region for every entry
+    df <- df %>%
+      left_join(rel[, c("country", "region")], by = c("importer" = "country")) %>%
+      left_join(rel[, c("country", "region")], by = c("exporter" = "country")) %>%
+      select("t", "importer" = "region.x", "exporter" = "region.y", all_of(group_vars), "value") %>%
+      filter(.data$importer != .data$exporter)
+
+    if (flow_label=="Imports"){
+      df <- df %>%
+        group_by(.data$t, .data$importer, across(all_of(group_vars))) %>%
+        summarize(value = sum(.data$value, na.rm = TRUE)) %>%
+        ungroup() %>%
+        rename("Region" = "importer")
+    } else if (flow_label=="Exports"){
+      df <- df %>%
+        group_by(.data$t, .data$exporter, across(all_of(group_vars))) %>%
+        summarize(value = sum(.data$value, na.rm = TRUE)) %>%
+        ungroup() %>%
+        rename("Region" = "exporter")
+    }
+
+    x <- df %>%
+      select("Year" = "t", "Region", all_of(group_vars), "value") %>%
+      as.magpie()
+
+    # backcast trade data to 1950 based on historic plastic consumption
+    if (length(getNames(x, dim = 2)) == 1 && getNames(x, dim = 2) == "General") {
+      x <- toolBackcastByReference(x,  dimSums(reference, dim = 3))
+    } else {
+      x <- toolBackcastByReference(x, reference)
+    }
+
+    return(x)
+  }
+
   # ---------------------------------------------------------------------------
   # Load data
   # ---------------------------------------------------------------------------
   if (data_source == "UNCTAD") {
     # Load trade data for the selected category and flow label
-    trade <- calcOutput("PlUNCTAD", subtype = category, aggregate = TRUE)
+    trade <- calcOutput("PlUNCTAD", subtype = category, aggregate = FALSE)
     trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
     # backcast trade data to 1950 based on historic plastic consumption
-    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate = TRUE), dim = 3))
+    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate = FALSE), dim = 3))
     x <- toolBackcastByReference(trade_filtered, consumption)
 
     getNames(x) <- NULL
     note <- "dimensions: (Historic Time,Region,value)"
+    aggregationFunction = toolAggregate
+    aggregationArguments = NULL
+
   } else if (data_source == "BACI") {
-    # Load trade data for the selected category and flow label
-    trade <- calcOutput("BACI", subtype = "plastics_UNEP", aggregate = TRUE)
-    trade_filtered <- collapseNames(trade[, , list(type = flow_label, stage = category)], preservedim = 4)
+    # Load trade data for the selected category
+    trade <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, aggregate = FALSE) %>%
+      quitte::madrat_mule()
 
-    # backcast trade data to 1950 based on historic plastic consumption
-    consumption <- calcOutput("PlConsumptionByGood", aggregate = TRUE)
-
-    if (length(getNames(trade_filtered, dim = 2)) == 1 && getNames(trade_filtered, dim = 2) == "General") {
-      x <- toolBackcastByReference(trade_filtered,  dimSums(consumption, dim = 3))
-    } else {
-      x <- toolBackcastByReference(trade_filtered, consumption)
-    }
+    x <- as.magpie(trade, temporal = "t", spatial = "importer")
+    x <- toolCountryFill(x, fill = NA, verbosity = 2)
+    x <- replace_non_finite(x, replace = 0)
 
     note <- "dimensions: (Historic Time,Region,Material,Good,value)"
-
-    # remove sector column for Primary category ("General" for all)
+    # remove sector column for Primary and Waste category ("General" for all)
     if (category %in% c("Primary", "Waste")) {
       x <- collapseNames(x)
       note <- "dimensions: (Historic Time,Region,Material,value)"
     }
+
+    # reference used for backcasting
+    reference <- calcOutput("PlConsumptionByGood", aggregate = TRUE)
+    aggregationFunction = .customAggregate
+    aggregationArguments = list(reference = reference, flow_label = flow_label)
+
   }
 
   # ---------------------------------------------------------------------------
@@ -102,7 +146,8 @@ calcPlTrade <- function(
     x = x,
     weight = NULL,
     unit = "Mt Plastic",
-    isocountries = FALSE,
+    aggregationFunction = aggregationFunction,
+    aggregationArguments = aggregationArguments,
     description = sprintf(
       "%s plastics %s (1950-2023) from %s", category, flow_label, data_source
     ),

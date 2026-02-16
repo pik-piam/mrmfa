@@ -10,6 +10,17 @@
 #'        - 02
 #'        - 17
 #'        - 22
+#' @param category Character string specifying the stage of trade, valid parameters depend on the subtype
+#'        for plastics_UNCTAD:
+#'        - Plastics in primary forms
+#'        - Intermediate forms of plastic
+#'        - Intermediate manufactured plastic goods
+#'        - Final manufactured plastics goods
+#'        - Plastic waste
+#'        for plastics_UNEP:
+#'        - Primary
+#'        - Application
+#'        - Waste
 #'
 #' @return magpie object of the BACI trade data
 #'
@@ -19,14 +30,14 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", HS = "02")
+#' a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", HS = "02", category = "Plastics in primary forms")
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcBACI <- function(subtype, HS = "02") {
+calcBACI <- function(subtype, HS = "02", category) {
   # Read raw data
-  df <- readSource("BACI", subtype = subtype, subset = HS) %>%
+  df <- readSource("BACI", subtype = paste(subtype, category, sep="_"), subset = HS) %>%
     quitte::madrat_mule()
 
   if (subtype == "plastics_UNEP") {
@@ -72,9 +83,10 @@ calcBACI <- function(subtype, HS = "02") {
     df <- df %>%
       select(-"polymer", -"weight") %>%
       rename("polymer" = "Target") %>%
-      group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$stage, .data$sector) %>%
+      group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$sector) %>%
       summarize(value = sum(.data$value)) %>%
       ungroup()
+
   }
 
   # historical ISO countries SCG and ANT split into SRB & MNE in 2006 and SXM & CUW in 2011, respectively
@@ -85,51 +97,12 @@ calcBACI <- function(subtype, HS = "02") {
   df$exporter[df$exporter == "ANT"] <- "CUW"
   df$importer[df$importer == "ANT"] <- "CUW"
 
-  x <- as.magpie(df, temporal = "t", spatial = "importer")
-  x <- toolCountryFill(x, fill = NA, verbosity = 2)
-  x <- replace_non_finite(x, replace = 0)
-
-  # define a custom aggregation function that filters out all intra-regional trade
-  # and returns both imports and exports for each region in the region mapping
-  .customAggregate <- function(x, rel) {
-    df <- tibble::as_tibble(x)
-
-    # get grouping variables
-    group_vars <- setdiff(colnames(df), c("t", "importer", "exporter", "value"))
-
-    # make sure that exporter_region != importer_region for every entry
-    df <- df %>%
-      left_join(rel[, c("country", "region")], by = c("importer" = "country")) %>%
-      left_join(rel[, c("country", "region")], by = c("exporter" = "country")) %>%
-      select("t", "importer" = "region.x", "exporter" = "region.y", all_of(group_vars), "value") %>%
-      filter(.data$importer != .data$exporter)
-
-    imports <- df %>%
-      group_by(.data$t, .data$importer, across(all_of(group_vars))) %>%
-      summarize(value = sum(.data$value, na.rm = TRUE)) %>%
-      ungroup() %>%
-      rename("region" = "importer") %>%
-      mutate("type" = "Imports")
-
-    exports <- df %>%
-      group_by(.data$t, .data$exporter, across(all_of(group_vars))) %>%
-      summarize(value = sum(.data$value, na.rm = TRUE)) %>%
-      ungroup() %>%
-      rename("region" = "exporter") %>%
-      mutate("type" = "Exports")
-
-    x <- rbind(imports, exports) %>%
-      select("period" = "t", "region", "type", all_of(group_vars), "value") %>%
-      as.magpie()
-
-    return(x)
-  }
+  x <- quitte::madrat_mule(df)
 
   return(list(
     x = x,
     weight = NULL,
     unit = "Mt Plastic",
-    aggregationFunction = .customAggregate,
     description = "Plastic trade data from BACI"
   ))
 }

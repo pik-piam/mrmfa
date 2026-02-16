@@ -4,7 +4,7 @@
 \alias{calcBACI}
 \title{Get BACI Trade data for specific product groups}
 \usage{
-calcBACI(subtype, HS = "02")
+calcBACI(subtype, HS = "02", category)
 }
 \arguments{
 \item{subtype}{Character string specifying the scope
@@ -18,6 +18,18 @@ calcBACI(subtype, HS = "02")
 - 02
 - 17
 - 22}
+
+\item{category}{Character string specifying the stage of trade, valid parameters depend on the subtype
+for plastics_UNCTAD:
+- Plastics in primary forms
+- Intermediate forms of plastic
+- Intermediate manufactured plastic goods
+- Final manufactured plastics goods
+- Plastic waste
+for plastics_UNEP:
+- Primary
+- Application
+- Waste}
 }
 \value{
 magpie object of the BACI trade data
@@ -27,7 +39,7 @@ Get BACI Trade data for specific product groups
 }
 \examples{
 \dontrun{
-a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", HS = "02")
+a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", HS = "02", category = "Plastics in primary forms")
 }
 }
 \seealso{

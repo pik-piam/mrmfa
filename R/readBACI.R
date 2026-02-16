@@ -5,11 +5,23 @@
 #'        - 02
 #'        - 17
 #'        - 22
-#' @param subtype Character string specifying the scope
+#' @param subtype Character string specifying the scope, combination of material HS codes and category
+#'        material HS codes:
 #'        - "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into
 #'          primary, intermediate, manufactured, final and waste plastics
+#'          valid parameters for category:
+#'          - Plastics in primary forms
+#'          - Intermediate forms of plastic
+#'          - Intermediate manufactured plastic goods
+#'          - Final manufactured plastics goods
+#'          - Plastic waste
 #'        - "plastics_UNEP": plastics trade data for HS codes from UNEP NGP
 #'          (estimated plastics mass based on estimated plastics percentages in goods)
+#'          valid parameters for category:
+#'          - Primary
+#'          - Application
+#'          - Waste
+#'
 #'
 #' @return magpie object of the BACI trade data
 #'
@@ -33,8 +45,16 @@ readBACI <- function(subset = "02", subtype) {
     )
   }
 
+  # Parse subtype and validate
+  parts <- strsplit(subtype, "_")[[1]]
+  if (length(parts) != 3) {
+    stop("Subtype must have three components, e.g. 'plastics_UNEP_Primary'.")
+  }
+  key <- paste(parts[1], parts[2], sep = "_") # e.g., "plastics_UNEP"
+  category <- parts[3] # e.g., "Primary"
+
   # read HS codes that are relevant for the scope defined in subtype
-  if (subtype == "plastics_UNCTAD") {
+  if (key == "plastics_UNCTAD") {
     # if an older HS revision than 2002 is used, use the oldest available (2002)
     if (!(subset %in% c("02", "07", "12", "17", "22"))) {
       HS <- "02"
@@ -49,15 +69,18 @@ readBACI <- function(subset = "02", subtype) {
     UNCTAD_product_codes$Group <- UNCTAD_product_codes[[2]][is_header][cumsum(is_header)]
     # Remove the header rows
     codes <- UNCTAD_product_codes[!is_header, ] %>%
-      dplyr::rename(code = "Code", group = "Group")
+      dplyr::rename(code = "Code", group = "Group") %>%
+      filter(.data$group == category) %>% select(-"group")
     codes$code <- as.integer(codes$code)
-  } else if (subtype == "plastics_UNEP") {
+  } else if (key == "plastics_UNEP") {
     codes <- read_excel(file.path("UNEP_NGP", "TOOL_T1.4a_v1.2_Trade data modelling.xlsx"),
       sheet = "SelectedCOMCodes", skip = 12
     ) %>%
-      dplyr::select("code" = "Code", "polymer" = "Polymer Type", "application" = "Application Type",
-                    "stage" = "Type", "sector" = "Sector", "label" = "Extensive description on comtrade",
-                    "plastic_percentage" = "Plastic percentage")
+      select("code" = "Code", "polymer" = "Polymer Type", "application" = "Application Type",
+             "stage" = "Type", "sector" = "Sector", "label" = "Extensive description on comtrade",
+             "plastic_percentage" = "Plastic percentage") %>%
+      filter(.data$stage == category) %>% select(-"stage")
+
     # remove duplicates in raw data; label all polymers in the textile sector as "Fibres"
     codes <- unique(codes) %>%
       mutate(polymer = case_when(.data$sector == "Textile" ~ "Fibres", .default = .data$polymer))
@@ -84,14 +107,14 @@ readBACI <- function(subset = "02", subtype) {
 
   df_all <- NULL
 
-  for (f in files) {
+  for (f in files[1:2]) {
     df <- data.table::fread(f)
 
     # filter HS codes that are relevant for the scope defined in subtype
-    if (subtype == "plastics_UNCTAD") {
+    if (key == "plastics_UNCTAD") {
       # merge UNCTAD codes with BACI data
       df_filtered <- merge(df, codes, by.x = "k", by.y = "code") %>% select("t", "i", "j", "k", "group", "q")
-    } else if (subtype == "plastics_UNEP") {
+    } else if (key == "plastics_UNEP") {
       # UNEP Codes contain 4 digit and 5/6 digit codes;
       # in order to merge 4 digit codes, transform 6-digit codes in BACI database to 4 digits
       df_UNEP <- df %>% mutate(k4 = as.integer(as.integer(.data$k / 100)))
@@ -101,7 +124,7 @@ readBACI <- function(subset = "02", subtype) {
       df_filtered <- rbind(df_plastics_k6, df_plastics_k4) %>%
         rename(k = "code") %>%
         mutate(q_plastic = .data$plastic_percentage * .data$q) %>%
-        group_by(.data$t, .data$i, .data$j, .data$k, .data$polymer, .data$stage, .data$sector) %>%
+        group_by(.data$t, .data$i, .data$j, .data$k, .data$polymer, .data$sector) %>%
         summarize(q = sum(.data$q_plastic, na.rm = TRUE)) %>%
         ungroup()
     }
