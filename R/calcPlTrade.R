@@ -125,16 +125,10 @@ calcPlTrade <- function(
   } else {
     # Load trade data for the selected category
     if (data_source == "BACI_UNEP"){
-      trade <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, aggregate = FALSE) %>%
-        quitte::madrat_mule()
+      x <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, aggregate = FALSE)
     } else if (data_source == "BACI_UNCTAD"){
-      trade <- calcOutput("BACI", subtype = "plastics_UNCTAD", category = category, aggregate = FALSE) %>%
-        quitte::madrat_mule()
+      x <- calcOutput("BACI", subtype = "plastics_UNCTAD", category = category, aggregate = FALSE)
     }
-
-    x <- as.magpie(trade, temporal = "t", spatial = "importer")
-    x <- toolCountryFill(x, fill = NA, verbosity = 2)
-    x <- replace_non_finite(x, replace = 0)
 
     if (data_source == "BACI_UNEP"){
       note <- "dimensions: (Historic Time,Region,Material,Good,value)"

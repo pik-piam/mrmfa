@@ -110,7 +110,9 @@ calcBACI <- function(subtype, HS = "02", category) {
   df$exporter[df$exporter == "ANT"] <- "CUW"
   df$importer[df$importer == "ANT"] <- "CUW"
 
-  x <- quitte::madrat_mule(df)
+  x <- as.magpie(df, temporal = "t", spatial = "importer")
+  x <- toolCountryFill(x, fill = NA, verbosity = 2)
+  x <- replace_non_finite(x, replace = 0)
 
   return(list(
     x = x,
