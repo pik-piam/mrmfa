@@ -17,12 +17,12 @@
 #' @param perCapita If TRUE, GDP is returned as per capita (default: FALSE).
 #' @param smooth If TRUE, data is smoothed using spline interpolation (default: TRUE).
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
-calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = TRUE) {
+calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = TRUE, dof = 8) {
   startyear <- 1900
   endyear <- 2150
 
   # load data
-  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE)
+  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE, smooth = FALSE)
 
   # Historic GDP data that goes way back in time, with 1 year timestep
   gdpHistPC <- readSource("OECD_GDP")
@@ -33,7 +33,8 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
   gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE)
   gdpRecent <- gdpRecent * 1e6 # convert from million USD to USD
   getItems(gdpRecent, dim = 3) <- "value"
-  original_years <- getYears(gdpRecent)
+  original_years <- getYears(gdpRecent, as.integer = TRUE)
+  gdpRecent <- toolInterpolate(gdpRecent, years = seq(original_years[1], endyear, 1), type = "monotone")
 
   # convert historic data from per capita to total
   # data before startyear irrelevant (not cut off before because it helps for interpolation)
@@ -44,9 +45,9 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
 
   # backcast GDP data by global total for regions without OECD data
 
-  ## get GDP of regions that have data back to startyear
+  ## get GDP of regions that have complete data
   regions <- getItems(gdp, dim = 1)
-  regionsNotNA <- regions[!is.na(gdp[, startyear, ])]
+  regionsNotNA <- regions[!is.na(dimSums(gdp, dim = c(2,3)))]
 
   ## sum over these regions
   sumAvaliableGDP <- dimSums(gdp[regionsNotNA, , ], dim = 1)
@@ -54,14 +55,6 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
 
   ## backcast missing regions with the global average
   gdp <- toolBackcastByReference2D(gdp, ref = sumAvaliableGDP)
-
-  if (smooth) {
-    # smooth data and interpolate missing data. No NAs expected due to global backcasting.
-    gdp <- toolTimeSpline(gdp, targetYears = seq(startyear, endyear, 1), peggedYears = original_years)
-  } else {
-    # just interpolate missing years without smoothing
-    gdp <- toolInterpolate(gdp, years = seq(startyear, endyear, 1), type = "monotone")
-  }
 
   # finalize for calcOutput
   unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
@@ -77,9 +70,14 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
     weight <- pop
   }
 
+  if (smooth) {
+    # smooth data and interpolate missing data; ensure start and 2100 remain the same
+    gdp[,startyear:2100] <- toolTimeSpline(gdp[,startyear:2100], dof = dof, peggedYears = c(startyear, 2100))
+  }
+
   result <- list(
     x = gdp,
-    weight = weight, # TODO adapt weight for per capita data
+    weight = weight,
     unit = unit,
     description = description,
     note = "dimensions: (Time,Region,value)"
