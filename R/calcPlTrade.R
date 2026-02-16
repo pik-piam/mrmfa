@@ -93,14 +93,18 @@ calcPlTrade <- function(
       as.magpie()
 
     # backcast trade data to 1950 based on historic plastic consumption
+    ref <- toolAggregate(reference, rel = rel)
     if (dimExists("sector",x)) {
-      x <- toolBackcastByReference(x, reference)
+      x <- toolBackcastByReference(x, ref)
     } else {
-      x <- toolBackcastByReference(x,  dimSums(reference, dim = 3))
+      x <- toolBackcastByReference(x,  dimSums(ref, dim = 3))
     }
 
     return(x)
   }
+
+  # reference used for backcasting
+  reference <- calcOutput("PlConsumptionByGood", aggregate = FALSE)
 
   # ---------------------------------------------------------------------------
   # Load data
@@ -110,7 +114,7 @@ calcPlTrade <- function(
     trade <- calcOutput("PlUNCTAD", subtype = category, aggregate = FALSE)
     trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
     # backcast trade data to 1950 based on historic plastic consumption
-    consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood", aggregate = FALSE), dim = 3))
+    consumption <- collapseNames(dimSums(reference, dim = 3))
     x <- toolBackcastByReference(trade_filtered, consumption)
 
     getNames(x) <- NULL
@@ -143,8 +147,6 @@ calcPlTrade <- function(
       note <- "dimensions: (Historic Time,Region,value)"
     }
 
-    # reference used for backcasting
-    reference <- calcOutput("PlConsumptionByGood", aggregate = TRUE)
     aggregationFunction = .customAggregate
     aggregationArguments = list(reference = reference, flow_label = flow_label)
 

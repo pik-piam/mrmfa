@@ -149,7 +149,7 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     # Consumption
     calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
     # Trade
-    # calcOutput("PlTrade", category = "Final", flow_label = "Exports", data_source = "BACI_UNCTAD", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
+    # calcOutput("PlTrade", category = "Final", flow_label = "Exports", data_source = "UNCTAD", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
     # calcOutput("PlTrade", category = "Final", flow_label = "Imports", data_source = "UNCTAD", file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)
     # calcOutput("PlTrade", category = "Primary", flow_label = "Exports", data_source = "UNCTAD", file = "pl_primary_his_exports.cs4r", years = start_historic:end_historic)
     # calcOutput("PlTrade", category = "Primary", flow_label = "Imports", data_source = "UNCTAD", file = "pl_primary_his_imports.cs4r", years = start_historic:end_historic)
