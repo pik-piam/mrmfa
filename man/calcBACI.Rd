@@ -4,7 +4,7 @@
 \alias{calcBACI}
 \title{Get BACI Trade data for specific product groups}
 \usage{
-calcBACI(subtype, category, HS = "02")
+calcBACI(subtype, category, HS)
 }
 \arguments{
 \item{subtype}{Character string specifying the scope

@@ -4,7 +4,7 @@
 \alias{readBACI}
 \title{Read BACI Trade data}
 \usage{
-readBACI(subtype, subset = "02")
+readBACI(subtype, subset)
 }
 \arguments{
 \item{subtype}{Character string specifying the scope, combination of material HS codes and category

@@ -35,7 +35,7 @@
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #'
-readBACI <- function(subtype, subset = "02") {
+readBACI <- function(subtype, subset) {
   # check whether subset is one of the available HS revisions
   available <- c("92", "02", "17", "22")
   if (is_empty(intersect(subset, available))) {

@@ -24,11 +24,17 @@
 #'     \item "BACI_UNCTAD" - BACI with UNCTAD HS codes (trade flows by time and region)
 #'     \item "BACI_UNEP" - BACI with UNEP HS codes (trade flows by time, region, sector and polymer)
 #'   }
+#' @param HS Character string specifying the year of the HS (Harmonized System) revision of the data
+#'        - 92
+#'        - 02
+#'        - 17
+#'        - 22
 #' @author Qianzhi Zhang, Leonie Schweiger
 calcPlTrade <- function(
   category,
   flow_label = c("Exports", "Imports"),
-  data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP")
+  data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP"),
+  HS = "92"
 ) {
 
   # ---------------------------------------------------------------------------
@@ -133,9 +139,9 @@ calcPlTrade <- function(
   } else {
     # Load trade data for the selected category
     if (data_source == "BACI_UNEP"){
-      x <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, aggregate = FALSE)
+      x <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, HS=HS, aggregate = FALSE)
     } else if (data_source == "BACI_UNCTAD"){
-      x <- calcOutput("BACI", subtype = "plastics_UNCTAD", category = category, aggregate = FALSE)
+      x <- calcOutput("BACI", subtype = "plastics_UNCTAD", category = category, HS=HS, aggregate = FALSE)
     }
 
     if (data_source == "BACI_UNEP"){

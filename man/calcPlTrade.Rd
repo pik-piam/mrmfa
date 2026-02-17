@@ -7,7 +7,8 @@
 calcPlTrade(
   category,
   flow_label = c("Exports", "Imports"),
-  data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP")
+  data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP"),
+  HS = 92
 )
 }
 \arguments{
@@ -33,6 +34,12 @@ calcPlTrade(
   \item "BACI_UNCTAD" - BACI with UNCTAD HS codes (trade flows by time and region)
   \item "BACI_UNEP" - BACI with UNEP HS codes (trade flows by time, region, sector and polymer)
 }}
+
+\item{HS}{Character string specifying the year of the HS (Harmonized System) revision of the data
+- 92
+- 02
+- 17
+- 22}
 }
 \description{
 Reads plastics trade data and backcasts data to 1950 to fill missing years.

@@ -36,7 +36,7 @@
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcBACI <- function(subtype, category, HS = "02") {
+calcBACI <- function(subtype, category, HS) {
 
   # map category
   category <- switch(category,
