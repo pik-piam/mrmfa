@@ -7,11 +7,11 @@
 calcCoPopulation1900To2150(scenario = "SSP2", smooth = TRUE, dof = 8)
 }
 \arguments{
-\item{scenario}{Scenario to use for future population data (default: SSP2).}
+\item{scenario}{String. Scenario to use for future population data.}
 
-\item{smooth}{If TRUE, data is smoothed using spline interpolation (default: TRUE).}
+\item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation.}
 
-\item{dof}{Degrees of freedom for spline interpolation (default: 8).
+\item{dof}{Integer. Degrees of freedom for spline interpolation.
 Higher values lead to a closer fit to the original data, while lower values result in smoother curves.}
 }
 \value{

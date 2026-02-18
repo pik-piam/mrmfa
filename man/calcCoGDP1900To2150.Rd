@@ -12,13 +12,13 @@ calcCoGDP1900To2150(
 )
 }
 \arguments{
-\item{scenario}{Scenario to use for future GDP data (default: SSP2).}
+\item{scenario}{String. Scenario to use for future GDP data.}
 
-\item{perCapita}{If TRUE, GDP is returned as per capita (default: FALSE).}
+\item{perCapita}{Logical. If TRUE, GDP is returned as per capita.}
 
-\item{smooth}{If TRUE, data is smoothed using spline interpolation (default: TRUE).}
+\item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation.}
 
-\item{dof}{Degrees of freedom for spline interpolation (default: 8).
+\item{dof}{Integer. Degrees of freedom for spline interpolation.
 Higher values lead to a closer fit to the original data, while lower values result in smoother curves.}
 }
 \value{
