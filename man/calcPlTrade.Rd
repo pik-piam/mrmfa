@@ -8,7 +8,7 @@ calcPlTrade(
   category,
   flow_label = c("Exports", "Imports"),
   data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP"),
-  HS = 92
+  HS = "92"
 )
 }
 \arguments{

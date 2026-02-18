@@ -40,7 +40,8 @@ Get BACI Trade data for specific product groups
 }
 \examples{
 \dontrun{
-a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", category = "Plastics in primary forms", HS = "02")
+a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", 
+category = "Plastics in primary forms", HS = "02")
 }
 }
 \seealso{
