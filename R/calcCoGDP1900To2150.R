@@ -11,60 +11,81 @@
 #' GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 #' GDP datasets that use a different base year, which however does not matter
 #' as only the relative values are used
-#' (see \link{toolInterpolate2D}).
-#' @author Merlin Jo Hosak
-#' @param scenario Scenario to use for future GDP data (default: SSP2).
-#' @param perCapita If TRUE, GDP is returned as per capita (default: FALSE).
+#' (see \link{toolInterpolate}).
+#' @author Merlin Jo Hosak, Bennet Weiss
+#' @param scenario String. Scenario to use for future GDP data.
+#' @param perCapita Logical. If TRUE, GDP is returned as per capita.
+#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
+#' @param dof Integer. Degrees of freedom for spline interpolation.
+#' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
-calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE) {
+calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = TRUE, dof = 8) {
+  startyear <- 1900
+  endyear <- 2150
+
   # load data
-  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE)
+  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE, smooth = FALSE)
 
+  # Historic GDP data that goes way back in time, with 1 year timestep
   gdpHistPC <- readSource("OECD_GDP")
-  gdpHistPC <- toolInterpolate2D(gdpHistPC, method = "linear")
+  most_recent_hist_year <- tail(getYears(gdpHistPC, as.integer = TRUE), 1)
+  gdpHistPC <- toolInterpolate(gdpHistPC, type = "monotone", maxgap = 20)
 
-  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE)
-  gdpRecent <- gdpRecent * 1e6 # convert to million USD
+  # Historic and Future GDP data: 1960-2030 with 1 year timestep, therafter with 5 year timestep
+  # turn off average2020 to get yearly data where possible (and of course remove covid correction)
+  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE, average2020 = FALSE)
+  gdpRecent <- gdpRecent * 1e6 # convert from million USD to USD
   getItems(gdpRecent, dim = 3) <- "value"
-  gdpRecent <- time_interpolate(gdpRecent, seq(1965, 2150, 1))
+  original_years <- getYears(gdpRecent, as.integer = TRUE)
+  gdpRecent <- toolInterpolate(gdpRecent, years = seq(original_years[1], endyear, 1), type = "monotone")
 
   # convert historic data from per capita to total
-  # data before 1900 irrelevant (don't cut off before because it helps for interpolation)
-  hist <- pop[, seq(1900, 2016, 1), ] * gdpHistPC[, seq(1900, 2016, 1), ]
+  # data before startyear irrelevant (not cut off before because it helps for interpolation)
+  hist <- pop[, startyear:most_recent_hist_year, ] * gdpHistPC[, startyear:most_recent_hist_year, ]
 
-  # extrapolate data with OECD data as reference where data is available
+  # backcast data with OECD data as reference where data is available
   gdp <- toolBackcastByReference2D(gdpRecent, ref = hist, doInterpolate = FALSE) # Interpolation already done
 
-  # extrapolate GDP data by global total for regions without OECD data
+  # backcast GDP data by global total for regions without OECD data
 
-  ## get GDP of regions that have data up to 1900
+  ## get GDP of regions that have complete data
   regions <- getItems(gdp, dim = 1)
-  regionsNotNA <- regions[!is.na(gdp[, 1900, ])]
+  regionsNotNA <- regions[!is.na(dimSums(gdp, dim = c(2, 3)))]
 
   ## sum over these regions
-  sumGDPfrom1900 <- dimSums(gdp[regionsNotNA, , ], dim = 1)
-  getItems(sumGDPfrom1900, dim = 1) <- "GLO"
+  sumAvaliableGDP <- dimSums(gdp[regionsNotNA, , ], dim = 1)
+  getItems(sumAvaliableGDP, dim = 1) <- "GLO"
 
-  # extrapolate missing regions with the global average
-  gdp <- toolBackcastByReference2D(gdp, ref = sumGDPfrom1900)
+  ## backcast missing regions with the global average
+  gdp <- toolBackcastByReference2D(gdp, ref = sumAvaliableGDP)
 
   # finalize for calcOutput
   unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
-  description <- "GDP from 1900-2150 yearly"
+  description <- paste0("GDP from ", startyear, "-", endyear, " yearly")
   weight <- NULL
   getNames(gdp) <- NULL
 
+  if (smooth) {
+    # smooth data and interpolate missing data; ensure start, end of historic and end of SSP to remain similar
+    gdp[, startyear:2100] <- toolTimeSpline(gdp[, startyear:2100], dof = dof, peggedYears = c(startyear, 2023, 2100))
+  }
+
   # convert to per capita if requested
   if (perCapita) {
+    if (smooth) {
+      # If we smoothed GDP, we must fetch the corresponding smoothed Population
+      # Both happens before conversion to per capita to ensure consistency, as smoothing is not cummulative
+      pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE, smooth = TRUE, dof = dof)
+    }
     gdp <- gdp / pop
     unit <- paste0(unit, " per capita")
-    description <- "GDP per capita from 1900-2150 yearly"
+    description <- paste0("GDP per capita from ", startyear, "-", endyear, " yearly")
     weight <- pop
   }
 
   result <- list(
     x = gdp,
-    weight = weight, # TODO adapt weight for per capita data
+    weight = weight,
     unit = unit,
     description = description,
     note = "dimensions: (Time,Region,value)"
