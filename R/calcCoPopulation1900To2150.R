@@ -10,9 +10,9 @@
 #' scenario (see \code{vignette("scenarios")} for more information).
 #'
 #' @author Merlin Jo Hosak, Bennet Weiss
-#' @param scenario Scenario to use for future population data (default: SSP2).
-#' @param smooth If TRUE, data is smoothed using spline interpolation (default: TRUE).
-#' @param dof Degrees of freedom for spline interpolation (default: 8).
+#' @param scenario String. Scenario to use for future population data.
+#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
+#' @param dof Integer. Degrees of freedom for spline interpolation.
 #' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of population and metadata in calcOutput
 #' format.
@@ -42,8 +42,8 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2", smooth = TRUE, dof = 8
   pop <- toolBackcastByReference2D(x = pop, ref = worldHist)
 
   if (smooth) {
-    # smooth data and interpolate mising years.
-    pop[, 1900:2100] <- toolTimeSpline(pop[, 1900:2100], dof = dof, peggedYears = c(1900, 2100))
+    # smooth data and interpolate missing data; ensure start, end of historic and end of SSP to remain similar
+    pop[, 1900:2100] <- toolTimeSpline(pop[, 1900:2100], dof = dof, peggedYears = c(1900, 2023, 2100))
   }
 
   result <- list(

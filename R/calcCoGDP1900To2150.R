@@ -13,10 +13,10 @@
 #' as only the relative values are used
 #' (see \link{toolInterpolate}).
 #' @author Merlin Jo Hosak, Bennet Weiss
-#' @param scenario Scenario to use for future GDP data (default: SSP2).
-#' @param perCapita If TRUE, GDP is returned as per capita (default: FALSE).
-#' @param smooth If TRUE, data is smoothed using spline interpolation (default: TRUE).
-#' @param dof Degrees of freedom for spline interpolation (default: 8).
+#' @param scenario String. Scenario to use for future GDP data.
+#' @param perCapita Logical. If TRUE, GDP is returned as per capita.
+#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
+#' @param dof Integer. Degrees of freedom for spline interpolation.
 #' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
 calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = TRUE, dof = 8) {
@@ -31,8 +31,9 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
   most_recent_hist_year <- tail(getYears(gdpHistPC, as.integer = TRUE), 1)
   gdpHistPC <- toolInterpolate(gdpHistPC, type = "monotone", maxgap = 20)
 
-  # Historic and Future GDP data, with 5 year timestep, does not go back as far in time
-  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE)
+  # Historic and Future GDP data: 1960-2030 with 1 year timestep, therafter with 5 year timestep
+  # turn off average2020 to get yearly data where possible (and of course remove covid correction)
+  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE, average2020 = FALSE)
   gdpRecent <- gdpRecent * 1e6 # convert from million USD to USD
   getItems(gdpRecent, dim = 3) <- "value"
   original_years <- getYears(gdpRecent, as.integer = TRUE)
@@ -64,17 +65,22 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
   weight <- NULL
   getNames(gdp) <- NULL
 
+  if (smooth) {
+    # smooth data and interpolate missing data; ensure start, end of historic and end of SSP to remain similar
+    gdp[, startyear:2100] <- toolTimeSpline(gdp[, startyear:2100], dof = dof, peggedYears = c(startyear, 2023, 2100))
+  }
+
   # convert to per capita if requested
   if (perCapita) {
+    if (smooth) {
+      # If we smoothed GDP, we must fetch the corresponding smoothed Population
+      # Both happens before conversion to per capita to ensure consistency, as smoothing is not cummulative
+      pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE, smooth = TRUE, dof = dof)
+    }
     gdp <- gdp / pop
     unit <- paste0(unit, " per capita")
     description <- paste0("GDP per capita from ", startyear, "-", endyear, " yearly")
     weight <- pop
-  }
-
-  if (smooth) {
-    # smooth data and interpolate missing data; ensure start and 2100 remain the same
-    gdp[, startyear:2100] <- toolTimeSpline(gdp[, startyear:2100], dof = dof, peggedYears = c(startyear, 2100))
   }
 
   result <- list(
