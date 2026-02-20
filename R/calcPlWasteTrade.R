@@ -28,7 +28,8 @@ calcPlWasteTrade <- function(subtype) {
   trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == datatype])
 
   consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood"), dim = 3))
-  hist_df <- toolBackcastByReference2D(trade_filtered, consumption) %>%
+
+  hist_df <- toolBackcastByReference(trade_filtered, consumption) %>%
     as.data.frame() %>%
     dplyr::mutate(Year = as.integer(as.character(.data$Year))) %>%
     dplyr::select(-"Cell", -"Data1")

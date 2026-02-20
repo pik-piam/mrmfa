@@ -1,0 +1,24 @@
+Source;Target
+Unknown;ABS_ASA_SAN
+Unknown;Fibres
+Unknown;Elastomers (tyres)
+Unknown;HDPE
+Unknown;PET
+Unknown;PP
+Unknown;PS
+Unknown;PUR
+Unknown;LDPE
+Unknown;PVC
+Unknown;Others
+PP;PP
+PS;PS
+PVC;PVC
+Other;Others
+Other;ABS_ASA_SAN
+Other;PUR
+Synthetic Rubber;Elastomers (tyres)
+LDPE;LDPE
+HDPE;HDPE
+PET;PET
+Polyester;Others
+Fibres;Fibres

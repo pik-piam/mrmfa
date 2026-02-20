@@ -5,8 +5,10 @@
 \title{Calculate Country-Level Plastics Trade for Various Categories}
 \usage{
 calcPlTrade(
-  category = c("Final", "Primary", "Intermediate", "Manufactured"),
-  flow_label = c("Exports", "Imports")
+  category,
+  flow_label = c("Exports", "Imports"),
+  data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP"),
+  HS = "92"
 )
 }
 \arguments{
@@ -16,6 +18,8 @@ calcPlTrade(
   \item "Primary"      - Primary plastics
   \item "Intermediate" - Intermediate forms of plastic
   \item "Manufactured" - Intermediate manufactured plastic goods
+  \item "Application"  - Plastic goods
+  \item "Waste"        - Plastic waste
 }}
 
 \item{flow_label}{Character; trade flow:
@@ -23,12 +27,25 @@ calcPlTrade(
   \item "Exports" - Exports
   \item "Imports" - Imports
 }}
+
+\item{data_source}{Character; data source:
+\itemize{
+  \item "UNCTAD" - UNCTAD (trade flows by time and region)
+  \item "BACI_UNCTAD" - BACI with UNCTAD HS codes (trade flows by time and region)
+  \item "BACI_UNEP" - BACI with UNEP HS codes (trade flows by time, region, sector and polymer)
+}}
+
+\item{HS}{Character string specifying the year of the HS (Harmonized System) revision of the data
+- 92
+- 02
+- 17
+- 22}
 }
 \description{
-Reads UNCTAD plastics trade (exports or imports) data at regional level,
-backcasts data to 1950 to fill missing years 1950-2004 years,
-and aggregates to country level.
+Reads plastics trade data and backcasts data to 1950 to fill missing years.
+Note that as the source BACI has bilateral trade data that allows to filter out
+intraregional trade, aggregation is done by a custom aggregation function for this source.
 }
 \author{
-Qianzhi Zhang
+Qianzhi Zhang, Leonie Schweiger
 }

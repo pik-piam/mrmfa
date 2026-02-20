@@ -21,7 +21,7 @@ calcStDRIData <- function(subtype) {
   steelProduction <- calcOutput("StProduction", aggregate = FALSE)
 
   # Backcast DRI production based on steel production
-  final <- toolBackcastByReference2D(driData, steelProduction)
+  final <- toolBackcastByReference(driData, steelProduction)
 
   result <- list(
     x = final,
