@@ -68,35 +68,8 @@ calcPlTrade <- function(
   # and returns both imports and exports for each region in the region mapping
   # in addition, data is backcasted to 1950 based on reference
   .customAggregate <- function(x, rel, reference, flow_label) {
-    df <- tibble::as_tibble(x)
 
-    # get grouping variables
-    group_vars <- setdiff(colnames(df), c("t", "importer", "exporter", "value"))
-
-    # make sure that exporter_region != importer_region for every entry
-    df <- df %>%
-      left_join(rel[, c("country", "region")], by = c("importer" = "country")) %>%
-      left_join(rel[, c("country", "region")], by = c("exporter" = "country")) %>%
-      select("t", "importer" = "region.x", "exporter" = "region.y", all_of(group_vars), "value") %>%
-      filter(.data$importer != .data$exporter)
-
-    if (flow_label=="Imports"){
-      df <- df %>%
-        group_by(.data$t, .data$importer, across(all_of(group_vars))) %>%
-        summarize(value = sum(.data$value, na.rm = TRUE)) %>%
-        ungroup() %>%
-        rename("Region" = "importer")
-    } else if (flow_label=="Exports"){
-      df <- df %>%
-        group_by(.data$t, .data$exporter, across(all_of(group_vars))) %>%
-        summarize(value = sum(.data$value, na.rm = TRUE)) %>%
-        ungroup() %>%
-        rename("Region" = "exporter")
-    }
-
-    x <- df %>%
-      select("Year" = "t", "Region", all_of(group_vars), "value") %>%
-      as.magpie()
+    x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
     # backcast trade data to 1950 based on historic plastic consumption
     ref <- toolAggregate(reference, rel = rel)

@@ -22,7 +22,12 @@ material HS codes:
   valid parameters for category:
   - Primary
   - Application
-  - Waste}
+  - Waste
+- "steel": steel trade data from custom mapping
+  valid parameters for category:
+  - direct
+  - indirect
+  - scrap}
 
 \item{subset}{Character string specifying the HS (Harmonized System) revision of the data
 - 92

@@ -31,7 +31,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", 
+#' a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD",
 #' category = "Plastics in primary forms", HS = "02")
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
