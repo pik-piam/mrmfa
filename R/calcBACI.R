@@ -31,7 +31,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD", 
+#' a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD",
 #' category = "Plastics in primary forms", HS = "02")
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
@@ -111,6 +111,11 @@ calcBACI <- function(subtype, category, HS) {
   df$exporter[df$exporter == "ANT"] <- "CUW"
   df$importer[df$importer == "ANT"] <- "CUW"
 
+  # this mapgie object should actually contain two spatial dimensions "importer" and
+  # "exporter", but since madrat does not support regional aggregation for two spatial
+  # dimensions with iso countries well (as in trade data), we just use one spatial dimension
+  # to comply with the framework and later do the regional aggregation manually
+  # via a custom aggregation function
   x <- as.magpie(df, temporal = "t", spatial = "importer")
   x <- toolCountryFill(x, fill = NA, verbosity = 2)
   x <- replace_non_finite(x, replace = 0)
