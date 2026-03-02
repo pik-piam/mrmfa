@@ -36,7 +36,6 @@ calcPlTrade <- function(
   data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP"),
   HS = "92"
 ) {
-
   # ---------------------------------------------------------------------------
   # validate inputs
   # ---------------------------------------------------------------------------
@@ -46,7 +45,7 @@ calcPlTrade <- function(
   allowed_categories <- list(
     UNCTAD = c("Final", "Primary", "Intermediate", "Manufactured"),
     BACI_UNCTAD = c("Final", "Primary", "Intermediate", "Manufactured", "Waste"),
-    BACI_UNEP   = c("Primary", "Application", "Waste")
+    BACI_UNEP = c("Primary", "Application", "Waste")
   )
 
   if (missing(category)) {
@@ -68,7 +67,6 @@ calcPlTrade <- function(
   # and returns both imports and exports for each region in the region mapping
   # in addition, data is backcasted to 1950 based on reference
   .customAggregate <- function(x, rel, reference, flow_label) {
-
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
     # backcast trade data to 1950 based on historic plastic consumption
@@ -81,10 +79,10 @@ calcPlTrade <- function(
       x <- add_columns(x, addnm = missingRegions, dim = 1, fill = NA)
     }
 
-    if (dimExists("sector",x)) {
+    if (dimExists("sector", x)) {
       x <- toolBackcastByReference(x, ref)
     } else {
-      x <- toolBackcastByReference(x,  dimSums(ref, dim = 3))
+      x <- toolBackcastByReference(x, dimSums(ref, dim = 3))
     }
 
     return(x)
@@ -106,31 +104,29 @@ calcPlTrade <- function(
 
     getNames(x) <- NULL
     note <- "dimensions: (Historic Time,Region,value)"
-    aggregationFunction = toolAggregate
-    aggregationArguments = NULL
-
+    aggregationFunction <- toolAggregate
+    aggregationArguments <- NULL
   } else {
     # Load trade data for the selected category
-    if (data_source == "BACI_UNEP"){
-      x <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, HS=HS, aggregate = FALSE)
-    } else if (data_source == "BACI_UNCTAD"){
-      x <- calcOutput("BACI", subtype = "plastics_UNCTAD", category = category, HS=HS, aggregate = FALSE)
+    if (data_source == "BACI_UNEP") {
+      x <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, HS = HS, aggregate = FALSE)
+    } else if (data_source == "BACI_UNCTAD") {
+      x <- calcOutput("BACI", subtype = "plastics_UNCTAD", category = category, HS = HS, aggregate = FALSE)
     }
 
-    if (data_source == "BACI_UNEP"){
+    if (data_source == "BACI_UNEP") {
       note <- "dimensions: (Historic Time,Region,Material,Good,value)"
       # remove sector column for Primary and Waste category ("General" for all)
       if (category %in% c("Primary", "Waste")) {
         x <- collapseNames(x)
         note <- "dimensions: (Historic Time,Region,Material,value)"
       }
-    } else if (data_source == "BACI_UNCTAD"){
+    } else if (data_source == "BACI_UNCTAD") {
       note <- "dimensions: (Historic Time,Region,value)"
     }
 
-    aggregationFunction = .customAggregate
-    aggregationArguments = list(reference = reference, flow_label = flow_label)
-
+    aggregationFunction <- .customAggregate
+    aggregationArguments <- list(reference = reference, flow_label = flow_label)
   }
 
   # ---------------------------------------------------------------------------

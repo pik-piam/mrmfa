@@ -76,17 +76,20 @@ readBACI <- function(subtype, subset) {
     # Remove the header rows
     codes <- UNCTAD_product_codes[!is_header, ] %>%
       dplyr::rename(code = "Code", group = "Group") %>%
-      filter(.data$group == category) %>% select(-"group")
+      filter(.data$group == category) %>%
+      select(-"group")
     codes$code <- as.integer(codes$code)
-
   } else if (key == "plastics_UNEP") {
     codes <- read_excel(file.path("UNEP_NGP", "TOOL_T1.4a_v1.2_Trade data modelling.xlsx"),
       sheet = "SelectedCOMCodes", skip = 12
     ) %>%
-      select("code" = "Code", "polymer" = "Polymer Type", "application" = "Application Type",
-             "stage" = "Type", "sector" = "Sector", "label" = "Extensive description on comtrade",
-             "plastic_percentage" = "Plastic percentage") %>%
-      filter(.data$stage == category) %>% select(-"stage")
+      select(
+        "code" = "Code", "polymer" = "Polymer Type", "application" = "Application Type",
+        "stage" = "Type", "sector" = "Sector", "label" = "Extensive description on comtrade",
+        "plastic_percentage" = "Plastic percentage"
+      ) %>%
+      filter(.data$stage == category) %>%
+      select(-"stage")
 
     # remove duplicates in raw data; label all polymers in the textile sector as "Fibres"
     codes <- unique(codes) %>%
@@ -94,21 +97,22 @@ readBACI <- function(subtype, subset) {
     # get selected 4-digit and 6-digit COMTRADE codes from UNEP_NGP
     UNEP_codes_k4 <- codes %>% filter(.data$code < 10000)
     UNEP_codes_k6 <- codes %>% filter(.data$code > 10000)
-
   } else if (key == "steel") {
     # read all BACI product codes
     product_codes <- utils::read.csv(file.path(data_path, paste0("product_codes_HS", subset, "_V202501.csv"))) %>%
-      mutate(code_2=as.integer(as.numeric(code)/10000))
+      mutate(code_2 = as.integer(as.numeric(.data$code) / 10000))
     # read indirect steel trade product codes and respective steel share
     indirect <- read_excel(file.path("Steel_HSCodes", "Steel_HSCodes.xlsx")) %>%
-      mutate(steel_share=`Steel Weight Share (%)`/100) %>% select(-"Steel Weight Share (%)")
+      mutate(steel_share = .data$`Steel Weight Share (%)` / 100) %>%
+      select(-"Steel Weight Share (%)")
     codes <- switch(category,
-      "direct" = product_codes %>% filter(grepl("^72",.data$code) & # filter all HS72
-                                            !grepl("^7204",.data$code) & # except for HS7204 (steel scrap)
-                                            !grepl("^7202",.data$code) & # except for HS7202 (ferro-alloys, no listed in WSA trade data)
-                                            !grepl("^7205",.data$code)) %>% select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
-      "scrap" = product_codes %>% filter(grepl("^7204",.data$code)) %>% select("code"), # filter all HS7204
-      "indirect" = product_codes %>% merge(indirect, by.x="code_2", by.y="HS") %>%
+      "direct" = product_codes %>% filter(
+        grepl("^72", .data$code) & # filter all HS72
+        !grepl("^7204", .data$code) & # except for HS7204 (steel scrap)
+        !grepl("^7202", .data$code) & # except for HS7202 (ferro-alloys, no listed in WSA trade data)
+        !grepl("^7205", .data$code)) %>% select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
+      "scrap" = product_codes %>% filter(grepl("^7204", .data$code)) %>% select("code"), # filter all HS7204
+      "indirect" = product_codes %>% merge(indirect, by.x = "code_2", by.y = "HS") %>%
         select(-c("Chapter Title", "description", "code_2")),
       stop("Unsupported steel trade category: ", category)
     )
@@ -137,7 +141,7 @@ readBACI <- function(subtype, subset) {
     # filter HS codes that are relevant for the scope defined in subtype
     if (key == "plastics_UNCTAD") {
       # merge UNCTAD codes with BACI data
-      df_filtered <- merge(df, codes, by.x = "k", by.y = "code")  %>%
+      df_filtered <- merge(df, codes, by.x = "k", by.y = "code") %>%
         mutate(value = .data$q / 1000000) %>% # report quantity in Mt
         select("t", "i", "j", "k", "value")
     } else if (key == "plastics_UNEP") {
@@ -149,24 +153,25 @@ readBACI <- function(subtype, subset) {
       # merge filtered data with 4 and 6 digit codes, calculate plastics content
       df_filtered <- rbind(df_plastics_k6, df_plastics_k4) %>%
         rename(k = "code") %>%
-        mutate(q_plastic = .data$plastic_percentage * .data$q/1000000) %>% # report quantity in Mt
+        mutate(q_plastic = .data$plastic_percentage * .data$q / 1000000) %>% # report quantity in Mt
         group_by(.data$t, .data$i, .data$j, .data$k, .data$polymer, .data$sector) %>%
         summarize(value = sum(.data$q_plastic, na.rm = TRUE)) %>%
         ungroup()
-    } else if (key == "steel"){
+    } else if (key == "steel") {
       # merge HS codes with BACI data
-      df_filtered <- merge(df, codes %>% mutate(code=as.integer(code)), by.x = "k", by.y = "code") %>%
+      df_filtered <- merge(df, codes %>% mutate(code = as.integer(.data$code)), by.x = "k", by.y = "code") %>%
         filter(!is.na(.data$q))
-      if (category %in% c("direct","scrap")){
+      if (category %in% c("direct", "scrap")) {
         # for direct steel trade and scrap trade, sum over all product codes (steel share = 100%)
         df_filtered <- df_filtered %>%
           group_by(.data$t, .data$i, .data$j) %>%
           summarize(value = sum(.data$q, na.rm = TRUE)) %>%
           ungroup()
-      } else if (category == "indirect"){
+      } else if (category == "indirect") {
         # for indirect steel trade, multiply quantity with steel share and split by category
         df_filtered <- df_filtered %>%
-          tidyr::pivot_longer(cols=c("Construction","Transport","Machinery","Products"), names_to = "sector", values_to="share") %>%
+          tidyr::pivot_longer(cols = c("Construction", "Transport", "Machinery", "Products"),
+                              names_to = "sector", values_to = "share") %>%
           mutate(q = .data$q * .data$steel_share * .data$share) %>%
           group_by(.data$t, .data$i, .data$j, .data$sector) %>%
           summarize(value = sum(.data$q, na.rm = TRUE)) %>%
@@ -185,7 +190,7 @@ readBACI <- function(subtype, subset) {
   }
 
   # for plastics trade, check which codes are missing in the BACI dataset and clean data
-  if (key %in% c("plastics_UNCTAD", "plastics_UNEP")){
+  if (key %in% c("plastics_UNCTAD", "plastics_UNEP")) {
     # which Codes are missing?
     diff <- setdiff(unique(codes$code), unique(df_all$k))
     missing <- codes %>% filter(.data$code %in% diff)
