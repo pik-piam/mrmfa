@@ -109,9 +109,9 @@ calcPlTrade <- function(
   } else {
     # Load trade data for the selected category
     if (data_source == "BACI_UNEP") {
-      x <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, HS = HS, aggregate = FALSE)
+      x <- calcOutput("PlBACI", subtype = "plastics_UNEP", category = category, HS = HS, aggregate = FALSE)
     } else if (data_source == "BACI_UNCTAD") {
-      x <- calcOutput("BACI", subtype = "plastics_UNCTAD", category = category, HS = HS, aggregate = FALSE)
+      x <- calcOutput("PlBACI", subtype = "plastics_UNCTAD", category = category, HS = HS, aggregate = FALSE)
     }
 
     if (data_source == "BACI_UNEP") {

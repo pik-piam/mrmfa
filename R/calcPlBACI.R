@@ -32,14 +32,14 @@
 #' @examples
 #' \dontrun{
 #' a <- calcOutput(
-#'   type = "BACI", subtype = "plastics_UNCTAD",
+#'   type = "PlBACI", subtype = "plastics_UNCTAD",
 #'   category = "Plastics in primary forms", HS = "02"
 #' )
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcBACI <- function(subtype, category, HS) {
+calcPlBACI <- function(subtype, category, HS) {
   # map category
   category <- switch(category,
     "Primary" = case_when(subtype == "plastics_UNCTAD" ~ "Plastics in primary forms", .default = "Primary"),
