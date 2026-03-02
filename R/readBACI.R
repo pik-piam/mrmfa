@@ -106,14 +106,14 @@ readBACI <- function(subtype, subset) {
       "direct" = product_codes %>% filter(grepl("^72",.data$code) & # filter all HS72
                                             !grepl("^7204",.data$code) & # except for HS7204 (steel scrap)
                                             !grepl("^7202",.data$code) & # except for HS7202 (ferro-alloys, no listed in WSA trade data)
-                                            grepl("^7205",.data$code)) %>% select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
+                                            !grepl("^7205",.data$code)) %>% select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
       "scrap" = product_codes %>% filter(grepl("^7204",.data$code)) %>% select("code"), # filter all HS7204
       "indirect" = product_codes %>% merge(indirect, by.x="code_2", by.y="HS") %>%
         select(-c("Chapter Title", "description", "code_2")),
       stop("Unsupported steel trade category: ", category)
     )
   } else {
-    stop("Invalid subtype. Choose either 'plastics_UNCTAD' or 'plastics_UNEP'.")
+    stop("Invalid subtype. Choose either 'plastics_UNCTAD', 'plastics_UNEP' or 'steel'.")
   }
 
   # Read raw trade data of respective HS classification system
@@ -155,7 +155,8 @@ readBACI <- function(subtype, subset) {
         ungroup()
     } else if (key == "steel"){
       # merge HS codes with BACI data
-      df_filtered <- merge(df, codes %>% mutate(code=as.integer(code)), by.x = "k", by.y = "code")
+      df_filtered <- merge(df, codes %>% mutate(code=as.integer(code)), by.x = "k", by.y = "code") %>%
+        filter(!is.na(.data$q))
       if (category %in% c("direct","scrap")){
         # for direct steel trade and scrap trade, sum over all product codes (steel share = 100%)
         df_filtered <- df_filtered %>%

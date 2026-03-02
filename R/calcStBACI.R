@@ -46,12 +46,17 @@ calcStBACI <- function(subtype, category, HS="92") {
   if(category=="indirect"){
     WS_trade_df <- WS_trade_df %>% rename("sector"="Data1")
   }
+  # filter out regions where all values are 0 across all years
+  WS_trade_df <- WS_trade_df %>% group_by(.data$Region) %>% filter(any(.data$Value != 0)) %>% ungroup()
 
   # Read raw BACI data
   weights <- readSource("BACI", subtype = paste("steel", category, sep="-"), subset = HS) %>%
     quitte::madrat_mule() %>%
     rename("Region" = case_when(subtype=="imports"~"importer", subtype=="exports"~"exporter"),
            "Region2" = case_when(subtype=="imports"~"exporter", subtype=="exports"~"importer"))
+  # filter out unknown country codes that are later removed by madrat
+  unknown_countries <- c("ZA1", "PUS", "R20")
+  weights <- weights %>% filter(!.data$Region %in% unknown_countries, !.data$Region2 %in% unknown_countries)
   # get grouping variables
   group_vars <- setdiff(colnames(weights), c("t", "Region","Region2","value"))
 
@@ -70,11 +75,29 @@ calcStBACI <- function(subtype, category, HS="92") {
                    weights %>% filter(.data$Region == "SCG") %>% mutate(Region="SXM"),
                    weights %>% filter(.data$Region == "SCG") %>% mutate(Region="CUW"))
 
+  # fill missing years for each region with the next available year's weights (backfill) (e.g. LUX and ZAF are missing in the first years)
+  weights_wide <- weights %>% tidyr::pivot_wider(names_from= Region2, values_from=weight, values_fill = 0)
+  id_vars <- c("t", "Region", group_vars)
+  weights_wide <- weights_wide %>%
+    tidyr::complete(t = min(.data$t):max(.data$t), !!!rlang::syms(setdiff(id_vars, "t"))) %>%
+    dplyr::arrange(.data$Region, .data$t) %>%
+    group_by(across(all_of(setdiff(id_vars, "t")))) %>%
+    tidyr::fill(everything(), .direction = "updown") %>%
+    ungroup()
+  weights_complete <- weights_wide %>% tidyr::pivot_longer(!all_of(id_vars), names_to="Region2", values_to="weight")
+
   # split WS trade data into bilateral trade
-  df <- left_join(WS_trade_df %>% filter(t >= min(weights$t)), weights, by=c("t","Region",all_of(group_vars))) %>%
+  df <- left_join(WS_trade_df %>% filter(t >= min(weights_complete$t)), weights_complete, by=c("t","Region",all_of(group_vars))) %>%
     mutate(value = .data$weight * .data$Value)
-  # check whether there are missing weights (e.g. LUX and ZAF are missing in the first years)
-  missing <- df %>% filter(is.na(value) & Value>0)
+  # check whether there are missing weights, leading to incomplete splits of WS trade data
+  missing <- df %>% filter(is.na(value))
+  if (nrow(missing) > 0) {
+    warning(paste(
+      "The following region x year combinations in the BACI data are missing and can lead
+        to incomplete splitting of World Steel trade data:\n",
+      paste(utils::capture.output(print(missing)), collapse = "\n")
+    ))
+  }
 
   df <- df %>%
     select(-"weight",-"Value") %>%
