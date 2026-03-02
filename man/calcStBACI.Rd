@@ -36,8 +36,10 @@ BACI trade data cannot be used directly, since it does not cover the full scope)
 }
 \examples{
 \dontrun{
-a <- calcOutput(type = "StBACI", subtype = "imports",
-category = "direct", HS = "02")
+a <- calcOutput(
+  type = "StBACI", subtype = "imports",
+  category = "direct", HS = "02"
+)
 }
 }
 \seealso{

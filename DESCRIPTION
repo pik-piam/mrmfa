@@ -33,6 +33,7 @@ Imports:
     readxl,
     rlang,
     stats,
+    stringr,
     tibble,
     tidyr,
     zoo,

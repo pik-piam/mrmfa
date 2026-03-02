@@ -14,9 +14,9 @@ The magpie object should actually contain two spatial dimensions "importer" and
 dimensions with iso countries well (as in trade data), we just use one spatial dimension
 for the importer}
 
-\item{flow_label}{The trade type: either "Exports" or "Imports"}
+\item{rel}{A dataframe with the regional aggregation mapping with columns "country" and "region"}
 
-\item{ref}{A dataframe with the regional aggregation mapping with columns "country" and "region"}
+\item{flow_label}{The trade type: either "Exports" or "Imports"}
 }
 \value{
 An aggregated magpie object
