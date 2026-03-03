@@ -59,7 +59,7 @@ calcStTradeWorldsteel <- function(subtype = "imports") {
   trade <- toolBackcastByReference(trade, ref = production)
 
   # use constant (last observation carried forward) interpolation for remaining NaN values in the future
-  trade <- toolInterpolate(trade, method = "constant")
+  trade <- toolInterpolate(trade, type = "constant")
 
   # Split indirect trade
   if (indirect) {
