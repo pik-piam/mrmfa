@@ -31,27 +31,28 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- calcOutput(type = "BACI", subtype = "plastics_UNCTAD",
-#' category = "Plastics in primary forms", HS = "02")
+#' a <- calcOutput(
+#'   type = "PlBACI", subtype = "plastics_UNCTAD",
+#'   category = "Plastics in primary forms", HS = "02"
+#' )
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcBACI <- function(subtype, category, HS) {
-
+calcPlBACI <- function(subtype, category, HS) {
   # map category
   category <- switch(category,
-              "Primary" = case_when(subtype=="plastics_UNCTAD"~"Plastics in primary forms", .default="Primary"),
-              "Intermediate" = "Intermediate forms of plastic",
-              "Manufactured" = "Intermediate manufactured plastic goods",
-              "Final" = "Final manufactured plastics goods",
-              "Waste" = case_when(subtype=="plastics_UNCTAD"~"Plastic waste", .default="Waste"),
-              "Application" = "Application",
-              stop("Unsupported category: ", category)
+    "Primary" = case_when(subtype == "plastics_UNCTAD" ~ "Plastics in primary forms", .default = "Primary"),
+    "Intermediate" = "Intermediate forms of plastic",
+    "Manufactured" = "Intermediate manufactured plastic goods",
+    "Final" = "Final manufactured plastics goods",
+    "Waste" = case_when(subtype == "plastics_UNCTAD" ~ "Plastic waste", .default = "Waste"),
+    "Application" = "Application",
+    stop("Unsupported category: ", category)
   )
 
   # Read raw data
-  df <- readSource("BACI", subtype = paste(subtype, category, sep="-"), subset = HS) %>%
+  df <- readSource("BACI", subtype = paste(subtype, category, sep = "-"), subset = HS) %>%
     quitte::madrat_mule()
 
   if (subtype == "plastics_UNEP") {
@@ -100,7 +101,6 @@ calcBACI <- function(subtype, category, HS) {
       group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$sector) %>%
       summarize(value = sum(.data$value)) %>%
       ungroup()
-
   }
 
   # historical ISO countries SCG and ANT split into SRB & MNE in 2006 and SXM & CUW in 2011, respectively
