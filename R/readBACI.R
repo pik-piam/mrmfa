@@ -108,9 +108,10 @@ readBACI <- function(subtype, subset) {
     codes <- switch(category,
       "direct" = product_codes %>% filter(
         grepl("^72", .data$code) & # filter all HS72
-        !grepl("^7204", .data$code) & # except for HS7204 (steel scrap)
-        !grepl("^7202", .data$code) & # except for HS7202 (ferro-alloys, no listed in WSA trade data)
-        !grepl("^7205", .data$code)) %>% select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
+          !grepl("^7204", .data$code) & # except for HS7204 (steel scrap)
+          !grepl("^7202", .data$code) & # except for HS7202 (ferro-alloys, no listed in WSA trade data)
+          !grepl("^7205", .data$code)
+      ) %>% select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
       "scrap" = product_codes %>% filter(grepl("^7204", .data$code)) %>% select("code"), # filter all HS7204
       "indirect" = product_codes %>% merge(indirect, by.x = "code_2", by.y = "HS") %>%
         select(-c("Chapter Title", "description", "code_2")),
@@ -170,8 +171,10 @@ readBACI <- function(subtype, subset) {
       } else if (category == "indirect") {
         # for indirect steel trade, multiply quantity with steel share and split by category
         df_filtered <- df_filtered %>%
-          tidyr::pivot_longer(cols = c("Construction", "Transport", "Machinery", "Products"),
-                              names_to = "sector", values_to = "share") %>%
+          tidyr::pivot_longer(
+            cols = c("Construction", "Transport", "Machinery", "Products"),
+            names_to = "sector", values_to = "share"
+          ) %>%
           mutate(q = .data$q * .data$steel_share * .data$share) %>%
           group_by(.data$t, .data$i, .data$j, .data$sector) %>%
           summarize(value = sum(.data$q, na.rm = TRUE)) %>%
