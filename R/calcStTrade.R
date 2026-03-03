@@ -34,7 +34,6 @@
 #' @importFrom magclass as.magpie getComment<-
 #'
 calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = FALSE) {
-
   if (category == "indirect") {
     note <- "dimensions: (Historic Time,Region,Good,value)"
   } else {
@@ -52,7 +51,7 @@ calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   WS_trade <- calcOutput("StTradeWorldsteel", subtype = subtype_WS, aggregate = FALSE)
 
   # if intra-regional trade should be included, simply return the Worldsteel trade data
-  if (include_intra_regional == TRUE){
+  if (include_intra_regional == TRUE) {
     return(list(
       x = WS_trade,
       weight = NULL,
@@ -60,8 +59,7 @@ calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = F
       description = paste("Steel trade:", category, subtype, "from 1900-2021 yearly.", sep = " "),
       note = note
     ))
-  } else{
-
+  } else {
     WS_trade_df <- WS_trade %>%
       as.data.frame() %>%
       rename("t" = "Year") %>%
@@ -125,7 +123,9 @@ calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = F
 
     # split WS trade data into bilateral trade
     df <- left_join(WS_trade_df %>% filter(t >= min(weights_complete$t)),
-                    weights_complete, by = c("t", "Region", all_of(group_vars))) %>%
+      weights_complete,
+      by = c("t", "Region", all_of(group_vars))
+    ) %>%
       mutate(value = .data$weight * .data$Value)
     # check whether there are missing weights, leading to incomplete splits of WS trade data
     missing <- df %>% filter(is.na(.data$value))

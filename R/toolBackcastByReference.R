@@ -26,7 +26,6 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
 
   # matches reference regions to regions of x
   .adaptRefRegions <- function(x, ref) {
-
     xRegions <- getItems(x, dim = 1)
     refRegions <- getItems(ref, dim = 1)
 
@@ -123,7 +122,6 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
 
   # apply interpolation
   if (doInterpolate) {
-
     # Interpolate missing values in x and ref
     # Recommended so that the weight calculation is regular and more stable
 
