@@ -44,7 +44,7 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
   hist <- pop[, startyear:most_recent_hist_year, ] * gdpHistPC[, startyear:most_recent_hist_year, ]
 
   # backcast data with OECD data as reference where data is available
-  gdp <- toolBackcastByReference2D(gdpRecent, ref = hist, doInterpolate = FALSE) # Interpolation already done
+  gdp <- toolBackcastByReference(gdpRecent, ref = hist, doInterpolate = FALSE) # Interpolation already done
 
   # backcast GDP data by global total for regions without OECD data
 
@@ -57,7 +57,7 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
   getItems(sumAvaliableGDP, dim = 1) <- "GLO"
 
   ## backcast missing regions with the global average
-  gdp <- toolBackcastByReference2D(gdp, ref = sumAvaliableGDP)
+  gdp <- toolBackcastByReference(gdp, ref = sumAvaliableGDP)
 
   # finalize for calcOutput
   unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
