@@ -7,7 +7,6 @@
 fullMFA(
   rev = 0,
   dev = "",
-  scenario = "SSP2",
   gdpPerCapita = TRUE,
   runSections = NULL,
   end_future = 2100
@@ -17,8 +16,6 @@ fullMFA(
 \item{rev}{Revision number for the data version}
 
 \item{dev}{Development version string}
-
-\item{scenario}{SSP scenario used for population and GDP.}
 
 \item{gdpPerCapita}{bool if GDP should be returned as per capita values.}
 
