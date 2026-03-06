@@ -57,7 +57,8 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
       cells_and_regions = getItems(x, dim = 1),
       years = years,
       names = getNames(x),
-      fill = NA
+      fill = NA,
+      sets = getSets(x)
     )
     x_new[, getYears(x), ] <- x
   } else {

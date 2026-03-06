@@ -6,23 +6,25 @@
 #' Uses \link{readGapminder} and \link[mrdrivers]{readUN_PopDiv}
 #' datasets for historical population data as well as
 #' \link[mrdrivers]{calcPopulation} from
-#' mrdrivers for current and future population data according to a specific
+#' mrdrivers for current and future population data for different
 #' scenario (see \code{vignette("scenarios")} for more information).
 #'
 #' @author Merlin Jo Hosak, Bennet Weiss
-#' @param scenario String. Scenario to use for future population data.
 #' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of population and metadata in calcOutput
 #' format.
-calcCoPopulation1900To2150 <- function(scenario = "SSP2", smooth = TRUE, dof = 8) {
+calcCoPopulation1900To2150 <- function(smooth = TRUE, dof = 8) {
+
+  scenarios <- c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5")
   # The mrdrivers calcPopulation function provides population data from 1960 on
   # 1 year steps until 2030, 5 year steps thereafter.
-  current <- calcOutput("Population", scenario = scenario, aggregate = FALSE)
+  current <- calcOutput("Population", scenario = scenarios, aggregate = FALSE)
   current <- current * 1e6 # convert from millions to inhabitants
   original_years <- getYears(current, as.integer = TRUE)
   current <- toolInterpolate(current, years = seq(original_years[1], 2150, 1), type = "monotone")
+  getSets(current)[3] <- "scenario"
 
   # The Gapminder dataset reaches from 1800 to 2100, but lacks a few small
   # regions and lacks scenario information. Hence it is only used for
@@ -48,16 +50,16 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2", smooth = TRUE, dof = 8
 
   # build description including scenario and smoothing note
   smooth_suffix <- if (smooth) ", smoothed." else "."
-  description <- paste0("Yearly population 1900-2150 (", scenario, ")", smooth_suffix)
+  description <- paste0("Yearly population 1900-2150", smooth_suffix)
 
-  getNames(pop) <- NULL
+  getSets(pop)
 
   result <- list(
     x = pop,
     weight = NULL,
     unit = "inhabitants",
     description = description,
-    note = "dimensions: (Time,Region,value)"
+    note = "dimensions: (Time,Region,Scenario,value)"
   )
 
   return(result)
