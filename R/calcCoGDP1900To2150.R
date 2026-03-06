@@ -58,17 +58,19 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
 
   ## backcast missing regions with the global average
   gdp <- toolBackcastByReference(gdp, ref = sumAvaliableGDP)
-
-  # finalize for calcOutput
-  unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
-  description <- paste0("GDP from ", startyear, "-", endyear, " yearly")
-  weight <- NULL
+  
   getNames(gdp) <- NULL
 
   if (smooth) {
     # smooth data and interpolate missing data; ensure start, end of historic and end of SSP to remain similar
     gdp[, startyear:2100] <- toolTimeSpline(gdp[, startyear:2100], dof = dof, peggedYears = c(startyear, 2023, 2100))
   }
+
+  # finalize for calcOutput
+  unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
+  # build description incorporating scenario and optional smoothing
+  smooth_suffix <- if (smooth) ", smoothed." else "."
+  base_description <- paste0(startyear, "-", endyear, " (", scenario, ")", smooth_suffix)
 
   # convert to per capita if requested
   if (perCapita) {
@@ -79,8 +81,12 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
     }
     gdp <- gdp / pop
     unit <- paste0(unit, " per capita")
-    description <- paste0("GDP per capita from ", startyear, "-", endyear, " yearly")
+    # adjust description prefix
+    description <- paste0("Yearly GDP per capita ", base_description)
     weight <- pop
+  } else {
+    description <- paste0("Yearly GDP ", base_description)
+    weight <- NULL
   }
 
   result <- list(
