@@ -17,7 +17,7 @@
 #' format.
 calcCoPopulation1900To2150 <- function(smooth = TRUE, dof = 8) {
 
-  scenarios <- mrdrivers::toolGetScenarioDefinition(driver = "GDPpc", aslist = TRUE)$scenario
+  scenarios <- mrdrivers::toolGetScenarioDefinition(driver = "Population", aslist = TRUE)$scenario
   # The mrdrivers calcPopulation function provides population data from 1960 on
   # 1 year steps until 2030, 5 year steps thereafter.
   current <- calcOutput("Population", scenario = scenarios, aggregate = FALSE)
