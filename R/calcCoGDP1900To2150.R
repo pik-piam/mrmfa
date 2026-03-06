@@ -32,7 +32,7 @@ calcCoGDP1900To2150 <- function(perCapita = FALSE, smooth = TRUE, dof = 8) {
 
   # Historic and Future GDP data: 1960-2030 with 1 year timestep, therafter with 5 year timestep
   # turn off average2020 to get yearly data where possible (and of course remove covid correction)
-  scenarios <- c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5")
+  scenarios <- mrdrivers::toolGetScenarioDefinition(driver = "GDPpc", aslist = TRUE)$scenario
   gdpRecent <- calcOutput("GDP", scenario = scenarios, aggregate = FALSE, average2020 = FALSE)
   getSets(gdpRecent)[3] <- "scenario"
   gdpRecent <- gdpRecent * 1e6 # convert from million USD to USD
