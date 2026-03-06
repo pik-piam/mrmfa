@@ -58,8 +58,6 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
 
   ## backcast missing regions with the global average
   gdp <- toolBackcastByReference(gdp, ref = sumAvaliableGDP)
-  
-  getNames(gdp) <- NULL
 
   if (smooth) {
     # smooth data and interpolate missing data; ensure start, end of historic and end of SSP to remain similar
@@ -88,6 +86,8 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
     description <- paste0("Yearly GDP ", base_description)
     weight <- NULL
   }
+
+  getNames(gdp) <- NULL
 
   result <- list(
     x = gdp,

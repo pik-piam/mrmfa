@@ -49,7 +49,9 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2", smooth = TRUE, dof = 8
   # build description including scenario and smoothing note
   smooth_suffix <- if (smooth) ", smoothed." else "."
   description <- paste0("Yearly population 1900-2150 (", scenario, ")", smooth_suffix)
-  
+
+  getNames(pop) <- NULL
+
   result <- list(
     x = pop,
     weight = NULL,
