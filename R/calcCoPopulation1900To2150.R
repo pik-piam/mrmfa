@@ -46,11 +46,15 @@ calcCoPopulation1900To2150 <- function(scenario = "SSP2", smooth = TRUE, dof = 8
     pop[, 1900:2100] <- toolTimeSpline(pop[, 1900:2100], dof = dof, peggedYears = c(1900, 2023, 2100))
   }
 
+  # build description including scenario and smoothing note
+  smooth_suffix <- if (smooth) ", smoothed." else "."
+  description <- paste0("Yearly population 1900-2150 (", scenario, ")", smooth_suffix)
+  
   result <- list(
     x = pop,
     weight = NULL,
     unit = "inhabitants",
-    description = "Population from 1900-2150 yearly",
+    description = description,
     note = "dimensions: (Time,Region,value)"
   )
 
