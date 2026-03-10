@@ -60,7 +60,7 @@ calcCoPopulation1900To2150 <- function(smooth = TRUE, dof = 8) {
     weight = NULL,
     unit = "inhabitants",
     description = description,
-    note = "dimensions: (Time,Region,Scenario,value)"
+    note = "dimensions: (Time,Region,Driver Scenario,value)"
   )
 
   return(result)

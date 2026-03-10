@@ -92,7 +92,7 @@ calcCoGDP1900To2150 <- function(perCapita = FALSE, smooth = TRUE, dof = 8) {
     weight = weight,
     unit = unit,
     description = description,
-    note = "dimensions: (Time,Region,Scenario,value)"
+    note = "dimensions: (Time,Region,Driver Scenario,value)"
   )
 
   return(result)
