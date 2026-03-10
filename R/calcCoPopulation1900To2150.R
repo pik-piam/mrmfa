@@ -20,10 +20,7 @@ calcCoPopulation1900To2150 <- function(smooth = TRUE, dof = 8) {
   scenarios <- mrdrivers::toolGetScenarioDefinition(driver = "Population", aslist = TRUE)$scenario
   # The mrdrivers calcPopulation function provides population data from 1960 on
   # 1 year steps until 2030, 5 year steps thereafter.
-  scenarios <- toolGetScenarioDefinition(driver = "Population", aslist = TRUE)$scenario
-  scenarios <- unique(toolReplaceShortcuts(scenarios))
-  # TODO replace fix that removes ISIMIP scenarios which just includes SSP1-5 again.
-  scenarios <- scenarios[scenarios != "ISIMIP"]
+  scenarios <- c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5")
   current <- calcOutput("Population", scenario = scenarios, aggregate = FALSE)
   current <- current * 1e6 # convert from millions to inhabitants
   original_years <- getYears(current, as.integer = TRUE)
