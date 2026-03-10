@@ -26,6 +26,10 @@
 #'          - direct
 #'          - indirect
 #'          - scrap
+#'        - "cement": cement trade data
+#'          valid parameters for category:
+#'          - cement
+#'          - clinker
 #'
 #'
 #' @return magpie object of the BACI trade data
@@ -117,6 +121,12 @@ readBACI <- function(subtype, subset) {
         select(-c("Chapter Title", "description", "code_2")),
       stop("Unsupported steel trade category: ", category)
     )
+  } else if (key == "cement") {
+    codes <- switch(category,
+      "cement" = c(252321, 252329, 252330, 252390),
+      "clinker" = c(252310),
+      stop("Unsupported cement trade category: ", category)
+    )
   } else {
     stop("Invalid subtype. Choose either 'plastics_UNCTAD', 'plastics_UNEP' or 'steel'.")
   }
@@ -156,7 +166,7 @@ readBACI <- function(subtype, subset) {
         rename(k = "code") %>%
         mutate(q_plastic = .data$plastic_percentage * .data$q / 1000000) %>% # report quantity in Mt
         group_by(.data$t, .data$i, .data$j, .data$k, .data$polymer, .data$sector) %>%
-        summarize(value = sum(.data$q_plastic, na.rm = TRUE)) %>%
+        summarize(value = sum(.data$q_plastic, na.rm = TRUE), .groups = "drop_last") %>%
         ungroup()
     } else if (key == "steel") {
       # merge HS codes with BACI data
@@ -166,7 +176,7 @@ readBACI <- function(subtype, subset) {
         # for direct steel trade and scrap trade, sum over all product codes (steel share = 100%)
         df_filtered <- df_filtered %>%
           group_by(.data$t, .data$i, .data$j) %>%
-          summarize(value = sum(.data$q, na.rm = TRUE)) %>%
+            summarize(value = sum(.data$q, na.rm = TRUE), .groups = "drop_last") %>%
           ungroup()
       } else if (category == "indirect") {
         # for indirect steel trade, multiply quantity with steel share and split by category
@@ -177,8 +187,23 @@ readBACI <- function(subtype, subset) {
           ) %>%
           mutate(q = .data$q * .data$steel_share * .data$share) %>%
           group_by(.data$t, .data$i, .data$j, .data$sector) %>%
-          summarize(value = sum(.data$q, na.rm = TRUE)) %>%
+          summarize(value = sum(.data$q, na.rm = TRUE), .groups = "drop_last") %>%
           ungroup()
+      }
+    } else if (key == "cement") {
+      # merge HS codes with BACI data
+      df_filtered <- merge(df, data.frame(code = as.integer(codes)), by.x = "k", by.y = "code") %>%
+        filter(!is.na(.data$q))
+      if (category == "cement") {
+        # for cement trade, sum over all product codes
+        df_filtered <- df_filtered %>%
+          group_by(.data$t, .data$i, .data$j) %>%
+          summarize(value = sum(.data$q, na.rm = TRUE), .groups = "drop_last") %>%
+          ungroup()
+      } else if (category == "clinker") {
+        # for clinker trade, no further processing needed as only one product code is relevant
+        df_filtered <- df_filtered %>%
+          select("t", "i", "j", "value" = "q")
       }
     }
 
