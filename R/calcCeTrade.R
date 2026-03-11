@@ -71,20 +71,11 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   # Aggregation to avoid intra-regional trade
   # ----------------------------------------------------------------------------
 
-  # only backcast to 1900 and allow no forecasting.
-  years <- 1900:max(getYears(x, as.integer = TRUE))
+  # final data should only be 1900-2023.
+  years <- 1900:2023
   reference <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE, years = years)
 
-  # Avoids potential warning that years do not exist when calcOutput is called with start or end year:
-  # Add years to be backcasted and fill with 0 (not NA to avoid contains NA warning).
-  # Those years are removed again in .customAggregate
-  missing_years <- setdiff(getYears(reference), getYears(x))
-  x <-magpiesort(add_columns(x, addnm = missing_years, dim = 2, fill = 0))
-
   .customAggregate <- function(x, rel, reference, flow_label) {
-    # remove missing years that only contain zeros and ought to be backcasted
-    x <- x[, missing_years, , invert = TRUE]
-
     # aggregate to regions filtering out intra-regional trade
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 

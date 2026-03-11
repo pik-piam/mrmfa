@@ -109,11 +109,11 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CoGDP1900To2150", file = "ce_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
     # Production
     calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
-    # Trade
-    calcOutput("CeTrade", file = "ce_cement_imports.cs4r", subtype = "Imports", category = "cement", years = start_historic:end_historic)
-    calcOutput("CeTrade", file = "ce_cement_exports.cs4r", subtype = "Exports", category = "cement", years = start_historic:end_historic)
-    calcOutput("CeTrade", file = "ce_clinker_imports.cs4r", subtype = "Imports", category = "clinker", years = start_historic:end_historic)
-    calcOutput("CeTrade", file = "ce_clinker_exports.cs4r", subtype = "Exports", category = "clinker", years = start_historic:end_historic)
+    # Trade [Warning: years argument does not work properly. If a different start/end year than 1900/2023 is desired, change calcCeTrade function directly.]
+    calcOutput("CeTrade", file = "ce_cement_imports.cs4r", subtype = "Imports", category = "cement")
+    calcOutput("CeTrade", file = "ce_cement_exports.cs4r", subtype = "Exports", category = "cement")
+    calcOutput("CeTrade", file = "ce_clinker_imports.cs4r", subtype = "Imports", category = "clinker")
+    calcOutput("CeTrade", file = "ce_clinker_exports.cs4r", subtype = "Exports", category = "clinker")
     # Old Trade
     calcOutput("CeMaterialTrade", file = "ce_cement_trade.cs4r", years = start_historic:end_historic, subtype = "cement")
     calcOutput("CeMaterialTrade", file = "ce_clinker_trade.cs4r", years = start_historic:end_historic, subtype = "clinker")
