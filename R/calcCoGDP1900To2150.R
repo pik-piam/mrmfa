@@ -4,7 +4,7 @@
 #' level. Can be aggregated to regions via calcOutput aggregate parameter.
 #' Uses \link[=readOECD_GDP]{OECD_GDP} for historical GDP data as well as
 #' \link[mrdrivers]{calcGDP} from mrdrivers for current and future GDP data
-#' according to a specific scenario (see \code{vignette("scenarios")}
+#' according to a specific scenario.
 #' for more information). Population data from
 #' \link[=calcCoPopulation1900To2150]{calcCoPopulation1900To2150} is used to
 #' convert GDP per capita to total GDP.
@@ -13,13 +13,12 @@
 #' as only the relative values are used
 #' (see \link{toolInterpolate}).
 #' @author Merlin Jo Hosak, Bennet Weiss
-#' @param scenario String. Scenario to use for future GDP data.
 #' @param perCapita Logical. If TRUE, GDP is returned as per capita.
 #' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
-calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = TRUE, dof = 8) {
+calcCoGDP1900To2150 <- function(perCapita = FALSE, smooth = TRUE, dof = 8) {
   startyear <- 1900
   endyear <- 2150
 
@@ -33,9 +32,10 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
 
   # Historic and Future GDP data: 1960-2030 with 1 year timestep, therafter with 5 year timestep
   # turn off average2020 to get yearly data where possible (and of course remove covid correction)
-  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE, average2020 = FALSE)
+  scenarios <- c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5")
+  gdpRecent <- calcOutput("GDP", scenario = scenarios, aggregate = FALSE, average2020 = FALSE)
+  getSets(gdpRecent)[3] <- "scenario"
   gdpRecent <- gdpRecent * 1e6 # convert from million USD to USD
-  getItems(gdpRecent, dim = 3) <- "value"
   original_years <- getYears(gdpRecent, as.integer = TRUE)
   gdpRecent <- toolInterpolate(gdpRecent, years = seq(original_years[1], endyear, 1), type = "monotone")
 
@@ -59,16 +59,16 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
   ## backcast missing regions with the global average
   gdp <- toolBackcastByReference(gdp, ref = sumAvaliableGDP)
 
-  # finalize for calcOutput
-  unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
-  description <- paste0("GDP from ", startyear, "-", endyear, " yearly")
-  weight <- NULL
-  getNames(gdp) <- NULL
-
   if (smooth) {
     # smooth data and interpolate missing data; ensure start, end of historic and end of SSP to remain similar
     gdp[, startyear:2100] <- toolTimeSpline(gdp[, startyear:2100], dof = dof, peggedYears = c(startyear, 2023, 2100))
   }
+
+  # finalize for calcOutput
+  unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
+  # build description incorporating scenario and optional smoothing
+  smooth_suffix <- if (smooth) ", smoothed." else "."
+  base_description <- paste0(startyear, "-", endyear, smooth_suffix)
 
   # convert to per capita if requested
   if (perCapita) {
@@ -79,8 +79,12 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
     }
     gdp <- gdp / pop
     unit <- paste0(unit, " per capita")
-    description <- paste0("GDP per capita from ", startyear, "-", endyear, " yearly")
+    # adjust description prefix
+    description <- paste0("Yearly GDP per capita ", base_description)
     weight <- pop
+  } else {
+    description <- paste0("Yearly GDP ", base_description)
+    weight <- NULL
   }
 
   result <- list(
@@ -88,7 +92,7 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
     weight = weight,
     unit = unit,
     description = description,
-    note = "dimensions: (Time,Region,value)"
+    note = "dimensions: (Time,Region,Driver Scenario,value)"
   )
 
   return(result)

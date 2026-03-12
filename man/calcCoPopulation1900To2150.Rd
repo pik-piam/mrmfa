@@ -4,11 +4,9 @@
 \alias{calcCoPopulation1900To2150}
 \title{Get population from 1900-2100}
 \usage{
-calcCoPopulation1900To2150(scenario = "SSP2", smooth = TRUE, dof = 8)
+calcCoPopulation1900To2150(smooth = TRUE, dof = 8)
 }
 \arguments{
-\item{scenario}{String. Scenario to use for future population data.}
-
 \item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation.}
 
 \item{dof}{Integer. Degrees of freedom for spline interpolation.
@@ -24,7 +22,7 @@ level. Can be aggregated to regions via calcOutput aggregate parameter.
 Uses \link{readGapminder} and \link[mrdrivers]{readUN_PopDiv}
 datasets for historical population data as well as
 \link[mrdrivers]{calcPopulation} from
-mrdrivers for current and future population data according to a specific
+mrdrivers for current and future population data for different
 scenario (see \code{vignette("scenarios")} for more information).
 }
 \author{
