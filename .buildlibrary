@@ -1,4 +1,4 @@
-ValidationKey: '3077700'
+ValidationKey: '3078600'
 AutocreateReadme: yes
 AutocreateCITATION: yes
 AcceptedWarnings:
@@ -8,3 +8,4 @@ AcceptedNotes: madrat:::getSourceFolder
 allowLinterWarnings: yes
 enforceVersionUpdate: yes
 skipCoverage: yes
+UsePkgDown: no
