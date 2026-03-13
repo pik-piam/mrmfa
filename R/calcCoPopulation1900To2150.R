@@ -10,18 +10,19 @@
 #' scenario (see \code{vignette("scenarios")} for more information).
 #'
 #' @author Merlin Jo Hosak, Bennet Weiss
+#' @param scenario Character vector specifying the scenario to use for the future.
+#' @param collapse Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.
 #' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of population and metadata in calcOutput
 #' format.
-calcCoPopulation1900To2150 <- function(smooth = TRUE, dof = 8) {
+calcCoPopulation1900To2150 <- function(scenario = "SSP2", collapse = TRUE, smooth = FALSE, dof = 8) {
 
-  scenarios <- mrdrivers::toolGetScenarioDefinition(driver = "Population", aslist = TRUE)$scenario
   # The mrdrivers calcPopulation function provides population data from 1960 on
   # 1 year steps until 2030, 5 year steps thereafter.
-  scenarios <- c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5")
-  current <- calcOutput("Population", scenario = scenarios, aggregate = FALSE)
+  current <- calcOutput("Population", scenario = scenario, aggregate = FALSE)
+  getSets(pop)[3] <- "scenario"
   current <- current * 1e6 # convert from millions to inhabitants
   original_years <- getYears(current, as.integer = TRUE)
   current <- toolInterpolate(current, years = seq(original_years[1], 2150, 1), type = "monotone")
@@ -51,16 +52,22 @@ calcCoPopulation1900To2150 <- function(smooth = TRUE, dof = 8) {
 
   # build description including scenario and smoothing note
   smooth_suffix <- if (smooth) ", smoothed." else "."
-  description <- paste0("Yearly population 1900-2150", smooth_suffix)
+  description <- paste0("Yearly scenario-dependent population 1900-2150", smooth_suffix)
 
-  getSets(pop)
+  if (collapse) {
+    # remove redundant dimensions (e.g. scenario if only one requested)
+    pop <- collapseDim(pop)
+  }
+
+  scenario_note <- if (length(scenario) == 1 && collapse) "" else ",Driver Scenario"
+  note <- paste0("dimensions: (Time,Region", scenario_note, ",value)")
 
   result <- list(
     x = pop,
     weight = NULL,
     unit = "inhabitants",
     description = description,
-    note = "dimensions: (Time,Region,Driver Scenario,value)"
+    note = note
   )
 
   return(result)
