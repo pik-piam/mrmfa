@@ -5,14 +5,14 @@
 \title{Get population from 1900-2100}
 \usage{
 calcCoPopulation1900To2150(
-  scenario = "SSP2",
+  scenarios = "SSP2",
   collapse = TRUE,
   smooth = FALSE,
   dof = 8
 )
 }
 \arguments{
-\item{scenario}{Character vector specifying the scenario to use for the future.}
+\item{scenarios}{Character vector or string specifying the scenarios to use for the future.}
 
 \item{collapse}{Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.}
 
@@ -32,7 +32,7 @@ Uses \link{readGapminder} and \link[mrdrivers]{readUN_PopDiv}
 datasets for historical population data as well as
 \link[mrdrivers]{calcPopulation} from
 mrdrivers for current and future population data for different
-scenario (see \code{vignette("scenarios")} for more information).
+scenarios (see \code{vignette("scenarios")} for more information).
 }
 \author{
 Merlin Jo Hosak, Bennet Weiss
