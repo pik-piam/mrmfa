@@ -4,9 +4,18 @@
 \alias{calcCoPopulation1900To2150}
 \title{Get population from 1900-2100}
 \usage{
-calcCoPopulation1900To2150(smooth = TRUE, dof = 8)
+calcCoPopulation1900To2150(
+  scenario = "SSP2",
+  collapse = TRUE,
+  smooth = FALSE,
+  dof = 8
+)
 }
 \arguments{
+\item{scenario}{Character vector specifying the scenario to use for the future.}
+
+\item{collapse}{Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.}
+
 \item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation.}
 
 \item{dof}{Integer. Degrees of freedom for spline interpolation.

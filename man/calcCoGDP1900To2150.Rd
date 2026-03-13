@@ -4,10 +4,20 @@
 \alias{calcCoGDP1900To2150}
 \title{Get GDP from 1900-2150}
 \usage{
-calcCoGDP1900To2150(perCapita = FALSE, smooth = TRUE, dof = 8)
+calcCoGDP1900To2150(
+  perCapita = FALSE,
+  scenario = "SSP2",
+  collapse = TRUE,
+  smooth = FALSE,
+  dof = 8
+)
 }
 \arguments{
 \item{perCapita}{Logical. If TRUE, GDP is returned as per capita.}
+
+\item{scenario}{Character vector specifying the scenario to use for the future.}
+
+\item{collapse}{Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.}
 
 \item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation.}
 
