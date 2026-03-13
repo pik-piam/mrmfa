@@ -22,7 +22,7 @@ calcCoPopulation1900To2150 <- function(scenarios = "SSP2", collapse = TRUE, smoo
   # The mrdrivers calcPopulation function provides population data from 1960 on
   # 1 year steps until 2030, 5 year steps thereafter.
   current <- calcOutput("Population", scenario = scenarios, aggregate = FALSE)
-  getSets(pop)[3] <- "scenario"
+  getSets(current)[3] <- "scenario"
   current <- current * 1e6 # convert from millions to inhabitants
   original_years <- getYears(current, as.integer = TRUE)
   current <- toolInterpolate(current, years = seq(original_years[1], 2150, 1), type = "monotone")
