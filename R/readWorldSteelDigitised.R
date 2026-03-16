@@ -40,7 +40,8 @@ readWorldSteelDigitised <- function(subtype) {
       x <- as.magpie(x)
       # convert from Mt to t
       x <- x * 1e6
-      getItems(x, dim = 3) <- "value"
+      getNames(x) <- NULL
+
       return(x)
     },
     "production" = function() {
@@ -60,6 +61,8 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1991-1999 (should be DEU, but is BRG)
       x["DEU", seq(1991, 1999), ] <- x["BRG", seq(1991, 1999), ]
       x["BRG", seq(1991, 1999), ] <- NA
+      getNames(x) <- NULL
+
       return(x)
     },
     "productionByProcess" = function() {
@@ -133,6 +136,7 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1992-1997 (should be SCG, but is YUG)
       x["SCG", seq(1992, 1997), ] <- x["YUG", seq(1992, 1997), ]
       x["YUG", seq(1992, 1997), ] <- NA
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -153,6 +157,7 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1992-1997 (should be SCG, but is YUG)
       x["SCG", seq(1992, 1997), ] <- x["YUG", seq(1992, 1997), ]
       x["YUG", seq(1992, 1997), ] <- NA
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -175,6 +180,7 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
       x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
       x["BRG", seq(1991, 2000), ] <- NA
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -195,6 +201,7 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
       x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
       x["BRG", seq(1991, 2000), ] <- NA
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -274,6 +281,7 @@ readWorldSteelDigitised <- function(subtype) {
       x["LUX", seq(2000, 2008), ] <- x["BLX", seq(2000, 2008), ] * x["LUX", 1998, ] /
         (x["BEL", 1998, ] + x["LUX", 1998, ])
       x <- x["BLX", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -281,6 +289,7 @@ readWorldSteelDigitised <- function(subtype) {
       filenames <- c("specific_scrap_consumption_70s.xlsx")
       x <- .readCommonSourceFormat(filenames, type = "scrap_consumption", version = version)
       x <- x * 1e-3 # convert from kg/t to t/t (actual share)
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -291,6 +300,8 @@ readWorldSteelDigitised <- function(subtype) {
       )
       x <- as.magpie(x)
       x <- x * 1e3 # convert from kT to T
+      getNames(x) <- NULL
+
       return(x)
     },
     "indirectTrade" = function() {

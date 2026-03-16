@@ -47,11 +47,14 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
     "bofProduction" = function() {
       x <- .readCommonSourceFormat("P05_bof_2023-10-23.xlsx")
+      getNames(x) <- NULL
+
       return(x)
     },
     "eafProduction" = function() {
@@ -61,6 +64,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2002, 2005), ] <- x["YUG", seq(2002, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -71,6 +75,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -81,6 +86,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -91,6 +97,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -101,19 +108,26 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
     "indirectImports" = function() {
       x <- .readCommonSourceFormat("I02_indirect_imports_2023-10-23.xlsx")
+      getNames(x) <- NULL
+
       return(x)
     },
     "indirectExports" = function() {
       x <- .readCommonSourceFormat("I01_indirect_exports_2023-10-23.xlsx")
+      getNames(x) <- NULL
+
       return(x)
     },
     "pigIronProduction" = function() {
       x <- .readCommonSourceFormat("P26_pigiron_2023-10-23.xlsx")
+      getNames(x) <- NULL
+
       return(x)
     },
     "pigIronImports" = function() {
@@ -123,6 +137,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -133,11 +148,14 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
     "driProduction" = function() {
       x <- .readCommonSourceFormat("P27_driron_2023-10-23.xlsx")
+      getNames(x) <- NULL
+
       return(x)
     },
     "driImports" = function() {
@@ -147,6 +165,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -157,6 +176,7 @@ readWorldSteelDatabase <- function(subtype = "production") {
       x <- add_columns(x, addnm = "SCG", dim = 1, fill = NA)
       x["SCG", seq(2003, 2005), ] <- x["YUG", seq(2003, 2005), ]
       x <- x["YUG", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     }
