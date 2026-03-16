@@ -28,6 +28,7 @@ readWorldSteelDigitised <- function(subtype) {
     df <- toolCleanSteelRegions(df)
 
     x <- as.magpie(df, spatial = 1)
+    getNames(x) <- NULL
 
     return(x)
   }
@@ -61,7 +62,6 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1991-1999 (should be DEU, but is BRG)
       x["DEU", seq(1991, 1999), ] <- x["BRG", seq(1991, 1999), ]
       x["BRG", seq(1991, 1999), ] <- NA
-      getNames(x) <- NULL
 
       return(x)
     },
@@ -136,7 +136,6 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1992-1997 (should be SCG, but is YUG)
       x["SCG", seq(1992, 1997), ] <- x["YUG", seq(1992, 1997), ]
       x["YUG", seq(1992, 1997), ] <- NA
-      getNames(x) <- NULL
 
       return(x)
     },
@@ -157,7 +156,6 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1992-1997 (should be SCG, but is YUG)
       x["SCG", seq(1992, 1997), ] <- x["YUG", seq(1992, 1997), ]
       x["YUG", seq(1992, 1997), ] <- NA
-      getNames(x) <- NULL
 
       return(x)
     },
@@ -180,7 +178,6 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
       x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
       x["BRG", seq(1991, 2000), ] <- NA
-      getNames(x) <- NULL
 
       return(x)
     },
@@ -201,7 +198,6 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1991-2000 (should be DEU, but is BRG)
       x["DEU", seq(1991, 2000), ] <- x["BRG", seq(1991, 2000), ]
       x["BRG", seq(1991, 2000), ] <- NA
-      getNames(x) <- NULL
 
       return(x)
     },
@@ -289,7 +285,6 @@ readWorldSteelDigitised <- function(subtype) {
       filenames <- c("specific_scrap_consumption_70s.xlsx")
       x <- .readCommonSourceFormat(filenames, type = "scrap_consumption", version = version)
       x <- x * 1e-3 # convert from kg/t to t/t (actual share)
-      getNames(x) <- NULL
 
       return(x)
     },
