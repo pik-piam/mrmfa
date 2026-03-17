@@ -15,7 +15,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
 
   # Bypass loop if there is no 3rd dimension
   if (is.null(data_names)) {
-    return(.toolInterpolateSlice(x, years = years, type = type, extrapolate = extrapolate, ...))
+    return(toolInterpolateSlice(x, years = years, type = type, extrapolate = extrapolate, ...))
   }
 
   x_interpolated <- NULL
@@ -25,7 +25,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
     x_slice <- x[, , dname]
 
     # Run your existing 2D interpolation on the slice
-    interpolated_slice <- .toolInterpolateSlice(x_slice, years = years, type = type, extrapolate = extrapolate, ...)
+    interpolated_slice <- toolInterpolateSlice(x_slice, years = years, type = type, extrapolate = extrapolate, ...)
 
     # save the interpolated data
     if (is.null(x_interpolated)) {
@@ -49,7 +49,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
 #' @param ... Additional arguments passed to interpolation functions.
 #' @return A 2D magpie object with interpolated values for the specified years.
 #' @author Bennet Weiss
-.toolInterpolateSlice <- function(x, years = NULL, type, extrapolate, ...) {
+toolInterpolateSlice <- function(x, years = NULL, type, extrapolate, ...) {
   # If years are provided, create a new magpie object with those years
   if (!is.null(years)) {
     # Create empty magclass and fill in existing data
@@ -66,7 +66,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
   }
 
   # Interpolate
-  x_interpolated <- .toolInterpolateSliceNa(x_new, type = type, extrapolate = extrapolate, ...)
+  x_interpolated <- toolInterpolateSliceNa(x_new, type = type, extrapolate = extrapolate, ...)
 
   return(x_interpolated)
 }
@@ -84,7 +84,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
 #' @param ... Additional arguments passed to interpolation functions.
 #' @return A 2D magpie object with interpolated values.
 #' @author Merlin Jo Hosak, Bennet Weiss
-.toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
+toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
   # turn into data frame with same index
   df <- magclass::as.data.frame(x)
   df <- df[, c("Region", "Year", "Value")]
