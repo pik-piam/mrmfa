@@ -4,12 +4,25 @@
 \alias{calcCoGDP1900To2150}
 \title{Get GDP from 1900-2150}
 \usage{
-calcCoGDP1900To2150(scenario = "SSP2", perCapita = FALSE)
+calcCoGDP1900To2150(
+  perCapita = FALSE,
+  scenarios = "SSP2",
+  collapse = TRUE,
+  smooth = FALSE,
+  dof = 8
+)
 }
 \arguments{
-\item{scenario}{Scenario to use for future GDP data (default: SSP2).}
+\item{perCapita}{Logical. If TRUE, GDP is returned as per capita.}
 
-\item{perCapita}{If TRUE, GDP is returned as per capita (default: FALSE).}
+\item{scenarios}{Character vector or string specifying the scenarios to use for the future.}
+
+\item{collapse}{Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.}
+
+\item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation.}
+
+\item{dof}{Integer. Degrees of freedom for spline interpolation.
+Higher values lead to a closer fit to the original data, while lower values result in smoother curves.}
 }
 \value{
 List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
@@ -19,15 +32,15 @@ Calc GDP (PPP) from 1900-2150 yearly for the REMIND-MFA format on a country
 level. Can be aggregated to regions via calcOutput aggregate parameter.
 Uses \link[=readOECD_GDP]{OECD_GDP} for historical GDP data as well as
 \link[mrdrivers]{calcGDP} from mrdrivers for current and future GDP data
-according to a specific scenario (see \code{vignette("scenarios")}
+according to specific scenarios.
 for more information). Population data from
 \link[=calcCoPopulation1900To2150]{calcCoPopulation1900To2150} is used to
 convert GDP per capita to total GDP.
 GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 GDP datasets that use a different base year, which however does not matter
 as only the relative values are used
-(see \link{toolInterpolate2D}).
+(see \link{toolInterpolate}).
 }
 \author{
-Merlin Jo Hosak
+Merlin Jo Hosak, Bennet Weiss
 }

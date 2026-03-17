@@ -36,7 +36,6 @@ calcPlTrade <- function(
   data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP"),
   HS = "92"
 ) {
-
   # ---------------------------------------------------------------------------
   # validate inputs
   # ---------------------------------------------------------------------------
@@ -46,7 +45,7 @@ calcPlTrade <- function(
   allowed_categories <- list(
     UNCTAD = c("Final", "Primary", "Intermediate", "Manufactured"),
     BACI_UNCTAD = c("Final", "Primary", "Intermediate", "Manufactured", "Waste"),
-    BACI_UNEP   = c("Primary", "Application", "Waste")
+    BACI_UNEP = c("Primary", "Application", "Waste")
   )
 
   if (missing(category)) {
@@ -68,35 +67,7 @@ calcPlTrade <- function(
   # and returns both imports and exports for each region in the region mapping
   # in addition, data is backcasted to 1950 based on reference
   .customAggregate <- function(x, rel, reference, flow_label) {
-    df <- tibble::as_tibble(x)
-
-    # get grouping variables
-    group_vars <- setdiff(colnames(df), c("t", "importer", "exporter", "value"))
-
-    # make sure that exporter_region != importer_region for every entry
-    df <- df %>%
-      left_join(rel[, c("country", "region")], by = c("importer" = "country")) %>%
-      left_join(rel[, c("country", "region")], by = c("exporter" = "country")) %>%
-      select("t", "importer" = "region.x", "exporter" = "region.y", all_of(group_vars), "value") %>%
-      filter(.data$importer != .data$exporter)
-
-    if (flow_label=="Imports"){
-      df <- df %>%
-        group_by(.data$t, .data$importer, across(all_of(group_vars))) %>%
-        summarize(value = sum(.data$value, na.rm = TRUE)) %>%
-        ungroup() %>%
-        rename("Region" = "importer")
-    } else if (flow_label=="Exports"){
-      df <- df %>%
-        group_by(.data$t, .data$exporter, across(all_of(group_vars))) %>%
-        summarize(value = sum(.data$value, na.rm = TRUE)) %>%
-        ungroup() %>%
-        rename("Region" = "exporter")
-    }
-
-    x <- df %>%
-      select("Year" = "t", "Region", all_of(group_vars), "value") %>%
-      as.magpie()
+    x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
     # backcast trade data to 1950 based on historic plastic consumption
     ref <- toolAggregate(reference, rel = rel)
@@ -108,10 +79,10 @@ calcPlTrade <- function(
       x <- add_columns(x, addnm = missingRegions, dim = 1, fill = NA)
     }
 
-    if (dimExists("sector",x)) {
+    if (dimExists("sector", x)) {
       x <- toolBackcastByReference(x, ref)
     } else {
-      x <- toolBackcastByReference(x,  dimSums(ref, dim = 3))
+      x <- toolBackcastByReference(x, dimSums(ref, dim = 3))
     }
 
     return(x)
@@ -133,31 +104,29 @@ calcPlTrade <- function(
 
     getNames(x) <- NULL
     note <- "dimensions: (Historic Time,Region,value)"
-    aggregationFunction = toolAggregate
-    aggregationArguments = NULL
-
+    aggregationFunction <- toolAggregate
+    aggregationArguments <- NULL
   } else {
     # Load trade data for the selected category
-    if (data_source == "BACI_UNEP"){
-      x <- calcOutput("BACI", subtype = "plastics_UNEP", category = category, HS=HS, aggregate = FALSE)
-    } else if (data_source == "BACI_UNCTAD"){
-      x <- calcOutput("BACI", subtype = "plastics_UNCTAD", category = category, HS=HS, aggregate = FALSE)
+    if (data_source == "BACI_UNEP") {
+      x <- calcOutput("PlBACI", subtype = "plastics_UNEP", category = category, HS = HS, aggregate = FALSE)
+    } else if (data_source == "BACI_UNCTAD") {
+      x <- calcOutput("PlBACI", subtype = "plastics_UNCTAD", category = category, HS = HS, aggregate = FALSE)
     }
 
-    if (data_source == "BACI_UNEP"){
+    if (data_source == "BACI_UNEP") {
       note <- "dimensions: (Historic Time,Region,Material,Good,value)"
       # remove sector column for Primary and Waste category ("General" for all)
       if (category %in% c("Primary", "Waste")) {
         x <- collapseNames(x)
         note <- "dimensions: (Historic Time,Region,Material,value)"
       }
-    } else if (data_source == "BACI_UNCTAD"){
+    } else if (data_source == "BACI_UNCTAD") {
       note <- "dimensions: (Historic Time,Region,value)"
     }
 
-    aggregationFunction = .customAggregate
-    aggregationArguments = list(reference = reference, flow_label = flow_label)
-
+    aggregationFunction <- .customAggregate
+    aggregationArguments <- list(reference = reference, flow_label = flow_label)
   }
 
   # ---------------------------------------------------------------------------

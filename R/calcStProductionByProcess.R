@@ -22,7 +22,7 @@ calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(
   .cleanMergeProcessData <- function(byProcessData, CurrentData) {
     getNames(byProcessData) <- "value"
     data <- mbind(byProcessData, CurrentData)
-    data <- toolInterpolate2D(data, method = "linear")
+    data <- toolInterpolate(data, type = "linear")
 
     return(data)
   }
@@ -53,9 +53,9 @@ calcStProductionByProcess <- function(assumedPastPercentages = list("y1900" = c(
       for (year in names(assumedPastPercentages)) {
         pct[, year, idx] <- assumedPastPercentages[[year]][idx]
       }
-      pct[, , idx] <- toolInterpolate2D(pct[, , idx], method = "linear")
+      pct[, , idx] <- toolInterpolate(pct[, , idx], type = "linear")
       # constant percentage towards future (last observation carried forwards/locf)
-      pct[, , idx] <- toolInterpolate2D(pct[, , idx], method = "constant")
+      pct[, , idx] <- toolInterpolate(pct[, , idx], type = "constant")
     }
 
     # Final check to make sure everything sums up to production values
