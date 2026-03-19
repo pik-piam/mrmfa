@@ -39,7 +39,8 @@ toolAggregateBilateralTrade <- function(x, rel, flow_label) {
 
   x <- df %>%
     select("Year" = "t", "Region", all_of(group_vars), "value") %>%
-    as.magpie()
+    as.magpie() %>%
+    collapseDim()
 
   return(x)
 }
