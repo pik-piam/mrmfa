@@ -10,3 +10,5 @@
 ^.lintr$
 ^tests/.lintr$
 ^\.venv$
+^\.claude$
+^_pkgdown\.yml$

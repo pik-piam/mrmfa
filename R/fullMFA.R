@@ -7,9 +7,9 @@
 #' @author Bennet Weiss
 #' @param rev Revision number for the data version
 #' @param dev Development version string
-#' @param scenario SSP scenario used for population and GDP.
 #' @param gdpPerCapita bool if GDP should be returned as per capita values.
-#' @param runSections Character vector selecting which parts to run.
+#' @param driverScenarios Character vector or string specifying the scenarios to use for GDP and population data.
+#' @param runSections Character vector or string selecting which parts to run.
 #' Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
 #' @param end_future End year for future data (default: 2100).
 #' @seealso
@@ -21,7 +21,11 @@
 #' fullMFA()
 #' }
 #'
-fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, runSections = NULL,
+fullMFA <- function(rev = 0,
+                    dev = "",
+                    gdpPerCapita = TRUE,
+                    driverScenarios = c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5"),
+                    runSections = NULL,
                     end_future = 2100) {
   # prepare section selector
   validSections <- c("steel", "cement", "plastic")
@@ -48,8 +52,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     end_historic <- 2022
 
     # common parameters
-    calcOutput("CoPopulation1900To2150", file = "st_population.cs4r", scenario = scenario, years = start_historic:end_future)
-    calcOutput("CoGDP1900To2150", file = "st_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
+    calcOutput("CoPopulation1900To2150", file = "st_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "st_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
 
     # Production
     calcOutput("StProduction", file = "st_production.cs4r", years = start_historic:end_historic)
@@ -105,8 +109,8 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     end_historic <- 2023
 
     # common parameters
-    calcOutput("CoPopulation1900To2150", file = "ce_population.cs4r", scenario = scenario, years = start_historic:end_future)
-    calcOutput("CoGDP1900To2150", file = "ce_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
+    calcOutput("CoPopulation1900To2150", file = "ce_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "ce_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     # Production
     calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
     # Trade [Warning: years argument does not work properly. If a different start/end year than 1900/2023 is desired, change calcCeTrade function directly.]
@@ -129,7 +133,6 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     calcOutput("CeStockTypeSplit", file = "ce_stock_type_split.cs4r")
     calcOutput("CeStockSaturationLevel", file = "ce_stock_saturation_level.cs4r")
     calcOutput("CeIndustrializedRegions", file = "ce_industrialized_regions.cs4r", round = 0)
-
     # Carbonation
     calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
     calcOutput("CeCaOContent", file = "ce_ckd_cao_ratio.cs4r", subtype = "CKD", aggregate = FALSE)
@@ -156,10 +159,11 @@ fullMFA <- function(rev = 0, dev = "", scenario = "SSP2", gdpPerCapita = TRUE, r
     end_historic <- 2019
 
     # common parameters
-    calcOutput("CoPopulation1900To2150", file = "pl_population.cs4r", scenario = scenario, years = start_historic:end_future)
-    calcOutput("CoGDP1900To2150", file = "pl_gdppc.cs4r", scenario = scenario, perCapita = gdpPerCapita, years = start_historic:end_future)
+    calcOutput("CoPopulation1900To2150", file = "pl_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    calcOutput("CoGDP1900To2150", file = "pl_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     # Consumption
     calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
+    calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate=FALSE)
     # Trade
     # calcOutput("PlTrade", category = "Final", flow_label = "Exports", data_source = "UNCTAD", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
     # calcOutput("PlTrade", category = "Final", flow_label = "Imports", data_source = "UNCTAD", file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)

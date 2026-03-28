@@ -4,7 +4,7 @@
 #' level. Can be aggregated to regions via calcOutput aggregate parameter.
 #' Uses \link[=readOECD_GDP]{OECD_GDP} for historical GDP data as well as
 #' \link[mrdrivers]{calcGDP} from mrdrivers for current and future GDP data
-#' according to a specific scenario (see \code{vignette("scenarios")}
+#' according to specific scenarios.
 #' for more information). Population data from
 #' \link[=calcCoPopulation1900To2150]{calcCoPopulation1900To2150} is used to
 #' convert GDP per capita to total GDP.
@@ -13,18 +13,19 @@
 #' as only the relative values are used
 #' (see \link{toolInterpolate}).
 #' @author Merlin Jo Hosak, Bennet Weiss
-#' @param scenario String. Scenario to use for future GDP data.
 #' @param perCapita Logical. If TRUE, GDP is returned as per capita.
+#' @param scenarios Character vector or string specifying the scenarios to use for the future.
+#' @param collapse Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.
 #' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
-calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = TRUE, dof = 8) {
+calcCoGDP1900To2150 <- function(perCapita = FALSE, scenarios = "SSP2", collapse = TRUE, smooth = FALSE, dof = 8) {
   startyear <- 1900
   endyear <- 2150
 
-  # load data
-  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE, smooth = FALSE)
+  # load population data, used for historical purposes only
+  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE)
 
   # Historic GDP data that goes way back in time, with 1 year timestep
   gdpHistPC <- readSource("OECD_GDP")
@@ -33,9 +34,9 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
 
   # Historic and Future GDP data: 1960-2030 with 1 year timestep, therafter with 5 year timestep
   # turn off average2020 to get yearly data where possible (and of course remove covid correction)
-  gdpRecent <- calcOutput("GDP", scenario = scenario, aggregate = FALSE, average2020 = FALSE)
+  gdpRecent <- calcOutput("GDP", scenario = scenarios, aggregate = FALSE, average2020 = FALSE)
+  getSets(gdpRecent)[3] <- "scenario"
   gdpRecent <- gdpRecent * 1e6 # convert from million USD to USD
-  getItems(gdpRecent, dim = 3) <- "value"
   original_years <- getYears(gdpRecent, as.integer = TRUE)
   gdpRecent <- toolInterpolate(gdpRecent, years = seq(original_years[1], endyear, 1), type = "monotone")
 
@@ -68,33 +69,42 @@ calcCoGDP1900To2150 <- function(scenario = "SSP2", perCapita = FALSE, smooth = T
   unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
   # build description incorporating scenario and optional smoothing
   smooth_suffix <- if (smooth) ", smoothed." else "."
-  base_description <- paste0(startyear, "-", endyear, " (", scenario, ")", smooth_suffix)
+  base_description <- paste0(startyear, "-", endyear, smooth_suffix)
 
   # convert to per capita if requested
   if (perCapita) {
-    if (smooth) {
-      # If we smoothed GDP, we must fetch the corresponding smoothed Population
-      # Both happens before conversion to per capita to ensure consistency, as smoothing is not cummulative
-      pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE, smooth = TRUE, dof = dof)
-    }
+    pop <- calcOutput(
+      "CoPopulation1900To2150",
+      scenarios = scenarios, 
+      collapse = collapse,
+      smooth = smooth,
+      dof = dof,
+      aggregate = FALSE
+    )
     gdp <- gdp / pop
     unit <- paste0(unit, " per capita")
     # adjust description prefix
-    description <- paste0("Yearly GDP per capita ", base_description)
+    description <- paste0("Yearly scenario-dependent GDP per capita ", base_description)
     weight <- pop
   } else {
-    description <- paste0("Yearly GDP ", base_description)
+    description <- paste0("Yearly scenario-dependent GDP ", base_description)
     weight <- NULL
   }
 
-  getNames(gdp) <- NULL
+  if (collapse) {
+    # remove redundant dimensions (e.g. scenario if only one requested)
+    gdp <- collapseDim(gdp)
+  }
+
+  scenario_note <- if (length(scenarios) == 1 && collapse) "" else ",Driver Scenario"
+  note <- paste0("dimensions: (Time,Region", scenario_note, ",value)")
 
   result <- list(
     x = gdp,
     weight = weight,
     unit = unit,
     description = description,
-    note = "dimensions: (Time,Region,value)"
+    note = note
   )
 
   return(result)

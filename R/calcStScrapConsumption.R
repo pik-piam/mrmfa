@@ -100,7 +100,6 @@ calcStScrapConsumption <- function(subtype) {
   scrapConsumption <- new.magpie(
     cells_and_regions = getItems(scrapConsumptionWS, dim = 1),
     years = seq(1965, 2025, 1),
-    names = "value",
     fill = NA,
     sets = names(dimnames(scrapConsumptionWS))
   )
