@@ -8,12 +8,20 @@ calcCeClinkerRatio <- function() {
   prod_clinker <- calcOutput("CeBinderProduction", subtype = "clinker", aggregate = FALSE)
 
   # Trade
-  trade_clinker <- calcOutput("CeMaterialTrade", subtype = "clinker", aggregate = FALSE)
+  # Note that the trade is not balanced, significant especially pre-1995
+  clinker_imports <- calcOutput("CeTrade", category = "clinker", subtype = "Imports", regionmapping = "regionmapping_ISO_2_ISO.csv")
+  clinker_exports <- calcOutput("CeTrade", category = "clinker", subtype = "Exports", regionmapping = "regionmapping_ISO_2_ISO.csv")
+  trade_years <- getYears(clinker_imports)
 
+  # Consumption
   consum_clinker <- prod_clinker
-  consum_clinker[, getYears(trade_clinker), ] <- consum_clinker[, getYears(trade_clinker), ] - trade_clinker
+  consum_clinker[, trade_years] <- (
+    consum_clinker[, trade_years]
+    + clinker_imports[, trade_years]
+    - clinker_exports[, trade_years]
+  )
 
-  # initiate clinker ratio by "clinker use" / "cement production"
+  # initiate clinker to cement ratio by "clinker consumption" / "cement production"
   ratio <- new.magpie(
     cells_and_regions = getItems(prod_cement, dim = 1),
     years = getYears(prod_cement)
