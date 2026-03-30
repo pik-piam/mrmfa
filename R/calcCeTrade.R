@@ -71,15 +71,34 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   # Aggregation to avoid intra-regional trade
   # ----------------------------------------------------------------------------
 
-  # final data should only be 1900-2023.
-  years <- 1900:2023
-  reference <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE, years = years)
+  # construct reference for backcasting based on production/gdp and shipping costs.
+  # Note: reference has region-specific units and can therefore not be aggregated.
+  years <- 1900:2021
+
+  # cement production data as base reference
+  production_reference <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE, years = years)
+  reference <- production_reference
+
+  # complement base reference with GDP data where in regions without production
+  gdp_reference <- calcOutput("CoGDP1900To2150", aggregate = FALSE, years = years)
+  zero_prod_regions <- getRegions(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ])
+  reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ]
+
+  # add global shipping cost to base reference as bulk trade generally got cheaper over time
+  shipping_cost <- readSource("OWID", subtype = "shipping_costs")
+  shipping_cost <- toolInterpolate(shipping_cost, years = years, extrapolate = TRUE)
+  shipping_cost <- toolTimeSpline(shipping_cost, dof = 10)
+  reference <- reference / shipping_cost
+
+  # replace US reference with actual trade data from USGS
+  us_reference <- readSource("USGSDS140", subtype = subtype)["USA",]
+  reference["USA", ] <- us_reference
 
   .customAggregate <- function(x, rel, reference, flow_label) {
     # aggregate to regions filtering out intra-regional trade
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
-    # backcast aggregated bilateral trade data to 1900 based on WS trade data
+    # backcast aggregated bilateral trade data to 1900
     ref <- toolAggregate(reference, rel = rel)
 
     # if some of the regions are missing in x due to the manual aggregation,
