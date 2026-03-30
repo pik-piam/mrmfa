@@ -82,6 +82,7 @@ toolInterpolateSlice <- function(x, years = NULL, type, extrapolate, ...) {
 #' @param extrapolate Logical. Whether to allow extrapolation outside the range of available data.
 #' If FALSE, values outside the data range remain NA.
 #' @param ... Additional arguments passed to interpolation functions.
+#' E.g. 'maxgap' can be set to limit the maximum gap size for interpolation.
 #' @return A 2D magpie object with interpolated values.
 #' @author Merlin Jo Hosak, Bennet Weiss
 toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
@@ -92,17 +93,36 @@ toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
   df <- tibble::column_to_rownames(df, "Region")
 
   # transpose and use zoo methods to interpolate missing values
-  df_transposed <- t(df)
+  df_transposed <- t(df) # years x regions
+
+  args <- list(...)
+  if ("rule" %in% names(args)) {
+    stop("The 'rule' argument is reserved for internal use and cannot be set by the user. Please remove it from the arguments.")
+  }
 
   interpolation_methods <- list(
+    # rule = 2 performs constant extrapolation for leading/trailing NAs (removed later if extrapolation = FALSE)
     "linear" = function(...) zoo::na.approx(..., rule = 2),
     "constant" = function(...) zoo::na.locf(..., rule = 2),
-    "spline" = zoo::na.spline,
+    "spline" = function(...) zoo::na.spline(...),
     "monotone" = function(...) zoo::na.spline(..., method = "monoH.FC")
   )
 
   if (!type %in% names(interpolation_methods)) {
     stop("Unknown method for interpolation. Use 'linear', 'spline', 'monotone', or 'constant'.")
+  }
+
+  original_df_transposed <- df_transposed # keep original for extrapolation check
+
+  # Check each column for exactly 1 non-NA value and pre-fill it.
+  # Otherwise, interpolation methods might not work as expected.
+  cols_one_val <- colSums(!is.na(df_transposed)) == 1
+  if (any(cols_one_val)) {
+    for (i in which(cols_one_val)) {
+      # Extract the single valid value and repeat it across the whole column
+      single_val <- stats::na.omit(df_transposed[, i])[1]
+      df_transposed[, i] <- single_val
+    }
   }
 
   # interpolate
@@ -122,9 +142,20 @@ toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
   }
   if (!extrapolate) {
     df_transposed_interpolated <- remove_extrapolation(
-      orig_mat = df_transposed,
+      orig_mat = original_df_transposed,
       interp_mat = df_transposed_interpolated
     )
+  } else {
+    # If extrapolate is TRUE, we still might need to undo the pre-fill for 1-value columns if the gap exceeds maxgap.
+    if ("maxgap" %in% names(args) && any(cols_one_val)) {
+      max_g <- args$maxgap
+      gap_size <- nrow(df_transposed_interpolated) - 1
+
+      # If the gap is too big, revert the whole column to original (NAs except for single value)
+      if (gap_size > max_g) {
+        df_transposed_interpolated[, cols_one_val] <- original_df_transposed[, cols_one_val]
+      }
+    }
   }
 
   # some data wrangling
