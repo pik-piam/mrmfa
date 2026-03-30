@@ -118,7 +118,9 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   # Return results
   # ---------------------------------------------------------------------------
   description <- sprintf(
-    "%s %s (1900-2023) from based on BACI data, backcasted using cement production data.", category, subtype
+    "%s %s (1900-2023) based on BACI data (>=1995), 
+    backcasted using cement production,gdp, shipping costs and USGS trade data.",
+    category, subtype
   )
 
   list(
