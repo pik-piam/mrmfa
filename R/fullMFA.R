@@ -158,7 +158,7 @@ fullMFA <- function(rev = 0,
     calcOutput("CoGDP1900To2150", file = "pl_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     # Consumption
     calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
-    calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate=FALSE)
+    calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate = FALSE)
     # Trade
     # calcOutput("PlTrade", category = "Final", flow_label = "Exports", data_source = "UNCTAD", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
     # calcOutput("PlTrade", category = "Final", flow_label = "Imports", data_source = "UNCTAD", file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)
@@ -177,16 +177,16 @@ fullMFA <- function(rev = 0,
     calcOutput("PlTrade", category = "Waste", flow_label = "Exports", data_source = "BACI_UNEP", file = "pl_waste_his_exports.cs4r", years = start_historic:end_historic)
     calcOutput("PlTrade", category = "Waste", flow_label = "Imports", data_source = "BACI_UNEP", file = "pl_waste_his_imports.cs4r", years = start_historic:end_historic)
     # Parameters
-    calcOutput("PlOECD_MGshare", file = "pl_material_shares_in_goods.cs4r")
-    calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", years = start_historic:end_future) # fix 0.79
+    calcOutput("PlOECD_MGshare", aggregate = FALSE, file = "pl_material_shares_in_goods.cs4r")
+    calcOutput("PlMechReYield", round = 2, aggregate = FALSE, file = "pl_mechanical_recycling_yield.cs4r", years = start_historic:end_future) # fix 0.79
     calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r", years = start_historic:end_future) # fix 0.05
     calcOutput("PlLifetime", subtype = "Lifetime_mean", aggregate = FALSE, file = "pl_lifetime_mean.cs4r")
     calcOutput("PlLifetime", subtype = "Lifetime_std", aggregate = FALSE, file = "pl_lifetime_std.cs4r")
     calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_materials.cs4r")
     # Historic EoL shares
-    calcOutput("PlEoL_shares", subtype = "Collected", file = "pl_collection_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_mechanical_recycling_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlEoL_shares", subtype = "Incinerated", file = "pl_incineration_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlEoL_shares", subtype = "Collected", aggregate = FALSE, file = "pl_collection_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlEoL_shares", subtype = "Recycled", aggregate = FALSE, file = "pl_mechanical_recycling_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlEoL_shares", subtype = "Incinerated", aggregate = FALSE, file = "pl_incineration_rate.cs4r", years = start_historic:end_historic)
     # Rates that are historically zero
     calcOutput("PlZeroRates", file = "pl_chemical_recycling_rate.cs4r", years = start_historic:end_historic)
     calcOutput("PlZeroRates", file = "pl_bio_production_rate.cs4r", years = start_historic:end_historic)

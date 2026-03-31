@@ -1,6 +1,6 @@
 #' Calculate Country-Level End-of-Life Plastic Fate Shares
 #'
-#' Compute end-of-life fate ratios of plastics by country,
+#' Compute end-of-life fate ratios of plastics,
 #' based on OECD regional waste EOL data (1990–2019) and
 #' country/region-specific datasets (EPA, Plastics Europe and Chinese reports)
 #'
@@ -101,41 +101,27 @@ calcPlEoL_shares <- function(subtype) {
   x_backcast[, 1950:2000, "Landfilled"] <- 1 - (x_backcast[, 1950:2000, "Recycled"] + x_backcast[, 1950:2000, "Incinerated"])
 
   # ---------------------------------------------------------------------------
-  # Apply regional-to-country mapping.
-  # ---------------------------------------------------------------------------
-  region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
-  x <- toolAggregate(
-    x_backcast,
-    rel = region_map, dim = 1,
-    from = "RegionCode", to = "CountryCode"
-  )
-  # ---------------------------------------------------------------------------
   # Select data based on subtype
   # ---------------------------------------------------------------------------
   x <- switch(subtype,
-    "Recycled" = mselect(x, Data1 = "Recycled"),
-    "Landfilled" = mselect(x, Data1 = "Landfilled"),
-    "Incinerated" = mselect(x, Data1 = "Incinerated"),
-    "Collected" = mselect(x, Data1 = "Collected"),
-    "All" = x,
+    "Recycled" = mselect(x_backcast, Data1 = "Recycled"),
+    "Landfilled" = mselect(x_backcast, Data1 = "Landfilled"),
+    "Incinerated" = mselect(x_backcast, Data1 = "Incinerated"),
+    "Collected" = mselect(x_backcast, Data1 = "Collected"),
+    "All" = x_backcast,
     stop("Unsupported subtype: ", subtype)
   )
   getNames(x) <- NULL
-  # ---------------------------------------------------------------------------
-  # Prepare weight object
-  #    - Use equal weights (1) for all country-fate combinations.
-  # ---------------------------------------------------------------------------
-  weight <- x
-  weight[, ] <- 1
+
   # ---------------------------------------------------------------------------
   # Return results
   # ---------------------------------------------------------------------------
   return(list(
-    x           = x,
-    weight      = weight,
-    unit        = "ratio",
-    description = "End-of-life fate ratios of plastic disaggregated to country level from OECD Plastics Outlook;
+    x            = x,
+    isocountries = FALSE,
+    unit         = "ratio",
+    description  = "End-of-life fate ratios of plastic from OECD Plastics Outlook;
     EUR, USA and CHA are replaced by region-specific data from Plastics Europa, EPA and Chinese reports",
-    note        = "dimensions: (Historic Time,Region,value)"
+    note         = "dimensions: (Historic Time,Region,value)"
   ))
 }

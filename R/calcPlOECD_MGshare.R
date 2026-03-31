@@ -1,7 +1,6 @@
 #' Calculate Country-Level Material Good Shares
 #'
-#' Compute material share of different goods from 2019 OECD use data,
-#' aggregate regional shares to country level for 2019.
+#' Compute material share of different goods from 2019 OECD use data
 #'
 #' @author Qianzhi Zhang
 #'
@@ -31,33 +30,13 @@ calcPlOECD_MGshare <- function() {
     dplyr::ungroup() %>%
     dplyr::select("Region", "Data2", "Data1", "MaterialShare")
 
-  # ---------------------------------------------------------------------------
-  # Aggregate shares to country level
-  #    - Convert to MagPIE and map regional codes to country codes.
-  # ---------------------------------------------------------------------------
-  region_map <- toolGetMapping(
-    "regionmappingH12.csv",
-    type = "regional", where = "mappingfolder"
-  )
   x <- as.magpie(ratio_df, spatial = 1)
-  x <- toolAggregate(
-    x,
-    rel = region_map, dim = 1,
-    from = "RegionCode", to = "CountryCode"
-  )
-
-  # ---------------------------------------------------------------------------
-  # Prepare weight object and return
-  #    - Use equal weights for aggregation.
-  # ---------------------------------------------------------------------------
-  weight <- x
-  weight[, ] <- 1
 
   return(list(
     x           = x,
-    weight      = weight,
+    isocountries = FALSE,
     unit        = "fraction",
-    description = "Material share of plastics in different goods aggregated to country level for 2019.",
+    description = "Material share of plastics in different goods aggregated to regional level for 2019.",
     note        = "dimensions: (Region,Good,Material,value)"
   ))
 }

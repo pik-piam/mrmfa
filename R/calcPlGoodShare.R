@@ -11,10 +11,24 @@ calcPlGoodShare <- function() {
   # - Read OECD plastic use outputs at regional level.
   # - Exclude total categories and compute sectoral sums (summarise over all polymers) and shares.
   # ---------------------------------------------------------------------------
-  regional_df <- calcOutput(
-    "PlOECD",
-    subtype = "Use_2019_region", aggregate = TRUE
-  ) %>%
+
+  plasticOutlook <- calcOutput("PlOECD", subtype = "Use_2019_region", aggregate = FALSE)
+
+  region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
+
+  # we always aggregate to H12 (independently of the set region mapping), do the share
+  # calculation on H12 regions and then carry over the shares to the countries according to
+  # H12 regions
+  # FIXME: consider doing the shares calculation directly on country level, as there will be
+  # a mismatch when using other regions and H12 also has some questionable regions like
+  # CAZ, grouping New Zealand and Australia with Canada
+
+
+  plasticOutlook <- toolAggregate(plasticOutlook, region_map,
+    from = "CountryCode", to = "RegionCode", dim = 1
+  )
+
+  regional_df <- plasticOutlook %>%
     as.data.frame() %>%
     dplyr::filter(.data$Data1 != "Total", .data$Data2 != "Total") %>%
     dplyr::group_by(.data$Region, .data$Year, .data$Data2) %>%
@@ -31,10 +45,7 @@ calcPlGoodShare <- function() {
   # ---------------------------------------------------------------------------
   # Aggregate shares to country level
   # ---------------------------------------------------------------------------
-  region_map <- toolGetMapping(
-    "regionmappingH12.csv",
-    type = "regional", where = "mappingfolder"
-  )
+
   country_share <- toolAggregate(
     regional_share,
     rel = region_map, dim = 1,
@@ -46,7 +57,7 @@ calcPlGoodShare <- function() {
   #    - Set all aggregation weights to 1.
   # ---------------------------------------------------------------------------
   weight <- country_share
-  weight[, ] <- 1
+  weight[, , ] <- 1
 
   return(list(
     x = country_share,
