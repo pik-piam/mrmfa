@@ -12,11 +12,11 @@ calcCeClinkerRatio <- function() {
   clinker_imports <- calcOutput("CeTrade",
                                 category = "clinker",
                                 subtype = "Imports",
-                                regionmapping = "regionmapping_ISO_2_ISO.csv")
+                                regionmapping = "ISO_2_ISO.csv")
   clinker_exports <- calcOutput("CeTrade",
                                 category = "clinker",
                                 subtype = "Exports",
-                                regionmapping = "regionmapping_ISO_2_ISO.csv")
+                                regionmapping = "ISO_2_ISO.csv")
   trade_years <- getYears(clinker_imports)
 
   # Consumption
