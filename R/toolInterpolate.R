@@ -97,7 +97,8 @@ toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
 
   args <- list(...)
   if ("rule" %in% names(args)) {
-    stop("The 'rule' argument is reserved for internal use and cannot be set by the user. Please remove it from the arguments.")
+    stop(paste0("The 'rule' argument is reserved for internal use and cannot be set by the user. ",
+                "Please remove it from the arguments."))
   }
 
   interpolation_methods <- list(

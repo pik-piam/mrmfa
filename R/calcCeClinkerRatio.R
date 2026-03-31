@@ -9,8 +9,14 @@ calcCeClinkerRatio <- function() {
 
   # Trade
   # Note that the trade is not balanced, significant especially pre-1995
-  clinker_imports <- calcOutput("CeTrade", category = "clinker", subtype = "Imports", regionmapping = "regionmapping_ISO_2_ISO.csv")
-  clinker_exports <- calcOutput("CeTrade", category = "clinker", subtype = "Exports", regionmapping = "regionmapping_ISO_2_ISO.csv")
+  clinker_imports <- calcOutput("CeTrade",
+                                category = "clinker",
+                                subtype = "Imports",
+                                regionmapping = "regionmapping_ISO_2_ISO.csv")
+  clinker_exports <- calcOutput("CeTrade",
+                                category = "clinker",
+                                subtype = "Exports",
+                                regionmapping = "regionmapping_ISO_2_ISO.csv")
   trade_years <- getYears(clinker_imports)
 
   # Consumption

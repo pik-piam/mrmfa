@@ -18,7 +18,6 @@
 #' @return List with Magpie object of population and metadata in calcOutput
 #' format.
 calcCoPopulation1900To2150 <- function(scenarios = "SSP2", collapse = TRUE, smooth = FALSE, dof = 8) {
-
   # The mrdrivers calcPopulation function provides population data from 1960 on
   # 1 year steps until 2030, 5 year steps thereafter.
   current <- calcOutput("Population", scenario = scenarios, aggregate = FALSE)

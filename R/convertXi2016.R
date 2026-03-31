@@ -3,9 +3,8 @@
 #' @author Bennet Weiss
 #' @param x Magpie object
 convertXi2016 <- function(x) {
-
   # normalize (data should be already 99% normalized.)
-  x <- x / dimSums(x, dim=3)
+  x <- x / dimSums(x, dim = 3)
 
   # create empty country list
   x_out <- toolCountryFill(x, verbosity = 2)

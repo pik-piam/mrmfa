@@ -160,7 +160,7 @@ fullMFA <- function(rev = 0,
     calcOutput("CoGDP1900To2150", file = "pl_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     # Consumption
     calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
-    calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate=FALSE)
+    calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate = FALSE)
     # Trade
     # calcOutput("PlTrade", category = "Final", flow_label = "Exports", data_source = "UNCTAD", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
     # calcOutput("PlTrade", category = "Final", flow_label = "Imports", data_source = "UNCTAD", file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)

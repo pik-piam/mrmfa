@@ -75,7 +75,7 @@ calcCoGDP1900To2150 <- function(perCapita = FALSE, scenarios = "SSP2", collapse 
   if (perCapita) {
     pop <- calcOutput(
       "CoPopulation1900To2150",
-      scenarios = scenarios, 
+      scenarios = scenarios,
       collapse = collapse,
       smooth = smooth,
       dof = dof,

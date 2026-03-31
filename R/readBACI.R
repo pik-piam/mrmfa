@@ -176,7 +176,7 @@ readBACI <- function(subtype, subset) {
         # for direct steel trade and scrap trade, sum over all product codes (steel share = 100%)
         df_filtered <- df_filtered %>%
           group_by(.data$t, .data$i, .data$j) %>%
-            summarize(value = sum(.data$q, na.rm = TRUE), .groups = "drop_last") %>%
+          summarize(value = sum(.data$q, na.rm = TRUE), .groups = "drop_last") %>%
           ungroup()
       } else if (category == "indirect") {
         # for indirect steel trade, multiply quantity with steel share and split by category

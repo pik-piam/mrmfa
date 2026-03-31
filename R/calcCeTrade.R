@@ -33,7 +33,6 @@
 #' @importFrom magclass as.magpie getComment<-
 #'
 calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = FALSE) {
-
   # ----------------------------------------------------------------------------
   # Load data
   # ----------------------------------------------------------------------------
@@ -81,7 +80,7 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
 
   # complement base reference with GDP data where in regions without production
   gdp_reference <- calcOutput("CoGDP1900To2150", aggregate = FALSE, years = years)
-  zero_prod_regions <- getRegions(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ])
+  zero_prod_regions <- getItems(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ], dim = 1)
   reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ]
 
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
@@ -91,7 +90,7 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   reference <- reference / shipping_cost
 
   # replace US reference with actual trade data from USGS
-  us_reference <- readSource("USGSDS140", subtype = subtype)["USA",]
+  us_reference <- readSource("USGSDS140", subtype = subtype)["USA", ]
   reference["USA", ] <- us_reference
 
   .customAggregate <- function(x, rel, reference, flow_label) {
@@ -118,7 +117,7 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   # Return results
   # ---------------------------------------------------------------------------
   description <- sprintf(
-    "%s %s (1900-2023) based on BACI data (>=1995), 
+    "%s %s (1900-2023) based on BACI data (>=1995),
     backcasted using cement production,gdp, shipping costs and USGS trade data.",
     category, subtype
   )
