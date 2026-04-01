@@ -35,7 +35,7 @@ calcCoPopulation <- function(scenarios = "SSP2", collapse = TRUE, smooth = FALSE
   pop <- toolBackcastByReference(x = current, ref = hist)
 
   # Where regional information in Gapminder dataset is missing, use its global dataset for backcasting instead
-  worldHist <- readSource("Gapminder", subtype = "global", convert = TRUE)
+  worldHist <- readSource("Gapminder", subtype = "global", convert = FALSE)
   pop <- toolBackcastByReference(x = pop, ref = worldHist)
 
   if (smooth) {
