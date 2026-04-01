@@ -3,7 +3,23 @@
 #' @param subtype Material subtype. Can be "cement or "clinker".
 calcCeBinderProduction <- function(subtype) {
   x <- readSource("Andrew2019", subtype)
-  x[is.na(x)] <- 0
+  if (subtype == "cement") {
+    x <- toolInterpolate(x, type = "spline", extrapolate = FALSE, maxgap = 10)
+
+    # Backcast missing data in early 20th century using regional GDP and US cement intensity
+    gdp <- calcOutput("CoGDP", years = getYears(x), aggregate = FALSE)
+    # Complete data available for US: t cement production per unit of GDP
+    us_cement_intensity <- x["USA", ] / gdp["USA", ]
+    getItems(us_cement_intensity, dim = 1) <- "GLO"
+    reference_cement_production <- us_cement_intensity * gdp
+    x <- toolBackcastByReference(x, reference_cement_production)
+
+  } else if (subtype == "clinker") {
+    x[is.na(x)] <- 0
+  } else {
+    stop("Invalid subtype. Please choose either 'cement' or 'clinker'.")
+  }
+
   x <- x * 1e3 # convert to tonnes
   unit <- "tonnes (t)"
   description <- paste(

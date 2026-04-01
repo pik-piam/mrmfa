@@ -7,6 +7,7 @@
 #' @param type Interpolation method: one of 'linear', 'spline', 'monotone', or 'constant'. Default is 'linear'.
 #' @param extrapolate Logical. Whether to allow extrapolation outside the range of available data. Default is FALSE.
 #' @param ... Additional arguments passed to interpolation functions.
+#' E.g. 'maxgap' can be set to limit the maximum gap size for interpolation.
 #' @return A magpie object with interpolated values for the specified years and all data slices.
 #' @author Bennet Weiss
 toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALSE, ...) {
@@ -47,6 +48,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
 #' @param type Interpolation method: one of 'linear', 'spline', 'monotone', or 'constant'.
 #' @param extrapolate Logical. Whether to allow extrapolation outside the range of available data.
 #' @param ... Additional arguments passed to interpolation functions.
+#' E.g. 'maxgap' can be set to limit the maximum gap size for interpolation.
 #' @return A 2D magpie object with interpolated values for the specified years.
 #' @author Bennet Weiss
 toolInterpolateSlice <- function(x, years = NULL, type, extrapolate, ...) {
