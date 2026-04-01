@@ -79,7 +79,7 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   reference <- production_reference
 
   # complement base reference with GDP data where in regions without production
-  gdp_reference <- calcOutput("CoGDP1900To2150", aggregate = FALSE, years = years)
+  gdp_reference <- calcOutput("CoGDP", aggregate = FALSE, years = years)
   zero_prod_regions <- getItems(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ], dim = 1)
   reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ]
 

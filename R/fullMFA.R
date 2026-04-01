@@ -52,8 +52,8 @@ fullMFA <- function(rev = 0,
     end_historic <- 2022
 
     # common parameters
-    calcOutput("CoPopulation1900To2150", file = "st_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
-    calcOutput("CoGDP1900To2150", file = "st_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    calcOutput("CoPopulation", file = "st_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    calcOutput("CoGDP", file = "st_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
 
     # Production
     calcOutput("StProduction", file = "st_production.cs4r", years = start_historic:end_historic)
@@ -109,8 +109,8 @@ fullMFA <- function(rev = 0,
     end_historic <- 2023
 
     # common parameters
-    calcOutput("CoPopulation1900To2150", file = "ce_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
-    calcOutput("CoGDP1900To2150", file = "ce_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    calcOutput("CoPopulation", file = "ce_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    calcOutput("CoGDP", file = "ce_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     # Production
     calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
     # Trade [Warning: years argument does not work properly. If a different start/end year than 1900/2023 is desired, change calcCeTrade function directly.]
@@ -156,8 +156,8 @@ fullMFA <- function(rev = 0,
     end_historic <- 2019
 
     # common parameters
-    calcOutput("CoPopulation1900To2150", file = "pl_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
-    calcOutput("CoGDP1900To2150", file = "pl_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    calcOutput("CoPopulation", file = "pl_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    calcOutput("CoGDP", file = "pl_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     # Consumption
     calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
     calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate = FALSE)
