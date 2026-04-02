@@ -7,19 +7,21 @@
 #'
 #'
 #'
-
-# TODO: currently used nowhere, can this function be deleted?
 calcPlOECD_EoL <- function() {
+  # TODO: currently used nowhere, can this function be deleted?
+  # Once this will be used, revisit the weight used.
+
+
   # ---------------------------------------------------------------------------
   # Load and clean regional EoL data (1990–2019)
   #    - Read OECD waste end-of-life outputs by region.
   #    - Exclude totals and not applicable categories.
   # ---------------------------------------------------------------------------
   eps <- 1e-9
-  eol_df <- calcOutput(
-    "PlOECD",
-    subtype = "WasteEOL_1990-2019_region", aggregate = TRUE
-  ) %>%
+
+  plOECD <- calcOutput("PlOECD", subtype = "WasteEOL_1990-2019_region", aggregate = FALSE)
+
+  eol_df <- plOECD %>%
     as.data.frame() %>%
     dplyr::filter(!.data$Data1 %in% c("Total", "Not applicable")) %>%
     dplyr::select(-"Cell", -"Data2")
@@ -40,9 +42,12 @@ calcPlOECD_EoL <- function() {
 
   x <- as.magpie(eol_df, spatial = 1, temporal = 2)
 
+  weight <- x
+  weight[, , ] <- plOECD[, , "Total"]
+
   return(list(
     x            = x,
-    isocountries = FALSE,
+    weight       = weight,
     unit         = "%",
     description  = "End-of-life fate ratios of plastic aggregated to country level."
   ))
