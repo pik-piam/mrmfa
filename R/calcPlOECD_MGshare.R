@@ -9,10 +9,10 @@ calcPlOECD_MGshare <- function() {
   # Load and filter regional use data (2019)
   #    - Read regional use output, exclude 'Total' categories.
   # ---------------------------------------------------------------------------
-  use_df <- calcOutput(
-    "PlOECD",
-    subtype = "Use_2019_region", aggregate = TRUE
-  ) %>%
+
+  plOECD <- calcOutput("PlOECD", subtype = "Use_2019_region", aggregate = FALSE)
+
+  use_df <- plOECD %>%
     as.data.frame() %>%
     dplyr::select(-"Cell") %>%
     dplyr::filter(.data$Data1 != "Total", .data$Data2 != "Total")
@@ -24,17 +24,21 @@ calcPlOECD_MGshare <- function() {
   ratio_df <- use_df %>%
     dplyr::group_by(.data$Region, .data$Year, .data$Data2) %>%
     dplyr::mutate(
-      total_by_good = sum(.data$Value, na.rm = TRUE),
-      MaterialShare = .data$Value / .data$total_by_good
+      "total_by_good" = sum(.data$Value, na.rm = TRUE),
+      "MaterialShare" = .data$Value / .data$total_by_good,
+      "MaterialShare" = ifelse(is.nan(.data$MaterialShare), 0, .data$MaterialShare)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::select("Region", "Data2", "Data1", "MaterialShare")
 
   x <- as.magpie(ratio_df, spatial = 1)
 
+  weight <- x
+  weight[, , ] <- plOECD[, , "Total.Total"]
+
   return(list(
     x           = x,
-    isocountries = FALSE,
+    weight      = weight,
     unit        = "fraction",
     description = "Material share of plastics in different goods aggregated to regional level for 2019.",
     note        = "dimensions: (Region,Good,Material,value)"

@@ -22,7 +22,7 @@ calcPlGoodShare <- function() {
     dplyr::group_by(.data$Region, .data$Year) %>%
     dplyr::mutate(
       "share" = .data$Value_sum / sum(.data$Value_sum, na.rm = TRUE),
-      "share" = ifelse(is.na(.data$share), 0, .data$share)
+      "share" = ifelse(is.nan(.data$share), 0, .data$share)
       ) %>%
     dplyr::ungroup()
 

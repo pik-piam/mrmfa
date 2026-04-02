@@ -44,6 +44,7 @@ calcPlOECD_EoL <- function() {
 
   weight <- x
   weight[, , ] <- plOECD[, , "Total"]
+  weight[, seq(1990, 1999, 1)] <- plOECD[, 2000, "Total"]
 
   return(list(
     x            = x,
