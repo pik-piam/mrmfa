@@ -11,45 +11,34 @@ calcPlGoodShare <- function() {
   # - Read OECD plastic use outputs at regional level.
   # - Exclude total categories and compute sectoral sums (summarise over all polymers) and shares.
   # ---------------------------------------------------------------------------
-  regional_df <- calcOutput(
-    "PlOECD",
-    subtype = "Use_2019_region", aggregate = TRUE
-  ) %>%
+
+  plasticOutlook <- calcOutput("PlOECD", subtype = "Use_2019_region", aggregate = FALSE)
+
+  regional_df <- plasticOutlook %>%
     as.data.frame() %>%
     dplyr::filter(.data$Data1 != "Total", .data$Data2 != "Total") %>%
     dplyr::group_by(.data$Region, .data$Year, .data$Data2) %>%
     dplyr::summarise(Value_sum = sum(.data$Value, na.rm = TRUE), .groups = "drop") %>%
     dplyr::group_by(.data$Region, .data$Year) %>%
-    dplyr::mutate(share = .data$Value_sum / sum(.data$Value_sum, na.rm = TRUE)) %>%
+    dplyr::mutate(
+      "share" = .data$Value_sum / sum(.data$Value_sum, na.rm = TRUE),
+      "share" = ifelse(is.nan(.data$share), 0, .data$share)
+      ) %>%
     dplyr::ungroup()
 
-  regional_share <- as.magpie(
+  x <- as.magpie(
     regional_df[c("Region", "Year", "Data2", "share")],
     spatial = 1, temporal = 2
   )
 
-  # ---------------------------------------------------------------------------
-  # Aggregate shares to country level
-  # ---------------------------------------------------------------------------
-  region_map <- toolGetMapping(
-    "regionmappingH12.csv",
-    type = "regional", where = "mappingfolder"
-  )
-  country_share <- toolAggregate(
-    regional_share,
-    rel = region_map, dim = 1,
-    from = "RegionCode", to = "CountryCode"
-  )
+  weight <- x
+  total <- plasticOutlook %>%
+    mselect("Plastic polymer" = "Total", collapseNames = TRUE)
 
-  # ---------------------------------------------------------------------------
-  # Prepare final weight object and return
-  #    - Set all aggregation weights to 1.
-  # ---------------------------------------------------------------------------
-  weight <- country_share
-  weight[, ] <- 1
+  weight <- total[, , getNames(weight)]
 
   return(list(
-    x = country_share,
+    x = x,
     weight = weight,
     unit = "%",
     description = "Sectoral plastic use shares aggregated to country level for 2019."

@@ -1,6 +1,6 @@
 #' Calculate Country-Level End-of-Life Plastic Fate Shares
 #'
-#' Compute end-of-life fate ratios of plastics by country,
+#' Compute end-of-life fate ratios of plastics,
 #' based on OECD regional waste EOL data (1990–2019) and
 #' country/region-specific datasets (EPA, Plastics Europe and Chinese reports)
 #'
@@ -17,28 +17,34 @@
 #' @importFrom data.table first
 #'
 calcPlEoL_shares <- function(subtype) {
+
   # ---------------------------------------------------------------------------
   # Calculate EoL shares from OECD data
   # - OECD data (1990–2019)
   # - data before 2000 all 0, so exclude
   # - calculate shares
   # ---------------------------------------------------------------------------
-  oecd_raw <- calcOutput("PlOECD", subtype = "WasteEOL_1990-2019_region", aggregate = TRUE) %>%
+
+  plOECD <- calcOutput("PlOECD", subtype = "WasteEOL_1990-2019_region", aggregate = FALSE)
+
+  oecd_raw <- plOECD %>%
     as.data.frame() %>%
     filter(!.data$Data1 %in% c("Total", "Not applicable")) %>%
     select(-"Cell", -"Data2") %>%
-    mutate(Year = as.integer(as.character(.data$Year)))
+    mutate("Year" = as.integer(as.character(.data$Year)))
+
   oecd <- oecd_raw %>%
     filter(.data$Year >= 2000) %>%
     mutate(
-      Data1 = case_when(.data$Data1 %in% c("Mismanaged", "Littered") ~ "Uncollected", TRUE ~ .data$Data1)
+      "Data1" = case_when(.data$Data1 %in% c("Mismanaged", "Littered") ~ "Uncollected", TRUE ~ .data$Data1)
     ) %>%
     group_by(.data$Region, .data$Data1, .data$Year) %>%
     summarise(Value = sum(.data$Value), .groups = "drop") %>%
     group_by(.data$Region, .data$Year) %>%
     mutate(
-      Total = sum(.data$Value),
-      share = .data$Value / .data$Total
+      "Total" = sum(.data$Value),
+      "share" = .data$Value / .data$Total,
+      "share" = ifelse(is.nan(.data$share), 0, .data$share)
     )
   # ---------------------------------------------------------------------------
   # Calculate shares from additional region-specific data
@@ -47,32 +53,45 @@ calcPlEoL_shares <- function(subtype) {
   # - US data (1960-2018, fill gaps by linear interpolation)
   # - calculate shares
   # ---------------------------------------------------------------------------
-  eu <- readSource("PlasticsEurope", subtype = "PlasticEoL_EU", convert = FALSE) %>% as.data.frame()
+  eu <- readSource("PlasticsEurope", subtype = "PlasticEoL_EU", convert = FALSE) %>%
+    as.data.frame()
   cn_raw <- readSource("China_PlasticEoL", convert = FALSE)
   cn <- time_interpolate(cn_raw, interpolated_year = 1978:2021, integrate_interpolated_years = TRUE) %>%
     as.data.frame() %>%
-    mutate(Data1 = case_when(.data$Data1 == "Untreatment" ~ "Uncollected", TRUE ~ .data$Data1))
+    mutate("Data1" = case_when(.data$Data1 == "Untreatment" ~ "Uncollected", TRUE ~ .data$Data1))
+
   us_raw <- readSource("US_EPA", convert = FALSE)
-  us <- time_interpolate(us_raw, interpolated_year = 1960:2018, integrate_interpolated_years = TRUE) %>% as.data.frame()
+  us <- time_interpolate(us_raw, interpolated_year = 1960:2018, integrate_interpolated_years = TRUE) %>%
+    as.data.frame()
+
   combined <- rbind(eu, cn, us) %>%
     select(-"Cell") %>%
-    mutate(Year = as.integer(as.character(.data$Year))) %>%
+    mutate("Year" = as.integer(as.character(.data$Year))) %>%
     group_by(.data$Region, .data$Year) %>%
     mutate(
-      Total = sum(.data$Value),
-      share = .data$Value / .data$Total
+      "Total" = sum(.data$Value),
+      "share" = .data$Value / .data$Total
     )
+
+  # map additional shares to country-level using H12 mapping
+  region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder") %>%
+    filter(.data$RegionCode %in% unique(combined$Region)) %>%
+    select("RegionCode", "CountryCode")
+
+  combined <- left_join(combined, region_map, by = c("Region" = "RegionCode"), relationship = "many-to-many") %>%
+    select("Region" = "CountryCode", "Year", "Data1", "share")
+
   # ---------------------------------------------------------------------------
   # replace OECD Eol shares where other data is available
   # recalculate Recycled, Incinerated and Landfilled shares as shares of total collected
   # calculate Collected share as 1-Uncollected
   # ---------------------------------------------------------------------------
   full_data <- left_join(oecd, combined, by = c("Region", "Year", "Data1")) %>%
-    mutate(share = if_else(!is.na(.data$share.y), .data$share.y, .data$share.x)) %>%
+    mutate("share" = if_else(!is.na(.data$share.y), .data$share.y, .data$share.x)) %>%
     group_by(.data$Region, .data$Year) %>%
     mutate(
-      Total_collected = sum(.data$share[.data$Data1 != "Uncollected"]),
-      share_new = case_when(
+      "Total_collected" = sum(.data$share[.data$Data1 != "Uncollected"]),
+      "share_new" = case_when(
         .data$Data1 != "Uncollected" ~ .data$share / .data$Total_collected,
         TRUE ~ (1 - .data$share)
       ),
@@ -93,7 +112,7 @@ calcPlEoL_shares <- function(subtype) {
   )
   target_collection <- full_data %>%
     filter(.data$Year == 2000, .data$Data1 == "Collected") %>%
-    mutate(Year = 1980)
+    mutate("Year" = 1980)
   backcast_data <- rbind(full_data, target, target_collection)
 
   x_backcast <- as.magpie(backcast_data, spatial = 1, temporal = 2)
@@ -101,41 +120,36 @@ calcPlEoL_shares <- function(subtype) {
   x_backcast[, 1950:2000, "Landfilled"] <- 1 - (x_backcast[, 1950:2000, "Recycled"] + x_backcast[, 1950:2000, "Incinerated"])
 
   # ---------------------------------------------------------------------------
-  # Apply regional-to-country mapping.
-  # ---------------------------------------------------------------------------
-  region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
-  x <- toolAggregate(
-    x_backcast,
-    rel = region_map, dim = 1,
-    from = "RegionCode", to = "CountryCode"
-  )
-  # ---------------------------------------------------------------------------
   # Select data based on subtype
   # ---------------------------------------------------------------------------
   x <- switch(subtype,
-    "Recycled" = mselect(x, Data1 = "Recycled"),
-    "Landfilled" = mselect(x, Data1 = "Landfilled"),
-    "Incinerated" = mselect(x, Data1 = "Incinerated"),
-    "Collected" = mselect(x, Data1 = "Collected"),
-    "All" = x,
+    "Recycled" = mselect(x_backcast, Data1 = "Recycled"),
+    "Landfilled" = mselect(x_backcast, Data1 = "Landfilled"),
+    "Incinerated" = mselect(x_backcast, Data1 = "Incinerated"),
+    "Collected" = mselect(x_backcast, Data1 = "Collected"),
+    "All" = x_backcast,
     stop("Unsupported subtype: ", subtype)
   )
   getNames(x) <- NULL
+
   # ---------------------------------------------------------------------------
   # Prepare weight object
-  #    - Use equal weights (1) for all country-fate combinations.
   # ---------------------------------------------------------------------------
+
   weight <- x
-  weight[, ] <- 1
+  weight[, , ] <- 0
+  weight[, seq(2000, 2019, 1)] <- plOECD[, seq(2000, 2019, ), "Total"]
+  weight[, seq(1950, 1999, 1)] <- plOECD[, 2000, "Total"]
+
   # ---------------------------------------------------------------------------
   # Return results
   # ---------------------------------------------------------------------------
   return(list(
-    x           = x,
-    weight      = weight,
-    unit        = "ratio",
-    description = "End-of-life fate ratios of plastic disaggregated to country level from OECD Plastics Outlook;
+    x            = x,
+    weight       = weight,
+    unit         = "ratio",
+    description  = "End-of-life fate ratios of plastic disaggregated to country level from OECD Plastics Outlook;
     EUR, USA and CHA are replaced by region-specific data from Plastics Europa, EPA and Chinese reports",
-    note        = "dimensions: (Historic Time,Region,value)"
+    note         = "dimensions: (Historic Time,Region,value)"
   ))
 }

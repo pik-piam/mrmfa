@@ -5,17 +5,23 @@
 #'
 #' @author Qianzhi Zhang
 #'
+#'
+#'
 calcPlOECD_EoL <- function() {
+  # TODO: currently used nowhere, can this function be deleted?
+  # Once this will be used, revisit the weight used.
+
+
   # ---------------------------------------------------------------------------
   # Load and clean regional EoL data (1990–2019)
   #    - Read OECD waste end-of-life outputs by region.
   #    - Exclude totals and not applicable categories.
   # ---------------------------------------------------------------------------
   eps <- 1e-9
-  eol_df <- calcOutput(
-    "PlOECD",
-    subtype = "WasteEOL_1990-2019_region", aggregate = TRUE
-  ) %>%
+
+  plOECD <- calcOutput("PlOECD", subtype = "WasteEOL_1990-2019_region", aggregate = FALSE)
+
+  eol_df <- plOECD %>%
     as.data.frame() %>%
     dplyr::filter(!.data$Data1 %in% c("Total", "Not applicable")) %>%
     dplyr::select(-"Cell", -"Data2")
@@ -34,35 +40,16 @@ calcPlOECD_EoL <- function() {
     dplyr::select(-"total", -"Value") %>%
     dplyr::rename(EoL_Ratio = "ratio")
 
-  # ---------------------------------------------------------------------------
-  # Aggregate ratios to country level
-  #    - Convert to MagPIE and apply regional-to-country mapping.
-  # ---------------------------------------------------------------------------
-  region_map <- toolGetMapping(
-    "regionmappingH12.csv",
-    type = "regional", where = "mappingfolder"
-  )
   x <- as.magpie(eol_df, spatial = 1, temporal = 2)
-  x <- toolAggregate(
-    x,
-    rel = region_map, dim = 1,
-    from = "RegionCode", to = "CountryCode"
-  )
 
-  # ---------------------------------------------------------------------------
-  # Prepare weight object
-  #    - Use equal weights (1) for all country-fate combinations.
-  # ---------------------------------------------------------------------------
   weight <- x
-  weight[, ] <- 1
+  weight[, , ] <- plOECD[, , "Total"]
+  weight[, seq(1990, 1999, 1)] <- plOECD[, 2000, "Total"]
 
-  # ---------------------------------------------------------------------------
-  # Return results
-  # ---------------------------------------------------------------------------
   return(list(
-    x           = x,
-    weight      = weight,
-    unit        = "%",
-    description = "End-of-life fate ratios of plastic aggregated to country level."
+    x            = x,
+    weight       = weight,
+    unit         = "%",
+    description  = "End-of-life fate ratios of plastic aggregated to country level."
   ))
 }
