@@ -167,7 +167,7 @@ toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
 
   # turn back to magpie object
   df <- tibble::rownames_to_column(df, "Region")
-  x_interpolated <- as.magpie(df, spatial = "Region")
+  x_interpolated <- as.magpie(df, spatial = 1, datacol = 2)
   getNames(x_interpolated) <- getNames(x)
   getSets(x_interpolated) <- getSets(x)
 
