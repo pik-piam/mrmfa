@@ -184,9 +184,9 @@ fullMFA <- function(rev = 0,
     calcOutput("PlLifetime", subtype = "Lifetime_std", aggregate = FALSE, file = "pl_lifetime_std.cs4r")
     calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_materials.cs4r")
     # Historic EoL shares
-    calcOutput("PlEoL_shares", subtype = "Collected", aggregate = FALSE, file = "pl_collection_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlEoL_shares", subtype = "Recycled", aggregate = FALSE, file = "pl_mechanical_recycling_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlEoL_shares", subtype = "Incinerated", aggregate = FALSE, file = "pl_incineration_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlEoL_shares", subtype = "Collected", file = "pl_collection_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_mechanical_recycling_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlEoL_shares", subtype = "Incinerated", file = "pl_incineration_rate.cs4r", years = start_historic:end_historic)
     # Rates that are historically zero
     calcOutput("PlZeroRates", file = "pl_chemical_recycling_rate.cs4r", years = start_historic:end_historic)
     calcOutput("PlZeroRates", file = "pl_bio_production_rate.cs4r", years = start_historic:end_historic)
