@@ -1,6 +1,6 @@
 #' Calculates global cement production as from Andrew's 2019 paper.
 #' @author Bennet Weiss
-#' @param subtype Material subtype. Can be "cement or "clinker".
+#' @param subtype Material subtype. Can be "cement" or "clinker".
 calcCeBinderProduction <- function(subtype) {
   x <- readSource("Andrew2019", subtype)
   x <- x * 1e3 # convert to tonnes

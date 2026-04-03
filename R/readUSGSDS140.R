@@ -12,11 +12,16 @@
 #'        - Imports
 #'        - Exports
 readUSGSDS140 <- function(subtype) {
+  if (!subtype %in% c("Imports", "Exports")) {
+    stop("Invalid subtype. Please choose either 'Imports' or 'Exports'.")
+  }
+
   path <- file.path("v1", "ds140-cement-2021.xlsx")
   data <- readxl::read_xlsx(path, range = "A5:I127")
   data["region"] <- "USA"
   data["value"] <- data[[subtype]]
-  x <- data[c("region", "Year", "value")]
+  x <- data[c("region", "Year", "value")] %>%
+    rename("year" = "Year")
 
   x <- magclass::as.magpie(x, spatial = 1, temporal = 2, datacol = 3)
   getNames(x) <- NULL
