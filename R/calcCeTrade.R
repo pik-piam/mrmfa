@@ -17,7 +17,7 @@
 #' @param include_intra_regional bool if intra-regional trade should be included
 #' @param target_years integer vector of target years for the output data.
 #' If NULL, all years from reference (cement production) are included.
-#' Note: the 'years' argument in calcOutput does not work properly for this function, so target years should be set here instead. 
+#' Note: the 'years' argument in calcOutput does not work properly for this function, so target years should be set here instead.
 #'
 #' @return magpie object of the aggregated trade data
 #'
@@ -88,7 +88,20 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
 
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
   shipping_cost <- readSource("OWID", subtype = "shipping_costs")
-  shipping_cost <- toolInterpolate(shipping_cost, years = target_years, extrapolate = TRUE)
+
+  last_shipping_cost_year <- getYears(shipping_cost, as.integer = TRUE)[1]
+  if (last_shipping_cost_year > target_years[1]) {
+    # extend shipping cost: increase linearly before 1930 and keep constant after 2003
+    shipping_cost <- toolInterpolate(shipping_cost, years = target_years, extrapolate = TRUE)
+    shipping_cost[,target_years < last_shipping_cost_year, ] <- NA
+    # increase shipping cost linearly by last shipping cost each 50y
+    shipping_cost[, target_years[1], ] <- (
+      shipping_cost[, last_shipping_cost_year, ]
+      * (1 + (last_shipping_cost_year - target_years[1]) / 50)
+    )
+    shipping_cost <- toolInterpolate(shipping_cost)
+  }
+  # smooth shipping cost function
   shipping_cost <- toolTimeSpline(shipping_cost, dof = 10)
   reference <- reference / shipping_cost
 
