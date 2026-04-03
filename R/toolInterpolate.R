@@ -6,7 +6,9 @@
 #' @param years Optional vector of years to interpolate to. If NULL, uses years in x.
 #' @param type Interpolation method: one of 'linear', 'spline', 'monotone', or 'constant'. Default is 'linear'.
 #' @param extrapolate Logical. Whether to allow extrapolation outside the range of available data. Default is FALSE.
+#' Extrapolation carries last observation forward/backward (constant), regardless of type.
 #' @param ... Additional arguments passed to interpolation functions.
+#' E.g. 'maxgap' can be set to limit the maximum gap size for interpolation.
 #' @return A magpie object with interpolated values for the specified years and all data slices.
 #' @author Bennet Weiss
 toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALSE, ...) {
@@ -47,6 +49,7 @@ toolInterpolate <- function(x, years = NULL, type = "linear", extrapolate = FALS
 #' @param type Interpolation method: one of 'linear', 'spline', 'monotone', or 'constant'.
 #' @param extrapolate Logical. Whether to allow extrapolation outside the range of available data.
 #' @param ... Additional arguments passed to interpolation functions.
+#' E.g. 'maxgap' can be set to limit the maximum gap size for interpolation.
 #' @return A 2D magpie object with interpolated values for the specified years.
 #' @author Bennet Weiss
 toolInterpolateSlice <- function(x, years = NULL, type, extrapolate, ...) {
@@ -60,7 +63,13 @@ toolInterpolateSlice <- function(x, years = NULL, type, extrapolate, ...) {
       fill = NA,
       sets = getSets(x)
     )
-    x_new[, getYears(x), ] <- x
+    # Only assign to years that exist in both x and x_new
+    years_in_both <- intersect(getYears(x), getYears(x_new))
+    if (length(years_in_both) > 0) {
+      x_new[, years_in_both, ] <- x[, years_in_both, ]
+    } else {
+      stop("No overlapping years between input data and specified years. Please check the 'years' argument.")
+    }
   } else {
     x_new <- x
   }
@@ -82,6 +91,7 @@ toolInterpolateSlice <- function(x, years = NULL, type, extrapolate, ...) {
 #' @param extrapolate Logical. Whether to allow extrapolation outside the range of available data.
 #' If FALSE, values outside the data range remain NA.
 #' @param ... Additional arguments passed to interpolation functions.
+#' E.g. 'maxgap' can be set to limit the maximum gap size for interpolation.
 #' @return A 2D magpie object with interpolated values.
 #' @author Merlin Jo Hosak, Bennet Weiss
 toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
@@ -92,17 +102,37 @@ toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
   df <- tibble::column_to_rownames(df, "Region")
 
   # transpose and use zoo methods to interpolate missing values
-  df_transposed <- t(df)
+  df_transposed <- t(df) # years x regions
+
+  args <- list(...)
+  if ("rule" %in% names(args)) {
+    stop(paste0("The 'rule' argument is reserved for internal use and cannot be set by the user. ",
+                "Please remove it from the arguments."))
+  }
 
   interpolation_methods <- list(
+    # rule = 2 performs constant extrapolation for leading/trailing NAs (removed later if extrapolation = FALSE)
     "linear" = function(...) zoo::na.approx(..., rule = 2),
     "constant" = function(...) zoo::na.locf(..., rule = 2),
-    "spline" = zoo::na.spline,
+    "spline" = function(...) zoo::na.spline(...),
     "monotone" = function(...) zoo::na.spline(..., method = "monoH.FC")
   )
 
   if (!type %in% names(interpolation_methods)) {
     stop("Unknown method for interpolation. Use 'linear', 'spline', 'monotone', or 'constant'.")
+  }
+
+  original_df_transposed <- df_transposed # keep original for extrapolation check
+
+  # Check each column for exactly 1 non-NA value and pre-fill it.
+  # Otherwise, interpolation methods might not work as expected.
+  cols_one_val <- colSums(!is.na(df_transposed)) == 1
+  if (any(cols_one_val)) {
+    for (i in which(cols_one_val)) {
+      # Extract the single valid value and repeat it across the whole column
+      single_val <- stats::na.omit(df_transposed[, i])[1]
+      df_transposed[, i] <- single_val
+    }
   }
 
   # interpolate
@@ -122,9 +152,20 @@ toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
   }
   if (!extrapolate) {
     df_transposed_interpolated <- remove_extrapolation(
-      orig_mat = df_transposed,
+      orig_mat = original_df_transposed,
       interp_mat = df_transposed_interpolated
     )
+  } else {
+    # If extrapolate is TRUE, we still might need to undo the pre-fill for 1-value columns if the gap exceeds maxgap.
+    if ("maxgap" %in% names(args) && any(cols_one_val)) {
+      max_g <- args$maxgap
+      gap_size <- nrow(df_transposed_interpolated) - 1
+
+      # If the gap is too big, revert the whole column to original (NAs except for single value)
+      if (gap_size > max_g) {
+        df_transposed_interpolated[, cols_one_val] <- original_df_transposed[, cols_one_val]
+      }
+    }
   }
 
   # some data wrangling
@@ -133,7 +174,7 @@ toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
 
   # turn back to magpie object
   df <- tibble::rownames_to_column(df, "Region")
-  x_interpolated <- as.magpie(df, spatial = "Region")
+  x_interpolated <- as.magpie(df, spatial = 1, datacol = 2)
   getNames(x_interpolated) <- getNames(x)
   getSets(x_interpolated) <- getSets(x)
 
