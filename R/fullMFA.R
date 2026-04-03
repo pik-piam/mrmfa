@@ -113,11 +113,11 @@ fullMFA <- function(rev = 0,
     calcOutput("CoGDP", file = "ce_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     # Production
     calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
-    # Trade [Warning: years argument does not work properly. If a different start/end year than 1900/2023 is desired, change calcCeTrade function directly.]
-    calcOutput("CeTrade", file = "ce_cement_imports.cs4r", subtype = "Imports", category = "cement")
-    calcOutput("CeTrade", file = "ce_cement_exports.cs4r", subtype = "Exports", category = "cement")
-    calcOutput("CeTrade", file = "ce_clinker_imports.cs4r", subtype = "Imports", category = "clinker")
-    calcOutput("CeTrade", file = "ce_clinker_exports.cs4r", subtype = "Exports", category = "clinker")
+    # Trade [Warning: years argument does not work properly. Set target_years instead.]
+    calcOutput("CeTrade", file = "ce_cement_imports.cs4r", subtype = "Imports", category = "cement", target_years = start_historic:end_historic)
+    calcOutput("CeTrade", file = "ce_cement_exports.cs4r", subtype = "Exports", category = "cement", target_years = start_historic:end_historic)
+    calcOutput("CeTrade", file = "ce_clinker_imports.cs4r", subtype = "Imports", category = "clinker", target_years = start_historic:end_historic)
+    calcOutput("CeTrade", file = "ce_clinker_exports.cs4r", subtype = "Exports", category = "clinker", target_years = start_historic:end_historic)
     # Parameters
     calcOutput("CeBuiltLifespan", file = "ce_lifetime_mean.cs4r", years = start_historic:end_historic)
     calcOutput("CeLifetimeRelStd", file = "ce_lifetime_rel_std.cs4r", aggregate = FALSE)

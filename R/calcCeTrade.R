@@ -15,6 +15,9 @@
 #'        - 17
 #'        - 22
 #' @param include_intra_regional bool if intra-regional trade should be included
+#' @param target_years integer vector of target years for the output data.
+#' If NULL, all years from reference (cement production) are included.
+#' Note: the 'years' argument in calcOutput does not work properly for this function, so target years should be set here instead. 
 #'
 #' @return magpie object of the aggregated trade data
 #'
@@ -32,7 +35,7 @@
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = FALSE) {
+calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = FALSE, target_years = NULL) {
   # ----------------------------------------------------------------------------
   # Load data
   # ----------------------------------------------------------------------------
@@ -74,19 +77,18 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   # Note: reference has region-specific units.
 
   # cement production data as base reference
-  production_reference <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
+  production_reference <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE, years = target_years)
   reference <- production_reference
-
-  years <- getYears(production_reference, as.integer = TRUE)
+  target_years <- getYears(production_reference, as.integer = TRUE)
 
   # complement base reference with GDP data where in regions without production
-  gdp_reference <- calcOutput("CoGDP", aggregate = FALSE, years = years)
+  gdp_reference <- calcOutput("CoGDP", aggregate = FALSE, years = target_years)
   zero_prod_regions <- getItems(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ], dim = 1)
   reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ]
 
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
   shipping_cost <- readSource("OWID", subtype = "shipping_costs")
-  shipping_cost <- toolInterpolate(shipping_cost, years = years, extrapolate = TRUE)
+  shipping_cost <- toolInterpolate(shipping_cost, years = target_years, extrapolate = TRUE)
   shipping_cost <- toolTimeSpline(shipping_cost, dof = 10)
   reference <- reference / shipping_cost
 
@@ -94,6 +96,7 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   us_reference <- readSource("USGSDS140", subtype = subtype)["USA", ]
   us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = FALSE)
   us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = TRUE)
+  us_reference <- us_reference[, target_years, ]
   reference["USA", ] <- us_reference
 
   .customAggregate <- function(x, rel, reference, flow_label) {
@@ -110,10 +113,12 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
       x <- add_columns(x, addnm = missingRegions, dim = 1, fill = NA)
     }
 
-    # Note that if reference has more recent data than x, x will be forecasted, too.
+    # Forecasting AND backcasting of x.
     x <- toolBackcastByReference(x, ref, doForecast = FALSE)
     x <- toolBackcastByReference(x, ref, doForecast = TRUE)
 
+    # cut x to target years
+    x <- x[, target_years, ]
     return(x)
   }
 
