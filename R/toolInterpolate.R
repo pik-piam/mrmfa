@@ -63,7 +63,13 @@ toolInterpolateSlice <- function(x, years = NULL, type, extrapolate, ...) {
       fill = NA,
       sets = getSets(x)
     )
-    x_new[, getYears(x), ] <- x
+    # Only assign to years that exist in both x and x_new
+    years_in_both <- intersect(getYears(x), getYears(x_new))
+    if (length(years_in_both) > 0) {
+      x_new[, years_in_both, ] <- x[, years_in_both, ]
+    } else {
+      stop("No overlapping years between input data and specified years. Please check the 'years' argument.")
+    }
   } else {
     x_new <- x
   }
