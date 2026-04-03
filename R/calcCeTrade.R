@@ -71,12 +71,13 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   # ----------------------------------------------------------------------------
 
   # construct reference for backcasting based on production/gdp and shipping costs.
-  # Note: reference has region-specific units and can therefore not be aggregated.
-  years <- 1900:2021
+  # Note: reference has region-specific units.
 
   # cement production data as base reference
-  production_reference <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE, years = years)
+  production_reference <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
   reference <- production_reference
+
+  years <- getYears(production_reference, as.integer = TRUE)
 
   # complement base reference with GDP data where in regions without production
   gdp_reference <- calcOutput("CoGDP", aggregate = FALSE, years = years)
@@ -91,6 +92,8 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
 
   # replace US reference with actual trade data from USGS
   us_reference <- readSource("USGSDS140", subtype = subtype)["USA", ]
+  us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = FALSE)
+  us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = TRUE)
   reference["USA", ] <- us_reference
 
   .customAggregate <- function(x, rel, reference, flow_label) {
@@ -108,7 +111,8 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
     }
 
     # Note that if reference has more recent data than x, x will be forecasted, too.
-    x <- toolBackcastByReference(x, ref)
+    x <- toolBackcastByReference(x, ref, doForecast = FALSE)
+    x <- toolBackcastByReference(x, ref, doForecast = TRUE)
 
     return(x)
   }
