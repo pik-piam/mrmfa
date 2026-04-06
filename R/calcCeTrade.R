@@ -112,6 +112,16 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   us_reference <- us_reference[, target_years, ]
   reference["USA", ] <- us_reference
 
+  # fade out clinker trade for the distant past (no clinker trade before 1950)
+  fill <- if (category == "cement") 1 else 0
+  clinker_trade_factor <- new.magpie(cells_and_regions = "GLO", years = target_years, fill = fill)
+  clinker_trade_factor <- convergence(origin = clinker_trade_factor,
+                                      aim = 1,
+                                      start_year = 1950,
+                                      end_year = 1970,
+                                      type = "linear")
+  reference <- reference * clinker_trade_factor
+
   .customAggregate <- function(x, rel, reference, flow_label) {
     # aggregate to regions filtering out intra-regional trade
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
