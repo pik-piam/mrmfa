@@ -105,7 +105,7 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   shipping_cost <- toolTimeSpline(shipping_cost, dof = 10)
   reference <- reference / shipping_cost
 
-  # replace US reference with actual trade data from USGS
+  # replace US reference with total clinker + cement trade data from USGS
   us_reference <- readSource("USGSDS140", subtype = subtype)["USA", ]
   us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = FALSE)
   us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = TRUE)
@@ -113,14 +113,32 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   reference["USA", ] <- us_reference
 
   # fade out clinker trade for the distant past (no clinker trade before 1950)
-  fill <- if (category == "cement") 1 else 0
-  clinker_trade_factor <- new.magpie(cells_and_regions = "GLO", years = target_years, fill = fill)
-  clinker_trade_factor <- convergence(origin = clinker_trade_factor,
-                                      aim = 1,
-                                      start_year = 1950,
-                                      end_year = 1970,
-                                      type = "linear")
-  reference <- reference * clinker_trade_factor
+  if (category == "clinker") {
+    # set clinker trade to zero before 1950 and linearly increase to 100% until 1970
+    clinker_trade_factor <- new.magpie(cells_and_regions = "GLO", years = target_years, fill = 0)
+    clinker_trade_factor <- convergence(origin = clinker_trade_factor,
+                                        aim = 1,
+                                        start_year = 1950,
+                                        end_year = 1970,
+                                        type = "linear")
+    reference <- reference * clinker_trade_factor
+  }
+
+  # Compensate clinker fade out for USA (which has reference of total clinker AND cement trade)
+  if (category == "cement") {
+    oldest_clinker_to_cement_trade_share <- if (subtype == "Exports") 0.45 else 0.225
+    usa_ref_correction <- new.magpie(
+      cells_and_regions = "GLO",
+      years = target_years,
+      fill = oldest_clinker_to_cement_trade_share
+    )
+    usa_ref_correction <- convergence(origin = usa_ref_correction,
+                                        aim = 0,
+                                        start_year = 1950,
+                                        end_year = 1970,
+                                        type = "linear")
+    reference["USA", ] <- reference["USA", ] * (1 + usa_ref_correction)
+  }
 
   .customAggregate <- function(x, rel, reference, flow_label) {
     # aggregate to regions filtering out intra-regional trade
