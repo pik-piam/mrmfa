@@ -98,9 +98,10 @@ calcPlEoL_shares <- function(subtype) {
 
   x_backcast <- as.magpie(backcast_data, spatial = 1, temporal = 2)
   x_backcast <- time_interpolate(x_backcast,
-                                 interpolated_year = 1950:2000,
-                                 integrate_interpolated_years = TRUE,
-                                 extrapolation_type = "constant")
+    interpolated_year = 1950:2000,
+    integrate_interpolated_years = TRUE,
+    extrapolation_type = "constant"
+  )
   x_backcast[, 1950:2000, "Landfilled"] <- (
     1 - (x_backcast[, 1950:2000, "Recycled"] + x_backcast[, 1950:2000, "Incinerated"])
   )

@@ -63,7 +63,7 @@ calcCoGDP <- function(perCapita = FALSE, scenarios = "SSP2", collapse = TRUE, sm
   if (smooth) {
     # smooth data and interpolate missing data
     years <- startyear:2100
-    gdp[, startyear:2100] <- toolTimeSpline(gdp[, startyear:2100], dof = dof, peggedYears = c(1900, 2023, 2100))
+    gdp[, years] <- toolTimeSpline(gdp[, years], dof = dof, peggedYears = c(1900, 2023, 2100))
   }
 
   # finalize for calcOutput

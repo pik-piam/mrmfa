@@ -22,20 +22,20 @@ toolBalanceTrade <- function(imports, exports, to = "hmean") {
   reference_trade <- switch(to,
     maximum = {
       result <- global_imports
-      mask   <- global_exports > global_imports
+      mask <- global_exports > global_imports
       result[mask] <- global_exports[mask]
       result
     },
     minimum = {
       result <- global_imports
-      mask   <- global_exports < global_imports
+      mask <- global_exports < global_imports
       result[mask] <- global_exports[mask]
       result
     },
     imports = global_imports,
     exports = global_exports,
     hmean = {
-      denom        <- global_imports + global_exports
+      denom <- global_imports + global_exports
       denom[denom == 0] <- NA
       2 * global_imports * global_exports / denom
     },
@@ -50,7 +50,7 @@ toolBalanceTrade <- function(imports, exports, to = "hmean") {
   reference_trade[is.na(reference_trade)] <- 0
 
   # protect against division by zero when global total is zero
-  
+
 
   eps <- .Machine$double.eps
   global_imports_safe <- global_imports

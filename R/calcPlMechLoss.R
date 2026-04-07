@@ -70,8 +70,10 @@ calcPlMechLoss <- function() {
   weight <- x
   weight[, ] <- 1
 
-  description <- paste0("Uncontrolled loss rate of mechanical recycling based on Brown et al. 2023, ",
-                        "(https://doi.org/10.1016/j.hazadv.2023.100309)")
+  description <- paste0(
+    "Uncontrolled loss rate of mechanical recycling based on Brown et al. 2023, ",
+    "(https://doi.org/10.1016/j.hazadv.2023.100309)"
+  )
   return(list(
     x           = x,
     weight      = weight,

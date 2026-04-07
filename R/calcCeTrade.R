@@ -17,7 +17,8 @@
 #' @param include_intra_regional bool if intra-regional trade should be included
 #' @param target_years integer vector of target years for the output data.
 #' If NULL, all years from reference (cement production) are included.
-#' Note: the 'years' argument in calcOutput does not work properly for this function, so target years should be set here instead.
+#' Note: the 'years' argument in calcOutput does not work properly for this function,
+#' so 'target years' should be set here instead.
 #'
 #' @return magpie object of the aggregated trade data
 #'
@@ -93,7 +94,7 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   if (last_shipping_cost_year > target_years[1]) {
     # extend shipping cost: increase linearly before 1930 and keep constant after 2003
     shipping_cost <- toolInterpolate(shipping_cost, years = target_years, extrapolate = TRUE)
-    shipping_cost[,target_years < last_shipping_cost_year, ] <- NA
+    shipping_cost[, target_years < last_shipping_cost_year, ] <- NA
     # increase shipping cost linearly by last shipping cost each 50y
     shipping_cost[, target_years[1], ] <- (
       shipping_cost[, last_shipping_cost_year, ]
@@ -116,11 +117,13 @@ calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = F
   if (category == "clinker") {
     # set clinker trade to zero before 1950 and linearly increase to 100% until 1970
     clinker_trade_factor <- new.magpie(cells_and_regions = "GLO", years = target_years, fill = 0)
-    clinker_trade_factor <- convergence(origin = clinker_trade_factor,
-                                        aim = 1,
-                                        start_year = 1950,
-                                        end_year = 1970,
-                                        type = "linear")
+    clinker_trade_factor <- convergence(
+      origin = clinker_trade_factor,
+      aim = 1,
+      start_year = 1950,
+      end_year = 1970,
+      type = "linear"
+    )
     reference <- reference * clinker_trade_factor
   }
 

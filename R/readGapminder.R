@@ -14,13 +14,11 @@ readGapminder <- function(subtype) {
 
     # Rename Vatican Iso3 code (HOS [Holy See] to VAT)
     getItems(x, dim = 1)[getItems(x, dim = 1) == "HOS"] <- "VAT"
-
   } else if (subtype == "global") {
     x <- readxl::read_excel(path = path, sheet = "Unpivot-world-year") %>%
       select("period" = "Year", "value" = "Population") %>%
       mutate(value = as.numeric(value)) %>%
       as.magpie(tidy = TRUE)
-
   } else {
     stop("Invalid subtype. Please choose either 'regional' or 'global'.")
   }

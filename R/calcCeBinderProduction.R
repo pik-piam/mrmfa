@@ -19,7 +19,7 @@ calcCeBinderProduction <- function(subtype) {
       ctry_x <- x[ctry, ]
       non_na_years <- years[!is.na(ctry_x)]
       oldest_non_na_year <- if (length(non_na_years) > 0) non_na_years[1] else max(years)
-      if (!is.na(ctry_x[, oldest_non_na_year, ]) & ctry_x[, oldest_non_na_year, ] == 0) {
+      if (!is.na(ctry_x[, oldest_non_na_year, ]) && ctry_x[, oldest_non_na_year, ] == 0) {
         fill_years <- years[is.na(ctry_x) & years <= oldest_non_na_year]
         if (length(fill_years) > 0) x[ctry, fill_years, ] <- 0
       }
@@ -35,7 +35,6 @@ calcCeBinderProduction <- function(subtype) {
 
     # Apply threshold again after backcasting
     x[!is.na(x) & x < threshold] <- 0
-
   } else if (subtype == "clinker") {
     x[is.na(x)] <- 0
   } else {
