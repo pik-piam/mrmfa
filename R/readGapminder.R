@@ -20,7 +20,7 @@ readGapminder <- function(subtype) {
       mutate(value = as.numeric(.data$value)) %>%
       as.magpie(tidy = TRUE)
   } else {
-    stop("Invalid subtype. Please choose either 'regional' or 'global'.")
+    stop("Invalid subtype. Please choose either 'countries' or 'global'.")
   }
 
   getNames(x) <- NULL
