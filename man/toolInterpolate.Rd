@@ -13,9 +13,11 @@ toolInterpolate(x, years = NULL, type = "linear", extrapolate = FALSE, ...)
 
 \item{type}{Interpolation method: one of 'linear', 'spline', 'monotone', or 'constant'. Default is 'linear'.}
 
-\item{extrapolate}{Logical. Whether to allow extrapolation outside the range of available data. Default is FALSE.}
+\item{extrapolate}{Logical. Whether to allow extrapolation outside the range of available data. Default is FALSE.
+Extrapolation carries last observation forward/backward (constant), regardless of type.}
 
-\item{...}{Additional arguments passed to interpolation functions.}
+\item{...}{Additional arguments passed to interpolation functions.
+E.g. 'maxgap' can be set to limit the maximum gap size for interpolation.}
 }
 \value{
 A magpie object with interpolated values for the specified years and all data slices.

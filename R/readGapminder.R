@@ -17,7 +17,7 @@ readGapminder <- function(subtype) {
   } else if (subtype == "global") {
     x <- readxl::read_excel(path = path, sheet = "Unpivot-world-year") %>%
       select("period" = "Year", "value" = "Population") %>%
-      mutate(value = as.numeric(value)) %>%
+      mutate(value = as.numeric(.data$value)) %>%
       as.magpie(tidy = TRUE)
   } else {
     stop("Invalid subtype. Please choose either 'regional' or 'global'.")

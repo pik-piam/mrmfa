@@ -3,7 +3,8 @@
 \name{readUSGSDS140}
 \alias{readUSGSDS140}
 \title{Read cement statistic data sheet from USGS.
-USGS DS140 combines historic data from USGS sources. Supply-Demand Statistics.}
+USGS DS140 combines historic data from USGS sources. Supply-Demand Statistics.
+Imports pre-1950 include clinker. Export data include hydraulic cement and clinker.}
 \usage{
 readUSGSDS140(subtype)
 }
