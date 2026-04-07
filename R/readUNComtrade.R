@@ -40,6 +40,9 @@ readUNComtrade <- function(subtype, subset) {
     data <- subset(data, data$cmdCode %in% resources)
 
     # select import / exports depending on subtype
+    if (!(subtype %in% c("Imports", "Exports"))) {
+      stop("Invalid subtype. Choose either 'Imports' or 'Exports'.")
+    }
     trade_type <- substr(subtype, 1, nchar(subtype) - 1)
     yearly_trade <- stats::aggregate(`qty` ~ `reporterISO`, data, sum, subset = data$flowDesc == trade_type)
 

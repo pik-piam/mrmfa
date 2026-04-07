@@ -12,5 +12,7 @@ readOWID <- function(subtype) {
     x <- magclass::as.magpie(x, temporal = 1, datacol = 2)
     getNames(x) <- NULL
     return(x)
+  } else {
+    stop(paste("Unsupported subtype:", subtype))
   }
 }

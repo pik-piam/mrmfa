@@ -1,7 +1,9 @@
-#' Split World Steel trade into bilateral trade by using proxy bilateral BACI trade data
-#' and aggregate via a custom aggregation function to filter out intra-regional trade
-#' (since we don't have a list with all HS codes and corresponding steel shares,
-#' BACI trade data cannot be used directly, since it does not cover the full scope)
+#' Calculate cement/clinker trade data (imports and exports).
+#' Based on bilateral BACI data (1995-2023).
+#' Intra-regional trade is filtered out during aggregation.
+#' Extended to 'target_years' by backcasting using
+#' cement production, GDP, shipping costs and USGS trade data (for US only) as proxy.
+#' Clinker trade is linearly faded out between 1970 and 1950.
 #'
 #' @param subtype Character string specifying the scope
 #'        - Imports
@@ -14,7 +16,6 @@
 #'        - 02
 #'        - 17
 #'        - 22
-#' @param include_intra_regional bool if intra-regional trade should be included
 #' @param target_years integer vector of target years for the output data.
 #' If NULL, all years from reference (cement production) are included.
 #' Note: the 'years' argument in calcOutput does not work properly for this function,

@@ -56,5 +56,5 @@ toolAggregateBilateralTrade <- function(x, rel, flow_label) {
   )
   x_filled[available_regions, ] <- x[available_regions, ]
 
-  return(x)
+  return(x_filled)
 }
