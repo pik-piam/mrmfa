@@ -37,7 +37,7 @@
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcCeTrade <- function(subtype, category, HS = "92", include_intra_regional = FALSE, target_years = NULL) {
+calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   # ----------------------------------------------------------------------------
   # Load data
   # ----------------------------------------------------------------------------

@@ -14,7 +14,8 @@ toolInterpolate(x, years = NULL, type = "linear", extrapolate = FALSE, ...)
 \item{type}{Interpolation method: one of 'linear', 'spline', 'monotone', or 'constant'. Default is 'linear'.}
 
 \item{extrapolate}{Logical. Whether to allow extrapolation outside the range of available data. Default is FALSE.
-Extrapolation carries last observation forward/backward (constant), regardless of type.}
+If TRUE, extrapolation carries last observation forward/backward if type is 'constant' or 'linear'.
+For type = 'spline' or 'monotone', extrapolation is performed by the spline method (not constant).}
 
 \item{...}{Additional arguments passed to interpolation functions.
 E.g. 'maxgap' can be set to limit the maximum gap size for interpolation.}
