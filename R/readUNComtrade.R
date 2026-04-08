@@ -46,7 +46,7 @@ readUNComtrade <- function(subtype, subset) {
     trade_type <- substr(subtype, 1, nchar(subtype) - 1)
     yearly_trade <- stats::aggregate(`qty` ~ `reporterISO`, data, sum, subset = data$flowDesc == trade_type)
 
-    # compute net trade and store in list
+    # store trade in list
     trade[[i]] <- data.frame(
       region = yearly_trade$reporterISO,
       time   = year,

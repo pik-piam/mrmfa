@@ -42,19 +42,5 @@ toolAggregateBilateralTrade <- function(x, rel, flow_label) {
     as.magpie() %>%
     collapseDim()
 
-  x <- collapseDim(x)
-
-  # fill in missing regions with 0 (equivalent to toolCountryFill but with regions)
-  all_regions <- unique(rel$region)
-  available_regions <- getItems(x, dim = 1)
-  x_filled <- new.magpie(
-    cells_and_regions = all_regions,
-    years = getYears(x),
-    names = getNames(x),
-    sets = getSets(x),
-    fill = 0
-  )
-  x_filled[available_regions, ] <- x[available_regions, ]
-
-  return(x_filled)
+  return(x)
 }

@@ -56,7 +56,6 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
 
   # historical ISO countries SCG and ANT split into SRB & MNE in 2006 and SXM & CUW in 2011, respectively
   # for simplicity, their trades are assigned to their major successor countries SRB and CUW before the split year
-  # as they account for >90% of the total plastics trade volume of successor countries
   df$importer[df$importer == "SCG"] <- "SRB"
   df$exporter[df$exporter == "SCG"] <- "SRB"
   df$importer[df$importer == "ANT"] <- "CUW"
@@ -132,7 +131,7 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     # aggregate to regions filtering out intra-regional trade
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
-    # backcast aggregated bilateral trade data to 1900
+    # aggregate/disaggregate reference to regions given by regionmapping
     ref <- toolAggregate(reference, rel = rel)
 
     # if some of the regions are missing in x due to the manual aggregation,
