@@ -32,7 +32,7 @@ calcPlGoodShare <- function() {
   )
 
   weight <- x
-  weight <- plasticOutlook[, , "Total.Total"]
+  weight[, , ] <- plasticOutlook[, , "Total.Total"]
 
   return(list(
     x = x,
