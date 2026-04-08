@@ -95,6 +95,7 @@ calcPlEoL_shares <- function(subtype) {
         .data$Data1 != "Uncollected" ~ .data$share / .data$Total_collected,
         TRUE ~ (1 - .data$share)
       ),
+      "share_new" = ifelse(is.nan(.data$share_new), 0, .data$share_new),
       Data1 = case_when(.data$Data1 == "Uncollected" ~ "Collected", TRUE ~ .data$Data1)
     ) %>%
     select("Region", "Year", "Data1", "share_new")
@@ -130,12 +131,17 @@ calcPlEoL_shares <- function(subtype) {
     "All" = x_backcast,
     stop("Unsupported subtype: ", subtype)
   )
-  getNames(x) <- NULL
+  if(subtype != "All"){
+    getNames(x) <- NULL
+  }
 
   # ---------------------------------------------------------------------------
   # Prepare weight object
   # ---------------------------------------------------------------------------
 
+  # FIXME these weights actually are only 100% correct for the "Collected" ratio, where the Total waste is the reference
+  # while for all other ratios, the reference is only the collected waste.
+  # This leads to different EoL ratios for OAS now when aggregating from country level than before when the whole calculation was performed on regional level
   weight <- x
   weight[, , ] <- 0
   weight[, seq(2000, 2019, 1)] <- plOECD[, seq(2000, 2019, ), "Total"]
