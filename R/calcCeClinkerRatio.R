@@ -8,17 +8,35 @@ calcCeClinkerRatio <- function() {
   prod_clinker <- calcOutput("CeBinderProduction", subtype = "clinker", aggregate = FALSE)
 
   # Trade
-  trade_clinker <- calcOutput("CeMaterialTrade", subtype = "clinker", aggregate = FALSE)
+  # Note that the trade is not balanced, significant especially pre-1995
+  clinker_imports <- calcOutput("CeTrade",
+    category = "clinker",
+    subtype = "Imports",
+    regionmapping = "ISO_2_ISO.csv"
+  )
+  clinker_exports <- calcOutput("CeTrade",
+    category = "clinker",
+    subtype = "Exports",
+    regionmapping = "ISO_2_ISO.csv"
+  )
+  trade <- toolBalanceTrade(clinker_imports, clinker_exports, to = "imports")
+  clinker_imports <- trade$imports
+  clinker_exports <- trade$exports
 
-  consum_clinker <- prod_clinker
-  consum_clinker[, getYears(trade_clinker), ] <- consum_clinker[, getYears(trade_clinker), ] - trade_clinker
+  # Consumption
+  clinker_years <- getYears(prod_clinker)
+  consum_clinker <- (
+    prod_clinker
+    + clinker_imports[, clinker_years]
+    - clinker_exports[, clinker_years]
+  )
 
-  # initiate clinker ratio by "clinker use" / "cement production"
+  # initiate clinker to cement ratio by "clinker consumption" / "cement production"
   ratio <- new.magpie(
     cells_and_regions = getItems(prod_cement, dim = 1),
     years = getYears(prod_cement)
   )
-  ratio[, getYears(consum_clinker), ] <- consum_clinker / prod_cement[, getYears(consum_clinker), ]
+  ratio[, clinker_years, ] <- consum_clinker / prod_cement[, clinker_years, ]
 
   # restrict clinker ratio to realistic values
   ratio[ratio < 0.6 | ratio > 0.99] <- NA
@@ -26,7 +44,7 @@ calcCeClinkerRatio <- function() {
 
   # replace data with GNR values where not at least n_valid values are available.
   # Andrew (2019) used GNR values where no other data was available.
-  country_mask <- toolMaskNACountries(ratio[, getYears(ratio_GNR)], n_valid = 5)
+  country_mask <- toolMaskNACountries(ratio[, getYears(ratio_GNR)], n_valid = 10)
   ratio[country_mask, ] <- NA
   ratio[, getYears(ratio_GNR)][country_mask, ] <- ratio_GNR[country_mask, ]
 

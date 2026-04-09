@@ -19,7 +19,8 @@ calcPlZeroRates <- function() {
     x           = x,
     weight      = weight,
     unit        = "share",
-    description = "Rates that are historically 0, e.g. chemical recycling rate, bio-based & DAC production rate and emission capture rate",
+    description = glue::glue("Rates that are historically 0, e.g. chemical recycling \\
+                             rate, bio-based & DAC production rate and emission capture rate"),
     note        = "dimensions: (Historic Time,Region,value)"
   ))
 }
