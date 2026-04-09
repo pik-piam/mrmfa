@@ -11,6 +11,7 @@
 #' @return An aggregated magpie object
 #' @author Leonie Schweiger
 toolAggregateBilateralTrade <- function(x, rel, flow_label) {
+
   df <- tibble::as_tibble(x)
 
   # get grouping variables
@@ -38,8 +39,8 @@ toolAggregateBilateralTrade <- function(x, rel, flow_label) {
   }
 
   x <- df %>%
-    select("Year" = "t", "Region", all_of(group_vars), "value") %>%
-    as.magpie() %>%
+    select("Region", "Year" = "t", all_of(group_vars), "value") %>%
+    as.magpie(spatial = 1, temporal = 2) %>%
     collapseDim()
 
   return(x)

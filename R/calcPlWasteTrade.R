@@ -24,10 +24,13 @@ calcPlWasteTrade <- function(subtype) {
     stop("Invalid subtype. Choose 'export' or 'import'.")
   }
 
-  trade <- calcOutput("PlUNCTAD", subtype = "Waste")
-  trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == datatype])
+  trade <- calcOutput("PlUNCTAD", subtype = "Waste", aggregate = FALSE)
+  trade_filtered <- trade[, , getNames(trade, dim = 1) == datatype] %>%
+    collapseNames()
 
-  consumption <- collapseNames(dimSums(calcOutput("PlConsumptionByGood"), dim = 3))
+  consumption <- calcOutput("PlConsumptionByGood", aggregate = FALSE) %>%
+    dimSums(dim = 3) %>%
+    collapseNames()
 
   hist_df <- toolBackcastByReference(trade_filtered, consumption) %>%
     as.data.frame() %>%
@@ -62,20 +65,13 @@ calcPlWasteTrade <- function(subtype) {
       )
     ) %>%
     dplyr::select(-".scale") # drop helper column
+
   full_df <- dplyr::bind_rows(hist_df, future_df) %>%
     dplyr::arrange(.data$Region, .data$Year)
 
-  # ---------------------------------------------------------------------------
-  # Convert to MagPIE and aggregate to country level
-  # ---------------------------------------------------------------------------
-  x <- as.magpie(full_df %>% dplyr::select("Region", "Year", "Value"), spatial = 1, temporal = 2)
-  region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
+  x <- as.magpie(full_df %>% dplyr::select("Region", "Year", "Value"),
+                 spatial = 1, temporal = 2)
 
-  gdp_ssp2 <- calcOutput("CoGDP", scenarios = "SSP2", perCapita = FALSE, aggregate = FALSE)[, "y2019", ]
-  x <- toolAggregate(x,
-    rel = region_map, dim = 1, from = "RegionCode", to = "CountryCode",
-    weight = gdp_ssp2[unique(region_map$CountryCode), , ]
-  )
   getNames(x) <- NULL
 
   # ---------------------------------------------------------------------------
