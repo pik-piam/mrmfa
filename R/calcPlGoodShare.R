@@ -32,10 +32,7 @@ calcPlGoodShare <- function() {
   )
 
   weight <- x
-  total <- plasticOutlook %>%
-    mselect("Plastic polymer" = "Total", collapseNames = TRUE)
-
-  weight <- total[, , getNames(weight)]
+  weight[, , ] <- plasticOutlook[, , "Total.Total"]
 
   return(list(
     x = x,

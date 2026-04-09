@@ -34,7 +34,9 @@ calcPlOECD_MGshare <- function() {
   x <- as.magpie(ratio_df, spatial = 1)
 
   weight <- x
-  weight[, , ] <- plOECD[, , "Total.Total"]
+  total <- plOECD %>%
+    mselect("Plastic polymer" = "Total", collapseNames = TRUE)
+  weight[, , ] <- total[, , getNames(weight, dim=1)]
 
   return(list(
     x           = x,
