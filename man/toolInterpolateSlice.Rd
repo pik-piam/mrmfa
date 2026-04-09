@@ -15,7 +15,8 @@ toolInterpolateSlice(x, years = NULL, type, extrapolate, ...)
 
 \item{extrapolate}{Logical. Whether to allow extrapolation outside the range of available data.}
 
-\item{...}{Additional arguments passed to interpolation functions.}
+\item{...}{Additional arguments passed to interpolation functions.
+E.g. 'maxgap' can be set to limit the maximum gap size for interpolation.}
 }
 \value{
 A 2D magpie object with interpolated values for the specified years.

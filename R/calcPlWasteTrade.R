@@ -71,7 +71,7 @@ calcPlWasteTrade <- function(subtype) {
   x <- as.magpie(full_df %>% dplyr::select("Region", "Year", "Value"), spatial = 1, temporal = 2)
   region_map <- toolGetMapping("regionmappingH12.csv", type = "regional", where = "mappingfolder")
 
-  gdp_ssp2 <- calcOutput("CoGDP1900To2150", scenarios = "SSP2", perCapita = FALSE, aggregate = FALSE)[, "y2019", ]
+  gdp_ssp2 <- calcOutput("CoGDP", scenarios = "SSP2", perCapita = FALSE, aggregate = FALSE)[, "y2019", ]
   x <- toolAggregate(x,
     rel = region_map, dim = 1, from = "RegionCode", to = "CountryCode",
     weight = gdp_ssp2[unique(region_map$CountryCode), , ]

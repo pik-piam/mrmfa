@@ -16,11 +16,15 @@ calcPlZeroRates <- function() {
   )
   weight <- x
   weight[, ] <- 1
+  description <- paste0(
+    "Rates that are historically 0, e.g. chemical recycling rate, ",
+    "bio-based & DAC production rate and emission capture rate"
+  )
   return(list(
     x           = x,
     weight      = weight,
     unit        = "share",
-    description = "Rates that are historically 0, e.g. chemical recycling rate, bio-based & DAC production rate and emission capture rate",
+    description = description,
     note        = "dimensions: (Historic Time,Region,value)"
   ))
 }
