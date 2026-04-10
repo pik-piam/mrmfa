@@ -6,8 +6,9 @@ calcCeBuildingsMI <- function(subtype = "concrete") {
   x <- x / 1000 # convert kg to t
 
   # use floor area for weight
-  weight <- calcOutput("CeFloorspaceGEM", subtype = c("Function", "Structure"), aggregate = FALSE)
-  weight[weight == 0] <- 1e-9 # hack to avoid weight sum of 0 in some cases (TODO is there a better way?)
+  weight <- calcOutput("CeFloorspace", subtype = c("Function", "Structure"), aggregate = FALSE)[,2020,]
+  # country without floorspace should still get MI if aggregated on country level
+  weight[weight == 0] <- 1e-9
   description <- paste(
     "Material Intensity of buildings by stock type, function and structure.",
     "Based on RASMI.",

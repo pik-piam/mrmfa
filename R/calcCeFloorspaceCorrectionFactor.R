@@ -8,10 +8,12 @@ calcCeFloorspaceCorrectionFactor <- function() {
 
   # EDGE-B data for 2020 (m2)
   # TODO check if 2020 data is scenario agnostic (as it should be)
-  edgeb_floorspace <- dimSums(calcOutput(
-    type = "CeFloorspaceEDGEB",
-    aggregate = FALSE
-  )[,2020])
+  edgeb_floorspace <- dimSums(
+    calcOutput(
+      type = "CeFloorspaceEDGEB",
+      aggregate = FALSE
+    )[,2020,], dim = 3
+  )
   edgeb_floorspace <- dimReduce(edgeb_floorspace) # remove year 2020 dimension
   # EUBUCCO data for 2020 (m2)
   eubucco_floorspace <- dimSums(readSource("EUBUCCO"))
@@ -58,11 +60,11 @@ calcCeFloorspaceCorrectionFactor <- function() {
   ratio[mean_mask] <- mean_ratio
 
   # ---Output---
-  description <- paste(
-    "EDGE-B Floorspace Correction Factor.",
-    "Translates energy-related floorspace from EDGE-B to material-related floorspace.",
-    "EDGE-B Floorspace upscaled to EUBUCCO and GHS-OBAT data, applying outlier correction."
-  )
+  description <- glue::glue("
+    EDGE-B Floorspace Correction Factor. \\
+    Translates energy-related floorspace from EDGE-B to material-related floorspace. \\
+    EDGE-B Floorspace upscaled to EUBUCCO and GHS-OBAT data, applying outlier correction.
+    ")
   note <- "dimensions: (Region,value)"
   output <- list(
     x = ratio,

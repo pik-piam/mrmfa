@@ -7,7 +7,7 @@
 convertGHSOBAT <- function(x, subtype) {
 
   # Distribute unatributed region XXX proportionally
-  scale_factor <- sum(x, na.rm = TRUE) / sum(x[getItems(x, dim = 1) != "XXX",], na.rm = TRUE)
+  scale_factor <- sum(x, na.rm = TRUE) / sum(x["XXX",,,invert = T], na.rm = TRUE)
   x <- x * scale_factor
   # Distribute other custom regions
   x["GBR",] <- x["GBR",] + x["XAD",] # Akrotiri and Dhekelia#

@@ -13,7 +13,7 @@
 readGHSOBAT <- function(subtype) {
   version <- "vR2024A"
 
-  name <- paste0("GHS_OBAT_COUNTRYSTATS_E2020_GLOBE_R2024A_V1_0.xlsx")
+  name <- "GHS_OBAT_COUNTRYSTATS_E2020_GLOBE_R2024A_V1_0.xlsx"
   path <- file.path(version, name)
   data <- readxl::read_xlsx(path)
 
