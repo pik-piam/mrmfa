@@ -5,7 +5,7 @@ calcStScrapConsumptionWS <- function() {
   # get historic consumption ----
   prodHist <- readSource("WorldSteelDigitised", subtype = "production", convert = FALSE)
   prodHistGlobal <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
-  prodHist <- toolBackcastByReference2D(prodHist, prodHistGlobal)
+  prodHist <- toolBackcastByReference(prodHist, prodHistGlobal)
 
   historicShare <- readSource("WorldSteelDigitised", subtype = "historicScrapShare", convert = FALSE)
 
@@ -30,7 +30,7 @@ calcStScrapConsumptionWS <- function() {
   scrapConsumptionWS[getItems(current, dim = 1), getItems(current, dim = 2), ] <- current
 
   # interpolate missing values ----
-  scrapConsumptionWS <- toolInterpolate2D(scrapConsumptionWS)
+  scrapConsumptionWS <- toolInterpolate(scrapConsumptionWS)
 
   # split historic regions ----
   historicalMap <- utils::read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))

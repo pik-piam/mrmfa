@@ -30,7 +30,7 @@ calcStScrapConsumption <- function(subtype) {
 
     scAssumptionsEU <- scAssumptions[euCountries, seq(1900, 2008, 1)]
     getItems(euCurrent, dim = 1) <- "GLO"
-    scAssumptionsEU <- toolBackcastByReference2D(scAssumptionsEU, euCurrent,
+    scAssumptionsEU <- toolBackcastByReference(scAssumptionsEU, euCurrent,
       doForecast = TRUE, doMakeZeroNA = TRUE
     )
     scAssumptions[euCountries, , ] <- scAssumptionsEU[euCountries, , ]
@@ -45,7 +45,7 @@ calcStScrapConsumption <- function(subtype) {
     globalSum <- readSource("WorldSteelDigitised", subtype = "worldScrapConsumption", convert = FALSE)
     birGlobalSum <- readSource("BIR", subtype = "scrapConsumption", convert = FALSE)["World", , ]
     getItems(birGlobalSum, dim = 1) <- "GLO"
-    worldCurrent <- toolBackcastByReference2D(globalSum, birGlobalSum, doForecast = TRUE, doMakeZeroNA = TRUE)
+    worldCurrent <- toolBackcastByReference(globalSum, birGlobalSum, doForecast = TRUE, doMakeZeroNA = TRUE)
 
     # the rest of the code separates between "complete" countries and rest of World,
     # where complete countries have data until 2023
@@ -58,7 +58,7 @@ calcStScrapConsumption <- function(subtype) {
     getItems(sumSCnoNA, dim = 1) <- "GLO"
 
     # get assumption of world consumption
-    worldSC <- toolBackcastByReference2D(worldCurrent, sumSCnoNA[, seq(1900, 2008, 1), ])
+    worldSC <- toolBackcastByReference(worldCurrent, sumSCnoNA[, seq(1900, 2008, 1), ])
 
     # calculate assumption for rest of world steel consumption by deducting sum of
     # complete countries from world consumption
@@ -71,12 +71,12 @@ calcStScrapConsumption <- function(subtype) {
     scAssumptionsRest <- scAssumptions[restWorldCountries, , ]
 
     # forecast
-    scAssumptionsRest <- toolBackcastByReference2D(scAssumptionsRest, restWorldSC,
+    scAssumptionsRest <- toolBackcastByReference(scAssumptionsRest, restWorldSC,
       doForecast = TRUE, doMakeZeroNA = TRUE
     )
 
     # backcast
-    scAssumptionsRest <- toolBackcastByReference2D(
+    scAssumptionsRest <- toolBackcastByReference(
       scAssumptionsRest,
       restWorldSC[, seq(1900, 2008, 1), ]
     )
@@ -100,7 +100,6 @@ calcStScrapConsumption <- function(subtype) {
   scrapConsumption <- new.magpie(
     cells_and_regions = getItems(scrapConsumptionWS, dim = 1),
     years = seq(1965, 2025, 1),
-    names = "value",
     fill = NA,
     sets = names(dimnames(scrapConsumptionWS))
   )
@@ -113,7 +112,7 @@ calcStScrapConsumption <- function(subtype) {
     getItems(scrapConsumptionBIR, dim = 2),
   ] <- scrapConsumptionBIR
 
-  scLinear <- toolInterpolate2D(scrapConsumption)
+  scLinear <- toolInterpolate(scrapConsumption)
 
   # ---- list all available subtypes with functions doing all the work ----
   switchboard <- list(
@@ -122,7 +121,7 @@ calcStScrapConsumption <- function(subtype) {
 
       # backcast recent data with production (basically assumes constant production share) ----
       production <- calcOutput("StProduction", aggregate = FALSE)
-      scAssumptions <- toolBackcastByReference2D(scLinear, production, doMakeZeroNA = TRUE)
+      scAssumptions <- toolBackcastByReference(scLinear, production, doMakeZeroNA = TRUE)
 
       # forecast EU with EU data ----
       scAssumptions <- .forecastEUData(scAssumptions)

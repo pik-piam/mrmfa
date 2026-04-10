@@ -1,8 +1,8 @@
 Type: Package
 Package: mrmfa
 Title: Input data generation for the REMIND MFA
-Version: 1.1.0
-Date: 2025-12-22
+Version: 1.7.2
+Date: 2026-04-10
 Authors@R: c(
     person("Jakob", "Dürrwächter", , "jakobdu@pik-potsdam.de", role = c("aut", "cre")),
     person("Bennet", "Weiss", , "bennet.weiss@pik-potsdam.de", role = "aut"),
@@ -28,11 +28,13 @@ Imports:
     ggplot2,
     magpiesets,
     magrittr,
-    purrr,        
+    purrr,
+    quitte,
     readr,
     readxl,
     rlang,
     stats,
+    stringr,
     tibble,
     tidyr,
     zoo,

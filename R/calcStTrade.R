@@ -1,99 +1,180 @@
-#' Get steel trade data
-#' @description
-#' Calc steel trade from WorldSteel datasets. Can be aggregated to regions
-#' via calcOutput aggregate parameter. Uses
-#' \link{readWorldSteelDigitised} and
-#' \link{readWorldSteelDatabase} datasets, the former for
-#' historic, the latter for current data. Further, uses
-#' \link{calcStProduction} to backcast historic trade data.
-#' @author Merlin Jo Hosak
-#' @param subtype Type of trade data to retrieve. Options: "imports", "exports",
-#' "scrapImports", "scrapExports", "indirectImports", "indirectExports"
+#' Split World Steel trade into bilateral trade by using proxy bilateral BACI trade data
+#' and aggregate via a custom aggregation function to filter out intra-regional trade
+#' (since we don't have a list with all HS codes and corresponding steel shares,
+#' BACI trade data cannot be used directly, since it does not cover the full scope)
 #'
-#' @return Steel trade across all regions from 1900-2022 as magpie within
-#' list of metadata.
-calcStTrade <- function(subtype = "imports") {
-  # helper functions ----
-
-  .splitIndirectTrade <- function(trade, shares) {
-    # remove regions containing only NAs
-    remove <- magpply(shares, function(y) all(is.na(y)), MARGIN = 1)
-    shares <- shares[!remove, , ]
-
-    # Multiply indirect trade with shares for intersecting countries
-    intersectingCountries <- intersect(getItems(trade, 1), getItems(shares, 1))
-    tradeIntersecting <- trade[intersectingCountries, , ] * shares[intersectingCountries, , ]
-
-    # For non-intersecting countries, use global average shares
-    # assuming all countries with data have same weight. Calculation works because rows sum to 1
-    averageShare <- colSums(shares) / nregions(shares)
-    nonIntersectingCountries <- setdiff(getItems(trade, 1), intersectingCountries)
-    tradeNonIntersecting <- trade[nonIntersectingCountries, , ] * averageShare
-
-    # Combine both
-    trade <- mbind(tradeIntersecting, tradeNonIntersecting)
-
-    return(trade)
-  }
-
-  # main routine ----
-
-  indirect <- subtype %in% c("indirectImports", "indirectExports")
-
-  database <- readSource("WorldSteelDatabase", subtype = subtype)
-
-  # Interpolate and Extrapolate
-  database <- toolInterpolate2D(database)
-
-  if (indirect) {
-    trade <- database
-  } else { # indirect trade isn't given in digitised yearbooks, only digitised 2013 shares
-    # if values are too small, they are not fit for extrapolation by reference
-    # (potentially creating infinite/unrealistic values)
-    digitised <- readSource("WorldSteelDigitised", subtype)
-    digitised[digitised < 1] <- NA
-    trade <- toolBackcastByReference2D(database, ref = digitised)
-  }
-
-  production <- calcOutput("StProduction", aggregate = FALSE)
-  trade <- toolBackcastByReference2D(trade, ref = production)
-
-  # use constant (last observation carried forward) interpolation for remaining NaN values in the future
-  trade <- toolInterpolate2D(trade, method = "constant")
-
-  # Split indirect trade
-  if (indirect) {
-    if (subtype == "indirectImports") {
-      shares <- calcOutput("StIndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "imports"] %>%
-        collapseDim()
-    } else if (subtype == "indirectExports") {
-      shares <- calcOutput("StIndirectTradeShares", aggregate = FALSE, warnNA = FALSE)[, , "exports"] %>%
-        collapseDim()
-    }
-    # Split indirect trade into direct trade
-    trade <- .splitIndirectTrade(trade, shares = shares)
-    trade <- time_interpolate(
-      trade,
-      seq(2020, 2022),
-      integrate_interpolated_years = TRUE,
-      extrapolation_type = "constant"
-    )
+#' @param subtype Character string specifying the scope
+#'        - imports
+#'        - exports
+#' @param category Character string specifying the stage of trade
+#'        - direct
+#'        - indirect
+#'        - scrap
+#' @param HS Character string specifying the year of the HS (Harmonized System) revision of the data
+#'        - 92
+#'        - 02
+#'        - 17
+#'        - 22
+#' @param include_intra_regional bool if intra-regional trade should be included
+#'
+#' @return magpie object of the aggregated trade data
+#'
+#' @author Leonie Schweiger
+#'
+#' @seealso [calcOutput()]
+#'
+#' @examples
+#' \dontrun{
+#' a <- calcOutput(
+#'   type = "StTrade", subtype = "imports",
+#'   category = "direct", HS = "02"
+#' )
+#' }
+#' @importFrom dplyr select filter rename summarize ungroup
+#' @importFrom magclass as.magpie getComment<-
+#'
+calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = FALSE) {
+  if (category == "indirect") {
     note <- "dimensions: (Historic Time,Region,Good,value)"
   } else {
     note <- "dimensions: (Historic Time,Region,value)"
   }
 
-  # Finalize
-  trade[is.na(trade)] <- 0 # fill remaining NA with zero
-  trade <- collapseDim(trade)
-
-  trade <- list(
-    x = trade,
-    weight = NULL,
-    unit = "Tonnes",
-    description = paste0("Steel trade: ", subtype, " from 1900-2021 yearly."),
-    note = note
+  # Read World Steel trade data
+  # map category
+  subtype_WS <- switch(category,
+    "indirect" = paste0(category, stringr::str_to_title(subtype)),
+    "scrap" = paste0(category, stringr::str_to_title(subtype)),
+    "direct" = subtype,
+    stop("Unsupported category: ", category)
   )
+  WS_trade <- calcOutput("StTradeWorldsteel", subtype = subtype_WS, aggregate = FALSE)
 
-  return(trade)
+  # if intra-regional trade should be included, simply return the Worldsteel trade data
+  if (include_intra_regional == TRUE) {
+    return(list(
+      x = WS_trade,
+      weight = NULL,
+      unit = "Tonnes",
+      description = paste("Steel trade:", category, subtype, "from 1900-2021 yearly.", sep = " "),
+      note = note
+    ))
+  } else {
+    WS_trade_df <- WS_trade %>%
+      as.data.frame() %>%
+      rename("t" = "Year") %>%
+      select(-"Cell") %>%
+      mutate(t = as.integer(as.character(.data$t)))
+    if (category == "indirect") {
+      WS_trade_df <- WS_trade_df %>% rename("sector" = "Data1")
+    } else {
+      WS_trade_df <- WS_trade_df %>% select(-"Data1")
+    }
+    # filter out regions where all values are 0 across all years
+    WS_trade_df <- WS_trade_df %>%
+      group_by(.data$Region) %>%
+      filter(any(.data$Value != 0)) %>%
+      ungroup()
+
+    # Read raw BACI data
+    weights <- readSource("BACI", subtype = paste("steel", category, sep = "-"), subset = HS) %>%
+      quitte::madrat_mule() %>%
+      rename(
+        "Region" = case_when(subtype == "imports" ~ "importer", subtype == "exports" ~ "exporter"),
+        "Region2" = case_when(subtype == "imports" ~ "exporter", subtype == "exports" ~ "importer")
+      )
+    # filter out unknown country codes that are later removed by madrat
+    unknown_countries <- c("ZA1", "PUS", "R20")
+    weights <- weights %>% filter(!.data$Region %in% unknown_countries, !.data$Region2 %in% unknown_countries)
+    # get grouping variables
+    group_vars <- setdiff(colnames(weights), c("t", "Region", "Region2", "value"))
+
+    # calculate weights to split WS trade data into bilateral trade data
+    weights <- weights %>%
+      group_by(.data$t, .data$Region, across(all_of(group_vars))) %>%
+      mutate(total = sum(.data$value), weight = .data$value / .data$total) %>%
+      ungroup() %>%
+      select(-"total", -"value")
+    # historical ISO countries SCG and ANT split into SRB & MNE in 2006 and SXM & CUW in 2011, respectively
+    # for simplicity, Region2 is assigned to their major successor countries SRB and CUW before the split year
+    weights$Region2[weights$Region2 == "SCG"] <- "SRB"
+    weights$Region2[weights$Region2 == "ANT"] <- "CUW"
+    # the shares for Region SCG and ANT are mapped to both SRB & MNE and SXM & CUW
+    weights <- rbind(
+      weights %>% filter(.data$Region != "SCG", .data$Region != "ANT"),
+      weights %>% filter(.data$Region == "SCG") %>% mutate(Region = "SRB"),
+      weights %>% filter(.data$Region == "SCG") %>% mutate(Region = "MNE"),
+      weights %>% filter(.data$Region == "SCG") %>% mutate(Region = "SXM"),
+      weights %>% filter(.data$Region == "SCG") %>% mutate(Region = "CUW")
+    )
+
+    # fill missing years for each region with the next available year's weights (backfill)
+    # (e.g. LUX and ZAF are missing in the first years)
+    weights_wide <- weights %>%
+      tidyr::pivot_wider(names_from = .data$Region2, values_from = .data$weight, values_fill = 0)
+    id_vars <- c("t", "Region", group_vars)
+    weights_wide <- weights_wide %>%
+      tidyr::complete(t = min(.data$t):max(.data$t), !!!rlang::syms(setdiff(id_vars, "t"))) %>%
+      dplyr::arrange(.data$Region, .data$t) %>%
+      group_by(across(all_of(setdiff(id_vars, "t")))) %>%
+      tidyr::fill(everything(), .direction = "updown") %>%
+      ungroup()
+    weights_complete <- weights_wide %>% tidyr::pivot_longer(!all_of(id_vars), names_to = "Region2", values_to = "weight")
+
+    # split WS trade data into bilateral trade
+    df <- left_join(WS_trade_df %>% filter(t >= min(weights_complete$t)),
+      weights_complete,
+      by = c("t", "Region", all_of(group_vars))
+    ) %>%
+      mutate(value = .data$weight * .data$Value)
+    # check whether there are missing weights, leading to incomplete splits of WS trade data
+    missing <- df %>% filter(is.na(.data$value))
+    if (nrow(missing) > 0) {
+      warning(paste(
+        "The following region x year combinations in the BACI data are missing and can lead
+          to incomplete splitting of World Steel trade data:\n",
+        paste(utils::capture.output(print(missing)), collapse = "\n")
+      ))
+    }
+
+    df <- df %>%
+      select(-"weight", -"Value") %>%
+      rename(
+        "importer" = case_when(subtype == "imports" ~ "Region", subtype == "exports" ~ "Region2"),
+        "exporter" = case_when(subtype == "imports" ~ "Region2", subtype == "exports" ~ "Region")
+      )
+
+    x <- as.magpie(df, temporal = "t", spatial = "importer")
+    x <- toolCountryFill(x, fill = NA, verbosity = 2)
+    x <- replace_non_finite(x, replace = 0)
+
+    .customAggregate <- function(x, rel, reference, flow_label) {
+      # aggregate to regions filtering out intra-regional trade
+      x <- toolAggregateBilateralTrade(x, rel, flow_label)
+
+      # backcast aggregated bilateral trade data to 1900 based on WS trade data
+      ref <- toolAggregate(reference, rel = rel)
+
+      # if some of the regions are missing in x due to the manual aggregation,
+      # fill with NA to match all the ref regions
+      missingRegions <- setdiff(getItems(ref, dim = 1), getItems(x, dim = 1))
+      if (length(missingRegions) > 0) {
+        x <- add_columns(x, addnm = missingRegions, dim = 1, fill = NA)
+      }
+
+      x <- toolBackcastByReference(x, ref)
+
+      return(x)
+    }
+
+    return(list(
+      x = x,
+      weight = NULL,
+      aggregationFunction = .customAggregate,
+      aggregationArguments = list(reference = WS_trade, flow_label = stringr::str_to_title(subtype)),
+      unit = "Tonnes",
+      description = paste("Steel trade:", category, subtype, "from 1900-2021 yearly.", sep = " "),
+      note = note
+    ))
+  }
 }

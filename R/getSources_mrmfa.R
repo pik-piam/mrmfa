@@ -17,28 +17,30 @@ getSources_mrmfa <- function() {
   # get mapping of parameters to calcFunctions in fullMFA
   mapping <- extract_calc_output_calls(fullMFA)
   # get GDP sources to exclude for all but the common parameters (only used for weighting)
-  GDP_sources <- getSources("calcCoGDP1900To2150")
+  GDP_sources <- getSources("calcCoGDP")
 
   rows <- list()
   bibtex_list <- character(0)
 
   for (i in mapping$Filename) {
     # get sources of calc function
-    sources <- getSources(mapping$CalcFunction[mapping$Filename==i])
+    sources <- getSources(mapping$CalcFunction[mapping$Filename == i])
 
     if (nrow(sources) == 0) {
       # add an empty row
       rows[[length(rows) + 1]] <- list(
-        Filename    = i,
-        CalcFunction = mapping$CalcFunction[mapping$Filename==i],
-        Source       = "",
-        Bibtex       = ""
+        Filename = i,
+        CalcFunction = mapping$CalcFunction[mapping$Filename == i],
+        Source = "",
+        Bibtex = ""
       )
     } else {
       for (j in sources$source) {
         # skip GDP sources for non-common parameters
         if (j %in% GDP_sources$source &
-            !(mapping$CalcFunction[mapping$Filename==i] %in% c("calcCoPopulation1900To2150","calcCoGDP1900To2150"))) next
+          !(mapping$CalcFunction[mapping$Filename == i] %in% c("calcCoPopulation", "calcCoGDP"))) {
+          next
+        }
         # get source folders and bibtex entries for each source
         sourceFolder <- madrat:::getSourceFolder(j, subtype = NULL)
         sourceFile <- find_source_info(sourceFolder)
@@ -64,10 +66,10 @@ getSources_mrmfa <- function() {
 
         # Add row
         rows[[length(rows) + 1]] <- list(
-          Filename    = i,
-          CalcFunction = mapping$CalcFunction[mapping$Filename==i],
-          Source       = j,
-          Bibtex       = bibtex_str
+          Filename = i,
+          CalcFunction = mapping$CalcFunction[mapping$Filename == i],
+          Source = j,
+          Bibtex = bibtex_str
         )
       }
     }

@@ -7,8 +7,8 @@
 fullMFA(
   rev = 0,
   dev = "",
-  scenario = "SSP2",
   gdpPerCapita = TRUE,
+  driverScenarios = c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5"),
   runSections = NULL,
   end_future = 2100
 )
@@ -18,11 +18,11 @@ fullMFA(
 
 \item{dev}{Development version string}
 
-\item{scenario}{SSP scenario used for population and GDP.}
-
 \item{gdpPerCapita}{bool if GDP should be returned as per capita values.}
 
-\item{runSections}{Character vector selecting which parts to run.
+\item{driverScenarios}{Character vector or string specifying the scenarios to use for GDP and population data.}
+
+\item{runSections}{Character vector or string selecting which parts to run.
 Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.}
 
 \item{end_future}{End year for future data (default: 2100).}
