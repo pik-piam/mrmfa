@@ -4,14 +4,7 @@
 #' @param x Magpie object
 convertUNComtrade <- function(x) {
   # Manually add missing regions required for ANT disaggregation in toolISOhistorical
-  missing_iso <- c("SXM", "BES")
-  extra <- new.magpie(
-    cells_and_regions = missing_iso,
-    years = getYears(x),
-    names = getNames(x),
-    fill = 0
-  )
-  x <- mbind(x, extra)
+  x <- add_columns(x, addnm =  c("SXM", "BES"), dim = 1, fill = 0)
 
   # ZA1 is Southern African Customs Union which includes Botswana, Eswatini, Lesotho, Namibia, South Africa
   # Existed until 1999 (according to dataset).

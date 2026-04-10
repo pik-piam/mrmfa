@@ -90,7 +90,7 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
   shipping_cost <- readSource("OWID", subtype = "shipping_costs")
 
-  last_shipping_cost_year <- getYears(shipping_cost, as.integer = TRUE)[1]
+  last_shipping_cost_year <- min(getYears(shipping_cost, as.integer = TRUE))
   if (last_shipping_cost_year > target_years[1]) {
     # extend shipping cost: increase linearly before 1930 and keep constant after 2003
     shipping_cost <- toolInterpolate(shipping_cost, years = target_years, extrapolate = TRUE)
