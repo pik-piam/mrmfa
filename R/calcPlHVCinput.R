@@ -141,7 +141,7 @@ calcPlHVCinput <- function(subtype) {
   # ---------------------------------------------------------------------------
 
   if (subtype == "polymerization_yield") {
-    x <- polymerization_full
+    x <- 1/polymerization_full
     note <- "dimensions: (Material,value)"
   } else if (subtype == "HVC_input_ratio"){
     x <- mselect(HVC_input_ratio, hvc_type = "HVC w/o C4") %>% collapseDim()
