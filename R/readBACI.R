@@ -128,7 +128,7 @@ readBACI <- function(subtype, subset) {
       stop("Unsupported cement trade category: ", category)
     )
   } else {
-    stop("Invalid subtype. Choose either 'plastics_UNCTAD', 'plastics_UNEP' or 'steel'.")
+    stop("Invalid subtype. Choose either 'plastics_UNCTAD', 'plastics_UNEP', 'steel', or 'cement'.")
   }
 
   # Read raw trade data of respective HS classification system
