@@ -116,7 +116,7 @@ calcPlHVCinput <- function(subtype) {
     group_by(.data$element) %>%
     tidyr::nest() %>%
     mutate(
-      model = purrr::map(.data$data, ~ lm(.data$hvc_input ~ .data$carbon, data = .x)),
+      model = purrr::map(.data$data, ~ lm(hvc_input ~ carbon, data = .x)),
       pred  = purrr::map(.data$model, ~ predict(.x, newdata = cc_missing))
     ) %>%
     tidyr::unnest(.data$pred) %>%
