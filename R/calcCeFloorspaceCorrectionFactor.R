@@ -161,7 +161,7 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
     "(3) GHS-OBAT" = ghsoobat_floor_area,
     "(4) EUBUCCO" = eubucco_floor_area
   )
-  toolMplotMulti(floorlist, title = "Global", xlab = "", ylab = ylab,
+  MplotMulti(floorlist, title = "Global", xlab = "", ylab = ylab,
                  filename = filename, ncol = length(floorlist), nrow = 1)
 
   # European plot (EUBUCCO Data)
@@ -173,7 +173,7 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
     "(3) GHS-OBAT" = ghsoobat_floor_area * eubucco_mask,
     "(4) EUBUCCO" = eubucco_floor_area * eubucco_mask
   )
-  toolMplotMulti(floorlist, title = "EU27", xlab = "", ylab = ylab,
+  MplotMulti(floorlist, title = "EU27", xlab = "", ylab = ylab,
                  filename = filename, ncol = length(floorlist), nrow = 1)
 
   # country plots
@@ -189,7 +189,7 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
     ghsobat <- ghsoobat_floor_area[country,,]
     floorlist <- list("(1) EDGE-B" = edgeb, "(2) GEM" = gem, "(4) EUBUCCO" = eubucco, "(3) GHS-OBAT" = ghsobat)
     filename <- paste0(savefolder, region, "_", country, ".png")
-    toolMplotMulti(floorlist, title = country, xlab = "", ylab = ylab,
+    MplotMulti(floorlist, title = country, xlab = "", ylab = ylab,
                    filename = filename, ncol = length(floorlist), nrow = 1)
   }
 }
@@ -210,7 +210,7 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
 #' @author Bennet Weiss, Pascal Sauer (mplot), Patrick Rein (mplot)
 #' @importFrom rlang .data
 #' @export
-toolMplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NULL, ylab = NULL, filename = NULL,
+MplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NULL, ylab = NULL, filename = NULL,
                            nrow = NULL, ncol = NULL, ignore_na = TRUE, show_shares = TRUE) {
 
   # --- Handle single object or list of objects ---
