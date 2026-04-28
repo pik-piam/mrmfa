@@ -2,7 +2,7 @@
 
 R package **mrmfa**, version **1.8.0**
 
-[![CRAN status](https://www.r-pkg.org/badges/version/mrmfa)](https://cran.r-project.org/package=mrmfa) [![R build status](https://github.com/pik-piam/mrmfa/workflows/check/badge.svg)](https://github.com/pik-piam/mrmfa/actions) [![codecov](https://codecov.io/gh/pik-piam/mrmfa/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/mrmfa) 
+   [![R build status](https://github.com/pik-piam/mrmfa/workflows/check/badge.svg)](https://github.com/pik-piam/mrmfa/actions) [![codecov](https://codecov.io/gh/pik-piam/mrmfa/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pik-piam/mrmfa) 
 
 ## Purpose and Functionality
 
@@ -46,7 +46,7 @@ A BibTeX entry for LaTeX users is
 @Misc{,
   title = {mrmfa: Input data generation for the REMIND MFA},
   author = {Jakob Dürrwächter and Bennet Weiss and Leonie Schweiger and Falk Benke and Merlin Jo Hosak and Qianzhi Zhang},
-  date = {2026-04-10},
+  date = {2026-04-28},
   year = {2026},
   url = {https://github.com/pik-piam/mrmfa},
   note = {Version: 1.8.0},

@@ -68,7 +68,7 @@ calcPlHVCinput <- function(subtype) {
   # ---------------------------------------------------------------------------
   polymer_map <- toolGetMapping("polymermappingLeviCullen.csv", type = "sectoral", where = "mrmfa")
   production_volumes <- readSource("LeviCullen", subtype = "Production", convert = FALSE)
-  weights <- mselect(production_volumes, stage = "total production", type = "plastics", to = polymerization$polymer) %>% collapseDim()
+  weights <- mselect(production_volumes, stage = "total production", type = "plastics", to = polymerization$polymer, collapseNames = TRUE) %>% collapseDim()
   HVC_input_mapped <- HVC_input_magclass %>%
     toolAggregate(rel = polymer_map, dim = 3.1, from = "Source", to = "Target", weight = weights, wdim = 3.1)
   polymerization_mapped <- polymerization_magclass %>%
@@ -119,7 +119,7 @@ calcPlHVCinput <- function(subtype) {
       model = purrr::map(.data$data, ~ lm(hvc_input ~ carbon, data = .x)),
       pred  = purrr::map(.data$model, ~ predict(.x, newdata = cc_missing))
     ) %>%
-    tidyr::unnest(.data$pred) %>%
+    tidyr::unnest("pred") %>%
     mutate(
       polymer = rep(missing_polymers, dplyr::n() / length(missing_polymers)),
       hvc_type = "HVC w/o C4"
