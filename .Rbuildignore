@@ -12,3 +12,4 @@
 ^\.venv$
 ^\.claude$
 ^_pkgdown\.yml$
+^\.positai$
