@@ -6,14 +6,11 @@
 #' @param correct Bool, whether to apply the correction factor (default: TRUE).
 #' @author Bennet Weiss
 calcCeFloorspace <- function(scenario = "SSP2", correct = TRUE) {
-  floorspace_edgeb <- calcOutput("CeFloorspaceEDGEB", scenario = scenario, aggregate = FALSE)
-  floorspace_correction <- calcOutput("CeFloorspaceCorrectionFactor", aggregate = FALSE)
+  floorspace <- calcOutput("CeFloorspaceEDGEB", scenario = scenario, aggregate = FALSE)
 
   if (correct) {
-    floorspace_out <- floorspace_edgeb * floorspace_correction
-  } else {
-    floorspace_out <- floorspace_edgeb
-  }
+    floorspace_correction <- calcOutput("CeFloorspaceCorrectionFactor", aggregate = FALSE)
+    floorspace <- floorspace * floorspace_correction
 
   # Output
   description <- paste(
@@ -22,7 +19,7 @@ calcCeFloorspace <- function(scenario = "SSP2", correct = TRUE) {
   )
   note <- "dimensions: (Time,Region,Stock Type,value)"
   output <- list(
-    x = floorspace_out,
+    x = floorspace,
     weight = NULL,
     unit = "m2",
     description = description,
