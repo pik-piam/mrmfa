@@ -122,7 +122,7 @@ fullMFA <- function(rev = 0,
     calcOutput("CeBuiltLifespan", file = "ce_lifetime_mean.cs4r", years = start_historic:end_historic)
     calcOutput("CeLifetimeRelStd", file = "ce_lifetime_rel_std.cs4r", aggregate = FALSE)
     calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = start_historic:end_historic)
-    calcOutput("CeCementRatio", file = "ce_cement_ratio.cs4r", aggregate = FALSE)
+    calcOutput("CeCementRatio", file = "ce_cement_ratio.cs4r")
     calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction", aggregate = FALSE)
     calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
     calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")

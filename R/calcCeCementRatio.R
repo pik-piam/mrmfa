@@ -41,7 +41,7 @@ calcCeCementRatio <- function() {
       "divided by product density across applications within each material.",
       "Data from Cao2024."
     ),
-    note = "dimensions: (Product Material,value)",
+    note = "dimensions: (Region,Product Material,value)",
     isocountries = FALSE
   )
   return(output)

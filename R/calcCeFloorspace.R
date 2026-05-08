@@ -11,6 +11,7 @@ calcCeFloorspace <- function(scenario = "SSP2", correct = TRUE) {
   if (correct) {
     floorspace_correction <- calcOutput("CeFloorspaceCorrectionFactor", aggregate = FALSE)
     floorspace <- floorspace * floorspace_correction
+  }
 
   # Output
   description <- paste(
