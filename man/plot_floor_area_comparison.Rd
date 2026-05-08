@@ -11,6 +11,15 @@ plot_floor_area_comparison(
   ghsoobat_floor_area
 )
 }
+\arguments{
+\item{edgeb_floor_area}{EDGE-B floor area magpie object.}
+
+\item{eubucco_floor_area}{EUBUCCO floor area magpie object.}
+
+\item{gem_floor_area}{GEM floor area magpie object.}
+
+\item{ghsoobat_floor_area}{GHS-OBAT floor area magpie object.}
+}
 \description{
 Plots a comparison of floor area data from EDGE-B, EUBUCCO and GEM.
 }

@@ -27,6 +27,12 @@ MplotMulti(
 
 \item{title}{A string to be used as the plot's main title. Defaults to NULL.}
 
+\item{xlab}{Label for the x axis. Defaults to NULL.}
+
+\item{ylab}{Label for the y axis. Defaults to NULL.}
+
+\item{filename}{Path to save the plot. If NULL, the plot is printed instead. Defaults to NULL.}
+
 \item{nrow}{Number of rows for the facet layout (passed to facet_wrap).}
 
 \item{ncol}{Number of columns for the facet layout (passed to facet_wrap).}

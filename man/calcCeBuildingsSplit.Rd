@@ -2,7 +2,8 @@
 % Please edit documentation in R/calcCeBuildingsSplit.R
 \name{calcCeBuildingsSplit}
 \alias{calcCeBuildingsSplit}
-\title{Calculates relative floor area of buildings by subtype.}
+\title{Calculates relative floor area of buildings by subtype.
+Based on splits in Global Exposure Model (GEM)}
 \usage{
 calcCeBuildingsSplit(subtype)
 }
@@ -11,6 +12,7 @@ calcCeBuildingsSplit(subtype)
 }
 \description{
 Calculates relative floor area of buildings by subtype.
+Based on splits in Global Exposure Model (GEM)
 }
 \author{
 Bennet Weiss

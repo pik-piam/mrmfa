@@ -8,14 +8,14 @@ convertGHSOBAT(x, subtype)
 }
 \arguments{
 \item{x}{magpie object}
+
+\item{subtype}{Data to extract.
+"surface" for total footprint building differentiated by residential and non-residential.
+"height" for average building height (not differentiated)}
 }
 \description{
 Convert GHSOBAT
 }
 \author{
 Bennet Weiss
-
-subtype Data to extract.
-       "surface" for total footprint building differentiated by residential and non-residential.
-       "height" for average building height (not differentiated)
 }

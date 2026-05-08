@@ -2,7 +2,8 @@
 % Please edit documentation in R/calcCeBuildingsMI.R
 \name{calcCeBuildingsMI}
 \alias{calcCeBuildingsMI}
-\title{Calculates global cement production as from Andrew's 2019 paper.}
+\title{Calculate Material Intensity (t/m2) of residential and commercial buildings.
+Based on RASMI}
 \usage{
 calcCeBuildingsMI(subtype = "concrete")
 }
@@ -10,7 +11,8 @@ calcCeBuildingsMI(subtype = "concrete")
 \item{subtype}{Material subtype. Possible values are "concrete", "steel", "plastics".}
 }
 \description{
-Calculates global cement production as from Andrew's 2019 paper.
+Calculate Material Intensity (t/m2) of residential and commercial buildings.
+Based on RASMI
 }
 \author{
 Bennet Weiss
