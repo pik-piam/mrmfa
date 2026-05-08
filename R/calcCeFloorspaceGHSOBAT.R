@@ -13,22 +13,24 @@ calcCeFloorspaceGHSOBAT <- function(floor_height = NULL) {
 
   # 1. Remove industrial buildings from nonres to get commercial buildings
   # Country-specific industry share comes from GEM
-  GEM_floor_area <- calcOutput("CeFloorspaceGEM", subtype = "Stock_Type",
-                               remove_ind = FALSE, aggregate = FALSE)
-  com_share <- GEM_floor_area[,,"Com"] / (GEM_floor_area[,, "Com"] + GEM_floor_area[,, "Ind"])
+  GEM_floor_area <- calcOutput("CeFloorspaceGEM",
+    subtype = "Stock_Type",
+    remove_ind = FALSE, aggregate = FALSE
+  )
+  com_share <- GEM_floor_area[, , "Com"] / (GEM_floor_area[, , "Com"] + GEM_floor_area[, , "Ind"])
   com_share <- mean(com_share, na.rm = TRUE) # global average if NA TODO: weighted averages
-  buildings_volume[,, "non_residential"] <- buildings_volume[,, "non_residential"] * com_share
+  buildings_volume[, , "non_residential"] <- buildings_volume[, , "non_residential"] * com_share
 
   # 2. Rename variables
   getItems(buildings_volume, dim = 3) <- c("Res", "Com")
 
   # 3. Calculate average floor height from EUBUCCO data if not provided
-  if (is.null(floor_height)){
+  if (is.null(floor_height)) {
     eubucco_floorspace <- readSource("EUBUCCO")
-    eubucco_floorspace_eu <- dimSums(eubucco_floorspace, dim=c(1,3), na.rm = TRUE)
+    eubucco_floorspace_eu <- dimSums(eubucco_floorspace, dim = c(1, 3), na.rm = TRUE)
     eubucco_mask <- !is.na(eubucco_floorspace)
     buildings_volume_eu <- buildings_volume * eubucco_mask
-    buildings_volume_eu <- dimSums(buildings_volume_eu, dim=c(1,3))
+    buildings_volume_eu <- dimSums(buildings_volume_eu, dim = c(1, 3))
 
     floor_height <- buildings_volume_eu / eubucco_floorspace_eu
   }

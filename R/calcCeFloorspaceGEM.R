@@ -14,7 +14,7 @@ calcCeFloorspaceGEM <- function(subtype = NULL, remove_ind = TRUE) {
     floorArea <- mselect(floorArea, "Function" = c("Com", "RM", "RS"))
   }
 
-  if (is.null(subtype)){
+  if (is.null(subtype)) {
     x_out <- floorArea
   } else if (all(subtype %in% possible_subtypes)) {
     dims_to_sum <- setdiff(possible_subtypes, subtype)

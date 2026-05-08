@@ -7,9 +7,9 @@ convertEUBUCCO <- function(x) {
 
   # commercial is implicitly given in dataset
   x <- add_columns(x, "commercial", 3)
-  x[,,"commercial"] <- x[,,"commercial and industry"] - x[,,"industry"]
+  x[, , "commercial"] <- x[, , "commercial and industry"] - x[, , "industry"]
   # remove unused variables
-  x <- x[,,list(Variable = c("commercial and industry", "industry")), invert = TRUE]
+  x <- x[, , list(Variable = c("commercial and industry", "industry")), invert = TRUE]
 
   # rename variables
   getItems(x, dim = 3) <- c("Res", "Com")

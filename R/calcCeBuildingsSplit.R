@@ -24,7 +24,7 @@ calcCeBuildingsSplit <- function(subtype) {
   unit <- "ratio"
   description <- paste0(
     "Relative floor area of buildings by ", compare_type, " and ", subtype, ".",
-    "Calculated as (floor area of ", subtype,")/(total floor area of ", compare_type, " in the same country).",
+    "Calculated as (floor area of ", subtype, ")/(total floor area of ", compare_type, " in the same country).",
     "Data from Global Exposure Model (GEM), categories harmonized with RASMI.",
     "Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek, J., Hoyos, M., Martins, L., Paul, N., Rao, A., Silva, V. (2023).",
     "Global Building Exposure Model for Earthquake Risk Assessment. Earthquake Spectra. doi:10.1177/87552930231194048."

@@ -3,7 +3,6 @@
 #' @param scenario EDGE-B scenario, one of "SSP1", "SSP2", "SSP3", "SSP4", "SSP5"
 #' @author Bennet Weiss
 calcCeFloorspaceEDGEB <- function(scenario = "SSP2") {
-
   # Read data
   floorspace <- calcOutput("Floorspace", scenario = scenario, aggregate = FALSE)
 
@@ -14,7 +13,7 @@ calcCeFloorspaceEDGEB <- function(scenario = "SSP2") {
   floorspace <- dimReduce(floorspace)
 
   # Remove buildings total
-  floorspace <- floorspace[,,(Variable = "buildings"), invert = TRUE]
+  floorspace <- floorspace[, , (Variable <- "buildings"), invert = TRUE]
 
   # enforce MFA naming convention
   getNames(floorspace) <- gsub("commercial", "Com", getNames(floorspace))
@@ -23,10 +22,12 @@ calcCeFloorspaceEDGEB <- function(scenario = "SSP2") {
   # TODO interpolate smoother than linear.
   year_range <- range(getYears(floorspace, as.integer = TRUE))
   target_years <- seq(year_range[1], year_range[2])
-  floorspace_annual <- time_interpolate(dataset = floorspace,
-                                        interpolated_year = target_years,
-                                        integrate_interpolated_years = FALSE,
-                                        extrapolation_type = "linear")
+  floorspace_annual <- time_interpolate(
+    dataset = floorspace,
+    interpolated_year = target_years,
+    integrate_interpolated_years = FALSE,
+    extrapolation_type = "linear"
+  )
 
   # Output
   description <- paste(

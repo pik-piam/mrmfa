@@ -17,7 +17,7 @@ convertRASMI <- function(x) {
     # cut SSPR5 name
     short_region <- strsplit(region, "_")[[1]][2]
     countries_in_region <- toolGetRegionCountries(x_out, short_region, region_mapping)
-    x_out[countries_in_region,,] <- x[region,,]
+    x_out[countries_in_region, , ] <- x[region, , ]
   }
 
   return(x_out)

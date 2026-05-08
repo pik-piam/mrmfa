@@ -103,8 +103,10 @@ toolExtractNStories <- function(taxonomy) {
     non_exception <- failed[!sapply(failed, function(f) any(sapply(exceptions, function(e) grepl(e, f))))]
 
     if (length(non_exception) > 0) {
-      warning("No height found in the following entries:\n",
-              paste0(" - ", non_exception, collapse = "\n"))
+      warning(
+        "No height found in the following entries:\n",
+        paste0(" - ", non_exception, collapse = "\n")
+      )
     }
   }
   return(n_stories)
@@ -135,23 +137,23 @@ toolInferResBuildingType <- function(data) {
 #' @author Bennet Weiss
 #' @param structure Vector of building structure types as used in GEM.
 toolAggregateFunctionType <- function(structure) {
-  mapping = c(
-    "S" = "S",     # Steel
-    "W" = "T",     # Wood
-    "RC" = "C",    # Reinforced Concrete
-    "M" = "M",     # Masonry
-    "MUR" = "M",   # Unreinforced Masonry
-    "MR" = "M",    # Reinforced Masonry
-    "MCF" = "M",   # Confined Masonry
-    "ADO" = "M",   # Adobe (see material_intensity_db/data/buildings.csv)
+  mapping <- c(
+    "S" = "S", # Steel
+    "W" = "T", # Wood
+    "RC" = "C", # Reinforced Concrete
+    "M" = "M", # Masonry
+    "MUR" = "M", # Unreinforced Masonry
+    "MR" = "M", # Reinforced Masonry
+    "MCF" = "M", # Confined Masonry
+    "ADO" = "M", # Adobe (see material_intensity_db/data/buildings.csv)
     "ADO/E" = "M", # Adobe/Earth
-    "MIX" = NA,    # Mixed-types (not in RASMI)
-    "OT" = NA      # Other (not in RASMI)
+    "MIX" = NA, # Mixed-types (not in RASMI)
+    "OT" = NA # Other (not in RASMI)
   )
   mapped <- mapping[structure]
 
-  unmatched <-  structure[!structure %in% names(mapping) & !is.na(structure)]
-  if(length(unmatched) > 0) {
+  unmatched <- structure[!structure %in% names(mapping) & !is.na(structure)]
+  if (length(unmatched) > 0) {
     warning("Unmatched elements: ", paste(unique(unmatched), collapse = ", "))
   }
 

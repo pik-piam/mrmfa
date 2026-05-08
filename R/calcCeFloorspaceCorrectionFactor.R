@@ -2,7 +2,6 @@
 #'
 #' @author Bennet Weiss
 calcCeFloorspaceCorrectionFactor <- function() {
-
   # ---Read and prepare data---
   # Correction is not differentiated by sector, hence the use of dimSums
 
@@ -12,7 +11,8 @@ calcCeFloorspaceCorrectionFactor <- function() {
     calcOutput(
       type = "CeFloorspaceEDGEB",
       aggregate = FALSE
-    )[,2020,], dim = 3
+    )[, 2020, ],
+    dim = 3
   )
   edgeb_floorspace <- dimReduce(edgeb_floorspace) # remove year 2020 dimension
   # EUBUCCO data for 2020 (m2)
@@ -47,16 +47,16 @@ calcCeFloorspaceCorrectionFactor <- function() {
   ratio[ratio < 1] <- 1
 
   # Upper bound: Interquartile range method on trustworthy EUBUCCO data
-  q1 = quantile(ratio[!not_eubucco_mask], 0.25)
-  q3 = quantile(ratio[!not_eubucco_mask], 0.75)
-  iqr = q3 - q1
-  upper_bound = q3 + 1 * iqr
+  q1 <- quantile(ratio[!not_eubucco_mask], 0.25)
+  q3 <- quantile(ratio[!not_eubucco_mask], 0.75)
+  iqr <- q3 - q1
+  upper_bound <- q3 + 1 * iqr
   outlier_mask <- (ratio > upper_bound)
 
   mean_mask <- gem_mask | outlier_mask
 
   # Set outliers to mean
-  mean_ratio <- dimSums(combined_floorspace * !mean_mask, dim=1) / dimSums(edgeb_floorspace * !mean_mask, dim=1)
+  mean_ratio <- dimSums(combined_floorspace * !mean_mask, dim = 1) / dimSums(edgeb_floorspace * !mean_mask, dim = 1)
   ratio[mean_mask] <- mean_ratio
 
   # ---Output---
@@ -82,11 +82,10 @@ calcCeFloorspaceCorrectionFactor <- function() {
 #'                 Options are "floor area comparison" and "ratio eubucco/edgeb over cement production".
 #'                 Defaults to no plot.
 plot_floorspace_data <- function(plotting) {
-
   edgeb_floor_area <- calcOutput(
     type = "CeFloorspaceEDGEB",
     aggregate = FALSE
-  )[,2020]
+  )[, 2020]
   edgeb_floor_area <- dimReduce(edgeb_floor_area) # remove year 2020 dimension
 
   # EUBUCCO data for 2020 (m2)
@@ -94,7 +93,6 @@ plot_floorspace_data <- function(plotting) {
 
   if (!is.null(plotting)) {
     if (plotting == "floor area comparison") {
-
       # GEM data for 2021 (m2)
       gem_floor_area <- calcOutput(
         type = "CeFloorspaceGEM",
@@ -105,17 +103,14 @@ plot_floorspace_data <- function(plotting) {
       ghsoobat_floor_area <- calcOutput("CeFloorspaceGHSOBAT", aggregate = FALSE)
 
       plot_floor_area_comparison(edgeb_floor_area, eubucco_floor_area, gem_floor_area, ghsoobat_floor_area)
-
     } else if (plotting == "ratio eubucco/edgeb over cement production") {
-
       cement_production <- calcOutput(
         type = "CeBinderProduction",
         subtype = "cement",
         aggregate = FALSE
-      )[,2020] # tonnes
+      )[, 2020] # tonnes
 
       plot_ratio_over_x(edgeb_floor_area, eubucco_floor_area, cement_production, "Cement Production (tonnes)")
-
     } else {
       stop("Invalid plotting option. Choose either 'floor area comparison' or 'ratio eubucco/edgeb over cement production'.")
     }
@@ -129,13 +124,12 @@ plot_floorspace_data <- function(plotting) {
 #' @param x magpie object to plot ratio against (e.g., Production, GDP)
 #' @param xlabel label for x axis
 plot_ratio_over_x <- function(edgeb, eubucco, x, xlabel) {
-
   filename <- "../madrat_wd/figures/floor_area_ratio_eubucco_edgeb/floor_area_ratio_eubucco_edgeb.png"
   ratio <- dimSums(eubucco) / dimSums(edgeb)
   ratio_df <- as.data.frame(ratio)
   x_df <- as.data.frame(x)
   ratio_df$x <- x_df$Value
-  ratio_df <- ratio_df[ratio_df$Value > 0,]
+  ratio_df <- ratio_df[ratio_df$Value > 0, ]
 
   plot <- ggplot2::ggplot(ratio_df, ggplot2::aes(x = x, y = Value)) +
     ggplot2::geom_point() +
@@ -143,7 +137,6 @@ plot_ratio_over_x <- function(edgeb, eubucco, x, xlabel) {
     ggplot2::labs(x = xlabel, y = "Floor-area ratio: EUBUCCO/EDGE-B") +
     ggplot2::theme_minimal()
   ggplot2::ggsave(filename, plot = plot)
-
 }
 
 
@@ -161,8 +154,10 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
     "(3) GHS-OBAT" = ghsoobat_floor_area,
     "(4) EUBUCCO" = eubucco_floor_area
   )
-  MplotMulti(floorlist, title = "Global", xlab = "", ylab = ylab,
-                 filename = filename, ncol = length(floorlist), nrow = 1)
+  MplotMulti(floorlist,
+    title = "Global", xlab = "", ylab = ylab,
+    filename = filename, ncol = length(floorlist), nrow = 1
+  )
 
   # European plot (EUBUCCO Data)
   filename <- paste0(savefolder, "EU27", ".png")
@@ -173,8 +168,10 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
     "(3) GHS-OBAT" = ghsoobat_floor_area * eubucco_mask,
     "(4) EUBUCCO" = eubucco_floor_area * eubucco_mask
   )
-  MplotMulti(floorlist, title = "EU27", xlab = "", ylab = ylab,
-                 filename = filename, ncol = length(floorlist), nrow = 1)
+  MplotMulti(floorlist,
+    title = "EU27", xlab = "", ylab = ylab,
+    filename = filename, ncol = length(floorlist), nrow = 1
+  )
 
   # country plots
   countries <- getItems(gem_floor_area, dim = 1)
@@ -183,14 +180,16 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
   for (i in seq_along(countries)) {
     country <- countries[i]
     region <- regions[i]
-    edgeb <- edgeb_floor_area[country,,]
-    eubucco <- eubucco_floor_area[country,,]
-    gem <- gem_floor_area[country,,]
-    ghsobat <- ghsoobat_floor_area[country,,]
+    edgeb <- edgeb_floor_area[country, , ]
+    eubucco <- eubucco_floor_area[country, , ]
+    gem <- gem_floor_area[country, , ]
+    ghsobat <- ghsoobat_floor_area[country, , ]
     floorlist <- list("(1) EDGE-B" = edgeb, "(2) GEM" = gem, "(4) EUBUCCO" = eubucco, "(3) GHS-OBAT" = ghsobat)
     filename <- paste0(savefolder, region, "_", country, ".png")
-    MplotMulti(floorlist, title = country, xlab = "", ylab = ylab,
-                   filename = filename, ncol = length(floorlist), nrow = 1)
+    MplotMulti(floorlist,
+      title = country, xlab = "", ylab = ylab,
+      filename = filename, ncol = length(floorlist), nrow = 1
+    )
   }
 }
 
@@ -211,8 +210,7 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
 #' @importFrom rlang .data
 #' @export
 MplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NULL, ylab = NULL, filename = NULL,
-                           nrow = NULL, ncol = NULL, ignore_na = TRUE, show_shares = TRUE) {
-
+                       nrow = NULL, ncol = NULL, ignore_na = TRUE, show_shares = TRUE) {
   # --- Handle single object or list of objects ---
   if (inherits(px, "magpie")) {
     # Single object case
@@ -348,13 +346,15 @@ MplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NU
   plot <- ggplot2::ggplot(data = px_df, ggplot2::aes(x = .data[[temporalDimName]]))
 
   facetBySpatial <- !global
-  facetBySource  <- !isSingleObject && temporalCategorial
+  facetBySource <- !isSingleObject && temporalCategorial
 
   if (!temporalCategorial) {
     # --- LINE PLOT ---
     # Define aesthetics
-    line_aes <- ggplot2::aes(y = .data$.value,
-                             color = .data[[dataDimName]])
+    line_aes <- ggplot2::aes(
+      y = .data$.value,
+      color = .data[[dataDimName]]
+    )
 
     if (isSingleObject) {
       # Original behavior
@@ -362,17 +362,20 @@ MplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NU
     } else {
       # Multi-object: add linetype for 'source' and update group
       line_aes <- line_aes +
-        ggplot2::aes(linetype = .data$source,
-                     group = interaction(.data[[dataDimName]], .data$source))
+        ggplot2::aes(
+          linetype = .data$source,
+          group = interaction(.data[[dataDimName]], .data$source)
+        )
     }
 
     plot <- plot + ggplot2::geom_line(linewidth = 1.5, mapping = line_aes)
-
   } else {
     # --- BAR PLOT ---
-    bar_aes <- ggplot2::aes(weight = .data$.value,
-                            color = .data[[dataDimName]],
-                            group = .data[[dataDimName]])
+    bar_aes <- ggplot2::aes(
+      weight = .data$.value,
+      color = .data[[dataDimName]],
+      group = .data[[dataDimName]]
+    )
 
     plot <- plot + ggplot2::geom_bar(linewidth = 1.5, mapping = bar_aes)
 
@@ -414,11 +417,13 @@ MplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NU
   if (facetBySpatial && !facetBySource) {
     # Case 1: Spatial only
     plot <- plot + ggplot2::facet_wrap(stats::as.formula(paste("~", spatialDimName)),
-                                       nrow = nrow, ncol = ncol) # <--- MODIFIED
+      nrow = nrow, ncol = ncol
+    ) # <--- MODIFIED
   } else if (!facetBySpatial && facetBySource) {
     # Case 2: Source only (This is your specific case with 4 objects)
     plot <- plot + ggplot2::facet_wrap(~ .data$source,
-                                       nrow = nrow, ncol = ncol) # <--- MODIFIED
+      nrow = nrow, ncol = ncol
+    ) # <--- MODIFIED
   } else if (facetBySpatial && facetBySource) {
     # Case 3: Both
     # Note: facet_grid does NOT accept nrow/ncol as dimensions are fixed by variables
@@ -435,4 +440,3 @@ MplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NU
     print(plot)
   }
 }
-
