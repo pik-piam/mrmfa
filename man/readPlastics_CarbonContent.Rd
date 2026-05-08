@@ -2,21 +2,24 @@
 % Please edit documentation in R/readPlastics_CarbonContent.R
 \name{readPlastics_CarbonContent}
 \alias{readPlastics_CarbonContent}
-\title{Read Plastics Carbon Content from stochiometric calculations for defined polymers and
-rough estimates for broader classes}
+\title{Read Carbon Content for HVCs or plastics (from stochiometric calculations for defined polymers and
+rough estimates for broader classes)}
 \usage{
-readPlastics_CarbonContent()
+readPlastics_CarbonContent(subtype)
+}
+\arguments{
+\item{subtype}{plastics or HVC}
 }
 \value{
-magpie object of the Carbon Content for different plastic types/polymers
+magpie object of the Carbon Content for different plastic types/polymers or HVC
 }
 \description{
-Read Plastics Carbon Content from stochiometric calculations for defined polymers and
-rough estimates for broader classes
+Read Carbon Content for HVCs or plastics (from stochiometric calculations for defined polymers and
+rough estimates for broader classes)
 }
 \examples{
 \dontrun{
-a <- readSource(type = "Plastics_CarbonContent")
+a <- readSource(type = "Plastics_CarbonContent", subtype="plastics")
 }
 
 }
