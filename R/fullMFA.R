@@ -127,7 +127,6 @@ fullMFA <- function(rev = 0,
     calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
     calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")
     calcOutput("CeStockTypeSplit", file = "ce_stock_type_split.cs4r")
-    calcOutput("CeStockSaturationLevel", file = "ce_stock_saturation_level.cs4r")
     calcOutput("CeIndustrializedRegions", file = "ce_industrialized_regions.cs4r", round = 0)
     # Carbonation
     calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
@@ -144,7 +143,6 @@ fullMFA <- function(rev = 0,
     calcOutput("CeWasteSplit", file = "ce_waste_type_split.cs4r")
     calcOutput("CeCaOEmissionFactor", file = "ce_cao_emission_factor.cs4r", aggregate = FALSE)
     calcOutput("CeMaterialApplicationSplit", file = "ce_material_application_split.cs4r")
-    calcOutput("CeProductDensity", file = "ce_product_density.cs4r", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_min.cs4r", subtype = "min", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_max.cs4r", subtype = "max", aggregate = FALSE)
     # Service demand / bottom-up
