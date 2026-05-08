@@ -143,7 +143,7 @@ fullMFA <- function(rev = 0,
     calcOutput("CeWasteSizeSplit", file = "ce_waste_size_share.cs4r")
     calcOutput("CeWasteSplit", file = "ce_waste_type_split.cs4r")
     calcOutput("CeCaOEmissionFactor", file = "ce_cao_emission_factor.cs4r", aggregate = FALSE)
-    calcOutput("CeMaterialApplicationSplit", file = "ce_material_application_split.cs4r", aggregate = FALSE)
+    calcOutput("CeMaterialApplicationSplit", file = "ce_material_application_split.cs4r")
     calcOutput("CeProductDensity", file = "ce_product_density.cs4r", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_min.cs4r", subtype = "min", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_max.cs4r", subtype = "max", aggregate = FALSE)
