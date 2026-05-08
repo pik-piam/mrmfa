@@ -47,8 +47,8 @@ calcCeFloorspaceCorrectionFactor <- function() {
   ratio[ratio < 1] <- 1
 
   # Upper bound: Interquartile range method on trustworthy EUBUCCO data
-  q1 <- quantile(ratio[!not_eubucco_mask], 0.25)
-  q3 <- quantile(ratio[!not_eubucco_mask], 0.75)
+  q1 <- stats::quantile(ratio[!not_eubucco_mask], 0.25)
+  q3 <- stats::quantile(ratio[!not_eubucco_mask], 0.75)
   iqr <- q3 - q1
   upper_bound <- q3 + 1 * iqr
   outlier_mask <- (ratio > upper_bound)
@@ -131,7 +131,7 @@ plot_ratio_over_x <- function(edgeb, eubucco, x, xlabel) {
   ratio_df$x <- x_df$Value
   ratio_df <- ratio_df[ratio_df$Value > 0, ]
 
-  plot <- ggplot2::ggplot(ratio_df, ggplot2::aes(x = x, y = Value)) +
+  plot <- ggplot2::ggplot(ratio_df, ggplot2::aes(x = .data$x, y = .data$Value)) +
     ggplot2::geom_point() +
     ggplot2::geom_smooth(method = "lm", se = FALSE) +
     ggplot2::labs(x = xlabel, y = "Floor-area ratio: EUBUCCO/EDGE-B") +
@@ -141,6 +141,10 @@ plot_ratio_over_x <- function(edgeb, eubucco, x, xlabel) {
 
 
 #' Plots a comparison of floor area data from EDGE-B, EUBUCCO and GEM.
+#' @param edgeb_floor_area EDGE-B floor area magpie object.
+#' @param eubucco_floor_area EUBUCCO floor area magpie object.
+#' @param gem_floor_area GEM floor area magpie object.
+#' @param ghsoobat_floor_area GHS-OBAT floor area magpie object.
 #' @author Bennet Weiss
 plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem_floor_area, ghsoobat_floor_area) {
   savefolder <- "../madrat_wd/figures/floor_area_comparison_2020/floor_area_comparison_2020_"
@@ -206,6 +210,9 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
 #' @param ncol Number of columns for the facet layout (passed to facet_wrap).
 #' @param ignore_na Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) before plotting. Defaults to TRUE.
 #' @param show_shares Logical indicating whether stacked bars should display percentage shares for each category. Defaults to FALSE.
+#' @param xlab Label for the x axis. Defaults to NULL.
+#' @param ylab Label for the y axis. Defaults to NULL.
+#' @param filename Path to save the plot. If NULL, the plot is printed instead. Defaults to NULL.
 #' @author Bennet Weiss, Pascal Sauer (mplot), Patrick Rein (mplot)
 #' @importFrom rlang .data
 #' @export
@@ -392,7 +399,7 @@ MplotMulti <- function(px, global = TRUE, total = FALSE, title = NULL, xlab = NU
         totals <- sum(px_df$.value)
         totals <- rep(totals, nrow(px_df))
       } else {
-        totals <- ave(px_df$.value, interaction(px_df[groupCols], drop = TRUE, lex.order = TRUE), FUN = sum)
+        totals <- stats::ave(px_df$.value, interaction(px_df[groupCols], drop = TRUE, lex.order = TRUE), FUN = sum)
       }
 
       share_df <- px_df

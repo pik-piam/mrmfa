@@ -44,8 +44,8 @@ readGlobalExposureModel <- function() {
       data <- data[!is.na(data$TOTAL_AREA_SQM), ]
 
       # aggregate floor space
-      aggregated_data <- group_by(data, ID_0, OCCUPANCY, MACRO_TAXO, FUNCTION) %>%
-        summarise(TOTALAREA_SQM = sum(TOTAL_AREA_SQM), .groups = "drop")
+      aggregated_data <- dplyr::group_by(data, .data$ID_0, .data$OCCUPANCY, .data$MACRO_TAXO, .data$FUNCTION) %>%
+        dplyr::summarise(TOTALAREA_SQM = sum(.data$TOTAL_AREA_SQM), .groups = "drop")
 
       all_data[[i]] <- aggregated_data
       i <- i + 1

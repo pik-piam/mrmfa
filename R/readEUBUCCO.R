@@ -18,7 +18,7 @@ readEUBUCCO <- function(subtype = "concrete") {
     "Product Stock|Buildings|Residential|All" = "residential",
     "Product Stock|Buildings|Commercial|All" = "commercial and industry"
   )
-  df <- subset(df, Variable %in% names(rename_map))
+  df <- df[df$Variable %in% names(rename_map), ]
   df$Variable <- rename_map[df$Variable]
 
   # remove redundant aggregated data

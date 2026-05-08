@@ -1,9 +1,9 @@
 #' Convert GHSOBAT
 #' @param x magpie object
-#' @author Bennet Weiss
-#' @author subtype Data to extract.
+#' @param subtype Data to extract.
 #'        "surface" for total footprint building differentiated by residential and non-residential.
 #'        "height" for average building height (not differentiated)
+#' @author Bennet Weiss
 convertGHSOBAT <- function(x, subtype) {
   # Distribute unatributed region XXX proportionally
   scale_factor <- sum(x, na.rm = TRUE) / sum(x["XXX", , , invert = T], na.rm = TRUE)
