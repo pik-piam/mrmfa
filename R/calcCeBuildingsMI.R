@@ -1,4 +1,5 @@
-#' Calculates global cement production as from Andrew's 2019 paper.
+#' Calculate Material Intensity (t/m2) of residential and commercial buildings.
+#' Based on RASMI
 #' @author Bennet Weiss
 #' @param subtype Material subtype. Possible values are "concrete", "steel", "plastics".
 calcCeBuildingsMI <- function(subtype = "concrete") {
@@ -24,4 +25,5 @@ calcCeBuildingsMI <- function(subtype = "concrete") {
     description = description,
     note = note
   )
+  return(output)
 }

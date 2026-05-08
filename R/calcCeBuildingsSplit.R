@@ -1,4 +1,5 @@
 #' Calculates relative floor area of buildings by subtype.
+#' Based on splits in Global Exposure Model (GEM)
 #'
 #' @author Bennet Weiss
 #' @param subtype Split category. Can be "Function" or "Structure"
@@ -36,4 +37,5 @@ calcCeBuildingsSplit <- function(subtype) {
     description = description,
     note = note
   )
+  return(output)
 }
