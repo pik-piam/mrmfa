@@ -20,13 +20,13 @@ The additional repository can be made available permanently by adding the line a
 
 After that the most recent version of the package can be installed using `install.packages`:
 
-```r 
+```r
 install.packages("mrmfa")
 ```
 
 Package updates can be installed using `update.packages` (make sure that the additional repository has been added before running that command):
 
-```r 
+```r
 update.packages()
 ```
 
@@ -46,7 +46,7 @@ A BibTeX entry for LaTeX users is
 @Misc{,
   title = {mrmfa: Input data generation for the REMIND MFA},
   author = {Jakob Dürrwächter and Bennet Weiss and Leonie Schweiger and Falk Benke and Merlin Jo Hosak and Qianzhi Zhang},
-  date = {2026-05-08},
+  date = {2026-05-20},
   year = {2026},
   url = {https://github.com/pik-piam/mrmfa},
   note = {Version: 1.9.0},
