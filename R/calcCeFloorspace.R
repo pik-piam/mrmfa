@@ -3,15 +3,9 @@
 #' Corrected by region-specific calibration using EUBUCCO and GEM if correct = TRUE.
 #'
 #' @param scenario EDGE-B scenario, one of "SSP1", "SSP2", "SSP3", "SSP4", "SSP5".
-#' @param correct Bool, whether to apply the correction factor (default: TRUE).
 #' @author Bennet Weiss
-calcCeFloorspace <- function(scenario = "SSP2", correct = FALSE) {
+calcCeFloorspace <- function(scenario = "SSP2") {
   floorspace <- calcOutput("CeFloorspaceEDGEB", scenario = scenario, aggregate = FALSE)
-
-  if (correct) {
-    floorspace_correction <- calcOutput("CeFloorspaceCorrectionFactor", aggregate = FALSE)
-    floorspace <- floorspace * floorspace_correction
-  }
 
   # Output
   description <- paste(
