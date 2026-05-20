@@ -6,12 +6,10 @@
 Based on floorspace data from EDGE-B.
 Corrected by region-specific calibration using EUBUCCO and GEM if correct = TRUE.}
 \usage{
-calcCeFloorspace(scenario = "SSP2", correct = TRUE)
+calcCeFloorspace(scenario = "SSP2")
 }
 \arguments{
 \item{scenario}{EDGE-B scenario, one of "SSP1", "SSP2", "SSP3", "SSP4", "SSP5".}
-
-\item{correct}{Bool, whether to apply the correction factor (default: TRUE).}
 }
 \description{
 Calculates the floorspace of residential (Res) and commercial (Com) buildings.
