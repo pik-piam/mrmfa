@@ -9,7 +9,7 @@ readOECDAffordableHousingDatabase <- function(subtype) {
   col_names <- c("Region", "vacant", "holiday", "both")
   col_types <- c("text", "numeric", "numeric", "numeric")
   df <- readxl::read_xlsx(path, sheet = "HM1.1.2", range = "M8:P33", col_names = col_names, col_types = col_types)
-  df <- na.omit(df[c("Region", subtype)])
+  df <- stats::na.omit(df[c("Region", subtype)])
   df <- dplyr::rename(df, "value" = subtype)
   x <- magclass::as.magpie(df, spatial = 1, tidy = TRUE)
   getNames(x) <- NULL
