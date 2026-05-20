@@ -12,5 +12,6 @@ readOECDAffordableHousingDatabase <- function(subtype) {
   df <- na.omit(df[c("Region", subtype)])
   df <- dplyr::rename(df, "value" = subtype)
   x <- magclass::as.magpie(df, spatial = 1, tidy = TRUE)
+  getNames(x) <- NULL
   return(x)
 }
