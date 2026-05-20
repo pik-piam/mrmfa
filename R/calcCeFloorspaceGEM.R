@@ -18,7 +18,7 @@ calcCeFloorspaceGEM <- function(subtype = NULL, remove_ind = TRUE) {
     x_out <- floorArea
   } else if (all(subtype %in% possible_subtypes)) {
     dims_to_sum <- setdiff(possible_subtypes, subtype)
-    x_out <- dimSums(floorArea, dim = dims_to_sum, na.rm = T)
+    x_out <- dimSums(floorArea, dim = dims_to_sum, na.rm = TRUE)
   } else {
     stop(paste("Invalid subtype: must be one of ", paste(possible_subtypes, collapse = ", ")))
   }

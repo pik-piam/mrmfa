@@ -37,7 +37,8 @@ calcCeHibernatingStockShare <- function() {
       "Building material stock drives embodied carbon emissions and risks future climate goals in China.",
       "Nat. Clim. Chang. 16, 164–171 (2026). https://doi.org/10.1038/s41558-025-02527-3.",
       "ROW based on:",
-      "OECD (2024), OECD Affordable Housing Database - indicator HM1.1. Housing stock and construction, https://oe.cd/ahd"
+      "OECD (2024), OECD Affordable Housing Database - indicator HM1.1. Housing stock and construction,",
+      "https://oe.cd/ahd"
     ),
     collapse = "\n"
   )

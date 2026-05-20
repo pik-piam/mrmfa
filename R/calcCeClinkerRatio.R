@@ -28,7 +28,7 @@ calcCeClinkerRatio <- function() {
   consum_clinker <- (
     prod_clinker
     + clinker_imports[, clinker_years]
-      - clinker_exports[, clinker_years]
+    - clinker_exports[, clinker_years]
   )
 
   # initiate clinker to cement ratio by "clinker consumption" / "cement production"
