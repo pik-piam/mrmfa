@@ -11,12 +11,12 @@ calcPlCarbonContent <- function(subtype = "plastics") {
 
   data_final <- mbind(data, other_elements)
 
-  if(subtype=="plastics"){
+  if (subtype == "plastics") {
     description <- paste(
       "Carbon contents of plastic types. ",
       "Data from stochiometric calculations and rough estimates for broader categories"
     )
-  }else if(subtype=="HVC"){
+  } else if (subtype == "HVC") {
     description <- "Carbon contents of HVC. Data from stochiometric calculations."
   }
 

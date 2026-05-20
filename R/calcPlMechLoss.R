@@ -6,7 +6,6 @@
 #' @author Qianzhi Zhang
 #'
 calcPlMechLoss <- function() {
-
   sector_map <- toolGetMapping(
     "structuremappingPlasticManu.csv",
     type = "sectoral", where = "mrmfa"

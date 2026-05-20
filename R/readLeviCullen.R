@@ -12,14 +12,14 @@ readLeviCullen <- function(subtype) {
   switchboard <- list(
     "Production" = function() {
       path <- file.path(".", version, "LeviCullen.xlsx")
-      df <- readxl::read_excel(path = path, sheet = "production", range="A1:G47") %>%
-        select("stage","type","from","to","flow (Mt)")
+      df <- readxl::read_excel(path = path, sheet = "production", range = "A1:G47") %>%
+        select("stage", "type", "from", "to", "flow (Mt)")
       x <- as.magpie(df)
       return(x)
     },
     "HVCbyProcess" = function() {
       path <- file.path(".", version, "LeviCullen.xlsx")
-      df <- readxl::read_excel(path = path, sheet = "HVC input by process", range="A1:D25")
+      df <- readxl::read_excel(path = path, sheet = "HVC input by process", range = "A1:D25")
       x <- as.magpie(df)
       return(x)
     }

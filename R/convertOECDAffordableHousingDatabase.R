@@ -2,7 +2,7 @@
 #' @author Bennet Weiss
 #' @param x Magpie object
 convertOECDAffordableHousingDatabase <- function(x) {
-  mapping = c(
+  mapping <- c(
     "The Netherlands" = "NLD",
     "UK (England)" = "GBR"
   )

@@ -23,7 +23,7 @@ calcPlGoodShare <- function() {
     dplyr::mutate(
       "share" = .data$Value_sum / sum(.data$Value_sum, na.rm = TRUE),
       "share" = ifelse(is.nan(.data$share), 0, .data$share)
-      ) %>%
+    ) %>%
     dplyr::ungroup()
 
   x <- as.magpie(

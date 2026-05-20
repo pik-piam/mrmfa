@@ -70,7 +70,8 @@ calcPlWasteTrade <- function(subtype) {
     dplyr::arrange(.data$Region, .data$Year)
 
   x <- as.magpie(full_df %>% dplyr::select("Region", "Year", "Value"),
-                 spatial = 1, temporal = 2)
+    spatial = 1, temporal = 2
+  )
 
   getNames(x) <- NULL
 

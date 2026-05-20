@@ -4,7 +4,6 @@
 #' @author Leonie Schweiger
 #'
 calcPlZeroRates <- function() {
-
   x <- new.magpie(
     cells_and_regions = madrat::getISOlist(),
     years = 1950:2019,

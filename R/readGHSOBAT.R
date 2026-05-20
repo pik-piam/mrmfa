@@ -35,10 +35,13 @@ readGHSOBAT <- function(subtype) {
     ratio_use_2 <- 1 - ratio_use_1
     x["Footprint_surface_ha_Use_1"] <- x["Footprint_surface_ha_Use_1"] + data["Footprint_surface_ha_Use_0"] * ratio_use_1
     x["Footprint_surface_ha_Use_2"] <- x["Footprint_surface_ha_Use_2"] + data["Footprint_surface_ha_Use_0"] * ratio_use_2
-    x <- dplyr::rename(x, residential = "Footprint_surface_ha_Use_1",
-                       non_residential = "Footprint_surface_ha_Use_2")
+    x <- dplyr::rename(x,
+      residential = "Footprint_surface_ha_Use_1",
+      non_residential = "Footprint_surface_ha_Use_2"
+    )
     x <- tidyr::pivot_longer(x, c("residential", "non_residential"),
-                             names_to = "variable", values_to = "Value")
+      names_to = "variable", values_to = "Value"
+    )
     x <- magclass::as.magpie(x, temporal = 0, spatial = 1)
   } else {
     stop("Invalid subtype for GHSOBAT read")
