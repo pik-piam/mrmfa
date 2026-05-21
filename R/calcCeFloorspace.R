@@ -8,8 +8,7 @@ calcCeFloorspace <- function(scenario = "SSP2") {
 
   # Output
   description <- paste(
-    "Floor area calculated from linearly interpolated EDGE-B data.",
-    "Corrected by region-specific calibration using EUBUCCO and GEM."
+    "Floor area calculated from linearly interpolated EDGE-B data."
   )
   note <- "dimensions: (Time,Region,Stock Type,value)"
   output <- list(
