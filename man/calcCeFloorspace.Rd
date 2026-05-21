@@ -3,8 +3,7 @@
 \name{calcCeFloorspace}
 \alias{calcCeFloorspace}
 \title{Calculates the floorspace of residential (Res) and commercial (Com) buildings.
-Based on floorspace data from EDGE-B.
-Corrected by region-specific calibration using EUBUCCO and GEM if correct = TRUE.}
+Based on floorspace data from EDGE-B.}
 \usage{
 calcCeFloorspace(scenario = "SSP2")
 }
@@ -14,7 +13,6 @@ calcCeFloorspace(scenario = "SSP2")
 \description{
 Calculates the floorspace of residential (Res) and commercial (Com) buildings.
 Based on floorspace data from EDGE-B.
-Corrected by region-specific calibration using EUBUCCO and GEM if correct = TRUE.
 }
 \author{
 Bennet Weiss
