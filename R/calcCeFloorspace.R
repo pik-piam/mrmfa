@@ -1,6 +1,5 @@
 #' Calculates the floorspace of residential (Res) and commercial (Com) buildings.
 #' Based on floorspace data from EDGE-B.
-#' Corrected by region-specific calibration using EUBUCCO and GEM if correct = TRUE.
 #'
 #' @param scenario EDGE-B scenario, one of "SSP1", "SSP2", "SSP3", "SSP4", "SSP5".
 #' @author Bennet Weiss
