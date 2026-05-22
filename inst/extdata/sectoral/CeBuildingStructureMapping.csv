@@ -1,0 +1,12 @@
+GEM_structure,RASMI_structure,Description
+S,S,Steel
+W,T,Wood
+RC,C,Reinforced Concrete
+M,M,Masonry
+MUR,M,Unreinforced Masonry
+MR,M,Reinforced Masonry
+MCF,M,Confined Masonry
+ADO,M,Adobe (see material_intensity_db/data/buildings.csv)
+ADO/E,M,Adobe/Earth
+MIX,,Mixed-types (not in RASMI)
+OT,,Other (not in RASMI)

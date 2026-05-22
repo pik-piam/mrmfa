@@ -36,7 +36,7 @@ calcPlOECD_MGshare <- function() {
   weight <- x
   total <- plOECD %>%
     mselect("Plastic polymer" = "Total", collapseNames = TRUE)
-  weight[, , ] <- total[, , getNames(weight, dim=1)]
+  weight[, , ] <- total[, , getNames(weight, dim = 1)]
 
   return(list(
     x           = x,

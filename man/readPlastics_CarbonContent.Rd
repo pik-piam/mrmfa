@@ -19,7 +19,7 @@ rough estimates for broader classes)
 }
 \examples{
 \dontrun{
-a <- readSource(type = "Plastics_CarbonContent", subtype="plastics")
+a <- readSource(type = "Plastics_CarbonContent", subtype = "plastics")
 }
 
 }

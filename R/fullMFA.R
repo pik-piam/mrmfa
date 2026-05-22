@@ -122,13 +122,11 @@ fullMFA <- function(rev = 0,
     calcOutput("CeBuiltLifespan", file = "ce_lifetime_mean.cs4r", years = start_historic:end_historic)
     calcOutput("CeLifetimeRelStd", file = "ce_lifetime_rel_std.cs4r", aggregate = FALSE)
     calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = start_historic:end_historic)
+    calcOutput("CeCementRatio", file = "ce_cement_ratio.cs4r")
     calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction", aggregate = FALSE)
     calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
-    calcOutput("CeProductApplicationSplit", file = "ce_product_application_split.cs4r")
-    calcOutput("CeProductCementContent", file = "ce_product_cement_content.cs4r", aggregate = FALSE)
     calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")
     calcOutput("CeStockTypeSplit", file = "ce_stock_type_split.cs4r")
-    calcOutput("CeStockSaturationLevel", file = "ce_stock_saturation_level.cs4r")
     calcOutput("CeIndustrializedRegions", file = "ce_industrialized_regions.cs4r", round = 0)
     # Carbonation
     calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
@@ -144,10 +142,15 @@ fullMFA <- function(rev = 0,
     calcOutput("CeWasteSizeSplit", file = "ce_waste_size_share.cs4r")
     calcOutput("CeWasteSplit", file = "ce_waste_type_split.cs4r")
     calcOutput("CeCaOEmissionFactor", file = "ce_cao_emission_factor.cs4r", aggregate = FALSE)
-    calcOutput("CeProductDensity", file = "ce_product_density.cs4r", aggregate = FALSE)
+    calcOutput("CeMaterialApplicationSplit", file = "ce_material_application_split.cs4r")
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_min.cs4r", subtype = "min", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_max.cs4r", subtype = "max", aggregate = FALSE)
-    calcOutput("CeProductMaterialApplicationTransform", file = "ce_product_material_application_transform.cs4r", aggregate = FALSE)
+    # Service demand / bottom-up
+    calcOutput("CeFloorspace", file = "ce_floorspace.cs4r", years = start_historic:end_future)
+    calcOutput("CeBuildingsMI", file = "ce_concrete_building_mi.cs4r", subtype = "concrete")
+    calcOutput("CeBuildingsSplit", file = "ce_function_buildings_split.cs4r", subtype = "Function")
+    calcOutput("CeBuildingsSplit", file = "ce_structure_buildings_split.cs4r", subtype = "Structure")
+    calcOutput("CeHibernatingStockShare", file = "ce_hibernating_stock_share.cs4r")
   }
 
   #  ------------- PLASTIC -----------

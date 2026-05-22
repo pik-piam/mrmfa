@@ -17,7 +17,6 @@
 #' @importFrom data.table first
 #'
 calcPlEoL_shares <- function(subtype) {
-
   # ---------------------------------------------------------------------------
   # Calculate EoL shares from OECD data
   # - OECD data (1990–2019)
@@ -137,7 +136,7 @@ calcPlEoL_shares <- function(subtype) {
     "All" = x_backcast,
     stop("Unsupported subtype: ", subtype)
   )
-  if(subtype != "All"){
+  if (subtype != "All") {
     getNames(x) <- NULL
   }
 

@@ -11,7 +11,6 @@
 #' @return An aggregated magpie object
 #' @author Leonie Schweiger
 toolAggregateBilateralTrade <- function(x, rel, flow_label) {
-
   df <- tibble::as_tibble(x)
 
   # get grouping variables

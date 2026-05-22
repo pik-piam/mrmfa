@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- readSource(type = "Plastics_CarbonContent", subtype="plastics")
+#' a <- readSource(type = "Plastics_CarbonContent", subtype = "plastics")
 #' }
 #'
 readPlastics_CarbonContent <- function(subtype) {

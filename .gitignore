@@ -4,3 +4,5 @@
 .Ruserdata
 *.Rproj
 .venv
+.positai
+.github/copilot-instructions.md
