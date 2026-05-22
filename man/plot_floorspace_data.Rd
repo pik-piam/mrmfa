@@ -8,8 +8,7 @@ plot_floorspace_data(plotting)
 }
 \arguments{
 \item{plotting}{Type of plot to generate.
-Options are "floor area comparison" and "ratio eubucco/edgeb over cement production".
-Defaults to no plot.}
+Options are "floor area comparison" and "ratio eubucco/edgeb over cement production".}
 }
 \description{
 Generates different plots of floor area data.

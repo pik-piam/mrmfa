@@ -15,10 +15,13 @@ calcCeFloorspaceGHSOBAT <- function(floor_height = NULL) {
   # Country-specific industry share comes from GEM
   GEM_floor_area <- calcOutput("CeFloorspaceGEM",
     subtype = "Stock_Type",
-    remove_ind = FALSE, aggregate = FALSE
+    remove_ind = FALSE,
+    aggregate = FALSE
   )
   com_share <- GEM_floor_area[, , "Com"] / (GEM_floor_area[, , "Com"] + GEM_floor_area[, , "Ind"])
-  com_share <- mean(com_share, na.rm = TRUE) # global average if NA TODO: weighted averages
+  # global average if for NA values
+  # TODO use weighted averages
+  com_share[is.na(com_share)] <- mean(com_share, na.rm = TRUE)
   buildings_volume[, , "non_residential"] <- buildings_volume[, , "non_residential"] * com_share
 
   # 2. Rename variables

@@ -1,250 +1,250 @@
-X,CountryCode,RegionCode,RegionName,,Region Name,Abbr
-Afghanistan,AFG,DA,Developing Asia,,North America,NA
-Aland Islands,ALA,EU,Europe,,Latin America & Caribbean,LAC
-Albania,ALB,EU,Europe,,Europe,EU
-Algeria,DZA,AF,Africa,,Commonwealth of Independent States,CIS
-American Samoa,ASM,NA,North America,,Africa,AF
-Andorra,AND,EU,Europe,,Middle East,ME
-Angola,AGO,AF,Africa,,India,IN
-Anguilla,AIA,LAC,Latin America & Caribbean,,China,CN
-Antarctica,ATA,LAC,Latin America & Caribbean,,Developed Asia & Oceania,DAO
-Antigua and Barbuda,ATG,LAC,Latin America & Caribbean,,Developing Asia,DA
-Argentina,ARG,LAC,Latin America & Caribbean,,,
-Armenia,ARM,CIS,Commonwealth of Independent States,,,
-Aruba,ABW,LAC,Latin America & Caribbean,,,
-Australia,AUS,DAO,Developed Asia & Oceania,,,
-Austria,AUT,EU,Europe,,,
-Azerbaijan,AZE,CIS,Commonwealth of Independent States,,,
-Bahamas,BHS,LAC,Latin America & Caribbean,,,
-Bahrain,BHR,ME,Middle East,,,
-Bangladesh,BGD,DA,Developing Asia,,,
-Barbados,BRB,LAC,Latin America & Caribbean,,,
-Belarus,BLR,CIS,Commonwealth of Independent States,,,
-Belgium,BEL,EU,Europe,,,
-Belize,BLZ,LAC,Latin America & Caribbean,,,
-Benin,BEN,AF,Africa,,,
-Bermuda,BMU,NA,North America,,,
-Bhutan,BTN,DA,Developing Asia,,,
-Bolivia (Plurinational State of),BOL,LAC,Latin America & Caribbean,,,
-Bonaire,BES,LAC,Latin America & Caribbean,,,
-Bosnia and Herzegovina,BIH,AF,Africa,,,
-Botswana,BWA,AF,Africa,,,
-Bouvet Island,BVT,LAC,Latin America & Caribbean,,,
-Brazil,BRA,LAC,Latin America & Caribbean,,,
-British Indian Ocean Territory,IOT,EU,Europe,,,
-Brunei Darussalam,BRN,DA,Developing Asia,,,
-Bulgaria,BGR,EU,Europe,,,
-Burkina Faso,BFA,AF,Africa,,,
-Burundi,BDI,AF,Africa,,,
-Cambodia,KHM,DA,Developing Asia,,,
-Cameroon,CMR,AF,Africa,,,
-Canada,CAN,NA,North America,,,
-Cape Verde,CPV,AF,Africa,,,
-Cayman Islands,CYM,LAC,Latin America & Caribbean,,,
-Central African Republic,CAF,AF,Africa,,,
-Chad,TCD,AF,Africa,,,
-Chile,CHL,LAC,Latin America & Caribbean,,,
-China,CHN,CN,China,,,
-Christmas Island,CXR,DAO,Developed Asia & Oceania,,,
-Cocos (Keeling) Islands,CCK,DAO,Developed Asia & Oceania,,,
-Colombia,COL,LAC,Latin America & Caribbean,,,
-Comoros,COM,AF,Africa,,,
-Congo,COG,AF,Africa,,,
-Cook Islands,COK,DA,Developing Asia,,,
-Costa Rica,CRI,LAC,Latin America & Caribbean,,,
-Cote d Ivoire,CIV,AF,Africa,,,
-Croatia,HRV,EU,Europe,,,
-Cuba,CUB,LAC,Latin America & Caribbean,,,
-Curacao,CUW,LAC,Latin America & Caribbean,,,
-Cyprus,CYP,EU,Europe,,,
-Czech Republic,CZE,EU,Europe,,,
-Democratic People's Republic of Korea,PRK,DA,Developing Asia,,,
-Democratic Republic of the Congo,COD,AF,Africa,,,
-Denmark,DNK,EU,Europe,,,
-Djibouti,DJI,AF,Africa,,,
-Dominica,DMA,LAC,Latin America & Caribbean,,,
-Dominican Republic,DOM,LAC,Latin America & Caribbean,,,
-Ecuador,ECU,LAC,Latin America & Caribbean,,,
-Egypt,EGY,AF,Africa,,,
-El Salvador,SLV,LAC,Latin America & Caribbean,,,
-Equatorial Guinea,GNQ,AF,Africa,,,
-Eritrea,ERI,AF,Africa,,,
-Estonia,EST,CIS,Commonwealth of Independent States,,,
-Ethiopia,ETH,AF,Africa,,,
-Falkland Islands (Malvinas),FLK,EU,Europe,,,
-Faroe Islands,FRO,EU,Europe,,,
-Fiji,FJI,DAO,Developed Asia & Oceania,,,
-Finland,FIN,EU,Europe,,,
-France,FRA,EU,Europe,,,
-French Guiana,GUF,LAC,Latin America & Caribbean,,,
-French Polynesia,PYF,DAO,Developed Asia & Oceania,,,
-French Southern Territories,ATF,EU,Europe,,,
-Gabon,GAB,AF,Africa,,,
-Gambia,GMB,AF,Africa,,,
-Georgia,GEO,CIS,Commonwealth of Independent States,,,
-Germany,DEU,EU,Europe,,,
-Ghana,GHA,AF,Africa,,,
-Gibraltar,GIB,EU,Europe,,,
-Greece,GRC,EU,Europe,,,
-Greenland,GRL,EU,Europe,,,
-Grenada,GRD,LAC,Latin America & Caribbean,,,
-Guadeloupe,GLP,LAC,Latin America & Caribbean,,,
-Guam,GUM,LAC,Latin America & Caribbean,,,
-Guatemala,GTM,LAC,Latin America & Caribbean,,,
-Guernsey,GGY,EU,Europe,,,
-Guinea,GIN,AF,Africa,,,
-Guinea-Bissau,GNB,AF,Africa,,,
-Guyana,GUY,LAC,Latin America & Caribbean,,,
-Haiti,HTI,LAC,Latin America & Caribbean,,,
-Heard Island and McDonald Islands,HMD,DAO,Developed Asia & Oceania,,,
-Holy See (Vatican City State),VAT,EU,Europe,,,
-Honduras,HND,LAC,Latin America & Caribbean,,,
-Hong Kong,HKG,DAO,Developed Asia & Oceania,,,
-Hungary,HUN,EU,Europe,,,
-Iceland,ISL,EU,Europe,,,
-India,IND,IN,India,,,
-Indonesia,IDN,DA,Developing Asia,,,
-Iran (Islamic Republic of),IRN,ME,Middle East,,,
-Iraq,IRQ,ME,Middle East,,,
-Ireland,IRL,EU,Europe,,,
-Isle of Man,IMN,EU,Europe,,,
-Israel,ISR,ME,Middle East,,,
-Italy,ITA,EU,Europe,,,
-Jamaica,JAM,LAC,Latin America & Caribbean,,,
-Japan,JPN,DAO,Developed Asia & Oceania,,,
-Jersey,JEY,EU,Europe,,,
-Jordan,JOR,ME,Middle East,,,
-Kazakhstan,KAZ,CIS,Commonwealth of Independent States,,,
-Kenya,KEN,AF,Africa,,,
-Kiribati,KIR,DAO,Developed Asia & Oceania,,,
-Kuwait,KWT,ME,Middle East,,,
-Kyrgyzstan,KGZ,DA,Developing Asia,,,
-Lao People's Democratic Republic,LAO,LAC,Latin America & Caribbean,,,
-Latvia,LVA,CIS,Commonwealth of Independent States,,,
-Lebanon,LBN,ME,Middle East,,,
-Lesotho,LSO,AF,Africa,,,
-Liberia,LBR,AF,Africa,,,
-Libya,LBY,AF,Africa,,,
-Liechtenstein,LIE,EU,Europe,,,
-Lithuania,LTU,CIS,Commonwealth of Independent States,,,
-Luxembourg,LUX,EU,Europe,,,
-Macao,MAC,DAO,Developed Asia & Oceania,,,
-Madagascar,MDG,AF,Africa,,,
-Malawi,MWI,AF,Africa,,,
-Malaysia,MYS,DA,Developing Asia,,,
-Maldives,MDV,DA,Developing Asia,,,
-Mali,MLI,AF,Africa,,,
-Malta,MLT,EU,Europe,,,
-Marshall Islands,MHL,DAO,Developed Asia & Oceania,,,
-Martinique,MTQ,LAC,Latin America & Caribbean,,,
-Mauritania,MRT,AF,Africa,,,
-Mauritius,MUS,AF,Africa,,,
-Mayotte,MYT,AF,Africa,,,
-Mexico,MEX,LAC,Latin America & Caribbean,,,
-Micronesia (Fed. States of),FSM,DAO,Developed Asia & Oceania,,,
-Monaco,MCO,EU,Europe,,,
-Mongolia,MNG,DA,Developing Asia,,,
-Montenegro,MNE,EU,Europe,,,
-Montserrat,MSR,LAC,Latin America & Caribbean,,,
-Morocco,MAR,AF,Africa,,,
-Mozambique,MOZ,AF,Africa,,,
-Myanmar,MMR,DA,Developing Asia,,,
-Namibia,NAM,AF,Africa,,,
-Nauru,NRU,DAO,Developed Asia & Oceania,,,
-Nepal,NPL,DA,Developing Asia,,,
-Netherlands,NLD,EU,Europe,,,
-New Caledonia,NCL,DAO,Developed Asia & Oceania,,,
-New Zealand,NZL,DAO,Developed Asia & Oceania,,,
-Nicaragua,NIC,LAC,Latin America & Caribbean,,,
-Niger,NER,AF,Africa,,,
-Nigeria,NGA,AF,Africa,,,
-Niue,NIU,DAO,Developed Asia & Oceania,,,
-Norfolk Island,NFK,DAO,Developed Asia & Oceania,,,
-North Macedonia,MKD,EU,Europe,,,
-Northern Mariana Islands,MNP,NA,North America,,,
-Norway,NOR,EU,Europe,,,
-Oman,OMN,ME,Middle East,,,
-Pakistan,PAK,DA,Developing Asia,,,
-Palau,PLW,DAO,Developed Asia & Oceania,,,
-Palestine,PSE,ME,Middle East,,,
-Panama,PAN,LAC,Latin America & Caribbean,,,
-Papua New Guinea,PNG,DAO,Developed Asia & Oceania,,,
-Paraguay,PRY,LAC,Latin America & Caribbean,,,
-Peru,PER,LAC,Latin America & Caribbean,,,
-Philippines,PHL,DA,Developing Asia,,,
-Pitcairn,PCN,DAO,Developed Asia & Oceania,,,
-Poland,POL,EU,Europe,,,
-Portugal,PRT,EU,Europe,,,
-Puerto Rico,PRI,NA,North America,,,
-Qatar,QAT,ME,Middle East,,,
-Republic of Korea,KOR,DAO,Developed Asia & Oceania,,,
-Republic of Moldova,MDA,CIS,Commonwealth of Independent States,,,
-Reunion,REU,AF,Africa,,,
-Romania,ROU,EU,Europe,,,
-Russian Federation,RUS,DA,Developing Asia,,,
-Rwanda,RWA,AF,Africa,,,
-Saint Barthelemy,BLM,LAC,Latin America & Caribbean,,,
-Saint Helena,SHN,EU,Europe,,,
-Saint Kitts and Nevis,KNA,LAC,Latin America & Caribbean,,,
-Saint Lucia,LCA,LAC,Latin America & Caribbean,,,
-Saint Martin (French part),MAF,LAC,Latin America & Caribbean,,,
-Saint Pierre and Miquelon,SPM,LAC,Latin America & Caribbean,,,
-Saint Vincent and the Grenadines,VCT,LAC,Latin America & Caribbean,,,
-Samoa,WSM,DAO,Developed Asia & Oceania,,,
-San Marino,SMR,EU,Europe,,,
-Sao Tome and Principe,STP,AF,Africa,,,
-Saudi Arabia,SAU,ME,Middle East,,,
-Senegal,SEN,AF,Africa,,,
-Serbia,SRB,EU,Europe,,,
-Seychelles,SYC,AF,Africa,,,
-Sierra Leone,SLE,AF,Africa,,,
-Singapore,SGP,DAO,Developed Asia & Oceania,,,
-Sint Maarten (Dutch part),SXM,LAC,Latin America & Caribbean,,,
-Slovakia,SVK,EU,Europe,,,
-Slovenia,SVN,EU,Europe,,,
-Solomon Islands,SLB,DAO,Developed Asia & Oceania,,,
-Somalia,SOM,AF,Africa,,,
-South Africa,ZAF,AF,Africa,,,
-South Georgia and the South Sandwich Islands,SGS,EU,Europe,,,
-South Sudan,SSD,AF,Africa,,,
-Spain,ESP,EU,Europe,,,
-Sri Lanka,LKA,DA,Developing Asia,,,
-Sudan,SDN,AF,Africa,,,
-Suriname,SUR,LAC,Latin America & Caribbean,,,
-Svalbard and Jan Mayen,SJM,EU,Europe,,,
-Swaziland,SWZ,AF,Africa,,,
-Sweden,SWE,EU,Europe,,,
-Switzerland,CHE,EU,Europe,,,
-Syrian Arab Republic,SYR,ME,Middle East,,,
-Taiwan,TWN,DAO,Developed Asia & Oceania,,,
-Tajikistan,TJK,CIS,Commonwealth of Independent States,,,
-Thailand,THA,DA,Developing Asia,,,
-Timor-Leste,TLS,DA,Developing Asia,,,
-Togo,TGO,AF,Africa,,,
-Tokelau,TKL,DA,Developing Asia,,,
-Tonga,TON,DA,Developing Asia,,,
-Trinidad and Tobago,TTO,LAC,Latin America & Caribbean,,,
-Tunisia,TUN,AF,Africa,,,
-Turkey,TUR,ME,Middle East,,,
-Turkmenistan,TKM,CIS,Commonwealth of Independent States,,,
-Turks and Caicos Islands,TCA,LAC,Latin America & Caribbean,,,
-Tuvalu,TUV,DAO,Developed Asia & Oceania,,,
-Uganda,UGA,AF,Africa,,,
-Ukraine,UKR,CIS,Commonwealth of Independent States,,,
-United Arab Emirates,ARE,ME,Middle East,,,
-United Kingdom,GBR,EU,Europe,,,
-United Republic of Tanzania,TZA,AF,Africa,,,
-United States Minor Outlying Islands,UMI,NA,North America,,,
-United States of America,USA,NA,North America,,,
-United States Virgin Islands,VIR,NA,North America,,,
-Uruguay,URY,LAC,Latin America & Caribbean,,,
-Uzbekistan,UZB,CIS,Commonwealth of Independent States,,,
-Vanuatu,VUT,DAO,Developed Asia & Oceania,,,
-Venezuela (Bolivarian Republic of),VEN,LAC,Latin America & Caribbean,,,
-Viet Nam,VNM,DA,Developing Asia,,,
-Virgin Islands (British),VGB,LAC,Latin America & Caribbean,,,
-Wallis and Futuna,WLF,DAO,Developed Asia & Oceania,,,
-Western Sahara,ESH,AF,Africa,,,
-Yemen,YEM,ME,Middle East,,,
-Zambia,ZMB,AF,Africa,,,
-Zimbabwe,ZWE,AF,Africa,,,
+X,CountryCode,RegionCode,RegionName
+Afghanistan,AFG,DA,Developing Asia
+Aland Islands,ALA,EU,Europe
+Albania,ALB,EU,Europe
+Algeria,DZA,AF,Africa
+American Samoa,ASM,NA,North America
+Andorra,AND,EU,Europe
+Angola,AGO,AF,Africa
+Anguilla,AIA,LAC,Latin America & Caribbean
+Antarctica,ATA,LAC,Latin America & Caribbean
+Antigua and Barbuda,ATG,LAC,Latin America & Caribbean
+Argentina,ARG,LAC,Latin America & Caribbean
+Armenia,ARM,CIS,Commonwealth of Independent States
+Aruba,ABW,LAC,Latin America & Caribbean
+Australia,AUS,DAO,Developed Asia & Oceania
+Austria,AUT,EU,Europe
+Azerbaijan,AZE,CIS,Commonwealth of Independent States
+Bahamas,BHS,LAC,Latin America & Caribbean
+Bahrain,BHR,ME,Middle East
+Bangladesh,BGD,DA,Developing Asia
+Barbados,BRB,LAC,Latin America & Caribbean
+Belarus,BLR,CIS,Commonwealth of Independent States
+Belgium,BEL,EU,Europe
+Belize,BLZ,LAC,Latin America & Caribbean
+Benin,BEN,AF,Africa
+Bermuda,BMU,NA,North America
+Bhutan,BTN,DA,Developing Asia
+Bolivia (Plurinational State of),BOL,LAC,Latin America & Caribbean
+Bonaire,BES,LAC,Latin America & Caribbean
+Bosnia and Herzegovina,BIH,AF,Africa
+Botswana,BWA,AF,Africa
+Bouvet Island,BVT,LAC,Latin America & Caribbean
+Brazil,BRA,LAC,Latin America & Caribbean
+British Indian Ocean Territory,IOT,EU,Europe
+Brunei Darussalam,BRN,DA,Developing Asia
+Bulgaria,BGR,EU,Europe
+Burkina Faso,BFA,AF,Africa
+Burundi,BDI,AF,Africa
+Cambodia,KHM,DA,Developing Asia
+Cameroon,CMR,AF,Africa
+Canada,CAN,NA,North America
+Cape Verde,CPV,AF,Africa
+Cayman Islands,CYM,LAC,Latin America & Caribbean
+Central African Republic,CAF,AF,Africa
+Chad,TCD,AF,Africa
+Chile,CHL,LAC,Latin America & Caribbean
+China,CHN,CN,China
+Christmas Island,CXR,DAO,Developed Asia & Oceania
+Cocos (Keeling) Islands,CCK,DAO,Developed Asia & Oceania
+Colombia,COL,LAC,Latin America & Caribbean
+Comoros,COM,AF,Africa
+Congo,COG,AF,Africa
+Cook Islands,COK,DA,Developing Asia
+Costa Rica,CRI,LAC,Latin America & Caribbean
+Cote d Ivoire,CIV,AF,Africa
+Croatia,HRV,EU,Europe
+Cuba,CUB,LAC,Latin America & Caribbean
+Curacao,CUW,LAC,Latin America & Caribbean
+Cyprus,CYP,EU,Europe
+Czech Republic,CZE,EU,Europe
+Democratic People's Republic of Korea,PRK,DA,Developing Asia
+Democratic Republic of the Congo,COD,AF,Africa
+Denmark,DNK,EU,Europe
+Djibouti,DJI,AF,Africa
+Dominica,DMA,LAC,Latin America & Caribbean
+Dominican Republic,DOM,LAC,Latin America & Caribbean
+Ecuador,ECU,LAC,Latin America & Caribbean
+Egypt,EGY,AF,Africa
+El Salvador,SLV,LAC,Latin America & Caribbean
+Equatorial Guinea,GNQ,AF,Africa
+Eritrea,ERI,AF,Africa
+Estonia,EST,CIS,Commonwealth of Independent States
+Ethiopia,ETH,AF,Africa
+Falkland Islands (Malvinas),FLK,EU,Europe
+Faroe Islands,FRO,EU,Europe
+Fiji,FJI,DAO,Developed Asia & Oceania
+Finland,FIN,EU,Europe
+France,FRA,EU,Europe
+French Guiana,GUF,LAC,Latin America & Caribbean
+French Polynesia,PYF,DAO,Developed Asia & Oceania
+French Southern Territories,ATF,EU,Europe
+Gabon,GAB,AF,Africa
+Gambia,GMB,AF,Africa
+Georgia,GEO,CIS,Commonwealth of Independent States
+Germany,DEU,EU,Europe
+Ghana,GHA,AF,Africa
+Gibraltar,GIB,EU,Europe
+Greece,GRC,EU,Europe
+Greenland,GRL,EU,Europe
+Grenada,GRD,LAC,Latin America & Caribbean
+Guadeloupe,GLP,LAC,Latin America & Caribbean
+Guam,GUM,LAC,Latin America & Caribbean
+Guatemala,GTM,LAC,Latin America & Caribbean
+Guernsey,GGY,EU,Europe
+Guinea,GIN,AF,Africa
+Guinea-Bissau,GNB,AF,Africa
+Guyana,GUY,LAC,Latin America & Caribbean
+Haiti,HTI,LAC,Latin America & Caribbean
+Heard Island and McDonald Islands,HMD,DAO,Developed Asia & Oceania
+Holy See (Vatican City State),VAT,EU,Europe
+Honduras,HND,LAC,Latin America & Caribbean
+Hong Kong,HKG,DAO,Developed Asia & Oceania
+Hungary,HUN,EU,Europe
+Iceland,ISL,EU,Europe
+India,IND,IN,India
+Indonesia,IDN,DA,Developing Asia
+Iran (Islamic Republic of),IRN,ME,Middle East
+Iraq,IRQ,ME,Middle East
+Ireland,IRL,EU,Europe
+Isle of Man,IMN,EU,Europe
+Israel,ISR,ME,Middle East
+Italy,ITA,EU,Europe
+Jamaica,JAM,LAC,Latin America & Caribbean
+Japan,JPN,DAO,Developed Asia & Oceania
+Jersey,JEY,EU,Europe
+Jordan,JOR,ME,Middle East
+Kazakhstan,KAZ,CIS,Commonwealth of Independent States
+Kenya,KEN,AF,Africa
+Kiribati,KIR,DAO,Developed Asia & Oceania
+Kuwait,KWT,ME,Middle East
+Kyrgyzstan,KGZ,DA,Developing Asia
+Lao People's Democratic Republic,LAO,LAC,Latin America & Caribbean
+Latvia,LVA,CIS,Commonwealth of Independent States
+Lebanon,LBN,ME,Middle East
+Lesotho,LSO,AF,Africa
+Liberia,LBR,AF,Africa
+Libya,LBY,AF,Africa
+Liechtenstein,LIE,EU,Europe
+Lithuania,LTU,CIS,Commonwealth of Independent States
+Luxembourg,LUX,EU,Europe
+Macao,MAC,DAO,Developed Asia & Oceania
+Madagascar,MDG,AF,Africa
+Malawi,MWI,AF,Africa
+Malaysia,MYS,DA,Developing Asia
+Maldives,MDV,DA,Developing Asia
+Mali,MLI,AF,Africa
+Malta,MLT,EU,Europe
+Marshall Islands,MHL,DAO,Developed Asia & Oceania
+Martinique,MTQ,LAC,Latin America & Caribbean
+Mauritania,MRT,AF,Africa
+Mauritius,MUS,AF,Africa
+Mayotte,MYT,AF,Africa
+Mexico,MEX,LAC,Latin America & Caribbean
+Micronesia (Fed. States of),FSM,DAO,Developed Asia & Oceania
+Monaco,MCO,EU,Europe
+Mongolia,MNG,DA,Developing Asia
+Montenegro,MNE,EU,Europe
+Montserrat,MSR,LAC,Latin America & Caribbean
+Morocco,MAR,AF,Africa
+Mozambique,MOZ,AF,Africa
+Myanmar,MMR,DA,Developing Asia
+Namibia,NAM,AF,Africa
+Nauru,NRU,DAO,Developed Asia & Oceania
+Nepal,NPL,DA,Developing Asia
+Netherlands,NLD,EU,Europe
+New Caledonia,NCL,DAO,Developed Asia & Oceania
+New Zealand,NZL,DAO,Developed Asia & Oceania
+Nicaragua,NIC,LAC,Latin America & Caribbean
+Niger,NER,AF,Africa
+Nigeria,NGA,AF,Africa
+Niue,NIU,DAO,Developed Asia & Oceania
+Norfolk Island,NFK,DAO,Developed Asia & Oceania
+North Macedonia,MKD,EU,Europe
+Northern Mariana Islands,MNP,NA,North America
+Norway,NOR,EU,Europe
+Oman,OMN,ME,Middle East
+Pakistan,PAK,DA,Developing Asia
+Palau,PLW,DAO,Developed Asia & Oceania
+Palestine,PSE,ME,Middle East
+Panama,PAN,LAC,Latin America & Caribbean
+Papua New Guinea,PNG,DAO,Developed Asia & Oceania
+Paraguay,PRY,LAC,Latin America & Caribbean
+Peru,PER,LAC,Latin America & Caribbean
+Philippines,PHL,DA,Developing Asia
+Pitcairn,PCN,DAO,Developed Asia & Oceania
+Poland,POL,EU,Europe
+Portugal,PRT,EU,Europe
+Puerto Rico,PRI,NA,North America
+Qatar,QAT,ME,Middle East
+Republic of Korea,KOR,DAO,Developed Asia & Oceania
+Republic of Moldova,MDA,CIS,Commonwealth of Independent States
+Reunion,REU,AF,Africa
+Romania,ROU,EU,Europe
+Russian Federation,RUS,DA,Developing Asia
+Rwanda,RWA,AF,Africa
+Saint Barthelemy,BLM,LAC,Latin America & Caribbean
+Saint Helena,SHN,EU,Europe
+Saint Kitts and Nevis,KNA,LAC,Latin America & Caribbean
+Saint Lucia,LCA,LAC,Latin America & Caribbean
+Saint Martin (French part),MAF,LAC,Latin America & Caribbean
+Saint Pierre and Miquelon,SPM,LAC,Latin America & Caribbean
+Saint Vincent and the Grenadines,VCT,LAC,Latin America & Caribbean
+Samoa,WSM,DAO,Developed Asia & Oceania
+San Marino,SMR,EU,Europe
+Sao Tome and Principe,STP,AF,Africa
+Saudi Arabia,SAU,ME,Middle East
+Senegal,SEN,AF,Africa
+Serbia,SRB,EU,Europe
+Seychelles,SYC,AF,Africa
+Sierra Leone,SLE,AF,Africa
+Singapore,SGP,DAO,Developed Asia & Oceania
+Sint Maarten (Dutch part),SXM,LAC,Latin America & Caribbean
+Slovakia,SVK,EU,Europe
+Slovenia,SVN,EU,Europe
+Solomon Islands,SLB,DAO,Developed Asia & Oceania
+Somalia,SOM,AF,Africa
+South Africa,ZAF,AF,Africa
+South Georgia and the South Sandwich Islands,SGS,EU,Europe
+South Sudan,SSD,AF,Africa
+Spain,ESP,EU,Europe
+Sri Lanka,LKA,DA,Developing Asia
+Sudan,SDN,AF,Africa
+Suriname,SUR,LAC,Latin America & Caribbean
+Svalbard and Jan Mayen,SJM,EU,Europe
+Swaziland,SWZ,AF,Africa
+Sweden,SWE,EU,Europe
+Switzerland,CHE,EU,Europe
+Syrian Arab Republic,SYR,ME,Middle East
+Taiwan,TWN,DAO,Developed Asia & Oceania
+Tajikistan,TJK,CIS,Commonwealth of Independent States
+Thailand,THA,DA,Developing Asia
+Timor-Leste,TLS,DA,Developing Asia
+Togo,TGO,AF,Africa
+Tokelau,TKL,DA,Developing Asia
+Tonga,TON,DA,Developing Asia
+Trinidad and Tobago,TTO,LAC,Latin America & Caribbean
+Tunisia,TUN,AF,Africa
+Turkey,TUR,ME,Middle East
+Turkmenistan,TKM,CIS,Commonwealth of Independent States
+Turks and Caicos Islands,TCA,LAC,Latin America & Caribbean
+Tuvalu,TUV,DAO,Developed Asia & Oceania
+Uganda,UGA,AF,Africa
+Ukraine,UKR,CIS,Commonwealth of Independent States
+United Arab Emirates,ARE,ME,Middle East
+United Kingdom,GBR,EU,Europe
+United Republic of Tanzania,TZA,AF,Africa
+United States Minor Outlying Islands,UMI,NA,North America
+United States of America,USA,NA,North America
+United States Virgin Islands,VIR,NA,North America
+Uruguay,URY,LAC,Latin America & Caribbean
+Uzbekistan,UZB,CIS,Commonwealth of Independent States
+Vanuatu,VUT,DAO,Developed Asia & Oceania
+Venezuela (Bolivarian Republic of),VEN,LAC,Latin America & Caribbean
+Viet Nam,VNM,DA,Developing Asia
+Virgin Islands (British),VGB,LAC,Latin America & Caribbean
+Wallis and Futuna,WLF,DAO,Developed Asia & Oceania
+Western Sahara,ESH,AF,Africa
+Yemen,YEM,ME,Middle East
+Zambia,ZMB,AF,Africa
+Zimbabwe,ZWE,AF,Africa

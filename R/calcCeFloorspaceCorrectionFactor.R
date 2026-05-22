@@ -80,7 +80,6 @@ calcCeFloorspaceCorrectionFactor <- function() {
 #' @author Bennet Weiss
 #' @param plotting Type of plot to generate.
 #'                 Options are "floor area comparison" and "ratio eubucco/edgeb over cement production".
-#'                 Defaults to no plot.
 plot_floorspace_data <- function(plotting) {
   edgeb_floor_area <- calcOutput(
     type = "CeFloorspaceEDGEB",
@@ -205,14 +204,14 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
 #' @param px The magpie object or a named list of magpie objects to be visualized.
 #' @param global Whether data should be aggregated over regions to global values.
 #' @param total Whether the total of all data values should also be visualized.
-#' @param title A string to be used as the plot's main title. Defaults to NULL.
+#' @param title A string to be used as the plot's main title.
 #' @param nrow Number of rows for the facet layout (passed to facet_wrap).
 #' @param ncol Number of columns for the facet layout (passed to facet_wrap).
-#' @param ignore_na Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) before plotting. Defaults to TRUE.
-#' @param show_shares Logical indicating whether stacked bars should display percentage shares for each category. Defaults to FALSE.
-#' @param xlab Label for the x axis. Defaults to NULL.
-#' @param ylab Label for the y axis. Defaults to NULL.
-#' @param filename Path to save the plot. If NULL, the plot is printed instead. Defaults to NULL.
+#' @param ignore_na Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) before plotting.
+#' @param show_shares Logical indicating whether stacked bars should display percentage shares for each category.
+#' @param xlab Label for the x axis.
+#' @param ylab Label for the y axis.
+#' @param filename Path to save the plot. If NULL, the plot is printed instead.
 #' @author Bennet Weiss, Pascal Sauer (mplot), Patrick Rein (mplot)
 #' @importFrom rlang .data
 #' @export

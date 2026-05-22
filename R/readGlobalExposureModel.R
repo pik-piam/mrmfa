@@ -32,13 +32,9 @@ readGlobalExposureModel <- function() {
       # extract building function type from taxonomy
       data["FUNCTION"] <- toolInferResBuildingType(data)
 
-      # align structure types with RASMI
-      data$MACRO_TAXO <- toolAggregateFunctionType(data$MACRO_TAXO)
-
-      # remove taxonomy column and "other" function/structure rows
+      # remove taxonomy column and rows with unknown function type
       data <- data[, -which(names(data) == "TAXONOMY")]
       data <- data[!is.na(data$FUNCTION), ]
-      data <- data[!is.na(data$MACRO_TAXO), ]
 
       # remove rows with unknown area
       data <- data[!is.na(data$TOTAL_AREA_SQM), ]
@@ -59,6 +55,17 @@ readGlobalExposureModel <- function() {
   combined_data$Function[combined_data$Function == "NonRes"] <- "Com"
 
   x <- magclass::as.magpie(combined_data, spatial = 1)
+
+  structureMapping <- toolGetMapping("CeBuildingStructureMapping.csv", type = "sectoral", where = "mrmfa")
+  x <- toolAggregate(
+    x,
+    rel = structureMapping,
+    dim = 3.2,
+    from = "GEM_structure",
+    to = "RASMI_structure",
+    partrel = TRUE
+  )
+
   return(x)
 }
 
@@ -129,33 +136,4 @@ toolInferResBuildingType <- function(data) {
 
   function_type[res_idx] <- new_types
   return(function_type)
-}
-
-
-#' Aggregate building strucutre types to match RASMI definition.
-#'
-#' @author Bennet Weiss
-#' @param structure Vector of building structure types as used in GEM.
-toolAggregateFunctionType <- function(structure) {
-  mapping <- c(
-    "S" = "S", # Steel
-    "W" = "T", # Wood
-    "RC" = "C", # Reinforced Concrete
-    "M" = "M", # Masonry
-    "MUR" = "M", # Unreinforced Masonry
-    "MR" = "M", # Reinforced Masonry
-    "MCF" = "M", # Confined Masonry
-    "ADO" = "M", # Adobe (see material_intensity_db/data/buildings.csv)
-    "ADO/E" = "M", # Adobe/Earth
-    "MIX" = NA, # Mixed-types (not in RASMI)
-    "OT" = NA # Other (not in RASMI)
-  )
-  mapped <- mapping[structure]
-
-  unmatched <- structure[!structure %in% names(mapping) & !is.na(structure)]
-  if (length(unmatched) > 0) {
-    warning("Unmatched elements: ", paste(unique(unmatched), collapse = ", "))
-  }
-
-  return(mapped)
 }

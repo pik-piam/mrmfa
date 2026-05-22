@@ -25,21 +25,21 @@ MplotMulti(
 
 \item{total}{Whether the total of all data values should also be visualized.}
 
-\item{title}{A string to be used as the plot's main title. Defaults to NULL.}
+\item{title}{A string to be used as the plot's main title.}
 
-\item{xlab}{Label for the x axis. Defaults to NULL.}
+\item{xlab}{Label for the x axis.}
 
-\item{ylab}{Label for the y axis. Defaults to NULL.}
+\item{ylab}{Label for the y axis.}
 
-\item{filename}{Path to save the plot. If NULL, the plot is printed instead. Defaults to NULL.}
+\item{filename}{Path to save the plot. If NULL, the plot is printed instead.}
 
 \item{nrow}{Number of rows for the facet layout (passed to facet_wrap).}
 
 \item{ncol}{Number of columns for the facet layout (passed to facet_wrap).}
 
-\item{ignore_na}{Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) before plotting. Defaults to TRUE.}
+\item{ignore_na}{Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) before plotting.}
 
-\item{show_shares}{Logical indicating whether stacked bars should display percentage shares for each category. Defaults to FALSE.}
+\item{show_shares}{Logical indicating whether stacked bars should display percentage shares for each category.}
 }
 \description{
 Get a quick visualization of the content of most magpie objects.

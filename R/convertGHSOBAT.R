@@ -5,7 +5,7 @@
 #'        "height" for average building height (not differentiated)
 #' @author Bennet Weiss
 convertGHSOBAT <- function(x, subtype) {
-  # Distribute unatributed region XXX proportionally
+  # Distribute unattributed region XXX proportionally
   scale_factor <- sum(x, na.rm = TRUE) / sum(x["XXX", , , invert = T], na.rm = TRUE)
   x <- x * scale_factor
   # Distribute other custom regions
