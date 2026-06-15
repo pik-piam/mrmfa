@@ -5,9 +5,14 @@
 calcCeBuildingsMI <- function(subtype = "concrete") {
   x <- readSource("RASMI", subtype)
   x <- x / 1000 # convert kg to t
+  # placeholder MI of 1 for the "N/A" function/structure, whose inflow is determined directly
+  x <- toolAddPlaceholder(x, "N/A.N/A", fill = 1)
 
   # use floor area for weight
   weight <- calcOutput("CeFloorspaceGEM", subtype = c("Function", "Structure"), aggregate = FALSE)
+  weight <- toolAddPlaceholder(weight, "N/A.N/A", fill = 1)
+  # align weight with x: drops GEM categories not present in RASMI (e.g. blank structure)
+  weight <- weight[, , getItems(x, dim = 3)]
   # country without floorspace should still get MI if aggregated on country level
   weight[weight == 0] <- 1e-9
   description <- paste(
