@@ -124,22 +124,8 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
   if (doInterpolate) {
     # Interpolate missing values in x and ref
     # Recommended so that the weight calculation is regular and more stable
-
-    if (ndata(x) != 1) {
-      for (n in getNames(x)) {
-        x[, , n] <- toolInterpolate(x[, , n])
-      }
-    } else {
-      x <- toolInterpolate(x)
-    }
-
-    if (ndata(ref) != 1) {
-      for (n in getNames(ref)) {
-        ref[, , n] <- toolInterpolate(ref[, , n])
-      }
-    } else {
-      ref <- toolInterpolate(ref)
-    }
+    x <- toolInterpolate(x)
+    ref <- toolInterpolate(ref)
   }
 
   # cut unnecessary years from ref

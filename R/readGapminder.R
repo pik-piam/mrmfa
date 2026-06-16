@@ -1,16 +1,29 @@
 #' Read Gapminder population data.
 #' @description Read Gapminder population data from 1800-2100 in yearly resolution.
-#' @author Merlin Jo Hosak
-readGapminder <- function() {
+#' @author Merlin Jo Hosak, Bennet Weiss
+#' @param subtype Regional scope of the data. Either "countries" or "global".
+readGapminder <- function(subtype) {
   version <- "v1.0"
   path <- file.path(".", version, "GM-Population - Dataset - v8.xlsx")
-  x <- readxl::read_excel(path = path, sheet = "Unpivot-countries-year") %>%
-    select("region" = "geo", "period" = "Year", "value" = "Population") %>%
-    mutate("region" = toupper(.data$region)) %>%
-    as.magpie()
 
-  # Rename Vatican Iso3 code (HOS [Holy See] to VAT)
-  getItems(x, dim = 1)[getItems(x, dim = 1) == "HOS"] <- "VAT"
+  if (subtype == "countries") {
+    x <- readxl::read_excel(path = path, sheet = "Unpivot-countries-year") %>%
+      select("region" = "geo", "period" = "Year", "value" = "Population") %>%
+      mutate("region" = toupper(.data$region)) %>%
+      as.magpie()
+
+    # Rename Vatican Iso3 code (HOS [Holy See] to VAT)
+    getItems(x, dim = 1)[getItems(x, dim = 1) == "HOS"] <- "VAT"
+  } else if (subtype == "global") {
+    x <- readxl::read_excel(path = path, sheet = "Unpivot-world-year") %>%
+      select("period" = "Year", "value" = "Population") %>%
+      mutate(value = as.numeric(.data$value)) %>%
+      as.magpie(tidy = TRUE)
+  } else {
+    stop("Invalid subtype. Please choose either 'countries' or 'global'.")
+  }
+
+  getNames(x) <- NULL
 
   return(x)
 }

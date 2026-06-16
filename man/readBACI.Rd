@@ -27,7 +27,11 @@ material HS codes:
   valid parameters for category:
   - direct
   - indirect
-  - scrap}
+  - scrap
+- "cement": cement trade data
+  valid parameters for category:
+  - cement
+  - clinker}
 
 \item{subset}{Character string specifying the HS (Harmonized System) revision of the data
 - 92

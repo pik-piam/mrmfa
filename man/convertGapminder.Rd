@@ -4,14 +4,16 @@
 \alias{convertGapminder}
 \title{Convert Gapminder data to Magpie format}
 \usage{
-convertGapminder(x)
+convertGapminder(x, subtype)
 }
 \arguments{
 \item{x}{MagPIE object}
+
+\item{subtype}{Regional scope of the data. Either "countries" or "global".}
 }
 \description{
 Convert Gapminder data to Magpie format
 }
 \author{
-Merlin Jo Hosak
+Merlin Jo Hosak, Bennet Weiss
 }

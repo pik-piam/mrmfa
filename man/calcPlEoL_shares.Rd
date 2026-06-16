@@ -16,7 +16,7 @@ Valid formats include:
 - All (all shares combined in one magpie object)}
 }
 \description{
-Compute end-of-life fate ratios of plastics by country,
+Compute end-of-life fate ratios of plastics,
 based on OECD regional waste EOL data (1990–2019) and
 country/region-specific datasets (EPA, Plastics Europe and Chinese reports)
 }

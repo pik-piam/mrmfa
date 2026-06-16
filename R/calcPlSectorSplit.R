@@ -2,7 +2,7 @@
 #' mapping Ryberg sectors to remind-mfa sectors
 #' @author Leonie Schweiger
 calcPlSectorSplit <- function() {
-  data_raw <- readSource("Ryberg", subtype = "Sector_split", convert=FALSE)
+  data_raw <- readSource("Ryberg", subtype = "Sector_split", convert = FALSE)
   use_map <- toolGetMapping("structuremappingRyberg.csv", type = "sectoral", where = "mrmfa")
   data <- toolAggregate(data_raw, rel = use_map, dim = 3, from = "Source", to = "Target")
   description <- paste(

@@ -1,12 +1,12 @@
-#' Get GDP from 1900-2150
+#' Get GDP from 1800-2150
 #' @description
-#' Calc GDP (PPP) from 1900-2150 yearly for the REMIND-MFA format on a country
+#' Calc GDP (PPP) from 1800-2150 yearly for the REMIND-MFA format on a country
 #' level. Can be aggregated to regions via calcOutput aggregate parameter.
 #' Uses \link[=readOECD_GDP]{OECD_GDP} for historical GDP data as well as
 #' \link[mrdrivers]{calcGDP} from mrdrivers for current and future GDP data
 #' according to specific scenarios.
 #' for more information). Population data from
-#' \link[=calcCoPopulation1900To2150]{calcCoPopulation1900To2150} is used to
+#' \link[=calcCoPopulation]{calcCoPopulation} is used to
 #' convert GDP per capita to total GDP.
 #' GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
 #' GDP datasets that use a different base year, which however does not matter
@@ -20,19 +20,19 @@
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
-calcCoGDP1900To2150 <- function(perCapita = FALSE, scenarios = "SSP2", collapse = TRUE, smooth = FALSE, dof = 8) {
-  startyear <- 1900
+calcCoGDP <- function(perCapita = FALSE, scenarios = "SSP2", collapse = TRUE, smooth = FALSE, dof = 8) {
+  startyear <- 1800
   endyear <- 2150
 
   # load population data, used for historical purposes only
-  pop <- calcOutput("CoPopulation1900To2150", aggregate = FALSE)
+  pop <- calcOutput("CoPopulation", aggregate = FALSE)
 
   # Historic GDP data that goes way back in time, with 1 year timestep
   gdpHistPC <- readSource("OECD_GDP")
   most_recent_hist_year <- tail(getYears(gdpHistPC, as.integer = TRUE), 1)
   gdpHistPC <- toolInterpolate(gdpHistPC, type = "monotone", maxgap = 20)
 
-  # Historic and Future GDP data: 1960-2030 with 1 year timestep, therafter with 5 year timestep
+  # Historic and Future GDP data: 1960-2030 with 1 year timestep, thereafter with 5 year timestep
   # turn off average2020 to get yearly data where possible (and of course remove covid correction)
   gdpRecent <- calcOutput("GDP", scenario = scenarios, aggregate = FALSE, average2020 = FALSE)
   getSets(gdpRecent)[3] <- "scenario"
@@ -61,21 +61,21 @@ calcCoGDP1900To2150 <- function(perCapita = FALSE, scenarios = "SSP2", collapse 
   gdp <- toolBackcastByReference(gdp, ref = sumAvaliableGDP)
 
   if (smooth) {
-    # smooth data and interpolate missing data; ensure start, end of historic and end of SSP to remain similar
-    gdp[, startyear:2100] <- toolTimeSpline(gdp[, startyear:2100], dof = dof, peggedYears = c(startyear, 2023, 2100))
+    # smooth data and interpolate missing data
+    years <- startyear:2100
+    gdp[, years] <- toolTimeSpline(gdp[, years], dof = dof, peggedYears = c(1900, 2023, 2100))
   }
 
   # finalize for calcOutput
   unit <- "2005 USD$PPP" # unit is that of calcGDP data as OECD data is just used for backcasting
   # build description incorporating scenario and optional smoothing
   smooth_suffix <- if (smooth) ", smoothed." else "."
-  base_description <- paste0(startyear, "-", endyear, smooth_suffix)
 
   # convert to per capita if requested
   if (perCapita) {
     pop <- calcOutput(
-      "CoPopulation1900To2150",
-      scenarios = scenarios, 
+      "CoPopulation",
+      scenarios = scenarios,
       collapse = collapse,
       smooth = smooth,
       dof = dof,
@@ -84,10 +84,10 @@ calcCoGDP1900To2150 <- function(perCapita = FALSE, scenarios = "SSP2", collapse 
     gdp <- gdp / pop
     unit <- paste0(unit, " per capita")
     # adjust description prefix
-    description <- paste0("Yearly scenario-dependent GDP per capita ", base_description)
+    description <- paste0("Yearly scenario-dependent GDP per capita (historical and future) ", smooth_suffix)
     weight <- pop
   } else {
-    description <- paste0("Yearly scenario-dependent GDP ", base_description)
+    description <- paste0("Yearly scenario-dependent GDP (historical and future) ", smooth_suffix)
     weight <- NULL
   }
 

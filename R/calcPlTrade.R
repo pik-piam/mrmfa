@@ -70,7 +70,7 @@ calcPlTrade <- function(
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
     # backcast trade data to 1950 based on historic plastic consumption
-    ref <- toolAggregate(reference, rel = rel)
+    ref <- toolAggregate(reference, rel = rel, from = "country", to = "region")
 
     # if some of the regions are missing in x due to the manual aggregation,
     # fill with NA to match all the ref regions

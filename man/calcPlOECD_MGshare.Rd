@@ -7,8 +7,7 @@
 calcPlOECD_MGshare()
 }
 \description{
-Compute material share of different goods from 2019 OECD use data,
-aggregate regional shares to country level for 2019.
+Compute material share of different goods from 2019 OECD use data
 }
 \author{
 Qianzhi Zhang

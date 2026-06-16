@@ -42,7 +42,7 @@ readRyberg <- function(subtype) {
   # Convert to magpie object
   # ---------------------------------------------------------------------------
   if (subtype == "Sector_split") {
-    magpie_data <- as.magpie(df %>% select("Application","Share [%]"))
+    magpie_data <- as.magpie(df %>% select("Application", "Share [%]"))
   }
   getComment(magpie_data) <- subtype
 
