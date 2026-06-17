@@ -1,8 +1,8 @@
 Type: Package
 Package: mrmfa
 Title: Input data generation for the REMIND MFA
-Version: 1.9.0
-Date: 2026-05-22
+Version: 1.9.1
+Date: 2026-06-17
 Authors@R: c(
     person("Jakob", "Dürrwächter", , "jakobdu@pik-potsdam.de", role = c("aut", "cre")),
     person("Bennet", "Weiss", , "bennet.weiss@pik-potsdam.de", role = "aut"),
@@ -42,3 +42,4 @@ Suggests:
     testthat
 Encoding: UTF-8
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

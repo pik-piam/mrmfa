@@ -114,11 +114,9 @@ find_source_info <- function(sourceFolder) {
     return(NA_character_)
   }
 
-  # Extract version numbers (remove leading "v")
-  version_numbers <- as.numeric(sub("^v", "", version_dirs))
-
-  # Pick the highest version
-  best_version <- version_dirs[which.max(version_numbers)]
+  # Extract version numbers (remove leading "v") and pick the highest version
+  parsed_versions <- numeric_version(sub("^v", "", version_dirs))
+  best_version <- version_dirs[which(parsed_versions == max(parsed_versions))[1]]
 
   # Check for SOURCE_INFO.txt in that version folder
   version_file <- file.path(sourceFolder, best_version, "SOURCE_INFO.txt")
