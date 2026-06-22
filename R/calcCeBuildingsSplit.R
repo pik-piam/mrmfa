@@ -6,15 +6,12 @@
 calcCeBuildingsSplit <- function(subtype) {
   if (subtype == "Function") {
     compare_type <- "Stock_Type"
-    # GEM only covers buildings (Res, Com); other stock types get their full share
-    # in the placeholder function "N/A"
-    placeholder_names <- c("Ind.N/A", "Civ.N/A")
-    placeholder_weight_names <- c("Ind", "Civ")
+    new_columns <- c("Ind.N/A", "Civ.N/A")
+    new_columns_weight <- c("Ind", "Civ")
   } else if (subtype == "Structure") {
     compare_type <- "Function"
-    # the placeholder function "N/A" maps fully to the placeholder structure "N/A"
-    placeholder_names <- "N/A.N/A"
-    placeholder_weight_names <- "N/A"
+    new_columns <- "N/A.N/A"
+    new_columns_weight <- "N/A"
   } else {
     stop("Invalid subtype: must be 'Function' or 'Structure'")
   }
@@ -27,9 +24,9 @@ calcCeBuildingsSplit <- function(subtype) {
   # output
   compare_type <- gsub("_", " ", compare_type)
   relFloorArea <- replace_non_finite(relFloorArea, replace = 0)
-  relFloorArea <- toolAddPlaceholder(relFloorArea, placeholder_names, fill = 1)
+  relFloorArea <- add_columns(relFloorArea, addnm = new_columns, dim = 3, fill = 1)
   weight <- floorArea_byCompareType # use normalizing floor area as weight
-  weight <- toolAddPlaceholder(weight, placeholder_weight_names, fill = 1)
+  weight <- add_columns(weight, addnm = new_columns_weight, dim = 3, fill = 1)
   unit <- "ratio"
   description <- paste0(
     "Relative floor area of buildings by ", compare_type, " and ", subtype, ".",

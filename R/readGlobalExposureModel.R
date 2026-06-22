@@ -56,16 +56,6 @@ readGlobalExposureModel <- function() {
 
   x <- magclass::as.magpie(combined_data, spatial = 1)
 
-  structureMapping <- toolGetMapping("CeBuildingStructureMapping.csv", type = "sectoral", where = "mrmfa")
-  x <- toolAggregate(
-    x,
-    rel = structureMapping,
-    dim = 3.2,
-    from = "GEM_structure",
-    to = "RASMI_structure",
-    partrel = TRUE
-  )
-
   return(x)
 }
 
