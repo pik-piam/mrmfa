@@ -3,7 +3,12 @@
 #' @param subtype Material subtype. Can be "cement" or "clinker".
 calcCeBinderProduction <- function(subtype) {
   x <- readSource("Andrew2019", subtype)
-  x <- x * 1e3 # convert to tonnes
+
+  # remove 2025 from dataset (only available in clinker, not for cement)
+  x <- x[,2025, invert = TRUE]
+
+  # convert to tonnes
+  x <- x * 1e3
 
   if (subtype == "cement") {
     x <- toolInterpolate(x, type = "spline", extrapolate = FALSE, maxgap = 10)

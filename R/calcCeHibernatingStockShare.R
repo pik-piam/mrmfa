@@ -3,7 +3,7 @@
 #'
 #' @author Bennet Weiss
 calcCeHibernatingStockShare <- function() {
-  weight <- dimSums(calcOutput("CeFloorspace", aggregate = FALSE)[, 2023], dim = 3)
+  weight <- dimSums(calcOutput("CeFloorspaceEDGEB", aggregate = FALSE, smooth = TRUE)[, 2023], dim = 3)
 
   share_vacant <- readSource("OECDAffordableHousingDatabase", subtype = "vacant") / 100
 

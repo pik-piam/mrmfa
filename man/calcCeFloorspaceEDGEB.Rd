@@ -4,10 +4,21 @@
 \alias{calcCeFloorspaceEDGEB}
 \title{Calculates the buildings floor area from EDGE-B}
 \usage{
-calcCeFloorspaceEDGEB(scenario = "SSP2")
+calcCeFloorspaceEDGEB(
+  scenarios = "SSP2",
+  collapse = TRUE,
+  smooth = FALSE,
+  dof = 8
+)
 }
 \arguments{
-\item{scenario}{EDGE-B scenario, one of "SSP1", "SSP2", "SSP3", "SSP4", "SSP5"}
+\item{scenarios}{EDGE-B scenarios (character vector or string). Available: "SSP1", "SSP2", "SSP3", "SSP4", "SSP5".}
+
+\item{collapse}{Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.}
+
+\item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation.}
+
+\item{dof}{Integer. Degrees of freedom for spline interpolation.}
 }
 \description{
 Calculates the buildings floor area from EDGE-B
