@@ -64,7 +64,11 @@ calcPlBACI <- function(subtype, category, HS) {
       rename("sector" = "Target")
 
     # map UNEP-NGP polymers to polymers used in REMIND-MFA
-    polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
+    if (category == "Waste"){
+      polymer_map <- toolGetMapping("polymermappingUNEP_NGP_waste.csv", type = "sectoral", where = "mrmfa")
+    } else {
+      polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
+    }
     # use polymer use by sector as weights (summarize over all Regions,
     # as polymer share by sector is constant over all Regions in OECD data);
     # use total polymer use over all sectors as weights for "General" sector
