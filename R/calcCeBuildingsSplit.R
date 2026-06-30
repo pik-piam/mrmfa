@@ -6,8 +6,12 @@
 calcCeBuildingsSplit <- function(subtype) {
   if (subtype == "Function") {
     compare_type <- "Stock_Type"
+    new_columns <- c("Ind.N/A", "Civ.N/A")
+    new_columns_weight <- c("Ind", "Civ")
   } else if (subtype == "Structure") {
     compare_type <- "Function"
+    new_columns <- "N/A.N/A"
+    new_columns_weight <- "N/A"
   } else {
     stop("Invalid subtype: must be 'Function' or 'Structure'")
   }
@@ -20,7 +24,9 @@ calcCeBuildingsSplit <- function(subtype) {
   # output
   compare_type <- gsub("_", " ", compare_type)
   relFloorArea <- replace_non_finite(relFloorArea, replace = 0)
+  relFloorArea <- add_columns(relFloorArea, addnm = new_columns, dim = 3, fill = 1)
   weight <- floorArea_byCompareType # use normalizing floor area as weight
+  weight <- add_columns(weight, addnm = new_columns_weight, dim = 3, fill = 1)
   unit <- "ratio"
   description <- paste0(
     "Relative floor area of buildings by ", compare_type, " and ", subtype, ".",
