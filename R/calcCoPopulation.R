@@ -12,7 +12,9 @@
 #' @author Merlin Jo Hosak, Bennet Weiss
 #' @param scenarios Character vector or string specifying the scenarios to use for the future.
 #' @param collapse Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.
-#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
+#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation
+#' (see \link{toolHistoricallyConsistentSmoothing}); smoothed historical values
+#' are identical across scenarios.
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of population and metadata in calcOutput
@@ -39,10 +41,17 @@ calcCoPopulation <- function(scenarios = "SSP2", collapse = TRUE, smooth = FALSE
   pop <- toolBackcastByReference(x = pop, ref = worldHist)
 
   if (smooth) {
-    # smooth data and interpolate missing data; ensure pegging of key years
+    # smooth data and interpolate missing data
     # remove data beyond 2100 from smoothing due to low data quality
     years <- min(getYears(pop, as.integer = TRUE)):2100
-    pop[, years] <- toolTimeSpline(pop[, years], dof = dof, peggedYears = c(1900, 2023, 2100))
+    # near-term population projections are fixed (scenario-independent) until 2029
+    lastHistYear <- 2029
+    pop[, years] <- toolHistoricallyConsistentSmoothing(
+      pop[, years],
+      lastHistYear = lastHistYear,
+      refScenario = if ("SSP2" %in% getItems(pop, dim = "scenario")) "SSP2" else getItems(pop, dim = "scenario")[1],
+      dof = dof
+    )
   }
 
   # build description including scenario and smoothing note

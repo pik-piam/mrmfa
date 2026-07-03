@@ -16,7 +16,9 @@
 #' @param perCapita Logical. If TRUE, GDP is returned as per capita.
 #' @param scenarios Character vector or string specifying the scenarios to use for the future.
 #' @param collapse Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.
-#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
+#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation
+#' (see \link{toolHistoricallyConsistentSmoothing}); smoothed historical values
+#' are identical across scenarios.
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' Higher values lead to a closer fit to the original data, while lower values result in smoother curves.
 #' @return List with Magpie object of GDP (given in 2005 USD) and metadata in calcOutput format.
@@ -63,7 +65,14 @@ calcCoGDP <- function(perCapita = FALSE, scenarios = "SSP2", collapse = TRUE, sm
   if (smooth) {
     # smooth data and interpolate missing data
     years <- startyear:2100
-    gdp[, years] <- toolTimeSpline(gdp[, years], dof = dof, peggedYears = c(1900, 2023, 2100))
+    # near-term GDP projections are fixed (scenario-independent) until 2029
+    lastHistYear <- 2029
+    gdp[, years] <- toolHistoricallyConsistentSmoothing(
+      gdp[, years],
+      lastHistYear = lastHistYear,
+      refScenario = if ("SSP2" %in% getItems(gdp, dim = "scenario")) "SSP2" else getItems(gdp, dim = "scenario")[1],
+      dof = dof
+    )
   }
 
   # finalize for calcOutput
