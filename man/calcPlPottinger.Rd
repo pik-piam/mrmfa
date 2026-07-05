@@ -4,18 +4,21 @@
 \alias{calcPlPottinger}
 \title{Pottinger 2024 plastics material flows in IAMC variables}
 \usage{
-calcPlPottinger()
+calcPlPottinger(subtype = "businessAsUsual")
+}
+\arguments{
+\item{subtype}{Character, scenario to extract (e.g., "businessAsUsual" for BAU).
+Must match a scenario name encoded in the data dimension from readPottinger2024.}
 }
 \value{
 List with a MagPIE object of plastics flows (Mt/yr) in IAMC variables
 and metadata in calcOutput format.
 }
 \description{
-Return the Business-as-Usual plastics material-flow data from Pottinger et al.
-(2024) at ISO3 country level, with the source flow columns renamed to IAMC
-variables under the \code{Materials|Plastics|...} hierarchy. All flows are in
-Mt/yr and are absolute quantities, so \code{weight = NULL} (they are summed
-when aggregated to regions).
+Return the plastics material-flow data from Pottinger et al. (2024) for a
+specified scenario (Business-as-Usual or policy variants), at ISO3 country
+level, with the source flow columns renamed to a subset of IAMC variables.
+All flows are in Mt/yr.
 }
 \seealso{
 \code{\link{readPottinger2024}}

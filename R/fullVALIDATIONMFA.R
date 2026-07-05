@@ -50,13 +50,12 @@ fullVALIDATIONMFA <- function(rev = 0) {
   # validation data ----
   valfile <- "validation.mif"
 
-  # Pottinger 2024 plastics material flows ----
-
+  # Pottinger 2024 plastics material flows (all scenarios) ----
   calcOutput(
-    type = "PlPottinger", file = valfile,
+    type = "PlPottinger", subtype = "all", file = valfile,
     aggregate = columnsForAggregation, append = FALSE,
     warnNA = FALSE, try = FALSE,
-    writeArgs = list(scenario = "businessAsUsual", model = "Pottinger et al 2024")
+    writeArgs = list(model = "Pottinger et al 2024")
   )
 
 }

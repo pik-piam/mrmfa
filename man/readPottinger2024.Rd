@@ -8,18 +8,17 @@ readPottinger2024()
 }
 \value{
 MagPIE object with the raw Pottinger flow variables, dimensions
-(regionKey, year, variable), in Mt.
+(regionKey, year, scenario.variable), in Mt.
 }
 \description{
 Read the global plastics material-flow dataset from Pottinger et al. (2024),
-"science.adr3837_data_s1.csv". Only the Business-as-Usual (no policies)
-pathway is read. In the source, the BAU time series is spread across
-scenarios: the scenarios \code{businessAsUsual2011}..\code{businessAsUsual2049}
-each hold a single year, and \code{businessAsUsual} holds the year 2050.
-Selecting all scenarios matching \code{^businessAsUsual} therefore
-reconstructs the full 2011-2050 series. The global aggregate region is
-dropped (it cannot be disaggregated to countries); the four modelling regions
-china, eu30, nafta and row are kept. All flows are in Mt (megatonnes) per year.
+"science.adr3837_data_s1.csv". All scenarios (Business-as-Usual and policy
+variants) are read. Each scenario's time series is spread across multiple rows:
+for each scenario, rows exist for years 2011–2050 (one year per row after
+extracting the year from the scenarioKey suffix). The global aggregate region
+is dropped (it cannot be disaggregated to countries); the four modelling regions
+china, eu30, nafta and row are kept.
+All flows are in Mt (megatonnes) per year.
 }
 \examples{
 \dontrun{
