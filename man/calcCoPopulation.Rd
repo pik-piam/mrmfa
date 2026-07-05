@@ -11,7 +11,9 @@ calcCoPopulation(scenarios = "SSP2", collapse = TRUE, smooth = FALSE, dof = 8)
 
 \item{collapse}{Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.}
 
-\item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation.}
+\item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation
+(see \link{toolHistoricallyConsistentSmoothing}); smoothed historical values
+are identical across scenarios.}
 
 \item{dof}{Integer. Degrees of freedom for spline interpolation.
 Higher values lead to a closer fit to the original data, while lower values result in smoother curves.}

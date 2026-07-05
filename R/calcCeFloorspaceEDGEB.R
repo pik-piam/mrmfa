@@ -13,7 +13,7 @@ calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = 
   floorspace <- floorspace * 1e6
 
   # Remove buildings total
-  floorspace <- floorspace[, , (Variable <- "buildings"), invert = TRUE]
+  floorspace <- floorspace[, , "buildings", invert = TRUE]
 
   # enforce MFA naming convention
   getNames(floorspace) <- gsub("commercial", "Com", getNames(floorspace))
@@ -25,9 +25,11 @@ calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = 
     # smooth data while keeping the historical period identical across scenarios
     # exclude data beyond 2100 from smoothing due to low data quality
     years <- floorspace_years[floorspace_years <= 2100]
+    scens <- getItems(floorspace, dim = "scenario")
+    refScenario <- if ("SSP2" %in% scens) "SSP2" else scens[1]
     floorspace[, years] <- toolHistoricallyConsistentSmoothing(
       floorspace[, years],
-      refScenario = if ("SSP2" %in% getItems(floorspace, dim = "scenario")) "SSP2" else getItems(floorspace, dim = "scenario")[1],
+      refScenario = refScenario,
       dof = dof
     )
   }

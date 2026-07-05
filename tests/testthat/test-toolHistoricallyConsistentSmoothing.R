@@ -44,10 +44,10 @@ test_that("transition is smooth (no kink) and continuous compared to hard splice
 
   # continuity: value step at the boundary (lastHistYear -> lastHistYear + 1)
   # is much smaller for the faded version than the hard splice
-  d1_res  <- diff(as.vector(res["DEU",  , "SSP3"]))
-  d1_hard <- diff(as.vector(hard["DEU", , "SSP3"]))
-  trans_idx <- which(years == 2020) # d1[i] = step from years[i] to years[i+1]
-  expect_lt(abs(d1_res[trans_idx]), abs(d1_hard[trans_idx]))
+  d1Res  <- diff(as.vector(res["DEU",  , "SSP3"]))
+  d1Hard <- diff(as.vector(hard["DEU", , "SSP3"]))
+  transIdx <- which(years == 2020) # d1[i] = step from years[i] to years[i+1]
+  expect_lt(abs(d1Res[transIdx]), abs(d1Hard[transIdx]))
 })
 
 test_that("single scenario and missing scenario dimension pass through", {
