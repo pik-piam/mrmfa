@@ -12,11 +12,6 @@ calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = 
   # Unit conversion from million m2 to m2
   floorspace <- floorspace * 1e6
 
-  # Remove redundant dimensions (e.g. Scenario, if only one is given)
-  if (collapse) {
-    floorspace <- collapseDim(floorspace)
-  }
-
   # Remove buildings total
   floorspace <- floorspace[, , (Variable <- "buildings"), invert = TRUE]
 
@@ -27,10 +22,19 @@ calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = 
   floorspace_years <- getYears(floorspace, as.integer = TRUE)
   # smooth if requested
   if (smooth) {
-    # smooth data and interpolate missing data; ensure pegging of key years
-    # remove data beyond 2100 from smoothing due to low data quality
-    years <- floorspace_years[floorspace_years<=2100]
-    floorspace[, years] <- toolTimeSpline(floorspace[, years], dof = dof)
+    # smooth data while keeping the historical period identical across scenarios
+    # exclude data beyond 2100 from smoothing due to low data quality
+    years <- floorspace_years[floorspace_years <= 2100]
+    floorspace[, years] <- toolHistoricallyConsistentSmoothing(
+      floorspace[, years],
+      refScenario = if ("SSP2" %in% getItems(floorspace, dim = "scenario")) "SSP2" else getItems(floorspace, dim = "scenario")[1],
+      dof = dof
+    )
+  }
+
+  # Remove redundant dimensions (e.g. scenario, if only one is given)
+  if (collapse) {
+    floorspace <- collapseDim(floorspace)
   }
 
   # interpolate to yearly data
