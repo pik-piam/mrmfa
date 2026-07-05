@@ -100,10 +100,6 @@ test_that("other third-dimension subdimensions are handled correctly", {
 test_that("invalid inputs raise errors and edge cases warn", {
   x <- makeTestData()
   expect_error(
-    toolHistoricallyConsistentSmoothing(x),
-    "lastHistYear must be provided"
-  )
-  expect_error(
     toolHistoricallyConsistentSmoothing(x, lastHistYear = 2020, refScenario = "SSPX"),
     "not found"
   )
@@ -119,6 +115,32 @@ test_that("invalid inputs raise errors and edge cases warn", {
     toolHistoricallyConsistentSmoothing(x, lastHistYear = 1900),
     "No years"
   )
+})
+
+test_that("lastHistYear is detected automatically when not provided", {
+  x <- makeTestData(divergeYear = 2020)
+  auto <- toolHistoricallyConsistentSmoothing(x)
+  explicit <- toolHistoricallyConsistentSmoothing(x, lastHistYear = 2020)
+  expect_equal(as.vector(auto), as.vector(explicit))
+})
+
+test_that("verbose reports the detected last historical year", {
+  x <- makeTestData(divergeYear = 2020)
+  expect_message(
+    toolHistoricallyConsistentSmoothing(x, verbose = TRUE),
+    "Detected last historical year: 2020"
+  )
+})
+
+test_that("no common historical period warns and returns plain smoothing", {
+  # scenarios already diverge in the first year, so no shared history exists
+  x <- makeTestData(divergeYear = 1949)
+  expected <- toolTimeSpline(x, dof = 8)
+  expect_warning(
+    res <- toolHistoricallyConsistentSmoothing(x),
+    "no common historical"
+  )
+  expect_equal(as.vector(res), as.vector(expected))
 })
 
 test_that("fade window truncated by end of data works", {

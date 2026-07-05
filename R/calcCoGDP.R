@@ -64,12 +64,10 @@ calcCoGDP <- function(perCapita = FALSE, scenarios = "SSP2", collapse = TRUE, sm
 
   if (smooth) {
     # smooth data and interpolate missing data
+    # exclude data beyond 2100 from smoothing due to low data quality
     years <- startyear:2100
-    # near-term GDP projections are fixed (scenario-independent) until 2029
-    lastHistYear <- 2029
     gdp[, years] <- toolHistoricallyConsistentSmoothing(
       gdp[, years],
-      lastHistYear = lastHistYear,
       refScenario = if ("SSP2" %in% getItems(gdp, dim = "scenario")) "SSP2" else getItems(gdp, dim = "scenario")[1],
       dof = dof
     )

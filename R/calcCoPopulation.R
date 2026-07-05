@@ -42,13 +42,10 @@ calcCoPopulation <- function(scenarios = "SSP2", collapse = TRUE, smooth = FALSE
 
   if (smooth) {
     # smooth data and interpolate missing data
-    # remove data beyond 2100 from smoothing due to low data quality
+    # exclude data beyond 2100 from smoothing due to low data quality
     years <- min(getYears(pop, as.integer = TRUE)):2100
-    # near-term population projections are fixed (scenario-independent) until 2029
-    lastHistYear <- 2029
     pop[, years] <- toolHistoricallyConsistentSmoothing(
       pop[, years],
-      lastHistYear = lastHistYear,
       refScenario = if ("SSP2" %in% getItems(pop, dim = "scenario")) "SSP2" else getItems(pop, dim = "scenario")[1],
       dof = dof
     )
