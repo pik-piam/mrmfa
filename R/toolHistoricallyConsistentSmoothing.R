@@ -17,8 +17,7 @@
 #' scenario-specific spline at its end, yielding a (at least) C1-continuous,
 #' in fact C2-continuous, transition.
 #'
-#' @param x A magpie object without NAs in the covered years
-#' (\link[madrat]{toolTimeSpline} does not support NAs).
+#' @param x A magpie object.
 #' @param lastHistYear Integer. Last year considered historical. Required if
 #' x contains multiple scenarios, ignored otherwise.
 #' @param refScenario Character. Name of the scenario whose smoothed values
@@ -48,6 +47,7 @@ toolHistoricallyConsistentSmoothing <- function(x,
 
   # without a scenario dimension or with a single scenario there is nothing to harmonize
   if (!scenarioDim %in% getSets(x)) {
+    warning("No dimension '", scenarioDim, "' found in x. Returning plainly smoothed object.")
     return(smoothed)
   }
   scens <- getItems(x, dim = scenarioDim)
@@ -77,21 +77,20 @@ toolHistoricallyConsistentSmoothing <- function(x,
   histYears <- years[years <= lastHistYear]
   fadeYears <- years[years > lastHistYear & years <= lastHistYear + fadeLength]
 
-  # note: arithmetic between magpie slices with differing dim-3 names silently
-  # Cartesian-expands instead of broadcasting, hence array math + positional assignment
   selRef <- stats::setNames(list(refScenario), scenarioDim)
   ref <- smoothed[, , selRef]
+  # prepare the fade weights
+  tNorm <- (fadeYears - lastHistYear) / fadeLength
+  w <- 6 * tNorm^5 - 15 * tNorm^4 + 10 * tNorm^3
+  refArr <- as.array(ref[, fadeYears, ])
   for (s in setdiff(scens, refScenario)) {
     selS <- stats::setNames(list(s), scenarioDim)
     # replace history by shared reference values
     smoothed[, histYears, selS] <- ref[, histYears, ]
-    # fade from shared history to scenario-specific future (weights from year
-    # values, not indices, so irregular time steps stay correct)
-    for (y in fadeYears) {
-      tNorm <- (y - lastHistYear) / fadeLength
-      w <- 6 * tNorm^5 - 15 * tNorm^4 + 10 * tNorm^3 # smootherstep
-      smoothed[, y, selS] <- (1 - w) * as.array(ref[, y, ]) + w * as.array(smoothed[, y, selS])
-    }
+    sArr <- as.array(smoothed[, fadeYears, selS])
+    # broadcast w across regions and data dims
+    blended <- sweep(refArr, 2, 1 - w, `*`) + sweep(sArr, 2, w, `*`)
+    smoothed[, fadeYears, selS] <- blended
   }
   return(smoothed)
 }

@@ -58,12 +58,15 @@ test_that("single scenario and missing scenario dimension pass through", {
     as.vector(toolHistoricallyConsistentSmoothing(x1)),
     as.vector(expected)
   )
-  # object without a "scenario" set
+  # object without a "scenario" set: should warn and return plain smoothed result
   x2 <- x1
   magclass::getSets(x2)[3] <- "variable"
-  expect_equal(
-    as.vector(toolHistoricallyConsistentSmoothing(x2)),
-    as.vector(expected)
+  expect_warning(
+    expect_equal(
+      as.vector(toolHistoricallyConsistentSmoothing(x2)),
+      as.vector(expected)
+    ),
+    "No dimension"
   )
 })
 
