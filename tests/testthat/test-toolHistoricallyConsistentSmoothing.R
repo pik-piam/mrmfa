@@ -34,7 +34,7 @@ test_that("historical values are identical across scenarios", {
 test_that("transition is smooth (no kink) and continuous compared to hard splice", {
   x <- makeTestData()
   res <- toolHistoricallyConsistentSmoothing(x, lastHistYear = 2020, fadeLength = 10)
-  hard <- toolHistoricallyConsistentSmoothing(x, lastHistYear = 2020, fadeLength = 0)
+  hard <- toolHistoricallyConsistentSmoothing(x, lastHistYear = 2020, fadeLength = 1)
   years <- magclass::getYears(res, as.integer = TRUE)
 
   # kink (second difference) at the transition is smaller for the faded version
@@ -104,7 +104,7 @@ test_that("invalid inputs raise errors and edge cases warn", {
     "not found"
   )
   expect_error(
-    toolHistoricallyConsistentSmoothing(x, lastHistYear = 2020, fadeLength = -1),
+    toolHistoricallyConsistentSmoothing(x, lastHistYear = 2020, fadeLength = 0),
     "fadeLength"
   )
   expect_warning(

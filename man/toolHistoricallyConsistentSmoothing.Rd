@@ -8,7 +8,6 @@ toolHistoricallyConsistentSmoothing(
   x,
   lastHistYear = NULL,
   refScenario = "SSP2",
-  scenarioDim = "scenario",
   fadeLength = 10,
   dof = 8,
   verbose = FALSE,
@@ -16,7 +15,7 @@ toolHistoricallyConsistentSmoothing(
 )
 }
 \arguments{
-\item{x}{A magpie object.}
+\item{x}{A magpie object with a 'scenario' dimension.}
 
 \item{lastHistYear}{Integer or NULL. Last year considered historical. If
 NULL (default), it is detected automatically as the last year up to which
@@ -26,14 +25,11 @@ there even where scenarios originally differ. Ignored if x contains a
 single scenario.}
 
 \item{refScenario}{Character. Name of the scenario whose smoothed values
-define the shared history (default "SSP2").}
+define the shared history (default "SSP2"). Must be located in 'scenario'
+dimension of \code{x}. Ignored if x contains a single scenario.}
 
-\item{scenarioDim}{Character. Name of the (sub)dimension holding the
-scenarios (default "scenario"). If x has no such dimension, the object is
-smoothed as a whole without any harmonization.}
-
-\item{fadeLength}{Integer >= 0. Length of the transition window in years.
-0 produces a hard splice, which is generally discontinuous.}
+\item{fadeLength}{Integer > 0. Length of the transition window in years.
+1 produces a hard splice, which is generally discontinuous.}
 
 \item{dof}{Degrees of freedom passed to \link[madrat]{toolTimeSpline}.}
 
@@ -60,8 +56,7 @@ faded from the reference trajectory to its own trajectory over
 \eqn{w(t) = 6t^5 - 15t^4 + 10t^3}, whose first and second derivatives
 vanish at both endpoints. The blended curve therefore matches the slope of
 the shared history at the start of the fade window and the slope of the
-scenario-specific spline at its end, yielding a (at least) C1-continuous,
-in fact C2-continuous, transition.
+scenario-specific spline at its end, yielding a C2-continuous transition.
 }
 \author{
 Bennet Weiss
