@@ -2,7 +2,8 @@
 #'
 #' @param scenarios EDGE-B scenarios (character vector or string). Available: "SSP1", "SSP2", "SSP3", "SSP4", "SSP5".
 #' @param collapse Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.
-#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
+#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation
+#' (see \link{toolHistoricallyConsistentSmoothing}); smoothed historical values are identical across scenarios.
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' @author Bennet Weiss
 calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = FALSE, dof = 8) {
