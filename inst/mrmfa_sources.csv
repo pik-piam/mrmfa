@@ -55,4 +55,4 @@
 "st_scrap_exports.cs4r","calcStTrade","WorldSteelDatabase, WorldSteelDigitised",""
 "st_indirect_imports.cs4r","calcStTrade","WorldSteelDatabase, WorldSteelDigitised",""
 "st_indirect_exports.cs4r","calcStTrade","WorldSteelDatabase, WorldSteelDigitised",""
-"st_scrap_in_BOF_rate.cs4r","calcStWorldSteelStaticParameters","WorldSteelParameters",""
+"st_scrap_in_bof_rate.cs4r","calcStWorldSteelStaticParameters","WorldSteelParameters",""
