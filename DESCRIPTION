@@ -30,6 +30,7 @@ Imports:
     magrittr,
     purrr,
     quitte,
+    R.matlab,
     readr,
     readxl,
     rlang,

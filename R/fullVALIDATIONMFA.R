@@ -58,4 +58,12 @@ fullVALIDATIONMFA <- function(rev = 0) {
     writeArgs = list(model = "Pottinger et al 2024")
   )
 
+  # Gao & Cabrera-Serrenho 2025 apparent polymer consumption ----
+  calcOutput(
+    type = "PlGaoCabrera", file = valfile,
+    aggregate = columnsForAggregation, append = TRUE,
+    warnNA = FALSE, try = FALSE,
+    writeArgs = list(model = "Gao & Cabrera-Serrenho 2025")
+  )
+
 }
