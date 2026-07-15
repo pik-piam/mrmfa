@@ -63,7 +63,15 @@ fullVALIDATIONMFA <- function(rev = 0) {
     type = "PlGaoCabrera", file = valfile,
     aggregate = columnsForAggregation, append = TRUE,
     warnNA = FALSE, try = FALSE,
-    writeArgs = list(model = "Gao & Cabrera-Serrenho 2025")
+    writeArgs = list(scenario = "historical", model = "Gao & Cabrera-Serrenho 2025")
+  )
+
+  # Geyer et al. 2017 global plastics production ----
+  calcOutput(
+    type = "PlGeyer", file = valfile,
+    aggregate = FALSE, append = TRUE,
+    warnNA = FALSE, try = FALSE,
+    writeArgs = list(scenario = "historical", model = "Geyer et al 2017")
   )
 
 }
