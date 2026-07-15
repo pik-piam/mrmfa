@@ -13,7 +13,11 @@ Valid formats include:
 - "Use_1990-2019_region" (plastic use in Mt, dimensions: region, year)
 - "Use_1990-2019_world" (plastic use in Mt, dimensions: year, application, polymer, type (primary/secondary))
 - "WasteEOL_1990-2019_region" (plastic waste in Mt, dimensions: region, year, EOL fate, collected for recycling)
-- "WasteType_2019_region" (plastic waste in Mt, dimensions: region, application, polymer)}
+- "WasteType_2019_region" (plastic waste in Mt, dimensions: region, application, polymer)
+- "Use_1980-2060_projection" (OECD Global Plastics Outlook 2022 plastics use in Mt,
+  dimensions: OECD-Outlook region, year)
+- "Pop_2019-2060_projection" (OECD Global Plastics Outlook 2022 population in billion
+  people, dimensions: OECD-Outlook region, year)}
 }
 \value{
 magpie object of the OECD Plastic data

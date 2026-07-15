@@ -74,4 +74,18 @@ fullVALIDATIONMFA <- function(rev = 0) {
     writeArgs = list(scenario = "historical", model = "Geyer et al 2017")
   )
 
+  # OECD Global Plastics Outlook 2022 projections ----
+  calcOutput(
+    type = "PlOECDProjection", subtype = "total", file = valfile,
+    aggregate = columnsForAggregation, append = TRUE,
+    warnNA = FALSE, try = FALSE,
+    writeArgs = list(scenario = "OECD Plastics Outlook", model = "OECD Global Plastics Outlook 2022")
+  )
+  calcOutput(
+    type = "PlOECDProjection", subtype = "perCapita", file = valfile,
+    aggregate = columnsForAggregation, append = TRUE,
+    warnNA = FALSE, try = FALSE,
+    writeArgs = list(scenario = "OECD Plastics Outlook", model = "OECD Global Plastics Outlook 2022")
+  )
+
 }
