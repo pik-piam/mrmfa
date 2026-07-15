@@ -8,14 +8,17 @@
 #'
 #' @param subtype Character, scenario to extract (e.g., "businessAsUsual" for BAU).
 #' Must match a scenario name encoded in the data dimension from readPottinger2024.
+#' @param perCapita Logical. If \code{FALSE} (default), return absolute flows in
+#' Mt/yr. If \code{TRUE}, return per-capita flows in kg/cap, using the same UN
+#' World Population Prospects population as \code{\link{convertPottinger2024}}.
 #'
 #' @author Leonie Schweiger
-#' @return List with a MagPIE object of plastics flows (Mt/yr) in IAMC variables
-#' and metadata in calcOutput format.
+#' @return List with a MagPIE object of plastics flows (Mt/yr, or kg/cap if
+#' \code{perCapita = TRUE}) in IAMC variables and metadata in calcOutput format.
 #' @seealso \code{\link{readPottinger2024}}
 #' @importFrom madrat readSource
-#' @importFrom magclass getItems getItems<-
-calcPlPottinger <- function(subtype = "businessAsUsual") {
+#' @importFrom magclass getItems getItems<- mbind getYears getNames<-
+calcPlPottinger <- function(subtype = "businessAsUsual", perCapita = FALSE) {
   x <- readSource("Pottinger2024")
   scenarios <- getNames(x, dim=1)
   variables <- getNames(x, dim=2)
@@ -50,14 +53,40 @@ calcPlPottinger <- function(subtype = "businessAsUsual") {
   new_names <- iamc[variables_kept]
   getItems(x, dim = 3.2) <- as.vector(new_names)
 
+  if (!perCapita) {
+    return(list(
+      x = x,
+      weight = NULL,
+      unit = "Mt/yr",
+      description = paste(
+        "Plastics material-flow pathway 2011-2050 from Pottinger et al. (2024),",
+        "scenario:", subtype, "in IAMC variables"
+      ),
+      note = "Disaggregated from 4 Pottinger regions to ISO3 via population weighting"
+    ))
+  }
+
+  # per-capita: same UN World Population Prospects population as convertPottinger2024
+  # (estimates through 2021 + medium variant from 2022), in millions of people
+  popEstimates <- readSource("UN_PopDiv", subtype = "pop", subset = "estimates")
+  popMedium <- readSource("UN_PopDiv", subtype = "pop", subset = "medium")
+  getNames(popEstimates) <- NULL
+  getNames(popMedium) <- NULL
+  pop <- mbind(popEstimates, popMedium)
+  pop <- pop[getItems(x, dim = 1), getYears(x), ] # ISO3 countries & Pottinger years
+
+  x <- 1000 * x / pop # Mt / million people -> kg/cap
+  x[is.na(x) | is.infinite(x)] <- 0
+  getItems(x, dim = 3.2) <- paste0(as.vector(new_names), "|per capita")
+
   return(list(
     x = x,
-    weight = NULL,
-    unit = "Mt/yr",
+    weight = pop,
+    unit = "kg/cap",
     description = paste(
-      "Plastics material-flow pathway 2011-2050 from Pottinger et al. (2024),",
-      "scenario:", subtype, "in IAMC variables"
+      "Per-capita plastics material-flow pathway 2011-2050 from Pottinger et al. (2024),",
+      "scenario:", subtype, "in IAMC variables; population from UN WPP (estimates + medium)."
     ),
-    note = "Disaggregated from 4 Pottinger regions to ISO3 via population weighting"
+    note = "Population-weighted; intensive variable aggregated as weighted mean."
   ))
 }
