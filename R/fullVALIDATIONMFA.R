@@ -108,4 +108,15 @@ fullVALIDATIONMFA <- function(rev = 0) {
     writeArgs = list(model = "Stegmann et al 2022")
   )
 
+  # IEA The Future of Petrochemicals 2018 global key-thermoplastics production ----
+  calcOutput(
+    type = "PlIEA", file = valfile,
+    aggregate = FALSE, append = TRUE,
+    warnNA = FALSE, try = FALSE,
+    writeArgs = list(
+      scenario = "Reference Technology Scenario",
+      model = "IEA The Future of Petrochemicals 2018"
+    )
+  )
+
 }
