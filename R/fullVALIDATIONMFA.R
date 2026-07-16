@@ -85,13 +85,27 @@ fullVALIDATIONMFA <- function(rev = 0) {
     type = "PlOECDProjection", subtype = "total", file = valfile,
     aggregate = columnsForAggregation, append = TRUE,
     warnNA = FALSE, try = FALSE,
-    writeArgs = list(scenario = "OECD Plastics Outlook", model = "OECD Global Plastics Outlook 2022")
+    writeArgs = list(scenario = "Baseline scenario", model = "OECD Global Plastics Outlook 2022")
   )
   calcOutput(
     type = "PlOECDProjection", subtype = "perCapita", file = valfile,
     aggregate = columnsForAggregation, append = TRUE,
     warnNA = FALSE, try = FALSE,
-    writeArgs = list(scenario = "OECD Plastics Outlook", model = "OECD Global Plastics Outlook 2022")
+    writeArgs = list(scenario = "Baseline scenario", model = "OECD Global Plastics Outlook 2022")
+  )
+
+  # Stegmann et al. 2022 (PLAIA/IMAGE) plastics production & demand ----
+  calcOutput(
+    type = "PlStegmann", subtype = "total", file = valfile,
+    aggregate = columnsForAggregation, append = TRUE,
+    warnNA = FALSE, try = FALSE,
+    writeArgs = list(model = "Stegmann et al 2022")
+  )
+  calcOutput(
+    type = "PlStegmann", subtype = "perCapita", file = valfile,
+    aggregate = columnsForAggregation, append = TRUE,
+    warnNA = FALSE, try = FALSE,
+    writeArgs = list(model = "Stegmann et al 2022")
   )
 
 }
