@@ -18,13 +18,16 @@
 #' @seealso \code{\link{readStegmann2022}}
 #' @importFrom madrat readSource
 #' @importFrom magclass getItems getItems<- getNames dimSums add_dimension
-#'   collapseNames mbind
+#'   collapseNames mbind mselect
 calcPlStegmann <- function(subtype = "total") {
   if (!subtype %in% c("total", "perCapita")) {
     stop("Unknown subtype '", subtype, "'. Use 'total' or 'perCapita'.")
   }
 
-  x <- readSource("Stegmann2022")
+  # get plastics production and population variables
+  x <- readSource("Stegmann2022", subtype = "PopWeighted")
+  # the read object carries a singleton Model and a Unit sub-dimension that is not needed downstream
+  x <- collapseNames(x, collapsedim = c("Model", "Unit"))
 
   # rename the scenario codes to readable article-equivalent labels (Overview sheet)
   scenMap <- c(
