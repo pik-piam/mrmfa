@@ -1,0 +1,250 @@
+X,RegionCode,CountryCode
+Afghanistan,PAK,AFG
+Aland Islands,EU15,ALA
+Albania,EEU,ALB
+Algeria,NAF,DZA
+American Samoa,USA,ASM
+Andorra,EU15,AND
+Angola,SSA-M,AGO
+Anguilla,LAM-M,AIA
+Antarctica,LAM-M,ATA
+Antigua and Barbuda,LAM-M,ATG
+Argentina,LAM-M,ARG
+Armenia,CAS,ARM
+Aruba,LAM-M,ABW
+Australia,AUNZ,AUS
+Austria,EU15,AUT
+Azerbaijan,CAS,AZE
+Bahamas,LAM-M,BHS
+Bahrain,MEA-H,BHR
+Bangladesh,OAS-L,BGD
+Barbados,LAM-M,BRB
+Belarus,EEU-FSU,BLR
+Belgium,EU15,BEL
+Belize,LAM-L,BLZ
+Benin,SSA-L,BEN
+Bermuda,LAM-M,BMU
+Bhutan,OAS-M,BTN
+Bolivia (Plurinational State of),LAM-M,BOL
+Bonaire,LAM-M,BES
+Bosnia and Herzegovina,EEU,BIH
+Botswana,SSA-M,BWA
+Bouvet Island,EFTA,BVT
+Brazil,BRA,BRA
+British Indian Ocean Territory,EU15,IOT
+Brunei Darussalam,OAS-M,BRN
+Bulgaria,EU12-M,BGR
+Burkina Faso,SSA-L,BFA
+Burundi,SSA-L,BDI
+Cambodia,OAS-CPA,KHM
+Cameroon,SSA-L,CMR
+Canada,CAN,CAN
+Cape Verde,SSA-L,CPV
+Cayman Islands,LAM-M,CYM
+Central African Republic,SSA-L,CAF
+Chad,SSA-L,TCD
+Chile,LAM-M,CHL
+China,CHN,CHN
+Christmas Island,AUNZ,CXR
+Cocos (Keeling) Islands,AUNZ,CCK
+Colombia,LAM-M,COL
+Comoros,SSA-L,COM
+Congo,SSA-L,COG
+Cook Islands,OAS-L,COK
+Costa Rica,LAM-M,CRI
+Cote d Ivoire,SSA-L,CIV
+Croatia,EEU,HRV
+Cuba,LAM-M,CUB
+Curacao,LAM-M,CUW
+Cyprus,EU12-H,CYP
+Czech Republic,EU12-H,CZE
+Democratic People's Republic of Korea,OAS-L,PRK
+Democratic Republic of the Congo,SSA-L,COD
+Denmark,EU15,DNK
+Djibouti,SSA-L,DJI
+Dominica,LAM-M,DMA
+Dominican Republic,LAM-M,DOM
+Ecuador,LAM-M,ECU
+Egypt,NAF,EGY
+El Salvador,LAM-M,SLV
+Equatorial Guinea,SSA-M,GNQ
+Eritrea,SSA-L,ERI
+Estonia,EU12-H,EST
+Ethiopia,SSA-L,ETH
+Falkland Islands (Malvinas),EU15,FLK
+Faroe Islands,EU15,FRO
+Fiji,OAS-L,FJI
+Finland,EU15,FIN
+France,EU15,FRA
+French Guiana,LAM-M,GUF
+French Polynesia,OAS-M,PYF
+French Southern Territories,EU15,ATF
+Gabon,SSA-M,GAB
+Gambia,SSA-L,GMB
+Georgia,CAS,GEO
+Germany,EU15,DEU
+Ghana,SSA-L,GHA
+Gibraltar,EU15,GIB
+Greece,EU15,GRC
+Greenland,EU15,GRL
+Grenada,LAM-M,GRD
+Guadeloupe,LAM-M,GLP
+Guam,OAS-M,GUM
+Guatemala,LAM-L,GTM
+Guernsey,EU15,GGY
+Guinea,SSA-L,GIN
+Guinea-Bissau,SSA-L,GNB
+Guyana,LAM-M,GUY
+Haiti,LAM-L,HTI
+Heard Island and McDonald Islands,AUNZ,HMD
+Holy See (Vatican City State),EU15,VAT
+Honduras,LAM-L,HND
+Hong Kong,CHN,HKG
+Hungary,EU12-H,HUN
+Iceland,EFTA,ISL
+India,IND,IND
+Indonesia,IDN,IDN
+Iran (Islamic Republic of),MEA-M,IRN
+Iraq,MEA-M,IRQ
+Ireland,EU15,IRL
+Isle of Man,EU15,IMN
+Israel,MEA-H,ISR
+Italy,EU15,ITA
+Jamaica,LAM-M,JAM
+Japan,JPN,JPN
+Jersey,EU15,JEY
+Jordan,MEA-M,JOR
+Kazakhstan,CAS,KAZ
+Kenya,SSA-L,KEN
+Kiribati,OAS-L,KIR
+Kuwait,MEA-H,KWT
+Kyrgyzstan,CAS,KGZ
+Lao People's Democratic Republic,OAS-CPA,LAO
+Latvia,EU12-M,LVA
+Lebanon,MEA-M,LBN
+Lesotho,SSA-L,LSO
+Liberia,SSA-L,LBR
+Libya,NAF,LBY
+Liechtenstein,EU15,LIE
+Lithuania,EU12-M,LTU
+Luxembourg,EU15,LUX
+Macao,CHN,MAC
+Madagascar,SSA-L,MDG
+Malawi,SSA-L,MWI
+Malaysia,OAS-M,MYS
+Maldives,OAS-M,MDV
+Mali,SSA-L,MLI
+Malta,EU12-H,MLT
+Marshall Islands,OAS-L,MHL
+Martinique,LAM-M,MTQ
+Mauritania,SSA-L,MRT
+Mauritius,SSA-M,MUS
+Mayotte,SSA-M,MYT
+Mexico,MEX,MEX
+Micronesia (Fed. States of),OAS-L,FSM
+Monaco,EU15,MCO
+Mongolia,OAS-CPA,MNG
+Montenegro,EEU,MNE
+Montserrat,LAM-M,MSR
+Morocco,NAF,MAR
+Mozambique,SSA-L,MOZ
+Myanmar,OAS-L,MMR
+Namibia,SSA-M,NAM
+Nauru,OAS-L,NRU
+Nepal,OAS-L,NPL
+Netherlands,EU15,NLD
+New Caledonia,OAS-M,NCL
+New Zealand,AUNZ,NZL
+Nicaragua,LAM-L,NIC
+Niger,SSA-L,NER
+Nigeria,SSA-L,NGA
+Niue,OAS-L,NIU
+Norfolk Island,AUNZ,NFK
+North Macedonia,EEU,MKD
+Northern Mariana Islands,USA,MNP
+Norway,EFTA,NOR
+Oman,MEA-H,OMN
+Pakistan,PAK,PAK
+Palau,OAS-L,PLW
+Palestine,MEA-M,PSE
+Panama,LAM-M,PAN
+Papua New Guinea,OAS-L,PNG
+Paraguay,LAM-M,PRY
+Peru,LAM-M,PER
+Philippines,OAS-L,PHL
+Pitcairn,OAS-L,PCN
+Poland,EU12-H,POL
+Portugal,EU15,PRT
+Puerto Rico,USA,PRI
+Qatar,MEA-H,QAT
+Republic of Korea,KOR,KOR
+Republic of Moldova,EEU-FSU,MDA
+Reunion,SSA-M,REU
+Romania,EU12-M,ROU
+Russian Federation,RUS,RUS
+Rwanda,SSA-L,RWA
+Saint Barthelemy,LAM-M,BLM
+Saint Helena,EU15,SHN
+Saint Kitts and Nevis,LAM-M,KNA
+Saint Lucia,LAM-M,LCA
+Saint Martin (French part),LAM-M,MAF
+Saint Pierre and Miquelon,LAM-M,SPM
+Saint Vincent and the Grenadines,LAM-M,VCT
+Samoa,OAS-L,WSM
+San Marino,EU15,SMR
+Sao Tome and Principe,SSA-L,STP
+Saudi Arabia,MEA-H,SAU
+Senegal,SSA-L,SEN
+Serbia,EEU,SRB
+Seychelles,SSA-M,SYC
+Sierra Leone,SSA-L,SLE
+Singapore,OAS-M,SGP
+Sint Maarten (Dutch part),LAM-M,SXM
+Slovakia,EU12-H,SVK
+Slovenia,EU12-H,SVN
+Solomon Islands,OAS-L,SLB
+Somalia,SSA-L,SOM
+South Africa,SAF,ZAF
+South Georgia and the South Sandwich Islands,EU15,SGS
+South Sudan,SSA-L,SSD
+Spain,EU15,ESP
+Sri Lanka,OAS-M,LKA
+Sudan,SSA-L,SDN
+Suriname,LAM-M,SUR
+Svalbard and Jan Mayen,EFTA,SJM
+Swaziland,SSA-L,SWZ
+Sweden,EU15,SWE
+Switzerland,EFTA,CHE
+Syrian Arab Republic,MEA-M,SYR
+Taiwan,TWN,TWN
+Tajikistan,CAS,TJK
+Thailand,OAS-M,THA
+Timor-Leste,OAS-L,TLS
+Togo,SSA-L,TGO
+Tokelau,OAS-L,TKL
+Tonga,OAS-L,TON
+Trinidad and Tobago,LAM-M,TTO
+Tunisia,NAF,TUN
+Turkey,TUR,TUR
+Turkmenistan,CAS,TKM
+Turks and Caicos Islands,LAM-M,TCA
+Tuvalu,OAS-L,TUV
+Uganda,SSA-L,UGA
+Ukraine,EEU-FSU,UKR
+United Arab Emirates,MEA-H,ARE
+United Kingdom,EU15,GBR
+United Republic of Tanzania,SSA-L,TZA
+United States Minor Outlying Islands,USA,UMI
+United States of America,USA,USA
+United States Virgin Islands,USA,VIR
+Uruguay,LAM-M,URY
+Uzbekistan,CAS,UZB
+Vanuatu,OAS-L,VUT
+Venezuela (Bolivarian Republic of),LAM-M,VEN
+Viet Nam,OAS-CPA,VNM
+Virgin Islands (British),LAM-M,VGB
+Wallis and Futuna,OAS-L,WLF
+Western Sahara,NAF,ESH
+Yemen,MEA-M,YEM
+Zambia,SSA-L,ZMB
+Zimbabwe,SSA-L,ZWE

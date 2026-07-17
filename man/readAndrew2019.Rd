@@ -10,8 +10,8 @@ readAndrew2019(subtype)
 \item{subtype}{Material subtype. Can be "cement" or "clinker".}
 }
 \description{
-https://zenodo.org/records/14931651
-Last version update 26.02.2025
+https://zenodo.org/records/20397304
+Last version update 26.05.2026
 Dataset update from:
 Andrew, R.M., 2019. Global CO2 emissions from cement production, 1928–2018.
 Earth System Science Data 11, 1675–1710. https://doi.org/10.5194/essd-11-1675-2019.

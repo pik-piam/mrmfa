@@ -28,6 +28,7 @@ readWorldSteelDigitised <- function(subtype) {
     df <- toolCleanSteelRegions(df)
 
     x <- as.magpie(df, spatial = 1)
+    getNames(x) <- NULL
 
     return(x)
   }
@@ -40,7 +41,8 @@ readWorldSteelDigitised <- function(subtype) {
       x <- as.magpie(x)
       # convert from Mt to t
       x <- x * 1e6
-      getItems(x, dim = 3) <- "value"
+      getNames(x) <- NULL
+
       return(x)
     },
     "production" = function() {
@@ -60,6 +62,7 @@ readWorldSteelDigitised <- function(subtype) {
       # fix mislabelled data for 1991-1999 (should be DEU, but is BRG)
       x["DEU", seq(1991, 1999), ] <- x["BRG", seq(1991, 1999), ]
       x["BRG", seq(1991, 1999), ] <- NA
+
       return(x)
     },
     "productionByProcess" = function() {
@@ -274,6 +277,7 @@ readWorldSteelDigitised <- function(subtype) {
       x["LUX", seq(2000, 2008), ] <- x["BLX", seq(2000, 2008), ] * x["LUX", 1998, ] /
         (x["BEL", 1998, ] + x["LUX", 1998, ])
       x <- x["BLX", , , invert = TRUE]
+      getNames(x) <- NULL
 
       return(x)
     },
@@ -291,6 +295,8 @@ readWorldSteelDigitised <- function(subtype) {
       )
       x <- as.magpie(x)
       x <- x * 1e3 # convert from kT to T
+      getNames(x) <- NULL
+
       return(x)
     },
     "indirectTrade" = function() {

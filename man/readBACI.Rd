@@ -4,9 +4,35 @@
 \alias{readBACI}
 \title{Read BACI Trade data}
 \usage{
-readBACI(subset = "02", subtype)
+readBACI(subtype, subset)
 }
 \arguments{
+\item{subtype}{Character string specifying the scope, combination of material HS codes and category
+material HS codes:
+- "plastics_UNCTAD": plastics trade data for HS codes from UNCTAD classification into
+  primary, intermediate, manufactured, final and waste plastics
+  valid parameters for category:
+  - Plastics in primary forms
+  - Intermediate forms of plastic
+  - Intermediate manufactured plastic goods
+  - Final manufactured plastics goods
+  - Plastic waste
+- "plastics_UNEP": plastics trade data for HS codes from UNEP NGP
+  (estimated plastics mass based on estimated plastics percentages in goods)
+  valid parameters for category:
+  - Primary
+  - Application
+  - Waste
+- "steel": steel trade data from custom mapping
+  valid parameters for category:
+  - direct
+  - indirect
+  - scrap
+- "cement": cement trade data
+  valid parameters for category:
+  - cement
+  - clinker}
+
 \item{subset}{Character string specifying the HS (Harmonized System) revision of the data
 - 92
 - 02
@@ -25,7 +51,7 @@ Read BACI Trade data
 }
 \examples{
 \dontrun{
-a <- readSource(type = "BACI", subtype = "plastics_UNEP", subset = "02")
+a <- readSource(type = "BACI", subtype = "plastics_UNEP-Primary", subset = "02")
 }
 }
 \seealso{

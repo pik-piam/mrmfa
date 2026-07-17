@@ -2,12 +2,18 @@
 % Please edit documentation in R/readUNComtrade.R
 \name{readUNComtrade}
 \alias{readUNComtrade}
-\title{Read cement and clinker trade data from UN Comtrade. Get net trade (export).}
+\title{Read cement and clinker trade data from UN Comtrade.}
 \usage{
-readUNComtrade(subtype)
+readUNComtrade(subtype, subset)
 }
 \arguments{
-\item{subtype}{Material subtype. Can be "cement" or "clinker"}
+\item{subtype}{Character string specifying the scope
+- Imports
+- Exports}
+
+\item{subset}{Character string specifying the stage of trade
+- cement
+- clinker}
 }
 \description{
 United Nations Statistics Division. (n.d.). UN Comtrade Database.

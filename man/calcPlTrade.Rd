@@ -7,7 +7,8 @@
 calcPlTrade(
   category,
   flow_label = c("Exports", "Imports"),
-  source = c("UNCTAD", "BACI")
+  data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP"),
+  HS = "92"
 )
 }
 \arguments{
@@ -27,20 +28,24 @@ calcPlTrade(
   \item "Imports" - Imports
 }}
 
-\item{source}{Character; data source:
+\item{data_source}{Character; data source:
 \itemize{
   \item "UNCTAD" - UNCTAD (trade flows by time and region)
-  \item "BACI" - BACI (trade flows by time, region, sector and polymer)
+  \item "BACI_UNCTAD" - BACI with UNCTAD HS codes (trade flows by time and region)
+  \item "BACI_UNEP" - BACI with UNEP HS codes (trade flows by time, region, sector and polymer)
 }}
+
+\item{HS}{Character string specifying the year of the HS (Harmonized System) revision of the data
+- 92
+- 02
+- 17
+- 22}
 }
 \description{
-Reads plastics trade (exports or imports) data at regional level,
-and backcasts data to 1950 to fill missing years.
-Note that aggregation to regions is done in the calc functions called by this function,
-as the source BACI has bilateral trade data that allows to filter out intraregional trade
-by a custom aggregation function.
-Therefore, we operate already at the regional aggregation level here (isocountries=FALSE).
+Reads plastics trade data and backcasts data to 1950 to fill missing years.
+Note that as the source BACI has bilateral trade data that allows to filter out
+intraregional trade, aggregation is done by a custom aggregation function for this source.
 }
 \author{
-Qianzhi Zhang
+Qianzhi Zhang, Leonie Schweiger
 }

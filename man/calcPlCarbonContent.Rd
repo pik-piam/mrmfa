@@ -2,12 +2,15 @@
 % Please edit documentation in R/calcPlCarbonContent.R
 \name{calcPlCarbonContent}
 \alias{calcPlCarbonContent}
-\title{Returns the carbon contents of different plastic types/polymers}
+\title{Returns the carbon contents of different plastic types/polymers or HVCs}
 \usage{
-calcPlCarbonContent()
+calcPlCarbonContent(subtype = "plastics")
+}
+\arguments{
+\item{subtype}{either plastics or HVC}
 }
 \description{
-Returns the carbon contents of different plastic types/polymers
+Returns the carbon contents of different plastic types/polymers or HVCs
 }
 \author{
 Leonie Schweiger

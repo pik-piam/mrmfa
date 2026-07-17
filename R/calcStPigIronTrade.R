@@ -13,7 +13,7 @@ calcStPigIronTrade <- function(subtype) {
   tradeData <- calcOutput("StPigIronPreliminaryData", subtype = subtype, aggregate = FALSE)
   production <- calcOutput("StPigIronPreliminaryData", subtype = "production", aggregate = FALSE)
 
-  final <- toolBackcastByReference2D(tradeData, production)
+  final <- toolBackcastByReference(tradeData, production)
 
   result <- list(
     x = final,

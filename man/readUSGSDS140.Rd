@@ -3,10 +3,15 @@
 \name{readUSGSDS140}
 \alias{readUSGSDS140}
 \title{Read cement statistic data sheet from USGS.
-It combines historic data from USGS sources. Supply-Demand Statistics.
-Get net trade (= exports) of cement (which includes clinker trade).}
+USGS DS140 combines historic data from USGS sources. Supply-Demand Statistics.
+Imports pre-1950 include clinker. Export data include hydraulic cement and clinker.}
 \usage{
-readUSGSDS140()
+readUSGSDS140(subtype)
+}
+\arguments{
+\item{subtype}{Character string specifying the column to be read. Supported are:
+- Imports
+- Exports}
 }
 \description{
 U.S. Geological Survey, 2020, Cement statistics, in Kelly, T.D., and Matos, G.R., comps.,

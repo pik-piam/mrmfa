@@ -4,11 +4,14 @@
 \alias{readGapminder}
 \title{Read Gapminder population data.}
 \usage{
-readGapminder()
+readGapminder(subtype)
+}
+\arguments{
+\item{subtype}{Regional scope of the data. Either "countries" or "global".}
 }
 \description{
 Read Gapminder population data from 1800-2100 in yearly resolution.
 }
 \author{
-Merlin Jo Hosak
+Merlin Jo Hosak, Bennet Weiss
 }

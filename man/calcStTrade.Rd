@@ -2,26 +2,51 @@
 % Please edit documentation in R/calcStTrade.R
 \name{calcStTrade}
 \alias{calcStTrade}
-\title{Get steel trade data}
+\title{Split World Steel trade into bilateral trade by using proxy bilateral BACI trade data
+and aggregate via a custom aggregation function to filter out intra-regional trade
+(since we don't have a list with all HS codes and corresponding steel shares,
+BACI trade data cannot be used directly, since it does not cover the full scope)}
 \usage{
-calcStTrade(subtype = "imports")
+calcStTrade(subtype, category, HS = "92", include_intra_regional = FALSE)
 }
 \arguments{
-\item{subtype}{Type of trade data to retrieve. Options: "imports", "exports",
-"scrapImports", "scrapExports", "indirectImports", "indirectExports"}
+\item{subtype}{Character string specifying the scope
+- imports
+- exports}
+
+\item{category}{Character string specifying the stage of trade
+- direct
+- indirect
+- scrap}
+
+\item{HS}{Character string specifying the year of the HS (Harmonized System) revision of the data
+- 92
+- 02
+- 17
+- 22}
+
+\item{include_intra_regional}{bool if intra-regional trade should be included}
 }
 \value{
-Steel trade across all regions from 1900-2022 as magpie within
-list of metadata.
+magpie object of the aggregated trade data
 }
 \description{
-Calc steel trade from WorldSteel datasets. Can be aggregated to regions
-via calcOutput aggregate parameter. Uses
-\link{readWorldSteelDigitised} and
-\link{readWorldSteelDatabase} datasets, the former for
-historic, the latter for current data. Further, uses
-\link{calcStProduction} to backcast historic trade data.
+Split World Steel trade into bilateral trade by using proxy bilateral BACI trade data
+and aggregate via a custom aggregation function to filter out intra-regional trade
+(since we don't have a list with all HS codes and corresponding steel shares,
+BACI trade data cannot be used directly, since it does not cover the full scope)
+}
+\examples{
+\dontrun{
+a <- calcOutput(
+  type = "StTrade", subtype = "imports",
+  category = "direct", HS = "02"
+)
+}
+}
+\seealso{
+[calcOutput()]
 }
 \author{
-Merlin Jo Hosak
+Leonie Schweiger
 }

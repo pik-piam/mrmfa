@@ -7,7 +7,7 @@
 calcCeBinderProduction(subtype)
 }
 \arguments{
-\item{subtype}{Material subtype. Can be "cement or "clinker".}
+\item{subtype}{Material subtype. Can be "cement" or "clinker".}
 }
 \description{
 Calculates global cement production as from Andrew's 2019 paper.
