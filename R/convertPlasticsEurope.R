@@ -9,10 +9,10 @@
 #' }
 convertPlasticsEurope <- function(x) {
 
-  # GDP weights for 2005-2023
+  # disaggregate to iso3 country level by GDP weighting
   region_map <- toolGetMapping("regionmappingPlasticsEurope.csv", type = "regional", where = "mrmfa") %>%
     filter(.data$PlasticsEuropeReg != "Rest")
-  GDP <- calcOutput("CoGDP1900To2150", scenario = "SSP2", perCapita = FALSE, aggregate = FALSE)[, paste0("y", 2005:2023), ]
+  GDP <- calcOutput("CoGDP", perCapita = FALSE, aggregate = FALSE)[, getYears(x), ]
   x <- toolAggregate(x,
                      rel = region_map, dim = 1,
                      from = "PlasticsEuropeReg", to = "CountryCode",

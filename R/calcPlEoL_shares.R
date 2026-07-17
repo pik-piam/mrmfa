@@ -52,7 +52,7 @@ calcPlEoL_shares <- function(subtype) {
   # - US data (1960-2018, fill gaps by linear interpolation)
   # - calculate shares
   # ---------------------------------------------------------------------------
-  eu <- readSource("PlasticsEurope", subtype = "PlasticEoL_EU", convert = FALSE) %>%
+  eu <- readSource("PlasticsEurope", subtype = "EoL_EU", convert = FALSE) %>%
     as.data.frame()
   cn_raw <- readSource("China_PlasticEoL", convert = FALSE)
   cn <- time_interpolate(cn_raw, interpolated_year = 1978:2021, integrate_interpolated_years = TRUE) %>%

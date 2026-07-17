@@ -6,9 +6,9 @@
 #'
 #' @param subtype Character string specifying the dataset and scope.
 #'        Valid formats include:
-#'        - "PlasticProduction_region" (plastic production in Mt, dimensions: region, year)
-#'        - "PlasticShare_EU" (plastic demand shares (%) by use category in the EU, dimensions: category, year)
-#'        - "PlasticEoL_EU" (plastic waste treatment in the EU in Mt, dimensions: year, treatment)
+#'        - "Production_region" (plastic production in Mt, dimensions: region, year)
+#'        - "SectorShare_EU" (plastic demand shares (%) by use category in the EU, dimensions: category, year)
+#'        - "EoL_EU" (plastic waste treatment in the EU in Mt, dimensions: year, treatment)
 #'
 #' @return magpie object of the Plastics Europe data
 #'
@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- readSource(type = "PlasticsEurope", subtype = "PlasticProduction_region")
+#' a <- readSource(type = "PlasticsEurope", subtype = "Production_region")
 #' }
 #' @importFrom readxl read_excel
 #' @importFrom dplyr select filter
@@ -29,15 +29,15 @@ readPlasticsEurope <- function(subtype) {
   # ---------------------------------------------------------------------------
   # Map subtype to Excel file parameters
   params <- switch(subtype,
-    "PlasticProduction_region" = list(
+    "Production_region" = list(
       sheet  = "PlasticProduction_region",
       range  = "A1:J20"
     ),
-    "PlasticShare_EU" = list(
+    "SectorShare_EU" = list(
       sheet  = "PlasticShare_EU",
       range  = "A1:I20"
     ),
-    "PlasticEoL_EU" = list(
+    "EoL_EU" = list(
       sheet  = "PlasticEoL_EU",
       range  = "A1:D16"
     ),
@@ -56,21 +56,21 @@ readPlasticsEurope <- function(subtype) {
   # ---------------------------------------------------------------------------
   # Select and filter columns based on subtype
   df <- switch(subtype,
-    "PlasticProduction_region" = raw_df %>%
+    "Production_region" = raw_df %>%
       pivot_longer(
         cols = -"Year",
         names_to = "Region",
         values_to = "Production"
       ) %>%
       filter(.data$Region != "Total Production (Mt)"),
-    "PlasticShare_EU" = raw_df %>%
+    "SectorShare_EU" = raw_df %>%
       pivot_longer(
         cols = -"Year",
         names_to = "Type",
         values_to = "Share"
       ) %>%
       filter(.data$Type != "Total Demand (Mt)"),
-    "PlasticEoL_EU" = raw_df %>%
+    "EoL_EU" = raw_df %>%
       pivot_longer(
         cols = -"Year",
         names_to = "EoL",
@@ -83,14 +83,14 @@ readPlasticsEurope <- function(subtype) {
   # Convert to magpie object and clean missing values
   # ---------------------------------------------------------------------------
   magpie_data <- switch(subtype,
-    "PlasticProduction_region" = as.magpie(df, temporal = 1, spatial = 2),
-    "PlasticShare_EU" = as.magpie(df, temporal = 1),
-    "PlasticEoL_EU" = as.magpie(df, temporal = 1),
+    "Production_region" = as.magpie(df, temporal = 1, spatial = 2),
+    "SectorShare_EU" = as.magpie(df, temporal = 1),
+    "EoL_EU" = as.magpie(df, temporal = 1),
     stop("Unsupported subtype: ", subtype)
   )
 
   magpie_data[is.na(magpie_data)] <- 0
-  if (subtype != "PlasticProduction_region") {
+  if (subtype != "Production_region") {
     getItems(magpie_data, dim = 1) <- "EUR"
   }
   getComment(magpie_data) <- subtype
