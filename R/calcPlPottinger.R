@@ -76,7 +76,7 @@ calcPlPottinger <- function(subtype = "businessAsUsual", perCapita = FALSE) {
   pop <- pop[getItems(x, dim = 1), getYears(x), ] # ISO3 countries & Pottinger years
 
   x <- 1000 * x / pop # Mt / million people -> kg/cap
-  x[is.na(x) | is.infinite(x)] <- 0
+  x[!is.finite(x)] <- NA
   getItems(x, dim = 3.2) <- paste0(as.vector(new_names), "|per capita")
 
   return(list(

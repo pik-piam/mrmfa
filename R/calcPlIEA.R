@@ -80,6 +80,7 @@ calcPlIEA <- function(subtype) {
       "at the global level under the IAMC variables Production|Chemicals|Plastics",
       "and Material Demand|Chemicals|Plastics.; population from UN WPP (estimates + medium)."
     ),
+    isocountries = FALSE,
     note = "Population-weighted; intensive variable aggregated as weighted mean."
   ))
 
