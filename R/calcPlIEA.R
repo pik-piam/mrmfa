@@ -69,6 +69,7 @@ calcPlIEA <- function(subtype) {
   out <- 1000 * out / pop # Mt / million people -> kg/cap
   out[is.na(out) | is.infinite(out)] <- 0
   getItems(out, dim = 3) <- paste0(getItems(out, dim = 3), "|per capita")
+  getItems(out, dim = 1) <- "GLO"
 
   return(list(
     x = out,
