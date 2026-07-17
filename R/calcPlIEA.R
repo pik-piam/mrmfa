@@ -9,13 +9,26 @@
 #' \code{Production|Chemicals|Plastics} and \code{Material Demand|Chemicals|Plastics}.
 #' The data are global only and are not disaggregated to countries or regions.
 #'
+#' @param subtype Character. \code{"total"} (default) returns absolute production
+#' and demand in Mt/yr; \code{"perCapita"} returns demand per capita in kg/cap,
+#' using Stegmann's own Population variable.
+#'
 #' @author Leonie Schweiger
 #' @return List with a global-only MagPIE object of plastics production (Mt/yr) in
 #' IAMC variables.
 #' @importFrom madrat readSource
 #' @importFrom magclass setNames mbind getItems getItems<-
-calcPlIEA <- function() {
+calcPlIEA <- function(subtype) {
+  if (!subtype %in% c("total", "perCapita")) {
+    stop("Unknown subtype '", subtype, "'. Use 'total' or 'perCapita'.")
+  }
+
   x <- readSource("IEA_Petrochem", subtype = "plastics_All", convert = FALSE)
+
+  # readIEA_Petrochem runs make.names() on the header row, which prefixes the
+  # numeric year columns with "X" (e.g. 1980 -> X1980). For the plastics subtype
+  # these become the temporal dimension, so normalise to proper year format.
+  getYears(x) <- as.integer(sub("^[Xy]", "", getYears(x)))
 
   # get the total production over all polymers
   x <- dimSums(x, dim = 3, na.rm = TRUE)
@@ -27,20 +40,47 @@ calcPlIEA <- function() {
     setNames(x, "Material Demand|Chemicals|Plastics")
   )
 
+  if (subtype == "total") {
+    return(list(
+      x = out,
+      weight = NULL,
+      unit = "Mt/yr",
+      description = paste(
+        "Global production of key thermoplastics 1980-2050 from IEA 'The Future of",
+        "Petrochemicals' (2018), Figure 4.2 (Reference Technology Scenario), reported",
+        "at the global level under the IAMC variables Production|Chemicals|Plastics",
+        "and Material Demand|Chemicals|Plastics."
+      ),
+      isocountries = FALSE,
+      note = paste(
+        "Global only; IEA 'key thermoplastics' is a subset of all plastics",
+        "(excludes thermosets and other polymers)."
+      )
+    ))
+  }
+
+  popEstimates <- readSource("UN_PopDiv", subtype = "pop", subset = "estimates")
+  popMedium <- readSource("UN_PopDiv", subtype = "pop", subset = "medium")
+  getNames(popEstimates) <- NULL
+  getNames(popMedium) <- NULL
+  pop <- dimSums(mbind(popEstimates, popMedium), dim = 1)
+  pop <- pop[, getYears(out), ]
+
+  out <- 1000 * out / pop # Mt / million people -> kg/cap
+  out[is.na(out) | is.infinite(out)] <- 0
+  getItems(out, dim = 3) <- paste0(getItems(out, dim = 3), "|per capita")
+
   return(list(
     x = out,
-    weight = NULL,
-    unit = "Mt/yr",
+    weight = pop,
+    unit = "kg/cap",
     description = paste(
-      "Global production of key thermoplastics 1980-2050 from IEA 'The Future of",
+      "Per-capita Global production of key thermoplastics 1980-2050 from IEA 'The Future of",
       "Petrochemicals' (2018), Figure 4.2 (Reference Technology Scenario), reported",
       "at the global level under the IAMC variables Production|Chemicals|Plastics",
-      "and Material Demand|Chemicals|Plastics."
+      "and Material Demand|Chemicals|Plastics.; population from UN WPP (estimates + medium)."
     ),
-    isocountries = FALSE,
-    note = paste(
-      "Global only; IEA 'key thermoplastics' is a subset of all plastics",
-      "(excludes thermosets and other polymers)."
-    )
+    note = "Population-weighted; intensive variable aggregated as weighted mean."
   ))
+
 }

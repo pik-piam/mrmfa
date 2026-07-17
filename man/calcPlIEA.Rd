@@ -4,7 +4,12 @@
 \alias{calcPlIEA}
 \title{IEA 2018 global plastics production in IAMC variables}
 \usage{
-calcPlIEA()
+calcPlIEA(subtype)
+}
+\arguments{
+\item{subtype}{Character. \code{"total"} (default) returns absolute production
+and demand in Mt/yr; \code{"perCapita"} returns demand per capita in kg/cap,
+using Stegmann's own Population variable.}
 }
 \value{
 List with a global-only MagPIE object of plastics production (Mt/yr) in
