@@ -16,7 +16,6 @@
 #' @return List with a MagPIE object of plastics flows (Mt/yr, or kg/cap if
 #' \code{perCapita = TRUE}) in IAMC variables and metadata in calcOutput format.
 #' @seealso \code{\link{readPottinger2024}}
-#' @importFrom madrat readSource
 #' @importFrom magclass getItems getItems<- mbind getYears getNames<-
 calcPlPottinger <- function(subtype = "businessAsUsual", perCapita = FALSE) {
   x <- readSource("Pottinger2024")

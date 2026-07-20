@@ -16,7 +16,6 @@
 #' @author Leonie Schweiger
 #' @return List with a global-only MagPIE object of plastics production (Mt/yr) in
 #' IAMC variables.
-#' @importFrom madrat readSource
 #' @importFrom magclass setNames mbind getItems getItems<-
 calcPlIEA <- function(subtype) {
   if (!subtype %in% c("total", "perCapita")) {
@@ -67,7 +66,7 @@ calcPlIEA <- function(subtype) {
   pop <- pop[, getYears(out), ]
 
   out <- 1000 * out / pop # Mt / million people -> kg/cap
-  out[is.na(out) | is.infinite(out)] <- 0
+  out[!is.finite(out)] <- NA
   getItems(out, dim = 3) <- paste0(getItems(out, dim = 3), "|per capita")
   getItems(out, dim = 1) <- "GLO"
 

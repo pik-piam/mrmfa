@@ -10,7 +10,6 @@
 #' @author Leonie Schweiger
 #' @return Total polymer consumption (Mt/yr)
 #' @seealso \code{\link{readGaoCabrera2025}}, \code{\link{calcPlPottinger}}
-#' @importFrom madrat readSource
 #' @importFrom magclass dimSums getNames<-
 calcPlGaoCabrera <- function() {
   x <- readSource("GaoCabrera2025")

@@ -12,7 +12,6 @@
 #' in IAMC variables and metadata in calcOutput format.
 #' @seealso \code{\link{readGeyer}}, \code{\link{calcPlPottinger}},
 #' \code{\link{calcPlGaoCabrera}}
-#' @importFrom madrat readSource
 #' @importFrom magclass setNames mbind
 calcPlGeyer <- function() {
   x <- readSource("Geyer", subtype = "Prod_1950-2015", convert = FALSE)

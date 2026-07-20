@@ -16,7 +16,6 @@
 #' kg/cap if \code{subtype = "perCapita"}) in IAMC variables and metadata in
 #' calcOutput format.
 #' @seealso \code{\link{readStegmann2022}}
-#' @importFrom madrat readSource
 #' @importFrom magclass getItems getItems<- getNames dimSums add_dimension
 #'   collapseNames mbind mselect
 calcPlStegmann <- function(subtype = "total") {
