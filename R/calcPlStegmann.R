@@ -15,7 +15,7 @@
 #' @return List with a MagPIE object of plastics production/demand (Mt/yr, or
 #' kg/cap if \code{subtype = "perCapita"}) in IAMC variables and metadata in
 #' calcOutput format.
-#' @seealso \code{\link{readStegmann2022}}
+#' @seealso \code{\link[mrindustry]{readStegmann2022}}
 #' @importFrom magclass getItems getItems<- getNames dimSums add_dimension
 #'   collapseNames mbind mselect
 calcPlStegmann <- function(subtype = "total") {

@@ -24,7 +24,7 @@ flows (PJ/yr) are summed to a total and converted to mass using the lower
 heating value of plastics of 35 GJ/t (Mt/yr = PJ/yr / 35).
 }
 \seealso{
-\code{\link{readStegmann2022}}
+\code{\link[mrindustry]{readStegmann2022}}
 }
 \author{
 Leonie Schweiger
