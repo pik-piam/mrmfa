@@ -128,4 +128,18 @@ fullVALIDATIONMFA <- function(rev = 0) {
     )
   )
 
+  # Zanon-Zotin et al. 2024 global HVC production scenarios (COFFEE 1.5) ----
+  calcOutput(
+    type = "PlZanonZotin2024", subtype = "total", file = valfile,
+    aggregate = FALSE, append = TRUE,
+    warnNA = FALSE, try = FALSE,
+    writeArgs = list(model = "COFFEE 1.5")
+  )
+  calcOutput(
+    type = "PlZanonZotin2024", subtype = "perCapita", file = valfile,
+    aggregate = FALSE, append = TRUE,
+    warnNA = FALSE, try = FALSE,
+    writeArgs = list(model = "COFFEE 1.5")
+  )
+
 }
