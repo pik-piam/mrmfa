@@ -18,7 +18,7 @@
 #' retrieveData("VALIDATIONMFA")
 #' }
 #'
-fullVALIDATIONMFA <- function(rev = 0) {
+fullVALIDATIONMFA <- function(rev = 0, runSections = NULL) {
 
   # get region mappings for aggregation ----
   # Determines all regions data should be aggregated to by examining the columns
@@ -50,96 +50,133 @@ fullVALIDATIONMFA <- function(rev = 0) {
   # validation data ----
   valfile <- "validation.mif"
 
-  # Pottinger 2024 plastics material flows (all scenarios) ----
-  calcOutput(
-    type = "PlPottinger", subtype = "all", file = valfile,
-    aggregate = columnsForAggregation, append = FALSE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(model = "Pottinger et al 2024")
-  )
-  calcOutput(
-    type = "PlPottinger", subtype = "all", perCapita = TRUE, file = valfile,
-    aggregate = columnsForAggregation, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(model = "Pottinger et al 2024")
-  )
+  # prepare section selector
+  validSections <- c("steel", "cement", "plastic")
 
-  # Gao & Cabrera-Serrenho 2025 apparent polymer consumption ----
-  calcOutput(
-    type = "PlGaoCabrera", file = valfile,
-    aggregate = columnsForAggregation, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(scenario = "historical", model = "Gao & Cabrera-Serrenho 2025")
-  )
+  if (is.null(runSections)) {
+    runSections <- validSections
+  } else {
+    bad <- setdiff(runSections, validSections)
+    if (length(bad)) stop("Invalid sections: ", paste(bad, collapse = ", "))
+  }
 
-  # Geyer et al. 2017 global plastics production ----
-  calcOutput(
-    type = "PlGeyer", file = valfile,
-    aggregate = FALSE, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(scenario = "historical", model = "Geyer et al 2017")
-  )
+  runSection <- function(name) name %in% runSections
 
-  # OECD Global Plastics Outlook 2022 projections ----
-  calcOutput(
-    type = "PlOECDProjection", subtype = "total", file = valfile,
-    aggregate = columnsForAggregation, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(scenario = "Baseline scenario", model = "OECD Global Plastics Outlook 2022")
-  )
-  calcOutput(
-    type = "PlOECDProjection", subtype = "perCapita", file = valfile,
-    aggregate = columnsForAggregation, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(scenario = "Baseline scenario", model = "OECD Global Plastics Outlook 2022")
-  )
+  if (!length(runSections)) {
+    message("fullMFA: no sections selected; nothing done.")
+    return(invisible(NULL))
+  }
 
-  # Stegmann et al. 2022 (PLAIA/IMAGE) plastics production & demand ----
-  calcOutput(
-    type = "PlStegmann", subtype = "total", file = valfile,
-    aggregate = columnsForAggregation, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(model = "Stegmann et al 2022")
-  )
-  calcOutput(
-    type = "PlStegmann", subtype = "perCapita", file = valfile,
-    aggregate = columnsForAggregation, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(model = "Stegmann et al 2022")
-  )
+  if (runSection("steel")) {}
 
-  # IEA The Future of Petrochemicals 2018 global key-thermoplastics production ----
-  calcOutput(
-    type = "PlIEA", subtype = "total", file = valfile,
-    aggregate = FALSE, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(
-      scenario = "Reference Technology Scenario",
-      model = "IEA The Future of Petrochemicals 2018"
+  if (runSection("cement")) {}
+
+  if (runSection("plastic")) {
+    # Pottinger 2024 plastics material flows (all scenarios) ----
+    calcOutput(
+      type = "PlPottinger", subtype = "all", file = valfile,
+      aggregate = columnsForAggregation, append = FALSE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "Pottinger et al 2024")
     )
-  )
-  calcOutput(
-    type = "PlIEA", subtype = "perCapita", file = valfile,
-    aggregate = FALSE, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(
-      scenario = "Reference Technology Scenario",
-      model = "IEA The Future of Petrochemicals 2018"
+    calcOutput(
+      type = "PlPottinger", subtype = "all", perCapita = TRUE, file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "Pottinger et al 2024")
     )
-  )
 
-  # Zanon-Zotin et al. 2024 global HVC production scenarios (COFFEE 1.5) ----
-  calcOutput(
-    type = "PlZanonZotin2024", subtype = "total", file = valfile,
-    aggregate = FALSE, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(model = "COFFEE 1.5")
-  )
-  calcOutput(
-    type = "PlZanonZotin2024", subtype = "perCapita", file = valfile,
-    aggregate = FALSE, append = TRUE,
-    warnNA = FALSE, try = FALSE,
-    writeArgs = list(model = "COFFEE 1.5")
-  )
+    # Gao & Cabrera-Serrenho 2025 apparent polymer consumption ----
+    calcOutput(
+      type = "PlGaoCabrera", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(scenario = "historical", model = "Gao & Cabrera-Serrenho 2025")
+    )
+
+    # Geyer et al. 2017 global plastics production ----
+    calcOutput(
+      type = "PlGeyer", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(scenario = "historical", model = "Geyer et al 2017")
+    )
+
+    # OECD Global Plastics Outlook 2022 projections ----
+    calcOutput(
+      type = "PlOECDProjection", subtype = "total", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(scenario = "Baseline scenario", model = "OECD Global Plastics Outlook 2022")
+    )
+    calcOutput(
+      type = "PlOECDProjection", subtype = "perCapita", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(scenario = "Baseline scenario", model = "OECD Global Plastics Outlook 2022")
+    )
+
+    # Stegmann et al. 2022 (PLAIA/IMAGE) plastics production & demand ----
+    calcOutput(
+      type = "PlStegmann", subtype = "total", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "Stegmann et al 2022")
+    )
+    calcOutput(
+      type = "PlStegmann", subtype = "perCapita", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "Stegmann et al 2022")
+    )
+
+    # IEA The Future of Petrochemicals 2018 global key-thermoplastics production ----
+    calcOutput(
+      type = "PlIEA", subtype = "total", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(
+        scenario = "Reference Technology Scenario",
+        model = "IEA The Future of Petrochemicals 2018"
+      )
+    )
+    calcOutput(
+      type = "PlIEA", subtype = "perCapita", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(
+        scenario = "Reference Technology Scenario",
+        model = "IEA The Future of Petrochemicals 2018"
+      )
+    )
+
+    # Zanon-Zotin et al. 2024 global HVC production scenarios (COFFEE 1.5) ----
+    calcOutput(
+      type = "PlZanonZotin2024", subtype = "total", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "COFFEE 1.5")
+    )
+    calcOutput(
+      type = "PlZanonZotin2024", subtype = "perCapita", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "COFFEE 1.5")
+    )
+
+    # Fritzeen et al. 2023 global plastics production scenarios (GCAM) ----
+    calcOutput(
+      type = "PlFritzeen2023", subtype = "total", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "GCAM 5.4")
+    )
+    calcOutput(
+      type = "PlFritzeen2023", subtype = "perCapita", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "GCAM 5.4")
+    )
+  }
 
 }

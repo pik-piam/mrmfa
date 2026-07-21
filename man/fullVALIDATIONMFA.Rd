@@ -4,7 +4,7 @@
 \alias{fullVALIDATIONMFA}
 \title{Generate validation data for the REMIND MFA}
 \usage{
-fullVALIDATIONMFA(rev = 0)
+fullVALIDATIONMFA(rev = 0, runSections = NULL)
 }
 \arguments{
 \item{rev}{Unused parameter, but required by \code{madrat}.}
