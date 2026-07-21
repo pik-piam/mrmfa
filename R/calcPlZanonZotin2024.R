@@ -52,6 +52,7 @@ calcPlZanonZotin2024 <- function(subtype = "total") {
   # per-capita demand: divide by SSP2 population
   pop <- calcOutput("CoPopulation", scenarios = "SSP2")
   pop <- dimSums(pop, dim = 1)
+  getItems(pop, dim = 1) <- "GLO"
   pop <- pop[, getYears(hvc), ]
 
   perCap <- hvc / pop * 1e9 # Mt/cap -> kg/cap
