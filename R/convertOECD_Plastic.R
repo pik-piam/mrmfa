@@ -11,7 +11,7 @@
 #' a <- convertOECD_Plastic(x)
 #' }
 #'
-#' @importFrom magclass where
+#' @importFrom magclass where getYears
 #' @importFrom magpiesets findset
 #' @importFrom dplyr filter
 convertOECD_Plastic <- function(x) {
@@ -81,6 +81,17 @@ convertOECD_Plastic <- function(x) {
       rel = region_map, dim = 1,
       from = "OECDPlasticReg", to = "CountryCode",
       weight = GDP[unique(region_map$CountryCode), , ]
+    )
+  } else if (subtype %in% c("Use_1980-2060_projection", "Pop_2019-2060_projection")) {
+    # OECD Global Plastics Outlook 2022 projections: disaggregate the short-labelled
+    # OECD-Outlook regions to ISO countries using population (SSP2) weights.
+    pop <- calcOutput("CoPopulation", scenarios = "SSP2", aggregate = FALSE)
+    region_map <- toolGetMapping("regionmappingOECDPlasticProjections.csv", type = "regional", where = "mrmfa") %>%
+      filter(.data$OECDPlasticProjReg != "rest")
+    x <- toolAggregate(x,
+      rel = region_map, dim = 1,
+      from = "OECDPlasticProjReg", to = "CountryCode",
+      weight = pop[unique(region_map$CountryCode), getYears(x), ]
     )
   } else {
     # -------------------------------------------------------------------------
