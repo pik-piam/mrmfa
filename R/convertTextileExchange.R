@@ -32,7 +32,8 @@ convertTextileExchange <- function(x) {
   # ChemicalTotal does not reach the share year (2024), so use its latest available
   # year and align it to the share year.
   chem <- calcOutput("ChemicalTotal", aggregate = FALSE)
-  chem <- setYears(chem[unique(map$CountryCode), tail(getYears(chem), 1), ], getYears(x))
+  chem <- toolInterpolate(chem, union(getYears(chem), getYears(x)), extrapolate = TRUE)
+  chem <- chem[,getYears(x),]
   getNames(chem) <- NULL
 
   x <- toolAggregate(x,
