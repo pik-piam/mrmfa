@@ -6,7 +6,7 @@ calcPlPlasticsEurope <- function() {
   # ---------------------------------------------------------------------------
   # Read source data
   # ---------------------------------------------------------------------------
-  x <- readSource("PlasticsEurope", subtype = "PlasticProduction_region")
+  x <- readSource("PlasticsEurope", subtype = "Production_region")
 
   # ---------------------------------------------------------------------------
   # Return packaged output
