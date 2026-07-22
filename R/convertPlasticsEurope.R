@@ -9,15 +9,19 @@
 #' }
 convertPlasticsEurope <- function(x) {
 
-  # disaggregate to iso3 country level by GDP weighting
+  # disaggregate to iso3 country level by chemical energy consumption weighting
+  # Countries mapped to "Rest" are outside PlasticsEurope's 8 reporting regions
+  # (e.g. Western Balkans, Georgia). They are intentionally dropped here and
+  # filled with 0 production below, since PlasticsEurope does not cover them.
   region_map <- toolGetMapping("regionmappingPlasticsEurope.csv", type = "regional", where = "mrmfa") %>%
     filter(.data$PlasticsEuropeReg != "Rest")
-  GDP <- calcOutput("CoGDP", perCapita = FALSE, aggregate = FALSE)[, getYears(x), ]
+  chem <- calcOutput("ChemicalTotal", aggregate = FALSE)
+  chem <- toolInterpolate(chem, union(getYears(chem), getYears(x)), extrapolate = TRUE)
   x <- toolAggregate(x,
                      rel = region_map, dim = 1,
                      from = "PlasticsEuropeReg", to = "CountryCode",
-                     weight = GDP[unique(region_map$CountryCode), , ])
-  x <- toolCountryFill(x, fill = 0)
+                     weight = chem[unique(region_map$CountryCode), getYears(x), ])
+  x <- toolCountryFill(x, fill = 0, verbosity = 2)
 
   return(x)
 }

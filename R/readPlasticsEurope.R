@@ -30,15 +30,15 @@ readPlasticsEurope <- function(subtype) {
   # Map subtype to Excel file parameters
   params <- switch(subtype,
     "Production_region" = list(
-      sheet  = "PlasticProduction_region",
+      sheet  = "Production_region",
       range  = "A1:J20"
     ),
     "SectorShare_EU" = list(
-      sheet  = "PlasticShare_EU",
+      sheet  = "SectorShare_EU",
       range  = "A1:I20"
     ),
     "EoL_EU" = list(
-      sheet  = "PlasticEoL_EU",
+      sheet  = "EoL_EU",
       range  = "A1:D16"
     ),
     stop("Invalid subtype: ", subtype)
