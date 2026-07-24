@@ -43,13 +43,6 @@ calcPlProduction <- function() {
   plastics <- prep(calcOutput("PlPlasticsEurope",  aggregate = FALSE), "Plastics")
 
   # ---------------------------------------------------------------------------
-  # Fibre only starts in 2020, one year after the OECD reference ends (2019).
-  # Assume fibre 2019 = fibre 2020 so it overlaps the OECD reference.
-  # ---------------------------------------------------------------------------
-  fibreFirstYear <- min(getYears(fibre, as.integer = TRUE))
-  fibre <- mbind(setYears(fibre[, fibreFirstYear, ], "y2019"), fibre)
-
-  # ---------------------------------------------------------------------------
   # Build the two backcasting references (total plastics trend)
   # ---------------------------------------------------------------------------
   oecdTotal <- readSource("OECD_Plastic", subtype = "Use_1990-2019_region")

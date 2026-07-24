@@ -14,14 +14,27 @@
 #' \dontrun{
 #' a <- calcOutput("PlSyntheticFibre")
 #' }
-#' @importFrom magclass dimSums collapseDim setYears getItems getYears new.magpie
+#' @importFrom magclass dimSums collapseDim setYears getItems getYears new.magpie magpiesort
 #' @export
 calcPlSyntheticFibre <- function() {
-  # global synthetic fibre production per year (sum over the three fibre types)
-  total <- dimSums(
-    readSource("TextileExchange", subtype = "timeseries_by_type", convert = FALSE),
-    dim = 3
+
+  # read source and interpolate missing years
+  data <- readSource("TextileExchange", subtype = "timeseries_by_type", convert = FALSE) %>% magpiesort()
+
+  data_years <- getYears(data, as.integer=TRUE)
+  interpolated <- toolInterpolate(
+    data,
+    years = seq(data_years[1], data_years[length(data_years)], 1),
+    type = "linear"
   )
+  # backcast missing years by oecd (first historic years differ between fibre types)
+  oecdTotal <- dimSums(readSource("OECD_Plastic", subtype = "Use_1990-2019_region"), dim = 1)
+  getItems(oecdTotal, dim=3) <- NULL
+  getRegions(oecdTotal) <- "GLO"
+  extrapolated <- toolBackcastByReference(interpolated, oecdTotal)
+
+  # global synthetic fibre production per year (sum over the three fibre types)
+  total <- dimSums(extrapolated, dim = 3)
 
   # country-level production shares (fraction); single fibre (Polyester proxy) and
   # single year (2024), applied as a static distribution key across all years

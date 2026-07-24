@@ -28,7 +28,7 @@ readTextileExchange <- function(subtype) {
   # ---------------------------------------------------------------------------
   # Map subtype to Excel sheet and cell range
   params <- switch(subtype,
-    "timeseries_by_type" = list(sheet = "timeseries_by_type", range = "A1:C16"),
+    "timeseries_by_type" = list(sheet = "timeseries_by_type", range = "A1:C41"),
     "region_share"       = list(sheet = "region_share",       range = "A1:D6"),
     stop("Invalid subtype: ", subtype)
   )
@@ -52,7 +52,6 @@ readTextileExchange <- function(subtype) {
     stop("Unsupported subtype: ", subtype)
   )
 
-  magpie_data[is.na(magpie_data)] <- 0
   getComment(magpie_data) <- subtype
 
   return(magpie_data)
