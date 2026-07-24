@@ -1,27 +1,10 @@
-#' Calculate Country-Level Mechanical Recycling Loss Trajectories
-#'
-#' Generate time series of mechanical recycling loss trajectories by sector and region,
-#' then aggregate to countries for 1950-2100.
+#' Set Country-Level Mechanical Recycling Loss 
 #'
 #' @author Qianzhi Zhang
 #'
 calcPlMechLoss <- function() {
-  sector_map <- toolGetMapping(
-    "structuremappingPlasticManu.csv",
-    type = "sectoral", where = "mrmfa"
-  )
 
-  targets <- setdiff(unique(sector_map$Target), "Total")
-
-  x <- new.magpie(
-    cells_and_regions = madrat::getISOlist(),
-    years = 1950:2100,
-    names = targets,
-    fill = 0.05
-  )
-
-  weight <- x
-  weight[, ] <- 1
+  x <- new.magpie(fill = 0.05)
 
   description <- paste0(
     "Uncontrolled loss rate of mechanical recycling based on Brown et al. 2023, ",
@@ -29,9 +12,10 @@ calcPlMechLoss <- function() {
   )
   return(list(
     x           = x,
-    weight      = weight,
+    weight      = NULL,
     unit        = "% Mechanical Recycling Loss",
+    isocountries= FALSE,
     description = description,
-    note        = "dimensions: (Time,Region,Material,value)"
+    note        = "dimensions: (value)"
   ))
 }
