@@ -14,12 +14,8 @@ A list in \code{\link[madrat]{calcOutput}} format with the polymer and
 }
 \description{
 Split total Fibre, Rubber and Plastics consumption into individual polymers
-and end-use sectors. Combines the apparent polymer consumption of Gao &
-Cabrera-Serrenho (2025) (\code{readSource("GaoCabrera2025", "consumption")})
-with their polymer-specific end-use sector distribution
-(\code{readSource("GaoCabrera2025", "sector_shares")}) to obtain, for every
-country and year, the consumption of each polymer in each of the 8 end-use
-sectors. These are normalized within each type (\code{Fibre}, \code{Rubber},
+and end-use sectors. Consumption of each polymer in each of the 8 end-use
+sectors is normalized within each type (\code{Fibre}, \code{Rubber},
 \code{Plastics}) so that the shares over \code{(polymer, sector)} sum to 1.
 
 Multiplying the result with a \code{(time, region, type)} total - e.g. the
