@@ -2,12 +2,8 @@
 #'
 #' @description
 #' Split total Fibre, Rubber and Plastics consumption into individual polymers
-#' and end-use sectors. Combines the apparent polymer consumption of Gao &
-#' Cabrera-Serrenho (2025) (\code{readSource("GaoCabrera2025", "consumption")})
-#' with their polymer-specific end-use sector distribution
-#' (\code{readSource("GaoCabrera2025", "sector_shares")}) to obtain, for every
-#' country and year, the consumption of each polymer in each of the 8 end-use
-#' sectors. These are normalized within each type (\code{Fibre}, \code{Rubber},
+#' and end-use sectors. Consumption of each polymer in each of the 8 end-use
+#' sectors is normalized within each type (\code{Fibre}, \code{Rubber},
 #' \code{Plastics}) so that the shares over \code{(polymer, sector)} sum to 1.
 #'
 #' Multiplying the result with a \code{(time, region, type)} total - e.g. the
@@ -28,37 +24,18 @@
 #' \dontrun{
 #' a <- calcOutput("PlSectorPolymerSplit")
 #' }
-#' @importFrom magclass getItems collapseDim add_dimension mselect mbind dimSums
-#' @importFrom magclass getSets getSets<-
+#' @importFrom magclass dimSums
 #' @export
 calcPlSectorPolymerSplit <- function() {
   
   data <- calcOutput("PlGaoCabrera2025", aggregate=FALSE)
 
   # ---------------------------------------------------------------------------
-  # Add the type subdim (Fibre / Rubber / Plastics) by splitting on the polymer
-  # groups. `type` becomes the first subdim so a (time, region, type) object
-  # multiplies cleanly across polymer/sector.
-  # ---------------------------------------------------------------------------
-  fibrePolymers <- c("Polyester fibre", "Polyamide fibre", "Other fibre (acrylic)")
-  rubberPolymers <- "Rubbers"
-  plasticsPolymers <- setdiff(getItems(data, dim = "polymer"), c(fibrePolymers, rubberPolymers))
-
-  tagType <- function(polys, typeName) {
-    add_dimension(mselect(data, polymer = polys), dim = 3.1, add = "type", nm = typeName)
-  }
-  absTyped <- mbind(
-    tagType(plasticsPolymers, "Plastics"),
-    tagType(fibrePolymers, "Fibre"),
-    tagType(rubberPolymers, "Rubber")
-  )
-
-  # ---------------------------------------------------------------------------
   # Normalize within type. Each polymer's sector shares sum to 1, so the per-type
   # total equals that type's summed polymer consumption.
   # ---------------------------------------------------------------------------
-  typeTotal <- dimSums(absTyped, dim = c("polymer", "sector")) # (region, year, type)
-  x <- absTyped / typeTotal # broadcasts typeTotal over polymer.sector via the type subdim
+  typeTotal <- dimSums(data, dim = c("polymer", "sector")) # (region, year, type)
+  x <- data / typeTotal # broadcasts typeTotal over polymer.sector via the type subdim
   x[is.na(x)] <- 0 # 0/0 for types with no consumption -> 0
 
   return(list(

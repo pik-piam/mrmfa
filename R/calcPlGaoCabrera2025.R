@@ -42,8 +42,26 @@ calcPlGaoCabrera2025 <- function() {
   polyMap$to <- ifelse(polyMap$from == "LLDPE", "LDPE", polyMap$from)
   absolute <- toolAggregate(absolute, rel = polyMap, dim = 3.1, from = "from", to = "to")
 
+  # ---------------------------------------------------------------------------
+  # Add the type subdim (Fibre / Rubber / Plastics) by splitting on the polymer
+  # groups. `type` becomes the first subdim so a (time, region, type) object
+  # multiplies cleanly across polymer/sector.
+  # ---------------------------------------------------------------------------
+  fibrePolymers <- c("Polyester fibre", "Polyamide fibre", "Other fibre (acrylic)")
+  rubberPolymers <- "Rubbers"
+  plasticsPolymers <- setdiff(getItems(absolute, dim = "polymer"), c(fibrePolymers, rubberPolymers))
+
+  tagType <- function(polys, typeName) {
+    add_dimension(mselect(absolute, polymer = polys), dim = 3.1, add = "type", nm = typeName)
+  }
+  absTyped <- mbind(
+    tagType(plasticsPolymers, "Plastics"),
+    tagType(fibrePolymers, "Fibre"),
+    tagType(rubberPolymers, "Rubber")
+  )
+
   return(list(
-    x = absolute,
+    x = absTyped,
     weight = NULL,
     unit = "Mt",
     description = paste(
