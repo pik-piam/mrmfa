@@ -69,40 +69,35 @@ calcPlBACI <- function(subtype, category, HS) {
     } else {
       polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
     }
-    # use polymer use by sector as weights (summarize over all Regions,
-    # as polymer share by sector is constant over all Regions in OECD data);
+    # use polymer use by sector as weights (summarize over all Regions and Years);
     # use total polymer use over all sectors as weights for "General" sector
-    use <- calcOutput("PlOECD", subtype = "Use_2019_region", aggregate = TRUE) %>% as.data.frame()
-    use_by_sector <- use %>%
-      rename(sector = "Data2", polymer = "Data1") %>%
-      filter(.data$polymer != "Total") %>%
-      group_by(.data$sector, .data$polymer) %>%
-      summarize(value = sum(.data$Value)) %>%
-      mutate(sector = case_when(.data$sector == "Total" ~ "General", .default = .data$sector))
-    split <- merge(polymer_map, use_by_sector, by.y = "polymer", by.x = "Target") %>%
+    use_sector <- dimSums(calcOutput("PlGaoCabrera2025", aggregate = TRUE), dim = c("region","year"))
+    use_total <- dimSums(use_sector, dim = "sector") %>% addDim(dim=3.2, dimName="sector", item="General")
+    use_by_sector <- mbind(use_sector, use_total) %>% as.data.frame(rev=3)
+    split <- merge(polymer_map, use_by_sector, by.y = "polymer", by.x = "Target_polymer") %>%
       group_by(.data$sector, .data$Source) %>%
       mutate(
-        total = sum(.data$value, na.rm = TRUE),
-        weight = .data$value / .data$total
+        total = sum(.data$.value, na.rm = TRUE),
+        weight = .data$.value / .data$total
       ) %>%
-      select(-"total", -"value")
+      select(-"total", -".value")
     df <- left_join(df, split, by = c("polymer" = "Source", "sector")) %>%
       mutate(value = .data$value * .data$weight)
-    # some weights are NaN for polymers that are not used in a specific sector according to OECD,
+    # some weights are NaN for polymers that are not used in a specific sector according to Gao & Cabrera,
     # throw a warning if these combination appear in the dataset
     nan <- df %>% filter(is.na(.data$weight))
     if (nrow(nan) > 0) {
       warning(paste(
         "The following sector-polymer combinations cannot be mapped from the BACI data
-        as they do not exist in the OECD dataset used for weighting:\n",
+        as they do not exist in the GaoCabrera dataset used for weighting:\n",
         paste(utils::capture.output(print(nan)), collapse = "\n")
       ))
     }
 
     df <- df %>%
       select(-"polymer", -"weight") %>%
-      rename("polymer" = "Target") %>%
-      group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$sector) %>%
+      rename("polymer" = "Target_polymer") %>%
+      group_by(.data$t, .data$exporter, .data$importer, .data$type, .data$polymer, .data$sector) %>%
       summarize(value = sum(.data$value)) %>%
       ungroup()
   }

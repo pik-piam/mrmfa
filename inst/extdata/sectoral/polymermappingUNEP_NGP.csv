@@ -1,7 +1,10 @@
-Source;Target
-Unknown;ABS_ASA_SAN
-Unknown;Fibres
-Unknown;Elastomers (tyres)
+Source;Target_polymer
+Unknown;Polyester fibre
+Unknown;Polyamide fibre
+Unknown;Other fibre (acrylic)
+Unknown;Rubbers
+Unknown;Other thermoplastics
+Unknown;Other thermosets
 Unknown;HDPE
 Unknown;PET
 Unknown;PP
@@ -9,16 +12,17 @@ Unknown;PS
 Unknown;PUR
 Unknown;LDPE
 Unknown;PVC
-Unknown;Others
 PP;PP
 PS;PS
 PVC;PVC
-Other;Others
-Other;ABS_ASA_SAN
-Other;PUR
-Synthetic Rubber;Elastomers (tyres)
 LDPE;LDPE
 HDPE;HDPE
 PET;PET
-Polyester;Others
-Fibres;Fibres
+Synthetic Rubber;Rubbers
+Polyester;Other thermosets
+Other;Other thermosets
+Other;Other thermoplastics
+Other;PUR
+Fibres;Polyester fibre
+Fibres;Polyamide fibre
+Fibres;Other fibre (acrylic)

@@ -89,7 +89,7 @@ calcPlTrade <- function(
   }
 
   # reference used for backcasting
-  reference <- calcOutput("PlConsumptionByGood", aggregate = FALSE)
+  reference <- calcOutput("PlProduction", aggregate = FALSE)
 
   # ---------------------------------------------------------------------------
   # Load data
@@ -115,11 +115,11 @@ calcPlTrade <- function(
     }
 
     if (data_source == "BACI_UNEP") {
-      note <- "dimensions: (Historic Time,Region,Material,Good,value)"
+      note <- "dimensions: (Historic Time,Region,Type,Material,Good,value)"
       # remove sector column for Primary and Waste category ("General" for all)
       if (category %in% c("Primary", "Waste")) {
         x <- collapseNames(x)
-        note <- "dimensions: (Historic Time,Region,Material,value)"
+        note <- "dimensions: (Historic Time,Region,Type,Material,value)"
       }
     } else if (data_source == "BACI_UNCTAD") {
       note <- "dimensions: (Historic Time,Region,value)"
