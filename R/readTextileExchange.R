@@ -28,7 +28,7 @@ readTextileExchange <- function(subtype) {
   # ---------------------------------------------------------------------------
   # Map subtype to Excel sheet and cell range
   params <- switch(subtype,
-    "timeseries_by_type" = list(sheet = "timeseries_by_type", range = "A1:C41"),
+    "timeseries_by_type" = list(sheet = "timeseries_by_type", range = "A1:D59"),
     "region_share"       = list(sheet = "region_share",       range = "A1:D6"),
     stop("Invalid subtype: ", subtype)
   )
@@ -44,8 +44,8 @@ readTextileExchange <- function(subtype) {
   magpie_data <- switch(subtype,
     "timeseries_by_type" = {
       raw_df$region <- "GLO"
-      as.magpie(raw_df[, c("region", "year", "fibre", "production_Mt")],
-                spatial = 1, temporal = 2)
+      as.magpie(raw_df[, c("region", "year", "fibre", "incl_PlasticsEurope", "production_Mt")],
+                spatial = "region", temporal = "year", data = "production_Mt")
     },
     "region_share" = as.magpie(raw_df[, c("region", "year", "fibre", "share_pct")],
                                spatial = 1, temporal = 2),

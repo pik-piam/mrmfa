@@ -30,11 +30,12 @@ calcPlSyntheticFibre <- function() {
   # backcast missing years by oecd (first historic years differ between fibre types)
   oecdTotal <- dimSums(readSource("OECD_Plastic", subtype = "Use_1990-2019_region"), dim = 1)
   getItems(oecdTotal, dim=3) <- NULL
-  getRegions(oecdTotal) <- "GLO"
+  getItems(oecdTotal, dim=1) <- "GLO"
   extrapolated <- toolBackcastByReference(interpolated, oecdTotal)
 
-  # global synthetic fibre production per year (sum over the three fibre types)
-  total <- dimSums(extrapolated, dim = 3)
+  # global synthetic fibre production per year (sum over the three fibre types,
+  # differentiating whether fibers are included in PlasticsEurope figures or not)
+  total <- dimSums(extrapolated, dim = 3.1)
 
   # country-level production shares (fraction); single fibre (Polyester proxy) and
   # single year (2024), applied as a static distribution key across all years

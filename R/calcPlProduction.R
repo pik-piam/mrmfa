@@ -31,16 +31,11 @@
 #' @export
 calcPlProduction <- function() {
   # ---------------------------------------------------------------------------
-  # Read the three country-level production series and tag each with a type name
+  # Read the three country-level production series
   # ---------------------------------------------------------------------------
-  prep <- function(m, typeName) {
-    m <- collapseDim(m)
-    getNames(m) <- typeName
-    m
-  }
-  fibre    <- prep(calcOutput("PlSyntheticFibre",  aggregate = FALSE), "Fibre")
-  rubber   <- prep(calcOutput("PlSyntheticRubber", aggregate = FALSE), "Rubber")
-  plastics <- prep(calcOutput("PlPlasticsEurope",  aggregate = FALSE), "Plastics")
+  fibre    <- calcOutput("PlSyntheticFibre",  aggregate = FALSE)
+  rubber   <- calcOutput("PlSyntheticRubber", aggregate = FALSE)
+  plastics <- calcOutput("PlPlasticsEurope",  aggregate = FALSE)
 
   # ---------------------------------------------------------------------------
   # Build the two backcasting references (total plastics trend)
@@ -51,26 +46,35 @@ calcPlProduction <- function() {
   geyer <- readSource("Geyer", subtype = "Prod_1950-2015", convert = FALSE)
 
   # ---------------------------------------------------------------------------
-  # Backcast each source independently: OECD (-> 1990) then Geyer (-> 1950)
+  # Backcast each source independently: OECD (-> 1990) then Geyer (-> 1950) and
+  # trim to the last year covered by all types (sources may end in different years)
   # ---------------------------------------------------------------------------
-  backcast <- function(s) {
-    s <- toolBackcastByReference(s, oecdTotal)
-    s <- toolBackcastByReference(s, geyer)
-    magpiesort(s)
+  lastYear <- min(max(getYears(fibre)), max(getYears(rubber)), max(getYears(plastics)))
+  backcast <- function(x) {
+    x <- toolBackcastByReference(x, oecdTotal)
+    x <- toolBackcastByReference(x, geyer)
+    magpiesort(x)
+    x <- x[,getYears(x)<lastYear,]
   }
   fibre    <- backcast(fibre)
   rubber   <- backcast(rubber)
   plastics <- backcast(plastics)
 
   # ---------------------------------------------------------------------------
-  # trim to the last year covered by all types (sources may end in different years),
+  # subtract fibres included in PlasticsEurope from PlasticsEurope,
   # then merge into the type dimension.
   # ---------------------------------------------------------------------------
-  lastYear <- min(max(getYears(fibre)), max(getYears(rubber)), max(getYears(plastics)))
-  alignYears <- function(x) {
-    x <- x[,getYears(x)<lastYear,]
+  plastics <- plastics - collapseDim(fibre[,,"TRUE"])
+  fibre <- dimSums(fibre, dim=3)
+  prep <- function(x, typeName) {
+    x <- collapseDim(x)
+    getNames(x) <- typeName
+    x
   }
-  x <- mbind(alignYears(fibre), alignYears(rubber), alignYears(plastics))
+  fibre    <- prep(fibre, "Fibre")
+  rubber   <- prep(rubber, "Rubber")
+  plastics <- prep(plastics, "Plastics")
+  x <- mbind(fibre, rubber, plastics)
   names(dimnames(x))[3] <- "type"
 
   return(list(
@@ -85,7 +89,6 @@ calcPlProduction <- function() {
       "2017 global production (1950-2015). Fibre 2019 is assumed equal to 2020",
       "so it overlaps the OECD reference."
     ),
-    note = "dimensions: (Time,Region,Type,value)",
-    min = 0
+    note = "dimensions: (Time,Region,Type,value)"
   ))
 }
