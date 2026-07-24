@@ -32,22 +32,8 @@
 #' @importFrom magclass getSets getSets<-
 #' @export
 calcPlSectorPolymerSplit <- function() {
-  # ---------------------------------------------------------------------------
-  # Inputs: apparent polymer consumption (ISO3 x year x polymer, kt) and the
-  # polymer-specific end-use sector distribution (sector x polymer, unitless).
-  # ---------------------------------------------------------------------------
-  cons <- readSource("GaoCabrera2025", subtype = "consumption")
-  # sector_shares carries both sector and polymer as name subdims (sector.polymer)
-  # with only dummy spatial/temporal dims; collapse those so it broadcasts cleanly.
-  shares <- collapseDim(readSource("GaoCabrera2025", subtype = "sector_shares", convert = FALSE))
-
-  # ---------------------------------------------------------------------------
-  # Outer product cons x shares -> absolute consumption per polymer and sector.
-  # `cons` has name dim polymer; `shares` has name dims sector.polymer. The
-  # product matches on the shared polymer subdim and broadcasts cons over sector
-  # (and the single shares value over region/year).
-  # ---------------------------------------------------------------------------
-  absolute <- cons * shares # (region, year, polymer.sector), kt
+  
+  data <- calcOutput("PlGaoCabrera2025", aggregate=FALSE)
 
   # ---------------------------------------------------------------------------
   # Add the type subdim (Fibre / Rubber / Plastics) by splitting on the polymer
@@ -56,10 +42,10 @@ calcPlSectorPolymerSplit <- function() {
   # ---------------------------------------------------------------------------
   fibrePolymers <- c("Polyester fibre", "Polyamide fibre", "Other fibre (acrylic)")
   rubberPolymers <- "Rubbers"
-  plasticsPolymers <- setdiff(getItems(cons, dim = "polymer"), c(fibrePolymers, rubberPolymers))
+  plasticsPolymers <- setdiff(getItems(data, dim = "polymer"), c(fibrePolymers, rubberPolymers))
 
   tagType <- function(polys, typeName) {
-    add_dimension(mselect(absolute, polymer = polys), dim = 3.1, add = "type", nm = typeName)
+    add_dimension(mselect(data, polymer = polys), dim = 3.1, add = "type", nm = typeName)
   }
   absTyped <- mbind(
     tagType(plasticsPolymers, "Plastics"),

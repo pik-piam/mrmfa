@@ -85,9 +85,9 @@ readGaoCabrera2025 <- function(subtype = "consumption") {
       # End-use sector distribution from distributionsV3.mat -> magpie (sector, polymer).
       # Sector row order of each 8x1 vector.
       sectorLabels <- c(
-        "packaging", "transportation", "building and construction",
-        "electrical and electronic", "consumer and institutional",
-        "industrial machinery", "textile", "other"
+        "Packaging", "Transportation", "Buildings & Construction",
+        "Electrical/Electronics", "Consumer & Institutional",
+        "Industrial Machinery", "Textile sector", "Others"
       )
 
       # Map each of the 14 D.mat polymer groups to the source variable in the .mat
