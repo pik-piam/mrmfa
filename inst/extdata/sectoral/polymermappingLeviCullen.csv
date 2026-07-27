@@ -1,11 +1,23 @@
 Source;Target
+HDPE;HDPE
+LDPE;LDPE
+PET;PET
 PP;PP
 PS;PS
 PVC;PVC
-ABS;ABS_ASA_SAN
-SAN;ABS_ASA_SAN
 PUR;PUR
-Styrene-butadiene rubber (SBR);Elastomers (tyres)
-LDPE;LDPE
-HDPE;HDPE
-PET;PET
+ABS;Other thermoplastics
+SAN;Other thermoplastics
+EPS;Other thermoplastics
+PC;Other thermoplastics
+PMMA;Other thermoplastics
+Styrene-butadiene rubber (SBR);Rubbers
+Nitrile butadiene;Rubbers
+Polybutadiene;Rubbers
+Polychloroprene;Rubbers
+Polyamide 6 fibre;Polyamide fibre
+Polyamide 66 fibre;Polyamide fibre
+PET fibre;PET fibre
+PP fibre;Other fibre
+Polyacrylonitrile fibre;Other fibre
+
