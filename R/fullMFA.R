@@ -161,9 +161,12 @@ fullMFA <- function(rev = 0,
     # common parameters
     calcOutput("CoPopulation", file = "pl_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     calcOutput("CoGDP", file = "pl_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    # Production
+    calcOutput("PlProduction", file = "pl_production.cs4r", years = start_historic:end_historic)
     # Consumption
-    calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
-    calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate = FALSE)
+    calcOutput("PlSectorPolymerSplit", file = "pl_sector_polymer_split.cs4r", years = start_historic:end_historic)
+    #calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
+    #calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate = FALSE)
     # Trade
     # calcOutput("PlTrade", category = "Final", flow_label = "Exports", data_source = "UNCTAD", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
     # calcOutput("PlTrade", category = "Final", flow_label = "Imports", data_source = "UNCTAD", file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)
@@ -186,8 +189,8 @@ fullMFA <- function(rev = 0,
     calcOutput("PlHVCinput", subtype = "HVC_input_ratio", aggregate = FALSE, file = "pl_HVC_input_ratio.cs4r")
     calcOutput("PlHVCinput", subtype = "C4_input_ratio", aggregate = FALSE, file = "pl_C4_input_ratio.cs4r")
     calcOutput("PlOECD_MGshare", file = "pl_material_shares_in_goods.cs4r")
-    calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", years = start_historic:end_future) # fix 0.79
-    calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r", years = start_historic:end_future) # fix 0.05
+    calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", aggregate = FALSE) # fix 0.79
+    calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r", aggregate = FALSE) # fix 0.05
     calcOutput("PlLifetime", subtype = "Lifetime_mean", aggregate = FALSE, file = "pl_lifetime_mean.cs4r")
     calcOutput("PlLifetime", subtype = "Lifetime_std", aggregate = FALSE, file = "pl_lifetime_std.cs4r")
     calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_materials.cs4r")
