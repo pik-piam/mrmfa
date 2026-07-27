@@ -72,7 +72,7 @@ calcPlBACI <- function(subtype, category, HS) {
     # use polymer use by sector as weights (summarize over all Regions and Years);
     # use total polymer use over all sectors as weights for "General" sector
     use_sector <- dimSums(calcOutput("PlGaoCabrera2025", aggregate = TRUE), dim = c("region","year"))
-    use_total <- dimSums(use_sector, dim = "sector") %>% addDim(dim=3.2, dimName="sector", item="General")
+    use_total <- dimSums(use_sector, dim = "sector") %>% addDim(dim=3.3, dimName="sector", item="General")
     use_by_sector <- mbind(use_sector, use_total) %>% as.data.frame(rev=3)
     split <- merge(polymer_map, use_by_sector, by.y = "polymer", by.x = "Target_polymer") %>%
       group_by(.data$sector, .data$Source) %>%
