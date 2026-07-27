@@ -43,16 +43,21 @@ calcPlGaoCabrera2025 <- function() {
   absolute <- toolAggregate(absolute, rel = polyMap, dim = 3.1, from = "from", to = "to")
 
   # ---------------------------------------------------------------------------
+  # Backcast data to 1950 using Geyer et al. (2023) global polymer consumption data
+  # ---------------------------------------------------------------------------
+  geyer <- readSource("Geyer", subtype = "Prod_1950-2015", convert = FALSE)
+  absoluteBackcasted <- toolBackcastByReference(absolute, geyer)
+
+  # ---------------------------------------------------------------------------
   # Add the type subdim (Fibre / Rubber / Plastics) by splitting on the polymer
-  # groups. `type` becomes the first subdim so a (time, region, type) object
-  # multiplies cleanly across polymer/sector.
+  # groups. 
   # ---------------------------------------------------------------------------
   fibrePolymers <- c("Polyester fibre", "Polyamide fibre", "Other fibre (acrylic)")
   rubberPolymers <- "Rubbers"
-  plasticsPolymers <- setdiff(getItems(absolute, dim = "polymer"), c(fibrePolymers, rubberPolymers))
+  plasticsPolymers <- setdiff(getItems(absoluteBackcasted, dim = "polymer"), c(fibrePolymers, rubberPolymers))
 
   tagType <- function(polys, typeName) {
-    add_dimension(mselect(absolute, polymer = polys), dim = 3.1, add = "type", nm = typeName)
+    add_dimension(mselect(absoluteBackcasted, polymer = polys), dim = 3.1, add = "type", nm = typeName)
   }
   absTyped <- mbind(
     tagType(plasticsPolymers, "Plastics"),
