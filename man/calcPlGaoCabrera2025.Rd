@@ -12,7 +12,7 @@ A list in \code{\link[madrat]{calcOutput}} format with the absolute
   Years 2020-2021 rely on incomplete Gao trade data.
 }
 \description{
-Combines the apparent polymer consumption of Gao & Cabrera-Serrenho (2025) 
+Combines the apparent polymer consumption of Gao & Cabrera-Serrenho (2025)
 (\code{readSource("GaoCabrera2025", "consumption")})
 with their polymer-specific end-use sector distribution
 (\code{readSource("GaoCabrera2025", "sector_shares")}) to obtain, for every

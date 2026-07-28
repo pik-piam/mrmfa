@@ -1,7 +1,7 @@
 #' Calculate absolute consumption per polymer and sector from Gao & Cabrera-Serrenho (2025)
 #'
 #' @description
-#' Combines the apparent polymer consumption of Gao & Cabrera-Serrenho (2025) 
+#' Combines the apparent polymer consumption of Gao & Cabrera-Serrenho (2025)
 #' (\code{readSource("GaoCabrera2025", "consumption")})
 #' with their polymer-specific end-use sector distribution
 #' (\code{readSource("GaoCabrera2025", "sector_shares")}) to obtain, for every
@@ -41,6 +41,8 @@ calcPlGaoCabrera2025 <- function() {
   polyMap <- data.frame(from = getItems(absolute, dim = "polymer"))
   polyMap$to <- ifelse(polyMap$from == "LLDPE", "LDPE", polyMap$from)
   absolute <- toolAggregate(absolute, rel = polyMap, dim = 3.1, from = "from", to = "to")
+  # TODO Other fibre category only includes acrylic fibres; however, for remind-mfa,
+  # this includes also PP fibre and Elastane (PU fibre) which need to be subtracted from PP and PUR
 
   # ---------------------------------------------------------------------------
   # Backcast data to 1950 using Geyer et al. (2023) global polymer consumption data
@@ -50,9 +52,9 @@ calcPlGaoCabrera2025 <- function() {
 
   # ---------------------------------------------------------------------------
   # Add the type subdim (Fibre / Rubber / Plastics) by splitting on the polymer
-  # groups. 
+  # groups.
   # ---------------------------------------------------------------------------
-  fibrePolymers <- c("Polyester fibre", "Polyamide fibre", "Other fibre (acrylic)")
+  fibrePolymers <- c("PET fibre", "Polyamide fibre", "Other fibre")
   rubberPolymers <- "Rubbers"
   plasticsPolymers <- setdiff(getItems(absoluteBackcasted, dim = "polymer"), c(fibrePolymers, rubberPolymers))
 

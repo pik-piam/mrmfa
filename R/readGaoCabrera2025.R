@@ -96,8 +96,8 @@ readGaoCabrera2025 <- function(subtype = "consumption") {
       polymerToVar <- c(
         "LDPE" = "LDPEdist", "LLDPE" = "LLDPEdist", "HDPE" = "HDPEdist",
         "PP" = "PPdist", "PS" = "PSdist", "PVC" = "PVCdist", "PET" = "PETdist",
-        "PUR" = "PURdist", "Polyester fibre" = "PPAdist",
-        "Polyamide fibre" = "PPAdist", "Other fibre (acrylic)" = "PPAdist",
+        "PUR" = "PURdist", "PET fibre" = "PPAdist",
+        "Polyamide fibre" = "PPAdist", "Other fibre" = "PPAdist",
         "Rubbers" = "Rubberdist", "Other thermoplastics" = "Otherdist",
         "Other thermosets" = "Epoxydist"
       )

@@ -12,9 +12,9 @@ A list in \code{\link[madrat]{calcOutput}} format with total synthetic
 }
 \description{
 Combines the global synthetic fibre production time series (Polyester,
-Polyamide (nylon) and Acrylic) from Textile Exchange with the estimated
-country-level production shares based on Credence Research market data
-on monoethylene glycol (MEG) to yield a total synthetic
+Polyamide (nylon), Acrylic, Polypropylene and Elastane) from Textile Exchange 
+with the estimated country-level production shares based on Credence Research 
+market data on monoethylene glycol (MEG) to yield a total synthetic
 fibre production by country and year.
 }
 \examples{
