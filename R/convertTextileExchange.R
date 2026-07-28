@@ -33,7 +33,7 @@ convertTextileExchange <- function(x) {
   # year and align it to the share year.
   chem <- calcOutput("ChemicalTotal", aggregate = FALSE)
   chem <- toolInterpolate(chem, union(getYears(chem), getYears(x)), extrapolate = TRUE)
-  chem <- chem[,getYears(x),]
+  chem <- chem[, getYears(x), ]
   getNames(chem) <- NULL
 
   x <- toolAggregate(x,

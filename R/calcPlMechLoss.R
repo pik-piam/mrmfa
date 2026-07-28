@@ -1,4 +1,4 @@
-#' Set Country-Level Mechanical Recycling Loss 
+#' Set Country-Level Mechanical Recycling Loss
 #'
 #' @author Qianzhi Zhang
 #'
@@ -14,7 +14,7 @@ calcPlMechLoss <- function() {
     x           = x,
     weight      = NULL,
     unit        = "% Mechanical Recycling Loss",
-    isocountries= FALSE,
+    isocountries = FALSE,
     description = description,
     note        = "dimensions: (value)"
   ))

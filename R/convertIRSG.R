@@ -27,7 +27,7 @@ convertIRSG <- function(x, subtype) {
   countries <- unique(map$CountryCode)
 
   # country-level chemical energy consumption as disaggregation weight
-  weight <- calcOutput("ChemicalTotal", aggregate = FALSE)[countries,getYears(x),]
+  weight <- calcOutput("ChemicalTotal", aggregate = FALSE)[countries, getYears(x), ]
   getNames(weight) <- NULL
 
   # disaggregate regions to countries, weighted by chemical energy consumption

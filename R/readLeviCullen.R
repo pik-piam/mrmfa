@@ -1,11 +1,13 @@
 #' Read data from Levi and Cullen (2018)
 #' @description
 #' Read data from supplementary material of Levi and Cullen (2018) paper
-#' 'Mapping Global Flows of Chemicals: From Fossil Fuel Feedstocks to Chemical Products'. https://doi.org/10.1021/acs.est.7b04573
+#' 'Mapping Global Flows of Chemicals: From Fossil Fuel Feedstocks to Chemical Products'.
+#' https://doi.org/10.1021/acs.est.7b04573
 #' @param subtype
 #'        - "HVCbyProcess" HVC inputs for chemical processes in the plastics production chain from Table S20
 #'          For PUR that is not covered separately in the paper, assumptions were made regarding a typical composition
-#'        - "Production" flows and total production volumes of chemicals in the plastics production chain from several Tables in SI
+#'        - "Production" flows and total production volumes of chemicals in the plastics production chain from
+#'          several Tables in SI
 #' @author Leonie Schweiger
 readLeviCullen <- function(subtype) {
   version <- "v2.0"

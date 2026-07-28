@@ -29,10 +29,10 @@ calcPlSyntheticRubber <- function() {
   onlyGlobalYears <- setdiff(globalYears, regionalYears)
 
   # for each global-only year, apply the country shares of the closest year with data
-  shares <- countryProd/dimSums(countryProd, dim=1)
-  target_years = union(regionalYears, globalYears)
-  shares <- toolInterpolate(shares, years=target_years, extrapolate=TRUE)
-  globalProd <- globalTotal[,onlyGlobalYears,] * shares[,onlyGlobalYears,]
+  shares <- countryProd / dimSums(countryProd, dim = 1)
+  target_years <- union(regionalYears, globalYears)
+  shares <- toolInterpolate(shares, years = target_years, extrapolate = TRUE)
+  globalProd <- globalTotal[, onlyGlobalYears, ] * shares[, onlyGlobalYears, ]
 
   # 2018-2020 taken directly, 2021-2024 derived from global totals * closest-year shares
   x <- mbind(countryProd, globalProd)

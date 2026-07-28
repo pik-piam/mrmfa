@@ -58,7 +58,9 @@ calcPlHVCinput <- function(subtype) {
 
   # merge with HVC input and calculate total HVC input by element
   HVC_input <- merge(HVC_input, carbon_content, by.x = "input", by.y = "Data1") %>%
-    mutate(input_by_element = .data$tonnes * .data$Value, hvc_type = case_when(.data$input == "butadiene" ~ "C4", .default = "HVC w/o C4")) %>%
+    mutate(
+      input_by_element = .data$tonnes * .data$Value,
+      hvc_type = case_when(.data$input == "butadiene" ~ "C4", .default = "HVC w/o C4")) %>%
     group_by(.data$polymer, .data$element, .data$hvc_type) %>%
     summarize(HVC_input = sum(.data$input_by_element))
   HVC_input_magclass <- as.magpie(HVC_input)
@@ -97,8 +99,8 @@ calcPlHVCinput <- function(subtype) {
     group_by(.data$element) %>%
     tidyr::nest() %>%
     mutate(
-      model = purrr::map(.data$data, ~ lm(hvc_input ~ carbon, data = .x)),
-      pred  = purrr::map(.data$model, ~ predict(.x, newdata = cc_missing))
+      model = purrr::map(.data$data, ~ stats::lm(hvc_input ~ carbon, data = .x)),
+      pred  = purrr::map(.data$model, function(m) stats::predict(m, newdata = cc_missing))
     ) %>%
     tidyr::unnest("pred") %>%
     mutate(
@@ -123,7 +125,8 @@ calcPlHVCinput <- function(subtype) {
   # ---------------------------------------------------------------------------
   polymer_map <- toolGetMapping("polymermappingLeviCullen.csv", type = "sectoral", where = "mrmfa")
   production_volumes <- readSource("LeviCullen", subtype = "Production", convert = FALSE)
-  weights <- mselect(production_volumes, stage = "total production", type = "plastics", to = polymerization$polymer, collapseNames = TRUE) %>% collapseDim()
+  weights <- mselect(production_volumes, stage = "total production", type = "plastics", to = polymerization$polymer,
+                     collapseNames = TRUE) %>% collapseDim()
   HVC_input_mapped <- HVC_input_magclass %>%
     toolAggregate(rel = polymer_map, dim = 3.1, from = "Source", to = "Target", weight = weights, wdim = 3.1)
   polymerization_mapped <- polymerization_magclass %>%

@@ -64,16 +64,16 @@ calcPlBACI <- function(subtype, category, HS) {
       rename("sector" = "Target")
 
     # map UNEP-NGP polymers to polymers used in REMIND-MFA
-    if (category == "Waste"){
+    if (category == "Waste") {
       polymer_map <- toolGetMapping("polymermappingUNEP_NGP_waste.csv", type = "sectoral", where = "mrmfa")
     } else {
       polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
     }
     # use polymer use by sector as weights (summarize over all Regions and Years);
     # use total polymer use over all sectors as weights for "General" sector
-    use_sector <- dimSums(calcOutput("PlGaoCabrera2025", aggregate = TRUE), dim = c("region","year"))
-    use_total <- dimSums(use_sector, dim = "sector") %>% addDim(dim=3.3, dimName="sector", item="General")
-    use_by_sector <- mbind(use_sector, use_total) %>% as.data.frame(rev=3)
+    use_sector <- dimSums(calcOutput("PlGaoCabrera2025", aggregate = TRUE), dim = c("region", "year"))
+    use_total <- dimSums(use_sector, dim = "sector") %>% addDim(dim = 3.3, dimName = "sector", item = "General")
+    use_by_sector <- mbind(use_sector, use_total) %>% as.data.frame(rev = 3)
     split <- merge(polymer_map, use_by_sector, by.y = "polymer", by.x = "Target_polymer") %>%
       group_by(.data$sector, .data$Source) %>%
       mutate(

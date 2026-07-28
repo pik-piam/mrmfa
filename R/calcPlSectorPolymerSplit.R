@@ -27,8 +27,8 @@
 #' @importFrom magclass dimSums
 #' @export
 calcPlSectorPolymerSplit <- function() {
-  
-  data <- calcOutput("PlGaoCabrera2025", aggregate=FALSE)
+
+  data <- calcOutput("PlGaoCabrera2025", aggregate = FALSE)
 
   # ---------------------------------------------------------------------------
   # Normalize within type. Each polymer's sector shares sum to 1, so the per-type

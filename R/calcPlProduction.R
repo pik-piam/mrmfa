@@ -54,7 +54,7 @@ calcPlProduction <- function() {
     x <- toolBackcastByReference(x, oecdTotal)
     x <- toolBackcastByReference(x, geyer)
     magpiesort(x)
-    x <- x[,getYears(x)<lastYear,]
+    x <- x[, getYears(x) < lastYear, ]
   }
   fibre    <- backcast(fibre)
   rubber   <- backcast(rubber)
@@ -64,8 +64,8 @@ calcPlProduction <- function() {
   # subtract fibres included in PlasticsEurope from PlasticsEurope,
   # then merge into the type dimension.
   # ---------------------------------------------------------------------------
-  plastics <- plastics - collapseDim(fibre[,,"TRUE"])
-  fibre <- dimSums(fibre, dim=3)
+  plastics <- plastics - collapseDim(fibre[, , "TRUE"])
+  fibre <- dimSums(fibre, dim = 3)
   prep <- function(x, typeName) {
     x <- collapseDim(x)
     getNames(x) <- typeName
