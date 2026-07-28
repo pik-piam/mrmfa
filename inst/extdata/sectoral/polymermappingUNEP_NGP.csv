@@ -1,7 +1,7 @@
 Source;Target_polymer
-Unknown;Polyester fibre
+Unknown;PET fibre
 Unknown;Polyamide fibre
-Unknown;Other fibre (acrylic)
+Unknown;Other fibre
 Unknown;Rubbers
 Unknown;Other thermoplastics
 Unknown;Other thermosets
@@ -23,6 +23,6 @@ Polyester;Other thermosets
 Other;Other thermosets
 Other;Other thermoplastics
 Other;PUR
-Fibres;Polyester fibre
+Fibres;PET fibre
 Fibres;Polyamide fibre
-Fibres;Other fibre (acrylic)
+Fibres;Other fibre
