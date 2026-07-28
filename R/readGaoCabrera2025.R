@@ -40,7 +40,7 @@ readGaoCabrera2025 <- function(subtype = "consumption") {
   # SI Table S3). Shared by both subtypes so their polymer dimension matches.
   polymerLabels <- c(
     "LDPE", "LLDPE", "HDPE", "PP", "PS", "PVC", "PET", "PUR",
-    "Polyester fibre", "Polyamide fibre", "Other fibre (acrylic)",
+    "PET fibre", "Polyamide fibre", "Other fibre",
     "Rubbers", "Other thermoplastics", "Other thermosets"
   )
   nPoly <- length(polymerLabels) # 14
