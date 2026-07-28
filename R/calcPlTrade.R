@@ -118,7 +118,7 @@ calcPlTrade <- function(
       note <- "dimensions: (Historic Time,Region,Type,Material,Good,value)"
       # remove sector column for Primary and Waste category ("General" for all)
       if (category %in% c("Primary", "Waste")) {
-        x <- collapseNames(x)
+        x <- collapseNames(x, preservedim = "type")
         note <- "dimensions: (Historic Time,Region,Type,Material,value)"
       }
     } else if (data_source == "BACI_UNCTAD") {
