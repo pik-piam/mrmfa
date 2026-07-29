@@ -32,7 +32,7 @@ update.packages()
 
 ## Questions / Problems
 
-In case of questions / problems please contact Jakob Dürrwächter <jakobdu@pik-potsdam.de>.
+In case of questions / problems please contact Jakob Dürrwächter <jakobdu@pik-potsdam.de> or open an issue at [pik-piam/industry_issues](https://github.com/pik-piam/industry_issues/issues).
 
 ## Citation
 
