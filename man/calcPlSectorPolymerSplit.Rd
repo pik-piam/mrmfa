@@ -4,7 +4,11 @@
 \alias{calcPlSectorPolymerSplit}
 \title{Calculate polymer and sector split shares within each plastics type}
 \usage{
-calcPlSectorPolymerSplit()
+calcPlSectorPolymerSplit(target_years = NULL)
+}
+\arguments{
+\item{target_years}{integer vector of target years for the output data.
+Enables forecasting of Gao data to include same years as production data.}
 }
 \value{
 A list in \code{\link[madrat]{calcOutput}} format with the polymer and

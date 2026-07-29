@@ -156,7 +156,7 @@ fullMFA <- function(rev = 0,
   #  ------------- PLASTIC -----------
   if (runSection("plastic")) {
     start_historic <- 1950
-    end_historic <- 2019
+    end_historic <- 2022
 
     # common parameters
     calcOutput("CoPopulation", file = "pl_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
@@ -164,7 +164,7 @@ fullMFA <- function(rev = 0,
     # Production
     calcOutput("PlProduction", file = "pl_production.cs4r", years = start_historic:end_historic)
     # Consumption
-    calcOutput("PlSectorPolymerSplit", file = "pl_sector_polymer_split.cs4r", years = start_historic:end_historic)
+    calcOutput("PlSectorPolymerSplit", file = "pl_sector_polymer_split.cs4r", target_years = start_historic:end_historic)
     #calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
     #calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate = FALSE)
     # Trade
@@ -199,10 +199,10 @@ fullMFA <- function(rev = 0,
     calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_mechanical_recycling_rate.cs4r", years = start_historic:end_historic)
     calcOutput("PlEoL_shares", subtype = "Incinerated", file = "pl_incineration_rate.cs4r", years = start_historic:end_historic)
     # Rates that are historically zero
-    calcOutput("PlZeroRates", file = "pl_chemical_recycling_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlZeroRates", file = "pl_bio_production_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlZeroRates", file = "pl_daccu_production_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlZeroRates", file = "pl_emission_capture_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlZeroRates", file = "pl_chemical_recycling_rate.cs4r", aggregate = FALSE)
+    calcOutput("PlZeroRates", file = "pl_bio_production_rate.cs4r", aggregate = FALSE)
+    calcOutput("PlZeroRates", file = "pl_daccu_production_rate.cs4r", aggregate = FALSE)
+    calcOutput("PlZeroRates", file = "pl_emission_capture_rate.cs4r", aggregate = FALSE)
   }
 
   # nolint end
