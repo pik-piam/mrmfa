@@ -5,12 +5,14 @@
 calcCeBuildingsMI <- function(subtype = "concrete") {
   x <- readSource("RASMI", subtype)
   x <- x / 1000 # convert kg to t
-  # dummy MI of 1 for the "N/A" function/structure
-  x <- add_columns(x, addnm = "N/A.N/A", dim = 3, fill = 1)
+  # MI of 0 for "Other" function
+  x <- add_columns(x, addnm = "Other", dim = 3.1, fill = 0)
+  # MI of 0 for U (unspecified) structure
+  x <- add_columns(x, addnm = "U", dim = 3.2, fill = 0)
 
   # use floor area for weight
   weight <- calcOutput("CeFloorspaceGEM", subtype = c("Function", "Structure"), aggregate = FALSE)
-  weight <- add_columns(weight, addnm = "N/A.N/A", dim = 3, fill = 1)
+  weight <- add_columns(weight, addnm = "Other", dim = 3.1, fill = 1)
   # country without floorspace should still get MI if aggregated on country level
   weight[weight == 0] <- 1e-9
   description <- paste(

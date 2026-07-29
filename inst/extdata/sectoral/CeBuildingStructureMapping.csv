@@ -6,6 +6,6 @@ M,M,Masonry
 MUR,M,Unreinforced Masonry
 MR,M,Reinforced Masonry
 MCF,M,Confined Masonry
-ADO/E,M,Adobe/Earth
-MIX,M,Mixed-types
-OT,M,Other
+ADO/E,U,Adobe/Earth
+MIX,U,Mixed-types
+OT,U,Other

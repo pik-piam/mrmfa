@@ -6,12 +6,12 @@
 calcCeBuildingsSplit <- function(subtype) {
   if (subtype == "Function") {
     compare_type <- "Stock_Type"
-    new_columns <- c("Ind.N/A", "Civ.N/A")
+    new_columns <- c("Ind.Other", "Civ.Other")
     new_columns_weight <- c("Ind", "Civ")
   } else if (subtype == "Structure") {
     compare_type <- "Function"
-    new_columns <- "N/A.N/A"
-    new_columns_weight <- "N/A"
+    new_columns <- "Other.U"
+    new_columns_weight <- "Other"
   } else {
     stop("Invalid subtype: must be 'Function' or 'Structure'")
   }
