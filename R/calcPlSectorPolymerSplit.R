@@ -61,7 +61,7 @@ calcPlSectorPolymerSplit <- function(target_years = NULL) {
       "(polymer, sector) within each (region, year, type). Multiply by a",
       "(time, region, type) total to obtain absolute values (done in remind-mfa)."
     ),
-    note = "dimensions: (Time, Region, Type, Material, Good)",
+    note = "dimensions: (Time, Region, Type, Material, Good, value)",
     min = 0,
     max = 1
   ))

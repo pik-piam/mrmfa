@@ -77,10 +77,13 @@ calcPlProduction <- function() {
   x <- mbind(fibre, rubber, plastics)
   names(dimnames(x))[3] <- "type"
 
+  # convert Mt -> t
+  x <- x * 1e6
+
   return(list(
     x = x,
     weight = NULL,
-    unit = "Mt",
+    unit = "t",
     description = paste(
       "Plastics (Plastics Europe), synthetic fibre (Textile Exchange) and",
       "synthetic rubber (IRSG) production by country and type, 1950-2024. Each",

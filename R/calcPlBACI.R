@@ -125,7 +125,7 @@ calcPlBACI <- function(subtype, category, HS) {
   return(list(
     x = x,
     weight = NULL,
-    unit = "Mt Plastic",
+    unit = "t Plastic",
     description = "Plastic trade data from BACI"
   ))
 }

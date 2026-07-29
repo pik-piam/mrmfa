@@ -155,7 +155,7 @@ calcPlTrade <- function(
   list(
     x = x,
     weight = NULL,
-    unit = "Mt Plastic",
+    unit = "t Plastic",
     aggregationFunction = aggregationFunction,
     aggregationArguments = aggregationArguments,
     description = sprintf(

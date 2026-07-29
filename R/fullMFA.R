@@ -188,7 +188,7 @@ fullMFA <- function(rev = 0,
     calcOutput("PlHVCinput", subtype = "polymerization_yield", aggregate = FALSE, file = "pl_polymerization_yield.cs4r")
     calcOutput("PlHVCinput", subtype = "HVC_input_ratio", aggregate = FALSE, file = "pl_HVC_input_ratio.cs4r")
     calcOutput("PlHVCinput", subtype = "C4_input_ratio", aggregate = FALSE, file = "pl_C4_input_ratio.cs4r")
-    calcOutput("PlOECD_MGshare", file = "pl_material_shares_in_goods.cs4r")
+    #calcOutput("PlOECD_MGshare", file = "pl_material_shares_in_goods.cs4r")
     calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", aggregate = FALSE) # fix 0.79
     calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r", aggregate = FALSE) # fix 0.05
     calcOutput("PlLifetime", subtype = "Lifetime_mean", aggregate = FALSE, file = "pl_lifetime_mean.cs4r")

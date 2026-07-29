@@ -156,7 +156,7 @@ readBACI <- function(subtype, subset) {
     if (key == "plastics_UNCTAD") {
       # merge UNCTAD codes with BACI data
       df_filtered <- merge(df, codes, by.x = "k", by.y = "code") %>%
-        mutate(value = .data$q / 1000000) %>% # report quantity in Mt
+        mutate(value = .data$q) %>% # report quantity in t
         select("t", "i", "j", "k", "value")
     } else if (key == "plastics_UNEP") {
       # UNEP Codes contain 4 digit and 5/6 digit codes;
@@ -167,7 +167,7 @@ readBACI <- function(subtype, subset) {
       # merge filtered data with 4 and 6 digit codes, calculate plastics content
       df_filtered <- rbind(df_plastics_k6, df_plastics_k4) %>%
         rename(k = "code") %>%
-        mutate(q_plastic = .data$plastic_percentage * .data$q / 1000000) %>% # report quantity in Mt
+        mutate(q_plastic = .data$plastic_percentage * .data$q) %>% # report quantity in t
         group_by(.data$t, .data$i, .data$j, .data$k, .data$polymer, .data$sector) %>%
         summarize(value = sum(.data$q_plastic, na.rm = TRUE), .groups = "drop_last") %>%
         ungroup()
