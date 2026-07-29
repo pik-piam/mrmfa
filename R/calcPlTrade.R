@@ -74,15 +74,26 @@ calcPlTrade <- function(
   # in addition, data is backcasted to 1950 based on reference (and eventually
   # forecasted if reference covers more recent years)
   # ---------------------------------------------------------------------------
-  # reference used for backcasting
+  # backcast trade data to 1950 based on historic plastic production
   reference <- calcOutput("PlProduction", aggregate = FALSE, years = target_years)
   target_years <- getYears(reference, as.integer = TRUE)
 
   .customAggregate <- function(x, rel, reference, flow_label) {
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
-    # backcast trade data to 1950 based on historic plastic consumption
     ref <- toolAggregate(reference, rel = rel, from = "country", to = "region")
+
+    # the reference (plastics production) may cover more items than the trade data x
+    # in shared data dimensions (e.g. the reference has type Plastics, Rubber, Fibre
+    # while plastic waste trade only has type Plastics). Subset the reference to the
+    # items present in x for every data dimension they share, so backcasting can match
+    # dimensions. Spatial and temporal dimensions are handled separately below.
+    xDataSets <- getSets(x, fulldim = TRUE)
+    xDataSets <- xDataSets[grepl("^d3", names(xDataSets))]
+    refDataSets <- getSets(ref, fulldim = TRUE)
+    for (s in intersect(xDataSets, refDataSets)) {
+      ref <- do.call(mselect, c(list(ref), stats::setNames(list(getItems(x, dim = s)), s)))
+    }
 
     # if some of the regions are missing in x due to the manual aggregation,
     # fill with NA to match all the ref regions

@@ -8,7 +8,8 @@ calcPlTrade(
   category,
   flow_label = c("Exports", "Imports"),
   data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP"),
-  HS = "92"
+  HS = "92",
+  target_years = NULL
 )
 }
 \arguments{
@@ -40,6 +41,11 @@ calcPlTrade(
 - 02
 - 17
 - 22}
+
+\item{target_years}{integer vector of target years for the output data.
+If NULL, all years from reference (plastics production) are included.
+Note: the 'years' argument in calcOutput does not work properly for this function,
+so 'target years' should be set here instead.}
 }
 \description{
 Reads plastics trade data and backcasts data to 1950 to fill missing years.
