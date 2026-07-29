@@ -16,6 +16,10 @@
 #'        - 17
 #'        - 22
 #' @param include_intra_regional bool if intra-regional trade should be included
+#' @param target_years integer vector of target years for the output data.
+#' If NULL, all years from reference are included.
+#' Note: the 'years' argument in calcOutput does not work properly for this function,
+#' so 'target years' should be set here instead.
 #'
 #' @return magpie object of the aggregated trade data
 #'
@@ -33,7 +37,13 @@
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = FALSE) {
+calcStTrade <- function(
+    subtype,
+    category,
+    HS = "92",
+    include_intra_regional = FALSE,
+    target_years = NULL
+) {
   if (category == "indirect") {
     note <- "dimensions: (Historic Time,Region,Good,value)"
   } else {
@@ -48,7 +58,8 @@ calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = F
     "direct" = subtype,
     stop("Unsupported category: ", category)
   )
-  WS_trade <- calcOutput("StTradeWorldsteel", subtype = subtype_WS, aggregate = FALSE)
+  WS_trade <- calcOutput("StTradeWorldsteel", subtype = subtype_WS, aggregate = FALSE, years = target_years)
+  target_years <- getYears(WS_trade, as.integer = TRUE)
 
   # if intra-regional trade should be included, simply return the Worldsteel trade data
   if (include_intra_regional == TRUE) {
@@ -163,6 +174,8 @@ calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = F
       }
 
       x <- toolBackcastByReference(x, ref)
+      # cut x to target years
+      x <- x[, target_years, ]
 
       return(x)
     }

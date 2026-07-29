@@ -7,7 +7,13 @@ and aggregate via a custom aggregation function to filter out intra-regional tra
 (since we don't have a list with all HS codes and corresponding steel shares,
 BACI trade data cannot be used directly, since it does not cover the full scope)}
 \usage{
-calcStTrade(subtype, category, HS = "92", include_intra_regional = FALSE)
+calcStTrade(
+  subtype,
+  category,
+  HS = "92",
+  include_intra_regional = FALSE,
+  target_years = NULL
+)
 }
 \arguments{
 \item{subtype}{Character string specifying the scope
@@ -26,6 +32,11 @@ calcStTrade(subtype, category, HS = "92", include_intra_regional = FALSE)
 - 22}
 
 \item{include_intra_regional}{bool if intra-regional trade should be included}
+
+\item{target_years}{integer vector of target years for the output data.
+If NULL, all years from reference are included.
+Note: the 'years' argument in calcOutput does not work properly for this function,
+so 'target years' should be set here instead.}
 }
 \value{
 magpie object of the aggregated trade data
