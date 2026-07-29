@@ -141,8 +141,11 @@ readBACI <- function(subtype, subset) {
   country_codes <- utils::read.csv(file.path(data_path, "country_codes_V202501.csv")) %>%
     select("country_code", "country_iso3") %>%
     # country code 490 (country_iso3="S19") is used as a proxy for trade statistics for Taiwan
+    # country code 849 (country_iso3="PUS", US Misc. Pacific Islands) is assigned to UMI (United States Minor Outlying Islands)
     # (see https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html)
-    mutate(country_iso3 = case_when(.data$country_iso3 == "S19" ~ "TWN", .default = .data$country_iso3))
+    mutate(country_iso3 = case_when(.data$country_iso3 == "S19" ~ "TWN",
+                                    .data$country_iso3 == "PUS" ~ "UMI",
+                                    .default = .data$country_iso3))
 
   df_all <- NULL
 

@@ -109,6 +109,9 @@ calcPlBACI <- function(subtype, category, HS) {
   df$importer[df$importer == "SCG"] <- "SRB"
   df$exporter[df$exporter == "ANT"] <- "CUW"
   df$importer[df$importer == "ANT"] <- "CUW"
+  # ZA1 is the Southern African Customs Union, assigned to South Africa
+  df$exporter[df$exporter == "ZA1"] <- "ZAF"
+  df$importer[df$importer == "ZA1"] <- "ZAF"
 
   # this mapgie object should actually contain two spatial dimensions "importer" and
   # "exporter", but since madrat does not support regional aggregation for two spatial
