@@ -69,6 +69,7 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   x <- as.magpie(df, temporal = 1, spatial = 2, datacol = 4)
   x <- toolCountryFill(x, fill = NA, verbosity = 2)
   x <- replace_non_finite(x, replace = 0)
+  x <- collapseDim(x)
 
   # ----------------------------------------------------------------------------
   # Aggregation to avoid intra-regional trade

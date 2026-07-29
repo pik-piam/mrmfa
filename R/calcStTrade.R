@@ -158,6 +158,7 @@ calcStTrade <- function(
     x <- as.magpie(df, temporal = "t", spatial = "importer")
     x <- toolCountryFill(x, fill = NA, verbosity = 2)
     x <- replace_non_finite(x, replace = 0)
+    x <- collapseDim(x)
 
     .customAggregate <- function(x, rel, reference, flow_label) {
       # aggregate to regions filtering out intra-regional trade
