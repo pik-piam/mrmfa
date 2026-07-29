@@ -61,10 +61,7 @@ calcPlSectorPolymerSplit <- function(target_years = NULL) {
       "(polymer, sector) within each (region, year, type). Multiply by a",
       "(time, region, type) total to obtain absolute values (done in remind-mfa)."
     ),
-    note = paste(
-      "dimensions: (Time, Region, Type, Polymer, Sector); shares sum to 1 within",
-      "each (Time, Region, Type). Years 2020-2021 rely on incomplete Gao trade data."
-    ),
+    note = "dimensions: (Time, Region, Type, Material, Good)",
     min = 0,
     max = 1
   ))
