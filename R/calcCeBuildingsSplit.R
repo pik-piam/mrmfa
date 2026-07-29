@@ -38,8 +38,8 @@ calcCeBuildingsSplit <- function(subtype) {
   )
   note <- paste0("dimensions: (Region,", compare_type, ",", subtype, ",value)")
   output <- list(
-    x = relFloorArea,
-    weight = weight,
+    x = complete_magpie(relFloorArea, fill = 0),
+    weight = complete_magpie(weight, fill = 0),
     unit = unit,
     description = description,
     note = note
