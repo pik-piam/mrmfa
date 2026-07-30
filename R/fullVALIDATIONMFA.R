@@ -9,6 +9,8 @@
 #'
 #' @md
 #' @param rev Unused parameter, but required by `madrat`.
+#' @param runSections Character vector or string selecting which parts to run.
+#' Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
 #' @author Leonie Schweiger
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{calcOutput}},
@@ -57,15 +59,11 @@ fullVALIDATIONMFA <- function(rev = 0, runSections = NULL) {
     runSections <- validSections
   } else {
     bad <- setdiff(runSections, validSections)
-    if (length(bad)) stop("Invalid sections: ", paste(bad, collapse = ", "))
+    if (length(bad)) warning("Invalid sections: ", paste(bad, collapse = ", "))
+    runSections <- intersect(runSections, validSections)
   }
 
   runSection <- function(name) name %in% runSections
-
-  if (!length(runSections)) {
-    message("fullMFA: no sections selected; nothing done.")
-    return(invisible(NULL))
-  }
 
   if (runSection("steel")) {}
 

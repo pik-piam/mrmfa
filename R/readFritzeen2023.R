@@ -24,7 +24,6 @@
 #' readSource("Fritzeen2023", convert = FALSE)
 #' }
 #' @importFrom dplyr bind_rows mutate select
-#' @importFrom rlang .data
 #' @importFrom magclass as.magpie
 readFritzeen2023 <- function() {
   read <- function(file, sheet) {

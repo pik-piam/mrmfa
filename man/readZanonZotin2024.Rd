@@ -4,10 +4,7 @@
 \alias{readZanonZotin2024}
 \title{Read Zanon-Zotin et al. 2024 HVC production scenarios}
 \usage{
-readZanonZotin2024(subtype = "fig3b")
-}
-\arguments{
-\item{subtype}{Character. Sheet to read; currently only \code{"fig3b"}.}
+readZanonZotin2024()
 }
 \value{
 MagPIE object with dimensions (region = GLO, year, scenario.variable)

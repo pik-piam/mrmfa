@@ -24,7 +24,7 @@ calcPlZanonZotin2024 <- function(subtype = "total") {
     stop("Unknown subtype '", subtype, "'. Use 'total' or 'perCapita'.")
   }
 
-  x <- readSource("ZanonZotin2024", subtype = "fig3b", convert = FALSE)
+  x <- readSource("ZanonZotin2024", convert = FALSE)
 
   # sum the three HVC sub-components (Multi-product, On-purpose, Refinery-sourced)
   # to the HVC total, keeping each scenario separate

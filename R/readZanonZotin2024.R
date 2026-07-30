@@ -9,7 +9,6 @@
 #' (Multi-product, On-purpose, Refinery-sourced), in kt/yr. The data are global
 #' only and are not disaggregated to countries or regions.
 #'
-#' @param subtype Character. Sheet to read; currently only \code{"fig3b"}.
 #' @author Leonie Schweiger
 #' @return MagPIE object with dimensions (region = GLO, year, scenario.variable)
 #' holding HVC production in kt/yr.
@@ -20,16 +19,11 @@
 #' }
 #' @importFrom dplyr mutate select
 #' @importFrom magclass as.magpie
-readZanonZotin2024 <- function(subtype = "fig3b") {
-  sheets <- list("fig3b")
-  if (!subtype %in% sheets) {
-    stop("Invalid subtype '", subtype, "'. Must be one of: ", paste(sheets, collapse = ", "))
-  }
-
+readZanonZotin2024 <- function() {
   # The single model ("COFFEE 1.5") and the unit ("kt/yr") are dropped from the
   # data dimension: the model is re-attached at write time via writeArgs (its "."
   # would collide with magpie's subdim separator), the unit via the calc return list.
-  x <- readxl::read_excel("41467_2024_52434_MOESM3_ESM.xlsx", sheet = subtype) %>%
+  x <- readxl::read_excel("41467_2024_52434_MOESM3_ESM.xlsx", sheet = "fig3b") %>%
     mutate(region = "GLO") %>%
     select(-"model", -"unit") %>%
     tidyr::pivot_longer(cols = -c("region", "scenario", "variable"),
