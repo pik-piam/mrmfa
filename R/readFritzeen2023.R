@@ -23,13 +23,12 @@
 #' \dontrun{
 #' readSource("Fritzeen2023", convert = FALSE)
 #' }
-#' @importFrom readxl read_excel
 #' @importFrom dplyr bind_rows mutate select
 #' @importFrom rlang .data
 #' @importFrom magclass as.magpie
 readFritzeen2023 <- function() {
   read <- function(file, sheet) {
-    read_excel(file, sheet = sheet) %>%
+    readxl::read_excel(file, sheet = sheet) %>%
       setNames(c("technology", "year", "value", "scenario"))
   }
   a <- read("Fig_6.xlsx", "Fig6")
@@ -40,5 +39,5 @@ readFritzeen2023 <- function() {
     mutate(technology = tolower(.data$technology), region = "GLO") %>%
     select("region", "scenario", "technology", "year", "value")
 
-  as.magpie(x, spatial = "region", temporal = "year", datacol = "value")
+  return(as.magpie(x, spatial = "region", temporal = "year", datacol = "value"))
 }

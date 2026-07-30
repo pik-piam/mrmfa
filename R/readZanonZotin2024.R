@@ -18,10 +18,7 @@
 #' \dontrun{
 #' readSource("ZanonZotin2024", subtype = "fig3b", convert = FALSE)
 #' }
-#' @importFrom readxl read_excel
 #' @importFrom dplyr mutate select
-#' @importFrom tidyr pivot_longer
-#' @importFrom rlang .data
 #' @importFrom magclass as.magpie
 readZanonZotin2024 <- function(subtype = "fig3b") {
   sheets <- list("fig3b")
@@ -32,12 +29,12 @@ readZanonZotin2024 <- function(subtype = "fig3b") {
   # The single model ("COFFEE 1.5") and the unit ("kt/yr") are dropped from the
   # data dimension: the model is re-attached at write time via writeArgs (its "."
   # would collide with magpie's subdim separator), the unit via the calc return list.
-  x <- read_excel("41467_2024_52434_MOESM3_ESM.xlsx", sheet = subtype) %>%
+  x <- readxl::read_excel("41467_2024_52434_MOESM3_ESM.xlsx", sheet = subtype) %>%
     mutate(region = "GLO") %>%
     select(-"model", -"unit") %>%
-    pivot_longer(cols = -c("region", "scenario", "variable"),
+    tidyr::pivot_longer(cols = -c("region", "scenario", "variable"),
                  names_to = "year", values_to = "value") %>%
     select("region", "scenario", "variable", "year", "value")
 
-  as.magpie(x, spatial = "region", temporal = "year", datacol = "value")
+  return(as.magpie(x, spatial = "region", temporal = "year", datacol = "value"))
 }

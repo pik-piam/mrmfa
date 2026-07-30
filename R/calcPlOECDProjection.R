@@ -29,9 +29,9 @@ calcPlOECDProjection <- function(subtype = "total") {
       weight = NULL,
       unit = "Mt/yr",
       description = paste(
-        "Plastics use projection 1980-2060 from the OECD Global Plastics Outlook 2022."
-      ),
-      note = "Disaggregated from 15 OECD-Outlook regions to ISO3 via population weighting."
+        "Plastics use projection 1980-2060 from the OECD Global Plastics Outlook 2022.",
+        "Disaggregated from 15 OECD-Outlook regions to ISO3 via population weighting."
+      )
     ))
   } else if (subtype == "perCapita") {
     # OECD population sheet (billion people), ISO3, 2019-2060
@@ -55,8 +55,7 @@ calcPlOECDProjection <- function(subtype = "total") {
         "Per-capita plastics use projection 1980-2060 from the OECD Global Plastics",
         "Outlook 2022. OECD population is used for 2019-2060 and ",
         "calcCoPopulation (SSP2) for 1980-2018."
-      ),
-      note = "Population-weighted; intensive variable aggregated as weighted mean."
+      )
     ))
   }
 

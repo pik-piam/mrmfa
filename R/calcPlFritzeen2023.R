@@ -63,9 +63,9 @@ calcPlFritzeen2023 <- function(subtype = "total") {
     unit = "kg/cap",
     description = paste(
       "Per-capita global plastics demand 1990-2100 by scenario from Fritzeen et al. (2023),",
-      "summed over all technologies and divided by SSP2 population (calcOutput('CoPopulation'))."
+      "summed over all technologies and divided by SSP2 population (calcOutput('CoPopulation')).",
+      "Global only; one value per scenario."
     ),
-    isocountries = FALSE,
-    note = "Global only; SSP2 population; one value per scenario."
+    isocountries = FALSE
   ))
 }

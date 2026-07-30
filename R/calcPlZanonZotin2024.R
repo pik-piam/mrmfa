@@ -68,10 +68,10 @@ calcPlZanonZotin2024 <- function(subtype = "total") {
     description = paste(
       "Per-capita HVC production 2010-2100 from Zanon-Zotin et al. (2024),",
       "doi:10.1038/s41467-024-52434-y, sheet fig3b (COFFEE 1.5 model), reported under",
-      "the IAMC variable Production|Industry|Chemicals|HVC|per capita."
+      "the IAMC variable Production|Industry|Chemicals|HVC|per capita.",
+      "Global only; no regional disaggregation. One value per scenario."
     ),
-    isocountries = FALSE,
-    note = "Global only; no regional disaggregation. One value per scenario."
+    isocountries = FALSE
   ))
 
 }
