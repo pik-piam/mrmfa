@@ -85,7 +85,6 @@ calcPlPottinger <- function(subtype = "businessAsUsual", perCapita = FALSE) {
     description = paste(
       "Per-capita plastics material-flow pathway 2011-2050 from Pottinger et al. (2024),",
       "scenario:", subtype, "in IAMC variables; population from UN WPP (estimates + medium)."
-    ),
-    note = "Population-weighted; intensive variable aggregated as weighted mean."
+    )
   ))
 }
