@@ -25,7 +25,10 @@ sectors is normalized within each type (\code{Fibre}, \code{Rubber},
 Multiplying the result with a \code{(time, region, type)} total - e.g. the
 output of \code{\link{calcPlProduction}} - yields absolute values per
 \code{(time, region, type, polymer, sector)}. That multiplication happens in
-remind-mfa, not here. The three fibre polymers form type \code{Fibre},
+remind-mfa, not here. Countries with no consumption of a type (so a locally
+undefined split) fall back to the global \code{(polymer, sector)} split of
+that type and year, so the shares always sum to 1 and the multiplication
+conserves mass. The three fibre polymers form type \code{Fibre},
 \code{Rubbers} forms type \code{Rubber}, and the remaining polymers form type
 \code{Plastics}, matching the \code{type} dimension of
 \code{\link{calcPlProduction}}.

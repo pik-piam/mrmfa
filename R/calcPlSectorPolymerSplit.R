@@ -9,14 +9,17 @@
 #' Multiplying the result with a \code{(time, region, type)} total - e.g. the
 #' output of \code{\link{calcPlProduction}} - yields absolute values per
 #' \code{(time, region, type, polymer, sector)}. That multiplication happens in
-#' remind-mfa, not here. The three fibre polymers form type \code{Fibre},
+#' remind-mfa, not here. Countries with no consumption of a type (so a locally
+#' undefined split) fall back to the global \code{(polymer, sector)} split of
+#' that type and year, so the shares always sum to 1 and the multiplication
+#' conserves mass. The three fibre polymers form type \code{Fibre},
 #' \code{Rubbers} forms type \code{Rubber}, and the remaining polymers form type
 #' \code{Plastics}, matching the \code{type} dimension of
 #' \code{\link{calcPlProduction}}.
 #'
 #' @return A list in \code{\link[madrat]{calcOutput}} format with the polymer and
 #'   sector split shares by country, year, type, polymer and sector (1978-2021).
-#'   The weight is the per-type total consumption. Years 2020-2021 rely on
+#'   The weight is the per-type Gao consumption total. Years 2020-2021 rely on
 #'   incomplete Gao trade data.
 #' @param target_years integer vector of target years for the output data.
 #' Enables forecasting of Gao data to include same years as production data.
@@ -26,7 +29,7 @@
 #' \dontrun{
 #' a <- calcOutput("PlSectorPolymerSplit")
 #' }
-#' @importFrom magclass dimSums
+#' @importFrom magclass dimSums setItems
 #' @export
 calcPlSectorPolymerSplit <- function(target_years = NULL) {
 
@@ -48,11 +51,33 @@ calcPlSectorPolymerSplit <- function(target_years = NULL) {
   # ---------------------------------------------------------------------------
   typeTotal <- dimSums(data_forecast, dim = c("polymer", "sector")) # (region, year, type)
   x <- data_forecast / typeTotal # broadcasts typeTotal over polymer.sector via the type subdim
-  x[is.na(x)] <- 0 # 0/0 for types with no consumption -> 0
+
+  # Where a country has no consumption of a type (typeTotal == 0) the local split
+  # is undefined (0/0) and would collapse to all-zeros. Multiplying that by a
+  # non-zero production total in remind-mfa would lose mass. Fall back to the
+  # global (polymer, sector) split of that type and year, which sums to 1 and
+  # hence conserves mass; countries that do have data keep their own split.
+  globalByType <- dimSums(data_forecast, dim = "region") # (GLO, year, type.polymer.sector)
+  globalShare <- globalByType / dimSums(globalByType, dim = c("polymer", "sector"))
+  globalShare[is.na(globalShare)] <- 0 # type absent even globally -> genuinely 0
+  globalShare <- setItems(globalShare, dim = 1, "GLO") # mark global so it broadcasts over region
+
+  missing <- typeTotal == 0 # (region, year, type)
+  x[is.na(x)] <- 0 # start the undefined blocks from 0 ...
+  x <- x + missing * globalShare # ... then fill only those blocks with the global split
+
+  # Weight the shares by Gao consumption, but floor the zero weights of fallback
+  # (region, year, type) blocks to a negligible positive value. Otherwise a model
+  # region whose countries all lack Gao data for a type sums to zero weight and
+  # its aggregated share becomes NaN (mass loss). The floor is tiny relative to
+  # real consumption, so it does not shift data-rich regions; where it does apply
+  # every country carries the same global split, so the region resolves to it.
+  weight <- typeTotal
+  weight[weight == 0] <- 1e-9 * max(weight)
 
   return(list(
     x = x,
-    weight = typeTotal,
+    weight = weight,
     unit = "share",
     description = paste(
       "Share of each polymer and end-use sector within total Fibre/Rubber/Plastics",
