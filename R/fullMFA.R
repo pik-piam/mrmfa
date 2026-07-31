@@ -126,7 +126,7 @@ fullMFA <- function(rev = 0,
     calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction", aggregate = FALSE)
     calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
     calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")
-    calcOutput("CeStockTypeSplit", file = "ce_stock_type_split.cs4r")
+    calcOutput("CeGoodSplit", file = "ce_good_split.cs4r")
     calcOutput("CeIndustrializedRegions", file = "ce_industrialized_regions.cs4r", round = 0)
     # Carbonation
     calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
@@ -148,8 +148,8 @@ fullMFA <- function(rev = 0,
     # Service demand / bottom-up
     calcOutput("CeFloorspaceEDGEB", file = "ce_floorspace.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = 1990:end_future)
     calcOutput("CeBuildingsMI", file = "ce_concrete_building_mi.cs4r", subtype = "concrete")
-    calcOutput("CeBuildingsSplit", file = "ce_function_buildings_split.cs4r", subtype = "Function")
-    calcOutput("CeBuildingsSplit", file = "ce_structure_buildings_split.cs4r", subtype = "Structure")
+    calcOutput("CeSingleFamilyHomeShare", file = "ce_single_family_home_share.cs4r")
+    calcOutput("CeStructureSplit", file = "ce_structure_split.cs4r")
     calcOutput("CeHibernatingStockShare", file = "ce_hibernating_stock_share.cs4r")
   }
 

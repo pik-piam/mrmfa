@@ -48,7 +48,7 @@ calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = 
     smooth_suffix
   )
   scenario_note <- if (length(scenarios) == 1 && collapse) "" else ",Driver Scenario"
-  note <- paste0("dimensions: (Time,Region", scenario_note, ",Stock Type,value)")
+  note <- paste0("dimensions: (Time,Region", scenario_note, ",Aggregated Good,value)")
   output <- list(
     x = floorspace,
     weight = NULL,
