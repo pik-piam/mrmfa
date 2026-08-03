@@ -127,7 +127,6 @@ fullMFA <- function(rev = 0,
     calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
     calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")
     calcOutput("CeGoodSplit", file = "ce_good_split.cs4r")
-    calcOutput("CeIndustrializedRegions", file = "ce_industrialized_regions.cs4r", round = 0)
     # Carbonation
     calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
     calcOutput("CeCaOContent", file = "ce_ckd_cao_ratio.cs4r", subtype = "CKD", aggregate = FALSE)
