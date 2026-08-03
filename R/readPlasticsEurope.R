@@ -31,7 +31,7 @@ readPlasticsEurope <- function(subtype) {
   params <- switch(subtype,
     "Production_region" = list(
       sheet  = "Production_region",
-      range  = "A1:J20"
+      range  = "A1:J21"
     ),
     "SectorShare_EU" = list(
       sheet  = "SectorShare_EU",

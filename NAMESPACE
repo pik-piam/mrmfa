@@ -3,6 +3,7 @@
 export(MplotMulti)
 export(calcPlGaoCabrera2025)
 export(calcPlProduction)
+export(calcPlRen2025)
 export(calcPlSectorPolymerSplit)
 export(calcPlSyntheticFibre)
 export(calcPlSyntheticRubber)
