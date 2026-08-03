@@ -1,10 +1,12 @@
-ValidationKey: '23121280'
+ValidationKey: '23350320'
 AutocreateReadme: yes
 AutocreateCITATION: yes
 AcceptedWarnings:
 - 'Warning: package ''.*'' was built under R version'
 - 'Warning: namespace ''.*'' is not available and has been replaced'
-AcceptedNotes: madrat:::getSourceFolder
+AcceptedNotes:
+- madrat:::getSourceFolder
+- .* includes the non-default packages.*
 allowLinterWarnings: yes
 enforceVersionUpdate: yes
 skipCoverage: yes

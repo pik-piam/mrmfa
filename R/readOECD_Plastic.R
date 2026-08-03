@@ -10,6 +10,10 @@
 #'  - "Use_1990-2019_world" (plastic use in Mt, dimensions: year, application, polymer, type (primary/secondary))
 #'  - "WasteEOL_1990-2019_region" (plastic waste in Mt, dimensions: region, year, EOL fate, collected for recycling)
 #'  - "WasteType_2019_region" (plastic waste in Mt, dimensions: region, application, polymer)
+#'  - "Use_1980-2060_projection" (OECD Global Plastics Outlook 2022 plastics use in Mt,
+#'    dimensions: OECD-Outlook region, year)
+#'  - "Pop_2019-2060_projection" (OECD Global Plastics Outlook 2022 population in billion
+#'    people, dimensions: OECD-Outlook region, year)
 #'
 #' @return magpie object of the OECD Plastic data
 #'
@@ -58,6 +62,16 @@ readOECD_Plastic <- function(subtype) {
       sheet  = "2019 WasteType",
       range  = "A1:X1411"
     ),
+    "Use_1980-2060" = list(
+      file   = "Plastics Projections.xlsx",
+      sheet  = "plastics",
+      range  = "A27:C1242"
+    ),
+    "Pop_2019-2060" = list(
+      file   = "Plastics Projections.xlsx",
+      sheet  = "pop",
+      range  = "A23:C653"
+    ),
     stop("Invalid subtype combination: ", key)
   )
 
@@ -102,6 +116,10 @@ readOECD_Plastic <- function(subtype) {
         "Plastic type", "OBS_VALUE"
       ) %>%
       filter(.data$`Reference area` == "World"),
+    "Use_1980-2060_projection" = raw_df %>%
+      select(region = "rLab", year = "t", value = "value"),
+    "Pop_2019-2060_projection" = raw_df %>%
+      select(region = "rLab", year = "year", value = "value"),
     stop("Unsupported subtype: ", subtype)
   )
 

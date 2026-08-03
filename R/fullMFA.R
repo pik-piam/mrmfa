@@ -34,15 +34,11 @@ fullMFA <- function(rev = 0,
     runSections <- validSections
   } else {
     bad <- setdiff(runSections, validSections)
-    if (length(bad)) stop("Invalid sections: ", paste(bad, collapse = ", "))
+    if (length(bad)) warning("Invalid sections: ", paste(bad, collapse = ", "))
+    runSections <- intersect(runSections, validSections)
   }
 
   runSection <- function(name) name %in% runSections
-
-  if (!length(runSections)) {
-    message("fullMFA: no sections selected; nothing done.")
-    return(invisible(NULL))
-  }
 
   # nolint start
 
@@ -83,7 +79,7 @@ fullMFA <- function(rev = 0,
 
     # Static Parameters
     # calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
-    calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_BOF_rate.cs4r", aggregate = FALSE)
+    calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_bof_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "productionLossRate", file = "st_production_loss_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "formingLossRate", file = "st_forming_loss_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "formingYield", file = "st_forming_yield.cs4r", aggregate = FALSE)
