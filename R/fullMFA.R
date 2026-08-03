@@ -148,7 +148,7 @@ fullMFA <- function(rev = 0,
     # Service demand / bottom-up
     calcOutput("CeFloorspaceEDGEB", file = "ce_floorspace.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = 1990:end_future)
     calcOutput("CeBuildingsMI", file = "ce_concrete_building_mi.cs4r", subtype = "concrete")
-    calcOutput("CeSingleFamilyHomeShare", file = "ce_single_family_home_share.cs4r")
+    calcOutput("CeDwellingSplit", file = "ce_dwelling_split.cs4r")
     calcOutput("CeStructureSplit", file = "ce_structure_split.cs4r")
     calcOutput("CeHibernatingStockShare", file = "ce_hibernating_stock_share.cs4r")
   }

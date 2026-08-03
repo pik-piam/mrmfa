@@ -7,11 +7,7 @@ calcCeBuiltLifespan <- function() {
   data_new <- add_columns(data, addnm = c("Com", "Ind"), dim = 3.1)
   data_new[, , "Com"] <- data[, , "NonRes"]
   data_new[, , "Ind"] <- data[, , "NonRes"]
-  # Split Res into single- (RS) and multi-family (RM) homes and remove Res category
-  data_new <- add_columns(data_new, addnm = c("RS", "RM"), dim = 3.1)
-  data_new[, , "RS"] <- data[, , "Res"]
-  data_new[, , "RM"] <- data[, , "Res"]
-  data_final <- data_new[, , c("NonRes", "Res"), invert = TRUE]
+  data_final <- data_new[, , "NonRes", invert = TRUE]
 
   unit <- "years (a)"
   description <- paste(

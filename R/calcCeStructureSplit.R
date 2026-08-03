@@ -22,11 +22,8 @@ calcCeStructureSplit <- function() {
 
   # output
   relFloorArea <- replace_non_finite(relFloorArea, replace = 0)
-  # Ind and Civ lie entirely in the unspecified structure U
-  relFloorArea <- add_columns(relFloorArea, addnm = c("Ind.U", "Civ.U"), dim = 3, fill = 1)
   getSets(relFloorArea)["d3.1"] <- "Good"
   weight <- floorArea_byFunction # use normalizing floor area as weight
-  weight <- add_columns(weight, addnm = c("Ind", "Civ"), dim = 3, fill = 1)
   unit <- "ratio"
   description <- paste0(
     "Relative floor area of buildings by Good and Structure. ",
@@ -36,7 +33,7 @@ calcCeStructureSplit <- function() {
     "J., Hoyos, M., Martins, L., Paul, N., Rao, A., Silva, V. (2023). ",
     "Global Building Exposure Model for Earthquake Risk Assessment. Earthquake Spectra. doi:10.1177/87552930231194048."
   )
-  note <- "dimensions: (Region,Good,Structure,value)"
+  note <- "dimensions: (Region,Bottom-up Good,Structure,value)"
   output <- list(
     x = complete_magpie(relFloorArea, fill = 0),
     weight = complete_magpie(weight, fill = 0),

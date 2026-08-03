@@ -1,9 +1,9 @@
-#' Share of single-family homes in residential floor area.
+#' Split of residential floor area into single- (RS) and multi-family (RM) homes.
 #'
-#' Floor area of single-family homes (RS) relative to the total residential floor
-#' area (RS + RM), based on the Global Exposure Model (GEM).
+#' Two-item split (sums to 1): floor area of single-family homes (RS) relative to the
+#' total residential floor area (RS + RM), based on the Global Exposure Model (GEM).
 #' @author Bennet Weiss
-calcCeSingleFamilyHomeShare <- function() {
+calcCeDwellingSplit <- function() {
   floorArea <- calcOutput("CeFloorspaceGEM", subtype = "Function", aggregate = FALSE)
   res_floorArea <- dimSums(mselect(floorArea, Function = c("RS", "RM")), dim = 3)
   share <- collapseDim(mselect(floorArea, Function = "RS")) / res_floorArea
@@ -20,16 +20,20 @@ calcCeSingleFamilyHomeShare <- function() {
   region_fill <- toolAggregate(regional_share, h12, from = "RegionCode", to = "CountryCode")
   share[!is.finite(share)] <- region_fill[!is.finite(share)]
 
-  weight <- res_floorArea
+  x <- mbind(setNames(share, "RS"), setNames(1 - share, "RM"))
+  getSets(x)["d3.1"] <- "Dwelling Type"
+  weight <- mbind(setNames(res_floorArea, "RS"), setNames(res_floorArea, "RM"))
+  getSets(weight)["d3.1"] <- "Dwelling Type"
+
   unit <- "ratio"
   description <- paste(
-    "Share of single-family homes (RS) in total residential (RS + RM) floor area.",
+    "Split of residential floor area into single- (RS) and multi-family (RM) homes.",
     "Data from Global Exposure Model (GEM), categories harmonized with RASMI."
   )
-  note <- "dimensions: (Region,value)"
+  note <- "dimensions: (Region,Dwelling Type,value)"
 
   output <- list(
-    x = share,
+    x = x,
     weight = weight,
     unit = unit,
     description = description,
