@@ -18,10 +18,7 @@
 #' \dontrun{
 #' readSource("Pottinger2024", convert = FALSE)
 #' }
-#' @importFrom readr read_csv
 #' @importFrom dplyr filter mutate select
-#' @importFrom tidyr pivot_longer
-#' @importFrom rlang .data
 #' @importFrom magclass as.magpie
 readPottinger2024 <- function() {
   raw <- readr::read_csv("science.adr3837_data_s1.csv", show_col_types = FALSE)
@@ -42,7 +39,7 @@ readPottinger2024 <- function() {
 
   # reshape all flow columns into the data dimension
   dfLong <- df %>%
-    pivot_longer(cols = -c("regionKey", "year", "scenario"), names_to = "variable", values_to = "value") %>%
+    tidyr::pivot_longer(cols = -c("regionKey", "year", "scenario"), names_to = "variable", values_to = "value") %>%
     select("regionKey", "year", "scenario", "variable", "value")
 
   x <- as.magpie(dfLong, spatial = 1, temporal = 2)
