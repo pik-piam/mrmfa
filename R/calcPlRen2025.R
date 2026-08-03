@@ -5,8 +5,9 @@
 #' (\code{\link{readRen2025}}), selected via \code{subtype}:
 #' \describe{
 #'   \item{\code{"production"}}{Total primary + secondary production (stage
-#'     \code{P}, processes \code{domestic} + \code{regeneration}) by polymer, in
-#'     tonnes. The fibre and rubber tonnages that stage \code{M} \code{p2m}
+#'     \code{P}, processes \code{domestic} + \code{regeneration}) by type
+#'     (\code{Plastics} / \code{Fibre} / \code{Rubber}) and polymer, in tonnes.
+#'     The fibre and rubber tonnages that stage \code{M} \code{p2m}
 #'     routes into the \code{Fibers} and \code{Rubbers} products are subtracted
 #'     from each polymer's plastics production and reported as separate materials
 #'     (\code{PET fibre}, \code{Polyamide fibre}, \code{Other fibre} and
@@ -65,8 +66,10 @@ calcPlRen2025 <- function(subtype) {
     fibVol <- expandPolymer(fibVol, prod)
     rubVol <- expandPolymer(rubVol, prod)
 
-    # plastics = production minus the fibre / rubber tonnages
+    # plastics = production minus the fibre / rubber tonnages (floored at 0; in
+    # early years p2m fibre/rubber manufacturing can exceed a polymer's production)
     plastics <- prod - fibVol - rubVol
+    plastics[plastics < 0] <- 0
     plastics <- foldPA(plastics)
 
     # fibre volumes routed to the named fibre materials (rest -> Other fibre)
@@ -79,7 +82,12 @@ calcPlRen2025 <- function(subtype) {
     # rubber volumes collapsed to a single Rubbers material
     rubber <- add_dimension(dimSums(rubVol, dim = "polymer"), dim = 3.1, add = "polymer", nm = "Rubbers")
 
-    production <- mbind(plastics, fibre, rubber) * 1e4 # 10^4 t -> t
+    # tag each block with its type (Plastics / Fibre / Rubber) and combine
+    production <- mbind(
+      add_dimension(plastics, dim = 3.1, add = "type", nm = "Plastics"),
+      add_dimension(fibre, dim = 3.1, add = "type", nm = "Fibre"),
+      add_dimension(rubber, dim = 3.1, add = "type", nm = "Rubber")
+    ) * 1e4 # 10^4 t -> t
 
     return(list(
       x = production,
@@ -90,7 +98,7 @@ calcPlRen2025 <- function(subtype) {
         "Ren et al. (2025). Fibre and rubber manufacturing tonnages are split off",
         "into separate materials. Assumes raw values are in 10^4 t (verify vs. paper)."
       ),
-      note = "dimensions: (Time,Region,Material,value)",
+      note = "dimensions: (Time,Region,Type,Material,value)",
       min = 0
     ))
   }

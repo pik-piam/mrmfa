@@ -18,8 +18,9 @@ Derive three outputs from the Ren et al. (2025) China material-flow database
 (\code{\link{readRen2025}}), selected via \code{subtype}:
 \describe{
   \item{\code{"production"}}{Total primary + secondary production (stage
-    \code{P}, processes \code{domestic} + \code{regeneration}) by polymer, in
-    tonnes. The fibre and rubber tonnages that stage \code{M} \code{p2m}
+    \code{P}, processes \code{domestic} + \code{regeneration}) by type
+    (\code{Plastics} / \code{Fibre} / \code{Rubber}) and polymer, in tonnes.
+    The fibre and rubber tonnages that stage \code{M} \code{p2m}
     routes into the \code{Fibers} and \code{Rubbers} products are subtracted
     from each polymer's plastics production and reported as separate materials
     (\code{PET fibre}, \code{Polyamide fibre}, \code{Other fibre} and
