@@ -23,9 +23,9 @@ calcCeHibernatingStockShare <- function() {
   )
 
   # set China manually based on:
-  # Zhang, C., Yang, L., Wiedenhofer, D. et al.
-  # Building material stock drives embodied carbon emissions and risks future climate goals in China.
-  # Nat. Clim. Chang. 16, 164-171 (2026). https://doi.org/10.1038/s41558-025-02527-3
+  # Zheng, H., Zhang, R., Yin, X. et al.
+  # Unused housing in urban China and its carbon emission impact.
+  # Nat Commun 16, 1985 (2025). https://doi.org/10.1038/s41467-025-57217-7
   share_vacant["CHN", ] <- 0.174
 
   unit <- "ratio"
@@ -33,9 +33,9 @@ calcCeHibernatingStockShare <- function() {
     c(
       "Share of total building stock that is hibernating (built but unused and not demolished).",
       "For China, based on:",
-      "# Zhang, C., Yang, L., Wiedenhofer, D. et al.",
-      "Building material stock drives embodied carbon emissions and risks future climate goals in China.",
-      "Nat. Clim. Chang. 16, 164-171 (2026). https://doi.org/10.1038/s41558-025-02527-3.",
+      "Zheng, H., Zhang, R., Yin, X. et al.",
+      "Unused housing in urban China and its carbon emission impact.",
+      "Nat Commun 16, 1985 (2025). https://doi.org/10.1038/s41467-025-57217-7",
       "ROW based on:",
       "OECD (2024), OECD Affordable Housing Database - indicator HM1.1. Housing stock and construction,",
       "https://oe.cd/ahd"
