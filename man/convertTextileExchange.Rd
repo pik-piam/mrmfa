@@ -13,12 +13,14 @@ convertTextileExchange(x)
 MagPIE object of the shares disaggregated to ISO country level.
 }
 \description{
-Disaggregates the regional synthetic-fibre production shares to ISO country
-level. The countries belonging to each Textile Exchange region are taken from
-\code{regionmappingTextileExchange.csv} (derived from the "comment" column of
-the source excel file), and the region share is distributed across those countries
-proportionally to their chemical energy consumption
-(\code{calcOutput("ChemicalTotal")}, from mrindustry).
+Disaggregates the year-varying (2007-2022) chemical-fibre production shares to
+ISO country level. The source split has eight named countries (DEU, USA, JPN,
+PAK, IND, KOR, TWN, CHN) plus two residual groups, Western Europe (excl. DE)
+and Other. The countries belonging to each group are taken from
+\code{regionmappingTextileExchange.csv}, and each group's share is distributed
+across its countries proportionally to their chemical energy consumption
+(\code{calcOutput("ChemicalTotal")}, from mrindustry); named single-country
+groups pass their share through unchanged.
 }
 \details{
 Only the \code{"region_share"} subtype is convertible; the

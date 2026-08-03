@@ -13,7 +13,7 @@ Enables forecasting of Gao data to include same years as production data.}
 \value{
 A list in \code{\link[madrat]{calcOutput}} format with the polymer and
   sector split shares by country, year, type, polymer and sector (1978-2021).
-  The weight is the per-type total consumption. Years 2020-2021 rely on
+  The weight is the per-type Gao consumption total. Years 2020-2021 rely on
   incomplete Gao trade data.
 }
 \description{

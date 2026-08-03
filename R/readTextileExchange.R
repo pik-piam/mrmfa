@@ -2,14 +2,15 @@
 #'
 #' This function reads Textile Exchange (Materials Market Report 2025) data on
 #' synthetic fibre production and its estimated regional distribution based on
-#' Credence Research market data on monoethylene glycol from an Excel file,
+#' Industrievereinigung Chemiefaser e.V. regional production volumes from an Excel file,
 #' based on a specified subtype, and returns a magpie object.
 #'
 #' @param subtype Character string specifying the dataset:
 #'        - "timeseries_by_type": global synthetic fibre production in Mt by fibre
 #'          type and year (fibre, year, production_Mt).
-#'        - "region_share": regional production shares (\%) by fibre and year
-#'          (region, fibre, share_pct, year).
+#'        - "region_share": chemical fibre production shares by region and year,
+#'          2007-2022, over the split WEU (Western Europe excl. DE), DEU, USA, JPN,
+#'          PAK, IND, KOR, TWN, CHN and Other (region, year, share).
 #'
 #' @return magpie object of the Textile Exchange data
 #'
@@ -21,7 +22,6 @@
 #' \dontrun{
 #' a <- readSource(type = "TextileExchange", subtype = "timeseries_by_type", convert = FALSE)
 #' }
-#' @importFrom readxl read_excel
 #' @importFrom magclass as.magpie getComment<-
 #'
 readTextileExchange <- function(subtype) {
@@ -29,11 +29,11 @@ readTextileExchange <- function(subtype) {
   # Map subtype to Excel sheet and cell range
   params <- switch(subtype,
     "timeseries_by_type" = list(sheet = "timeseries_by_type", range = "A1:D59"),
-    "region_share"       = list(sheet = "region_share",       range = "A1:D6"),
+    "region_share"       = list(sheet = "region_shares_pct",  range = "A3:K19"),
     stop("Invalid subtype: ", subtype)
   )
 
-  raw_df <- read_excel(
+  raw_df <- readxl::read_excel(
     path  = "TextileExchange.xlsx",
     sheet = params$sheet,
     range = params$range
@@ -47,8 +47,13 @@ readTextileExchange <- function(subtype) {
       as.magpie(raw_df[, c("region", "year", "fibre", "incl_PlasticsEurope", "production_Mt")],
                 spatial = "region", temporal = "year", data = "production_Mt")
     },
-    "region_share" = as.magpie(raw_df[, c("region", "year", "fibre", "share_pct")],
-                               spatial = 1, temporal = 2),
+    "region_share" = {
+      # wide (year x region) -> long (region, year, share)
+      long_df <- tidyr::pivot_longer(raw_df, cols = -"Year", names_to = "region", values_to = "share")
+      names(long_df)[names(long_df) == "Year"] <- "year"
+      as.magpie(long_df[, c("region", "year", "share")],
+                spatial = "region", temporal = "year", data = "share")
+    },
     stop("Unsupported subtype: ", subtype)
   )
 

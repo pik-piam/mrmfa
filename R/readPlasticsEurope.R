@@ -47,7 +47,7 @@ readPlasticsEurope <- function(subtype) {
   # ---------------------------------------------------------------------------
   # Read raw data from Excel
   raw_df <- read_excel(
-    path  = "PlasticsEurope.xlsx",
+    path  = file.path("v2.0","PlasticsEurope.xlsx"),
     sheet = params$sheet,
     range = params$range,
     skip  = 1

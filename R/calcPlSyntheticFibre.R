@@ -14,7 +14,7 @@
 #' \dontrun{
 #' a <- calcOutput("PlSyntheticFibre")
 #' }
-#' @importFrom magclass dimSums collapseDim setYears getItems getYears new.magpie magpiesort
+#' @importFrom magclass dimSums collapseDim getItems getYears new.magpie magpiesort
 #' @export
 calcPlSyntheticFibre <- function() {
   # read source and interpolate missing years
@@ -36,11 +36,17 @@ calcPlSyntheticFibre <- function() {
   # differentiating whether fibers are included in PlasticsEurope figures or not)
   total <- dimSums(extrapolated, dim = 3.1)
 
-  # country-level production shares (fraction); single fibre (Polyester proxy) and
-  # single year (2024), applied as a static distribution key across all years
-  share <- setYears(collapseDim(
+  # country-level production shares (fraction, sum to 1 per year), year-varying
+  # 2007-2022; held constant outside that range (2022 forward, 2007 backward) so
+  # every year of the global total gets a country split
+  share <- collapseDim(
     readSource("TextileExchange", subtype = "region_share", convert = TRUE)
-  ), NULL) / 100
+  )
+  share <- toolInterpolate(
+    share,
+    years = getYears(total, as.integer = TRUE),
+    extrapolate = TRUE
+  )
 
   # production by country and year = global total(year) * country share
   x <- total * share
@@ -51,9 +57,10 @@ calcPlSyntheticFibre <- function() {
     unit = "Mt",
     description = paste(
       "Synthetic fibre production (Polyester + Polyamide (nylon) + Acrylic) by",
-      "country, 2020-2024, from Textile Exchange Materials Market Report 2025.",
-      "Global totals disaggregated to countries using the 2024 regional split",
-      "(polyester/MEG proxy) distributed by chemical energy consumption."
+      "country, 1990-2024, from Textile Exchange Materials Market Report 2025.",
+      "Global totals disaggregated to countries using the year-varying 2007-2022",
+      "chemical-fibre regional split (held constant outside that range),",
+      "distributed to countries by chemical energy consumption."
     ),
     note = "dimensions: (Time,Region,value)",
     min = 0
