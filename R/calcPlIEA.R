@@ -48,13 +48,11 @@ calcPlIEA <- function(subtype) {
         "Global production of key thermoplastics 1980-2050 from IEA 'The Future of",
         "Petrochemicals' (2018), Figure 4.2 (Reference Technology Scenario), reported",
         "at the global level under the IAMC variables Production|Chemicals|Plastics",
-        "and Material Demand|Chemicals|Plastics."
-      ),
-      isocountries = FALSE,
-      note = paste(
+        "and Material Demand|Chemicals|Plastics.",
         "Global only; IEA 'key thermoplastics' is a subset of all plastics",
         "(excludes thermosets and other polymers)."
-      )
+      ),
+      isocountries = FALSE
     ))
   }
 
@@ -75,13 +73,12 @@ calcPlIEA <- function(subtype) {
     weight = pop,
     unit = "kg/cap",
     description = paste(
-      "Per-capita Global production of key thermoplastics 1980-2050 from IEA 'The Future of",
+      "Per-capita global production of key thermoplastics 1980-2050 from IEA 'The Future of",
       "Petrochemicals' (2018), Figure 4.2 (Reference Technology Scenario), reported",
       "at the global level under the IAMC variables Production|Chemicals|Plastics",
       "and Material Demand|Chemicals|Plastics.; population from UN WPP (estimates + medium)."
     ),
-    isocountries = FALSE,
-    note = "Population-weighted; intensive variable aggregated as weighted mean."
+    isocountries = FALSE
   ))
 
 }

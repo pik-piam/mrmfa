@@ -16,7 +16,8 @@ calcCeFloorspaceEDGEB(
 
 \item{collapse}{Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.}
 
-\item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation.}
+\item{smooth}{Logical. If TRUE, data is smoothed using spline interpolation
+(see \link{toolHistoricallyConsistentSmoothing}); smoothed historical values are identical across scenarios.}
 
 \item{dof}{Integer. Degrees of freedom for spline interpolation.}
 }

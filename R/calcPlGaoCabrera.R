@@ -27,8 +27,8 @@ calcPlGaoCabrera <- function() {
       "Apparent polymer consumption 1978-2021 from Gao & Cabrera-Serrenho (2025),",
       "total over all 14 polymer groups (incl. fibres and rubber), in the IAMC",
       "variable Material Demand|Chemicals|Plastics. Years 2020-2021 rely on",
-      "incomplete trade data."
-    ),
-    note = "Disaggregated from 8 Gao regions to ISO3 via population weighting"
+      "incomplete trade data.",
+      "Disaggregated from 8 Gao regions to ISO3 via population weighting."
+    )
   ))
 }

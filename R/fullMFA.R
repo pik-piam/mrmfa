@@ -34,15 +34,11 @@ fullMFA <- function(rev = 0,
     runSections <- validSections
   } else {
     bad <- setdiff(runSections, validSections)
-    if (length(bad)) stop("Invalid sections: ", paste(bad, collapse = ", "))
+    if (length(bad)) warning("Invalid sections: ", paste(bad, collapse = ", "))
+    runSections <- intersect(runSections, validSections)
   }
 
   runSection <- function(name) name %in% runSections
-
-  if (!length(runSections)) {
-    message("fullMFA: no sections selected; nothing done.")
-    return(invisible(NULL))
-  }
 
   # nolint start
 
