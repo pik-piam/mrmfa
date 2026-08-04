@@ -54,7 +54,7 @@ calcPlProduction <- function() {
     x <- toolBackcastByReference(x, oecdTotal)
     x <- toolBackcastByReference(x, geyer)
     magpiesort(x)
-    x <- x[, getYears(x) < lastYear, ]
+    x <- x[, getYears(x) <= lastYear, ]
   }
   fibre    <- backcast(fibre)
   rubber   <- backcast(rubber)
