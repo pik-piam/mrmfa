@@ -152,7 +152,7 @@ fullMFA <- function(rev = 0,
   #  ------------- PLASTIC -----------
   if (runSection("plastic")) {
     start_historic <- 1950
-    end_historic <- 2022
+    end_historic <- 2024
 
     # common parameters
     calcOutput("CoPopulation", file = "pl_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
