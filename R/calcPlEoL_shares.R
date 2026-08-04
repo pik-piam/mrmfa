@@ -126,10 +126,10 @@ calcPlEoL_shares <- function(subtype) {
   )
 
   # ---------------------------------------------------------------------------
-  # Forecast EoL rates to 2022 (keep constant)
+  # Forecast EoL rates to 2024 (keep constant)
   # ---------------------------------------------------------------------------
   x_forecast <- time_interpolate(x_backcast,
-    interpolated_year = 2019:2022,
+    interpolated_year = 2019:2024,
     integrate_interpolated_years = TRUE,
     extrapolation_type = "constant"
   )
@@ -160,7 +160,7 @@ calcPlEoL_shares <- function(subtype) {
   weight[, , ] <- 0
   weight[, seq(2000, 2019, 1)] <- plOECD[, seq(2000, 2019, ), "Total"]
   weight[, seq(1950, 1999, 1)] <- plOECD[, 2000, "Total"]
-  weight[, seq(2020, 2022, 1)] <- plOECD[, 2019, "Total"]
+  weight[, seq(2020, 2024, 1)] <- plOECD[, 2019, "Total"]
 
   # ---------------------------------------------------------------------------
   # Return results

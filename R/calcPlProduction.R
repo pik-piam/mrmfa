@@ -12,10 +12,7 @@
 #' independently along the total plastics trend: first with the OECD regional
 #' plastic use (1990-2019, \code{readSource("OECD_Plastic",
 #' "Use_1990-2019_region")}) and then with the Geyer et al. 2017 global
-#' production (1950-2015, \code{readSource("Geyer", "Prod_1950-2015")}). Since
-#' the fibre series only starts in 2020 - one year after the OECD reference ends
-#' - its 2019 value is assumed equal to 2020 so that it overlaps the OECD
-#' reference and can be backcast.
+#' production (1950-2015, \code{readSource("Geyer", "Prod_1950-2015")}).
 #'
 #' @return A list in \code{\link[madrat]{calcOutput}} format with plastics,
 #'   fibre and rubber production by country, type and year (1950-2024).
