@@ -6,12 +6,11 @@
 #' \describe{
 #'   \item{\code{"production"}}{Total primary + secondary production (stage
 #'     \code{P}, processes \code{domestic} + \code{regeneration}) by type
-#'     (\code{Plastics} / \code{Fibre} / \code{Rubber}) and polymer, in tonnes.
-#'     The fibre and rubber tonnages that stage \code{M} \code{p2m}
-#'     routes into the \code{Fibers} and \code{Rubbers} products are subtracted
-#'     from each polymer's plastics production and reported as separate materials
-#'     (\code{PET fibre}, \code{Polyamide fibre}, \code{Other fibre} and
-#'     \code{Rubbers}). Leftover polyamide plastics fold into
+#'     (\code{Plastics} / \code{Fibre}) and polymer, in tonnes.
+#'     The fibre tonnages that stage \code{M} \code{p2m} routes into the 
+#'     \code{Fibers} products are subtracted from each polymer's plastics production 
+#'     and reported as separate materials (\code{PET fibre}, \code{Polyamide fibre} 
+#'     and \code{Other fibre}. Leftover polyamide plastics fold into
 #'     \code{Other thermoplastics}.}
 #'   \item{\code{"consumption"}}{Share of each polymer and end-use sector within
 #'     total apparent consumption (stage \code{U}, process \code{inflow}),
@@ -45,47 +44,40 @@ calcPlRen2025 <- function(subtype) {
 
   if (subtype == "production") {
     # -------------------------------------------------------------------------
-    # Total production (primary + secondary) by base polymer, and the fibre /
-    # rubber tonnages that manufacturing (p2m) routes into fibre / rubber products
+    # Total production (primary + secondary) by base polymer, and the fibre
+    # tonnages that manufacturing (p2m) routes into fibre products
+    # Note: Although rubbers are also differentiated by Ren et al. (2025),
+    # these are only polyurethane rubbers which are part of the "plastics" scope
+    # in REMIND-MFA (because covered by PlasticsEurope). Therefore, we keep them in
+    # plastics here.
     # -------------------------------------------------------------------------
     collapse <- c("stage", "process", "product", "sector", "disposal")
     prod   <- dimSums(mselect(raw, stage = "P", process = c("domestic", "regeneration")), dim = collapse)
     fibVol <- dimSums(mselect(raw, stage = "M", process = "p2m", product = "Fibers"), dim = collapse)
-    rubVol <- dimSums(mselect(raw, stage = "M", process = "p2m", product = "Rubbers"), dim = collapse)
 
-    # align fibre / rubber volumes to the full production polymer set (0 where a
-    # polymer has no fibre / rubber manufacturing)
-    expandPolymer <- function(v, ref) {
-      out <- ref
-      out[, , ] <- 0
-      poly <- intersect(getItems(v, dim = "polymer"), getItems(ref, dim = "polymer"))
-      out[, , poly] <- v[, , poly]
-      out
-    }
-    fibVol <- expandPolymer(fibVol, prod)
-    rubVol <- expandPolymer(rubVol, prod)
+    # align fibre volumes to the full production polymer set (0 where a polymer has no fibre manufacturing)
+    fib <- prod
+    fib[, , ] <- 0
+    poly <- intersect(getItems(fibVol, dim = "polymer"), getItems(prod, dim = "polymer"))
+    fib[, , poly] <- fibVol[, , poly]
 
-    # plastics = production minus the fibre / rubber tonnages (floored at 0; in
-    # early years p2m fibre/rubber manufacturing can exceed a polymer's production)
-    plastics <- prod - fibVol - rubVol
+    # plastics = production minus the fibre tonnages (floored at 0; in
+    # early years p2m fibre manufacturing can exceed a polymer's production)
+    plastics <- prod - fib
     plastics[plastics < 0] <- 0
     plastics <- foldPA(plastics)
 
     # fibre volumes routed to the named fibre materials (rest -> Other fibre)
-    fibMap <- data.frame(from = getItems(fibVol, dim = "polymer"))
+    fibMap <- data.frame(from = getItems(fib, dim = "polymer"))
     fibMap$to <- ifelse(fibMap$from == "PET", "PET fibre",
       ifelse(fibMap$from == "PA", "Polyamide fibre", "Other fibre")
     )
-    fibre <- toolAggregate(fibVol, rel = fibMap, dim = "polymer", from = "from", to = "to")
+    fibre <- toolAggregate(fib, rel = fibMap, dim = "polymer", from = "from", to = "to")
 
-    # rubber volumes collapsed to a single Rubbers material
-    rubber <- add_dimension(dimSums(rubVol, dim = "polymer"), dim = 3.1, add = "polymer", nm = "Rubbers")
-
-    # tag each block with its type (Plastics / Fibre / Rubber) and combine
+    # tag each block with its type (Plastics / Fibre) and combine
     production <- mbind(
       add_dimension(plastics, dim = 3.1, add = "type", nm = "Plastics"),
-      add_dimension(fibre, dim = 3.1, add = "type", nm = "Fibre"),
-      add_dimension(rubber, dim = 3.1, add = "type", nm = "Rubber")
+      add_dimension(fibre, dim = 3.1, add = "type", nm = "Fibre")
     ) * 1e4 # 10^4 t -> t
 
     return(list(
@@ -94,8 +86,8 @@ calcPlRen2025 <- function(subtype) {
       unit = "t",
       description = paste(
         "Total primary + secondary plastic production in China by polymer, from",
-        "Ren et al. (2025). Fibre and rubber manufacturing tonnages are split off",
-        "into separate materials. Assumes raw values are in 10^4 t (verify vs. paper)."
+        "Ren et al. (2025). Fibre manufacturing tonnages are split off into",
+        "separate materials."
       ),
       note = "dimensions: (Time,Region,Type,Material,value)",
       min = 0
