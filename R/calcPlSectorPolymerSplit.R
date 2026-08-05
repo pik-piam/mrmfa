@@ -30,7 +30,6 @@
 #' a <- calcOutput("PlSectorPolymerSplit")
 #' }
 #' @importFrom magclass dimSums setItems
-#' @export
 calcPlSectorPolymerSplit <- function(target_years = NULL) {
 
   data <- calcOutput("PlGaoCabrera2025", aggregate = FALSE)

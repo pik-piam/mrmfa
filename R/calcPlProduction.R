@@ -25,7 +25,6 @@
 #' }
 #' @importFrom magclass dimSums getYears setYears getNames getNames<- getItems
 #' @importFrom magclass getSets<- collapseDim mbind new.magpie magpiesort
-#' @export
 calcPlProduction <- function() {
   # ---------------------------------------------------------------------------
   # Read the three country-level production series

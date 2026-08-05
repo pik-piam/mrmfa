@@ -15,7 +15,6 @@
 #' a <- calcOutput("PlSyntheticFibre")
 #' }
 #' @importFrom magclass dimSums collapseDim getItems getYears new.magpie magpiesort
-#' @export
 calcPlSyntheticFibre <- function() {
   # read source and interpolate missing years
   data <- readSource("TextileExchange", subtype = "timeseries_by_type", convert = FALSE) %>% magpiesort()

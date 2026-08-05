@@ -33,7 +33,6 @@
 #' a <- calcOutput("PlRen2025", subtype = "production")
 #' }
 #' @importFrom magclass mselect dimSums add_dimension mbind getItems getSets<-
-#' @export
 calcPlRen2025 <- function(subtype) {
   raw <- readSource("Ren2025")
 

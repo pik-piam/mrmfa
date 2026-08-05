@@ -16,7 +16,6 @@
 #' a <- calcOutput("PlSyntheticRubber")
 #' }
 #' @importFrom magclass dimSums getYears setYears mbind
-#' @export
 calcPlSyntheticRubber <- function() {
   # country-level production for the years with a regional split (2018-2020)
   countryProd <- readSource("IRSG", subtype = "regional", convert = TRUE)

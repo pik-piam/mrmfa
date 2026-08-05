@@ -18,7 +18,6 @@
 #' a <- calcOutput("PlGaoCabrera2025")
 #' }
 #' @importFrom magclass collapseDim
-#' @export
 calcPlGaoCabrera2025 <- function() {
   # ---------------------------------------------------------------------------
   # Inputs: apparent polymer consumption (ISO3 x year x polymer, kt) and the
