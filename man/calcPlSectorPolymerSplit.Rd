@@ -19,8 +19,10 @@ A list in \code{\link[madrat]{calcOutput}} format with the polymer and
 \description{
 Split total Fibre, Rubber and Plastics consumption into individual polymers
 and end-use sectors. Consumption of each polymer in each of the 8 end-use
-sectors is normalized within each type (\code{Fibre}, \code{Rubber},
-\code{Plastics}) so that the shares over \code{(polymer, sector)} sum to 1.
+sectors from GaoCabrera 2025 is normalized within each type (\code{Fibre}, 
+\code{Rubber}, \code{Plastics}) so that the shares over \code{(polymer, sector)} 
+sum to 1. Data for China is replaced with the polymer and sector split from 
+Ren et al. (2025).
 
 Multiplying the result with a \code{(time, region, type)} total - e.g. the
 output of \code{\link{calcPlProduction}} - yields absolute values per

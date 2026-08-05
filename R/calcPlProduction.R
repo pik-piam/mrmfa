@@ -13,6 +13,9 @@
 #' plastic use (1990-2019, \code{readSource("OECD_Plastic",
 #' "Use_1990-2019_region")}) and then with the Geyer et al. 2017 global
 #' production (1950-2015, \code{readSource("Geyer", "Prod_1950-2015")}).
+#' 
+#' China's production of plastics and fibre is replaced with the country-level
+#' data from Ren et al. (2025).
 #'
 #' @return A list in \code{\link[madrat]{calcOutput}} format with plastics,
 #'   fibre and rubber production by country, type and year (1950-2024).
@@ -76,6 +79,19 @@ calcPlProduction <- function() {
   # convert Mt -> t
   x <- x * 1e6
 
+  # ---------------------------------------------------------------------------
+  # Replace China with Ren et al. (2025) production (Fibre and Plastics only;
+  # Rubber untouched). Ren is already in tonnes and covers 1978-2022; it is
+  # backcast to 1950 with the CHA production series derived above.
+  # ---------------------------------------------------------------------------
+  renProd <- calcOutput("PlRen2025", subtype = "production", aggregate = FALSE)
+  # sum over the polymer subdim -> CHN totals per type (Fibre / Plastics), in t
+  renChn <- dimSums(renProd, dim = 3.2)["CHN", , c("Fibre", "Plastics")]
+  # back- and forecast Ren with the global production data
+  renChn <- toolBackcastByReference(renChn, x["CHN", , c("Fibre", "Plastics")])
+  renChn <- toolBackcastByReference(renChn, x["CHN", , c("Fibre", "Plastics")], doForecast = TRUE)
+  x["CHN", , c("Fibre", "Plastics")] <- renChn[, getYears(x), ]
+
   return(list(
     x = x,
     weight = NULL,
@@ -85,8 +101,9 @@ calcPlProduction <- function() {
       "synthetic rubber (IRSG) production by country and type, 1950-2024. Each",
       "source is backcast independently along the total plastics trend, first",
       "with OECD regional plastic use (1990-2019) and then with Geyer et al.",
-      "2017 global production (1950-2015). Fibre 2019 is assumed equal to 2020",
-      "so it overlaps the OECD reference."
+      "2017 global production (1950-2015). China Fibre and Plastics totals are",
+      "replaced with Ren et al. (2025) (1978-2022), backcast to 1950 along the",
+      "same trend and held constant for 2023-2024."
     ),
     note = "dimensions: (Time,Region,Type,value)"
   ))

@@ -3,8 +3,10 @@
 #' @description
 #' Split total Fibre, Rubber and Plastics consumption into individual polymers
 #' and end-use sectors. Consumption of each polymer in each of the 8 end-use
-#' sectors is normalized within each type (\code{Fibre}, \code{Rubber},
-#' \code{Plastics}) so that the shares over \code{(polymer, sector)} sum to 1.
+#' sectors from GaoCabrera 2025 is normalized within each type (\code{Fibre}, 
+#' \code{Rubber}, \code{Plastics}) so that the shares over \code{(polymer, sector)} 
+#' sum to 1. Data for China is replaced with the polymer and sector split from 
+#' Ren et al. (2025).
 #'
 #' Multiplying the result with a \code{(time, region, type)} total - e.g. the
 #' output of \code{\link{calcPlProduction}} - yields absolute values per
@@ -29,7 +31,7 @@
 #' \dontrun{
 #' a <- calcOutput("PlSectorPolymerSplit")
 #' }
-#' @importFrom magclass dimSums setItems
+#' @importFrom magclass dimSums setItems mselect new.magpie getNames getSets getYears
 calcPlSectorPolymerSplit <- function(target_years = NULL) {
 
   data <- calcOutput("PlGaoCabrera2025", aggregate = FALSE)
@@ -74,6 +76,28 @@ calcPlSectorPolymerSplit <- function(target_years = NULL) {
   weight <- typeTotal
   weight[weight == 0] <- 1e-9 * max(weight)
 
+  # ---------------------------------------------------------------------------
+  # Replace China's Plastics split with Ren et al. (2025) consumption (Fibre and
+  # Rubber untouched). Ren covers 1978-2022 and is held constant to the
+  # production years, matching the Gao extrapolation above.
+  # ---------------------------------------------------------------------------
+  renCons <- calcOutput("PlRen2025", subtype = "consumption", aggregate = FALSE)
+  renCons <- time_interpolate(renCons,
+    interpolated_year = getYears(production),
+    integrate_interpolated_years = TRUE,
+    extrapolation_type = "constant"
+  )
+  renCons <- renCons[, getYears(production), ]
+
+  # Expand Ren onto x's full Plastics (polymer, sector) grid; combos absent in
+  # Ren (notably "Textile sector") stay 0. Ren shares already sum to 1 over
+  # (polymer, sector), so the CHN Plastics block still sums to 1.
+  plasticsNames <- getNames(mselect(x, type = "Plastics"))
+  renBlock <- new.magpie("CHN", getYears(x), plasticsNames, fill = 0, sets = getSets(x))
+  common <- intersect(plasticsNames, getNames(renCons))
+  renBlock[, , common] <- renCons["CHN", , common]
+  x["CHN", , plasticsNames] <- renBlock
+
   return(list(
     x = x,
     weight = weight,
@@ -83,7 +107,9 @@ calcPlSectorPolymerSplit <- function(target_years = NULL) {
       "apparent consumption per region, from Gao & Cabrera-Serrenho (2025) polymer",
       "consumption times the polymer-specific sector distribution. Sums to 1 over",
       "(polymer, sector) within each (region, year, type). Multiply by a",
-      "(time, region, type) total to obtain absolute values (done in remind-mfa)."
+      "(time, region, type) total to obtain absolute values (done in remind-mfa).",
+      "China's Plastics split is replaced with Ren et al. (2025) consumption",
+      "(1978-2022, held constant to the production years)."
     ),
     note = "dimensions: (Time, Region, Type, Material, Good, value)",
     min = 0,
