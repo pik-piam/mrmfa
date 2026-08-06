@@ -19,7 +19,7 @@ readUNComtrade <- function(subtype, subset) {
     # get data
     name <- paste0("TradeData_2523_cement_", year, ".csv")
     path <- file.path("v2", name)
-    data <- suppressMessages(suppressWarnings(read_csv(
+    data <- suppressMessages(suppressWarnings(readr::read_csv(
       path,
       col_names = TRUE,
       col_select = c("reporterISO", "flowDesc", "cmdCode", "qtyUnitAbbr", "qty")

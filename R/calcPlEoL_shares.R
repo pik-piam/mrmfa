@@ -13,7 +13,7 @@
 #'        - Collected (share of total plastic waste)
 #'        - All (all shares combined in one magpie object)
 #'
-#' @importFrom dplyr select filter mutate group_by summarise case_when left_join
+#' @importFrom dplyr select filter mutate group_by summarise case_when left_join if_else
 #' @importFrom data.table first
 #'
 calcPlEoL_shares <- function(subtype) {
