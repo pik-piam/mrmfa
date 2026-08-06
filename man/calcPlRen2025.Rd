@@ -20,9 +20,9 @@ Derive three outputs from the Ren et al. (2025) China material-flow database
   \item{\code{"production"}}{Total primary + secondary production (stage
     \code{P}, processes \code{domestic} + \code{regeneration}) by type
     (\code{Plastics} / \code{Fibre}) and polymer, in tonnes.
-    The fibre tonnages that stage \code{M} \code{p2m} routes into the 
-    \code{Fibers} products are subtracted from each polymer's plastics production 
-    and reported as separate materials (\code{PET fibre}, \code{Polyamide fibre} 
+    The fibre tonnages that stage \code{M} \code{p2m} routes into the
+    \code{Fibers} products are subtracted from each polymer's plastics production
+    and reported as separate materials (\code{PET fibre}, \code{Polyamide fibre}
     and \code{Other fibre}. Leftover polyamide plastics fold into
     \code{Other thermoplastics}.}
   \item{\code{"consumption"}}{Share of each polymer and end-use sector within
