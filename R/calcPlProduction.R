@@ -13,7 +13,7 @@
 #' plastic use (1990-2019, \code{readSource("OECD_Plastic",
 #' "Use_1990-2019_region")}) and then with the Geyer et al. 2017 global
 #' production (1950-2015, \code{readSource("Geyer", "Prod_1950-2015")}).
-#' 
+#'
 #' China's production of plastics and fibre is replaced with the country-level
 #' data from Ren et al. (2025).
 #'
