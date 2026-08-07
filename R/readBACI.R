@@ -40,7 +40,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- readSource(type = "BACI", subtype = "plastics_UNEP-Primary", subset = "02")
+#' a <- readSource(type = "BACI", subtype = "plastics_UNEP-Primary", subset = "92")
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #'
@@ -53,7 +53,19 @@ readBACI <- function(subtype, subset) {
       paste0(available, collapse = ", ")
     )
   }
-  data_path <- paste0("BACI_HS", subset, "_V202501")
+  # Determine the data version by subset. The latest release (V202601) has so far
+  # only been downloaded for HS revision "92" (currently the only one in use);
+  # all other subsets still rely on the older V202501 release.
+  version <- if (subset == "92") {
+    "V202601"
+  } else {
+    warning(
+      "Only the older BACI version V202501 is available for subset '", subset,
+      "'. The latest version V202601 has only been downloaded for subset '92'."
+    )
+    "V202501"
+  }
+  data_path <- paste0("BACI_HS", subset, "_", version)
 
   # Parse subtype and validate
   parts <- strsplit(subtype, "-")[[1]]
@@ -103,7 +115,7 @@ readBACI <- function(subtype, subset) {
     UNEP_codes_k6 <- codes %>% filter(.data$code > 10000)
   } else if (key == "steel") {
     # read all BACI product codes
-    product_codes <- utils::read.csv(file.path(data_path, paste0("product_codes_HS", subset, "_V202501.csv"))) %>%
+    product_codes <- utils::read.csv(file.path(data_path, paste0("product_codes_HS", subset, "_", version, ".csv"))) %>%
       mutate(code_2 = as.integer(as.numeric(.data$code) / 10000))
     # read indirect steel trade product codes and respective steel share
     indirect <- read_excel(file.path("Steel_HSCodes", "Steel_HSCodes.xlsx")) %>%
@@ -138,7 +150,7 @@ readBACI <- function(subtype, subset) {
     full.names = TRUE
   )
   # Read country codes of the dataset
-  country_codes <- utils::read.csv(file.path(data_path, "country_codes_V202501.csv")) %>%
+  country_codes <- utils::read.csv(file.path(data_path, paste0("country_codes_", version, ".csv"))) %>%
     select("country_code", "country_iso3") %>%
     # country code 490 (country_iso3="S19") is used as a proxy for trade statistics for Taiwan
     # country code 849 (country_iso3="PUS", US Misc. Pacific Islands) is assigned to UMI (United States Minor Outlying Islands)
