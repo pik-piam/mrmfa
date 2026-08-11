@@ -76,24 +76,11 @@ calcPlTrade <- function(
   # ---------------------------------------------------------------------------
   # backcast trade data to 1950 based on historic plastic production
   reference <- calcOutput("PlProduction", aggregate = FALSE, years = target_years)
-  target_years <- getYears(reference, as.integer = TRUE)
 
   .customAggregate <- function(x, rel, reference, flow_label) {
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
     ref <- toolAggregate(reference, rel = rel, from = "country", to = "region")
-
-    # the reference (plastics production) may cover more items than the trade data x
-    # in shared data dimensions (e.g. the reference has type Plastics, Rubber, Fibre
-    # while plastic waste trade only has type Plastics). Subset the reference to the
-    # items present in x for every data dimension they share, so backcasting can match
-    # dimensions. Spatial and temporal dimensions are handled separately below.
-    xDataSets <- getSets(x, fulldim = TRUE)
-    xDataSets <- xDataSets[grepl("^d3", names(xDataSets))]
-    refDataSets <- getSets(ref, fulldim = TRUE)
-    for (s in intersect(xDataSets, refDataSets)) {
-      ref <- do.call(mselect, c(list(ref), stats::setNames(list(getItems(x, dim = s)), s)))
-    }
 
     # if some of the regions are missing in x due to the manual aggregation,
     # fill with NA to match all the ref regions
@@ -106,6 +93,7 @@ calcPlTrade <- function(
     x <- toolBackcastByReference(x, ref, doForecast = TRUE)
 
     # cut x to target years
+    target_years <- getYears(reference, as.integer = TRUE)
     x <- x[, target_years, ]
 
     return(x)
@@ -119,8 +107,8 @@ calcPlTrade <- function(
     trade <- calcOutput("PlUNCTAD", subtype = category, aggregate = FALSE)
     trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
     # backcast trade data to 1950 based on historic plastic production
-    production <- collapseNames(dimSums(reference, dim = 3))
-    x <- toolBackcastByReference(trade_filtered, production)
+    reference <- collapseNames(dimSums(reference, dim = 3))
+    x <- toolBackcastByReference(trade_filtered, reference)
 
     getNames(x) <- NULL
     note <- "dimensions: (Historic Time,Region,value)"
@@ -130,8 +118,13 @@ calcPlTrade <- function(
     # Load trade data for the selected category
     if (data_source == "BACI_UNEP") {
       x <- calcOutput("PlBACI", subtype = "plastics_UNEP", category = category, HS = HS, aggregate = FALSE)
+      # the reference (plastics production) may cover more items than the trade data x
+      # (e.g. the reference has type Plastics, Rubber, Fibre while plastic waste trade only has type Plastics).
+      # Subset the reference to the items present in x, so backcasting can match dimensions.
+      reference <- mselect(reference, type = getItems(x, dim = "type"))
     } else if (data_source == "BACI_UNCTAD") {
       x <- calcOutput("PlBACI", subtype = "plastics_UNCTAD", category = category, HS = HS, aggregate = FALSE)
+      reference <- collapseNames(dimSums(reference, dim = 3))
     }
 
     if (data_source == "BACI_UNEP") {

@@ -57,13 +57,14 @@ calcPlGaoCabrera2025 <- function() {
   rubberPolymers <- "Rubbers"
   plasticsPolymers <- setdiff(getItems(absoluteBackcasted, dim = "polymer"), c(fibrePolymers, rubberPolymers))
 
-  tagType <- function(polys, typeName) {
-    add_dimension(mselect(absoluteBackcasted, polymer = polys), dim = 3.1, add = "type", nm = typeName)
+  .tagType <- function(polys, typeName) {
+    x <- add_dimension(mselect(absoluteBackcasted, polymer = polys), dim = 3.1, add = "type", nm = typeName)
+    return(x)
   }
   absTyped <- mbind(
-    tagType(plasticsPolymers, "Plastics"),
-    tagType(fibrePolymers, "Fibre"),
-    tagType(rubberPolymers, "Rubber")
+    .tagType(plasticsPolymers, "Plastics"),
+    .tagType(fibrePolymers, "Fibre"),
+    .tagType(rubberPolymers, "Rubber")
   )
 
   return(list(

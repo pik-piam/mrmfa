@@ -4,7 +4,7 @@
 \alias{convertTextileExchange}
 \title{Convert Textile Exchange regional shares to country-level shares}
 \usage{
-convertTextileExchange(x)
+convertTextileExchange(x, subtype)
 }
 \arguments{
 \item{x}{MagPIE object of Textile Exchange regional shares (\code{region_share}).}

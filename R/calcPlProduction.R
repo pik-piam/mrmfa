@@ -37,27 +37,25 @@ calcPlProduction <- function() {
   plastics <- calcOutput("PlPlasticsEurope",  aggregate = FALSE)
 
   # ---------------------------------------------------------------------------
-  # Build the two backcasting references (total plastics trend)
-  # ---------------------------------------------------------------------------
-  oecdTotal <- readSource("OECD_Plastic", subtype = "Use_1990-2019_region")
-  # clean set names
-  getSets(oecdTotal, fulldim = FALSE) <- c("region", "year", "data")
-  geyer <- readSource("Geyer", subtype = "Prod_1950-2015", convert = FALSE)
-
-  # ---------------------------------------------------------------------------
   # Backcast each source independently: OECD (-> 1990) then Geyer (-> 1950) and
   # trim to the last year covered by all types (sources may end in different years)
   # ---------------------------------------------------------------------------
   lastYear <- min(max(getYears(fibre)), max(getYears(rubber)), max(getYears(plastics)))
-  backcast <- function(x) {
+  .backcast <- function(x) {
+    # build the two backcasting references (total plastics trend)
+    oecdTotal <- readSource("OECD_Plastic", subtype = "Use_1990-2019_region")
+    # clean set names
+    getSets(oecdTotal, fulldim = FALSE) <- c("region", "year", "data")
+    geyer <- readSource("Geyer", subtype = "Prod_1950-2015", convert = FALSE)
+    # backcast
     x <- toolBackcastByReference(x, oecdTotal)
     x <- toolBackcastByReference(x, geyer)
-    magpiesort(x)
+    x <- magpiesort(x)
     x <- x[, getYears(x) <= lastYear, ]
   }
-  fibre    <- backcast(fibre)
-  rubber   <- backcast(rubber)
-  plastics <- backcast(plastics)
+  fibre    <- .backcast(fibre)
+  rubber   <- .backcast(rubber)
+  plastics <- .backcast(plastics)
 
   # ---------------------------------------------------------------------------
   # subtract fibres included in PlasticsEurope from PlasticsEurope,
@@ -65,16 +63,16 @@ calcPlProduction <- function() {
   # ---------------------------------------------------------------------------
   plastics <- plastics - collapseDim(fibre[, , "TRUE"])
   fibre <- dimSums(fibre, dim = 3)
-  prep <- function(x, typeName) {
+  .prep <- function(x, typeName) {
     x <- collapseDim(x)
     getNames(x) <- typeName
     x
   }
-  fibre    <- prep(fibre, "Fibre")
-  rubber   <- prep(rubber, "Rubber")
-  plastics <- prep(plastics, "Plastics")
+  fibre    <- .prep(fibre, "Fibre")
+  rubber   <- .prep(rubber, "Rubber")
+  plastics <- .prep(plastics, "Plastics")
   x <- mbind(fibre, rubber, plastics)
-  names(dimnames(x))[3] <- "type"
+  getSets(x)[3] <- "type"
 
   # convert Mt -> t
   x <- x * 1e6

@@ -21,8 +21,8 @@
 #' a <- readSource("TextileExchange", subtype = "region_share")
 #' }
 #' @importFrom magclass getComment getYears setYears
-convertTextileExchange <- function(x) {
-  if (!any(grepl("region_share", getComment(x)))) {
+convertTextileExchange <- function(x, subtype) {
+  if (subtype != "region_share") {
     stop("convertTextileExchange only supports the 'region_share' subtype; ",
          "read 'timeseries_by_type' with convert = FALSE.")
   }

@@ -36,7 +36,7 @@ calcPlRen2025 <- function(subtype) {
   raw <- readSource("Ren2025")
 
   # helper: fold the transient PA polymer into Other thermoplastics
-  foldPA <- function(x) {
+  .foldPA <- function(x) {
     map <- data.frame(from = getItems(x, dim = "polymer"))
     map$to <- ifelse(map$from == "PA", "Other thermoplastics", map$from)
     toolAggregate(x, rel = map, dim = "polymer", from = "from", to = "to")
@@ -65,7 +65,7 @@ calcPlRen2025 <- function(subtype) {
     # early years p2m fibre manufacturing can exceed a polymer's production)
     plastics <- prod - fib
     plastics[plastics < 0] <- 0
-    plastics <- foldPA(plastics)
+    plastics <- .foldPA(plastics)
 
     # fibre volumes routed to the named fibre materials (rest -> Other fibre)
     fibMap <- data.frame(from = getItems(fib, dim = "polymer"))
@@ -102,7 +102,7 @@ calcPlRen2025 <- function(subtype) {
     cons <- dimSums(mselect(raw, stage = "U", process = "inflow"),
       dim = c("stage", "process", "product", "disposal")
     ) # (region, year, polymer.sector)
-    cons <- foldPA(cons)
+    cons <- .foldPA(cons)
     cons <- add_dimension(cons, dim = 3.1, add = "type", nm = "Plastics")
 
     typeTotal <- dimSums(cons, dim = c("polymer", "sector")) # (region, year, type)
@@ -136,7 +136,7 @@ calcPlRen2025 <- function(subtype) {
     waste <- dimSums(mselect(raw, stage = "W", process = "domestic"),
       dim = c("stage", "process", "product")
     ) # (region, year, polymer.sector.disposal)
-    waste <- foldPA(waste)
+    waste <- .foldPA(waste)
 
     total <- dimSums(waste, dim = "disposal") # (region, year, polymer.sector)
     x <- waste / total
