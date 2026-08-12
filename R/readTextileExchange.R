@@ -57,7 +57,5 @@ readTextileExchange <- function(subtype) {
     stop("Unsupported subtype: ", subtype)
   )
 
-  getComment(magpie_data) <- subtype
-
   return(magpie_data)
 }

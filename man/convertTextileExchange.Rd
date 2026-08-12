@@ -8,6 +8,16 @@ convertTextileExchange(x, subtype)
 }
 \arguments{
 \item{x}{MagPIE object of Textile Exchange regional shares (\code{region_share}).}
+
+\item{subtype}{Character string specifying the dataset:
+- "timeseries_by_type": global synthetic fibre production in Mt by fibre
+  type and year (fibre, year, production_Mt) - this subtype should not be
+  regionally disaggregated, so the convert function throws an error for this
+  subtype
+- "region_share": chemical fibre production shares by region and year,
+  2007-2022, over the split WEU (Western Europe excl. DE), DEU, USA, JPN,
+  PAK, IND, KOR, TWN, CHN and Other (region, year, share) - to be converted
+  to iso-country level}
 }
 \value{
 MagPIE object of the shares disaggregated to ISO country level.

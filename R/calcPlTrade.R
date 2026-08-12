@@ -32,7 +32,14 @@
 #' @param target_years integer vector of target years for the output data.
 #' If NULL, all years from reference (plastics production) are included.
 #' Note: the 'years' argument in calcOutput does not work properly for this function,
-#' so 'target years' should be set here instead.
+#' because backcasting of trade happens in the custom aggregation function (once the
+#' importer + exporter dimension have been aggregated to a single region dimension to
+#' match the reference). Since madrat checks whether the years of the returned object
+#' cover the years parameter before aggregating, it throws a warning when years that
+#' are obtained through backcasting are missing. The target_years parameter is a
+#' workaround to fix these warnings - now the warning is thrown if a period is chosen
+#' by setting target_years that is not covered by the backcasting data (i.e. production data).
+#'
 #' @author Qianzhi Zhang, Leonie Schweiger
 calcPlTrade <- function(
   category,

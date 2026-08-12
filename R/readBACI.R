@@ -122,12 +122,14 @@ readBACI <- function(subtype, subset) {
       mutate(steel_share = .data$`Steel Weight Share (%)` / 100) %>%
       select(-"Steel Weight Share (%)")
     codes <- switch(category,
-      "direct" = product_codes %>% filter(
-        grepl("^72", .data$code) & # filter all HS72
+      "direct" = product_codes %>%
+        filter(
+          grepl("^72", .data$code) & # filter all HS72
           !grepl("^7204", .data$code) & # except for HS7204 (steel scrap)
           !grepl("^7202", .data$code) & # except for HS7202 (ferro-alloys, no listed in WSA trade data)
           !grepl("^7205", .data$code)
-      ) %>% select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
+        ) %>%
+        select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
       "scrap" = product_codes %>% filter(grepl("^7204", .data$code)) %>% select("code"), # filter all HS7204
       "indirect" = product_codes %>% merge(indirect, by.x = "code_2", by.y = "HS") %>%
         select(-c("Chapter Title", "description", "code_2")),
@@ -153,7 +155,8 @@ readBACI <- function(subtype, subset) {
   country_codes <- utils::read.csv(file.path(data_path, paste0("country_codes_", version, ".csv"))) %>%
     select("country_code", "country_iso3") %>%
     # country code 490 (country_iso3="S19") is used as a proxy for trade statistics for Taiwan
-    # country code 849 (country_iso3="PUS", US Misc. Pacific Islands) is assigned to UMI (United States Minor Outlying Islands)
+    # country code 849 (country_iso3="PUS", US Misc. Pacific Islands) is assigned to UMI
+    # (United States Minor Outlying Islands)
     # (see https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html)
     mutate(country_iso3 = case_when(.data$country_iso3 == "S19" ~ "TWN",
                                     .data$country_iso3 == "PUS" ~ "UMI",
