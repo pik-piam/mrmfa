@@ -14,8 +14,6 @@ calcPlLifetime <- function(subtype) {
     rel = sector_map, dim = 3,
     from = "Source", to = "Target"
   )
-  # remove category "Industrial Machinery"
-  data <- data[, , getItems(data, 3) != "Industrial Machinery"]
   description <- paste(
     subtype,
     " of plastic goods by use sector. ",

@@ -5,7 +5,7 @@
 #'       - "shipping_costs": Get sea freight costs relative to 1930 in percent.
 readOWID <- function(subtype) {
   path <- file.path(subtype, "real-transport-and-communication-costs.csv")
-  data <- suppressMessages(read_csv(path))
+  data <- suppressMessages(readr::read_csv(path))
 
   if (subtype == "shipping_costs") {
     x <- data[c("Year", "Sea freight cost (relative to 1930)")]

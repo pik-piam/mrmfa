@@ -33,7 +33,7 @@
 #' \dontrun{
 #' a <- calcOutput(
 #'   type = "PlBACI", subtype = "plastics_UNCTAD",
-#'   category = "Plastics in primary forms", HS = "02"
+#'   category = "Plastics in primary forms", HS = "92"
 #' )
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
@@ -64,45 +64,40 @@ calcPlBACI <- function(subtype, category, HS) {
       rename("sector" = "Target")
 
     # map UNEP-NGP polymers to polymers used in REMIND-MFA
-    if (category == "Waste"){
+    if (category == "Waste") {
       polymer_map <- toolGetMapping("polymermappingUNEP_NGP_waste.csv", type = "sectoral", where = "mrmfa")
     } else {
       polymer_map <- toolGetMapping("polymermappingUNEP_NGP.csv", type = "sectoral", where = "mrmfa")
     }
-    # use polymer use by sector as weights (summarize over all Regions,
-    # as polymer share by sector is constant over all Regions in OECD data);
+    # use polymer use by sector as weights (summarize over all Regions and Years);
     # use total polymer use over all sectors as weights for "General" sector
-    use <- calcOutput("PlOECD", subtype = "Use_2019_region", aggregate = TRUE) %>% as.data.frame()
-    use_by_sector <- use %>%
-      rename(sector = "Data2", polymer = "Data1") %>%
-      filter(.data$polymer != "Total") %>%
-      group_by(.data$sector, .data$polymer) %>%
-      summarize(value = sum(.data$Value)) %>%
-      mutate(sector = case_when(.data$sector == "Total" ~ "General", .default = .data$sector))
-    split <- merge(polymer_map, use_by_sector, by.y = "polymer", by.x = "Target") %>%
+    use_sector <- dimSums(calcOutput("PlGaoCabrera2025", aggregate = TRUE), dim = c("region", "year"))
+    use_total <- dimSums(use_sector, dim = "sector") %>% addDim(dim = 3.3, dimName = "sector", item = "General")
+    use_by_sector <- mbind(use_sector, use_total) %>% as.data.frame(rev = 3)
+    split <- merge(polymer_map, use_by_sector, by.y = "polymer", by.x = "Target_polymer") %>%
       group_by(.data$sector, .data$Source) %>%
       mutate(
-        total = sum(.data$value, na.rm = TRUE),
-        weight = .data$value / .data$total
+        total = sum(.data$.value, na.rm = TRUE),
+        weight = .data$.value / .data$total
       ) %>%
-      select(-"total", -"value")
+      select(-"total", -".value")
     df <- left_join(df, split, by = c("polymer" = "Source", "sector")) %>%
       mutate(value = .data$value * .data$weight)
-    # some weights are NaN for polymers that are not used in a specific sector according to OECD,
+    # some weights are NaN for polymers that are not used in a specific sector according to Gao & Cabrera,
     # throw a warning if these combination appear in the dataset
     nan <- df %>% filter(is.na(.data$weight))
     if (nrow(nan) > 0) {
       warning(paste(
         "The following sector-polymer combinations cannot be mapped from the BACI data
-        as they do not exist in the OECD dataset used for weighting:\n",
+        as they do not exist in the GaoCabrera dataset used for weighting:\n",
         paste(utils::capture.output(print(nan)), collapse = "\n")
       ))
     }
 
     df <- df %>%
       select(-"polymer", -"weight") %>%
-      rename("polymer" = "Target") %>%
-      group_by(.data$t, .data$exporter, .data$importer, .data$polymer, .data$sector) %>%
+      rename("polymer" = "Target_polymer") %>%
+      group_by(.data$t, .data$exporter, .data$importer, .data$type, .data$polymer, .data$sector) %>%
       summarize(value = sum(.data$value)) %>%
       ungroup()
   }
@@ -114,6 +109,9 @@ calcPlBACI <- function(subtype, category, HS) {
   df$importer[df$importer == "SCG"] <- "SRB"
   df$exporter[df$exporter == "ANT"] <- "CUW"
   df$importer[df$importer == "ANT"] <- "CUW"
+  # ZA1 is the Southern African Customs Union, assigned to South Africa
+  df$exporter[df$exporter == "ZA1"] <- "ZAF"
+  df$importer[df$importer == "ZA1"] <- "ZAF"
 
   # this mapgie object should actually contain two spatial dimensions "importer" and
   # "exporter", but since madrat does not support regional aggregation for two spatial
@@ -127,7 +125,7 @@ calcPlBACI <- function(subtype, category, HS) {
   return(list(
     x = x,
     weight = NULL,
-    unit = "Mt Plastic",
+    unit = "t Plastic",
     description = "Plastic trade data from BACI"
   ))
 }

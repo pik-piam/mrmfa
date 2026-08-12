@@ -12,7 +12,7 @@
 #' @seealso \code{\link{readGaoCabrera2025}}, \code{\link{calcPlPottinger}}
 #' @importFrom magclass dimSums getNames<-
 calcPlGaoCabrera <- function() {
-  x <- readSource("GaoCabrera2025")
+  x <- readSource("GaoCabrera2025", subtype = "consumption")
 
   # sum all 14 polymers into a single total and convert kt -> Mt
   x <- dimSums(x, dim = 3) / 1000

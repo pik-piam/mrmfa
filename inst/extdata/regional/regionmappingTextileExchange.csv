@@ -1,0 +1,250 @@
+X;CountryCode;TextileExchangeReg
+Aruba;ABW;Other
+Afghanistan;AFG;Other
+Angola;AGO;Other
+Anguilla;AIA;Other
+Aland Islands;ALA;Other
+Albania;ALB;Other
+Andorra;AND;Other
+United Arab Emirates;ARE;Other
+Argentina;ARG;Other
+Armenia;ARM;Other
+American Samoa;ASM;Other
+Antarctica;ATA;Other
+French Southern Territories;ATF;Other
+Antigua and Barbuda;ATG;Other
+Australia;AUS;Other
+Austria;AUT;"Western Europe (excl_ DE)"
+Azerbaijan;AZE;Other
+Burundi;BDI;Other
+Belgium;BEL;"Western Europe (excl_ DE)"
+Benin;BEN;Other
+Bonaire, Sint Eustatius and Saba;BES;Other
+Burkina Faso;BFA;Other
+Bangladesh;BGD;Other
+Bulgaria;BGR;Other
+Bahrain;BHR;Other
+Bahamas;BHS;Other
+Bosnia and Herzegovina;BIH;Other
+Saint Barthelemy;BLM;Other
+Belarus;BLR;Other
+Belize;BLZ;Other
+Bermuda;BMU;Other
+Bolivia, Plurinational State of;BOL;Other
+Brazil;BRA;Other
+Barbados;BRB;Other
+Brunei Darussalam;BRN;Other
+Bhutan;BTN;Other
+Bouvet Island;BVT;Other
+Botswana;BWA;Other
+Central African Republic;CAF;Other
+Canada;CAN;Other
+Cocos (Keeling) Islands;CCK;Other
+Switzerland;CHE;"Western Europe (excl_ DE)"
+Chile;CHL;Other
+China;CHN;China
+Cote d Ivoire;CIV;Other
+Cameroon;CMR;Other
+Congo, the Democratic Republic of the;COD;Other
+Congo;COG;Other
+Cook Islands;COK;Other
+Colombia;COL;Other
+Comoros;COM;Other
+Cape Verde;CPV;Other
+Costa Rica;CRI;Other
+Cuba;CUB;Other
+Curacao;CUW;Other
+Christmas Island;CXR;Other
+Cayman Islands;CYM;Other
+Cyprus;CYP;Other
+Czech Republic;CZE;Other
+Germany;DEU;Germany
+Djibouti;DJI;Other
+Dominica;DMA;Other
+Denmark;DNK;"Western Europe (excl_ DE)"
+Dominican Republic;DOM;Other
+Algeria;DZA;Other
+Ecuador;ECU;Other
+Egypt;EGY;Other
+Eritrea;ERI;Other
+Western Sahara;ESH;Other
+Spain;ESP;"Western Europe (excl_ DE)"
+Estonia;EST;Other
+Ethiopia;ETH;Other
+Finland;FIN;"Western Europe (excl_ DE)"
+Fiji;FJI;Other
+Falkland Islands (Malvinas);FLK;Other
+France;FRA;"Western Europe (excl_ DE)"
+Faroe Islands;FRO;Other
+Micronesia, Federated States of;FSM;Other
+Gabon;GAB;Other
+United Kingdom;GBR;"Western Europe (excl_ DE)"
+Georgia;GEO;Other
+Guernsey;GGY;Other
+Ghana;GHA;Other
+Gibraltar;GIB;Other
+Guinea;GIN;Other
+Guadeloupe;GLP;Other
+Gambia;GMB;Other
+Guinea-Bissau;GNB;Other
+Equatorial Guinea;GNQ;Other
+Greece;GRC;"Western Europe (excl_ DE)"
+Grenada;GRD;Other
+Greenland;GRL;Other
+Guatemala;GTM;Other
+French Guiana;GUF;Other
+Guam;GUM;Other
+Guyana;GUY;Other
+Hong Kong;HKG;Other
+Heard Island and McDonald Islands;HMD;Other
+Honduras;HND;Other
+Croatia;HRV;Other
+Haiti;HTI;Other
+Hungary;HUN;Other
+Indonesia;IDN;Other
+Isle of Man;IMN;Other
+India;IND;India
+British Indian Ocean Territory;IOT;Other
+Ireland;IRL;"Western Europe (excl_ DE)"
+Iran, Islamic Republic of;IRN;Other
+Iraq;IRQ;Other
+Iceland;ISL;"Western Europe (excl_ DE)"
+Israel;ISR;Other
+Italy;ITA;"Western Europe (excl_ DE)"
+Jamaica;JAM;Other
+Jersey;JEY;Other
+Jordan;JOR;Other
+Japan;JPN;Japan
+Kazakhstan;KAZ;Other
+Kenya;KEN;Other
+Kyrgyzstan;KGZ;Other
+Cambodia;KHM;Other
+Kiribati;KIR;Other
+Saint Kitts and Nevis;KNA;Other
+Korea, Republic of;KOR;South Korea
+Kuwait;KWT;Other
+Lao People's Democratic Republic;LAO;Other
+Lebanon;LBN;Other
+Liberia;LBR;Other
+Libya;LBY;Other
+Saint Lucia;LCA;Other
+Liechtenstein;LIE;"Western Europe (excl_ DE)"
+Sri Lanka;LKA;Other
+Lesotho;LSO;Other
+Lithuania;LTU;Other
+Luxembourg;LUX;"Western Europe (excl_ DE)"
+Latvia;LVA;Other
+Macao;MAC;Other
+Saint Martin (French part);MAF;Other
+Morocco;MAR;Other
+Monaco;MCO;Other
+Moldova, Republic of;MDA;Other
+Madagascar;MDG;Other
+Maldives;MDV;Other
+Mexico;MEX;Other
+Marshall Islands;MHL;Other
+Macedonia, the former Yugoslav Republic of;MKD;Other
+Mali;MLI;Other
+Malta;MLT;Other
+Myanmar;MMR;Other
+Montenegro;MNE;Other
+Mongolia;MNG;Other
+Northern Mariana Islands;MNP;Other
+Mozambique;MOZ;Other
+Mauritania;MRT;Other
+Montserrat;MSR;Other
+Martinique;MTQ;Other
+Mauritius;MUS;Other
+Malawi;MWI;Other
+Malaysia;MYS;Other
+Mayotte;MYT;Other
+Namibia;NAM;Other
+New Caledonia;NCL;Other
+Niger;NER;Other
+Norfolk Island;NFK;Other
+Nigeria;NGA;Other
+Nicaragua;NIC;Other
+Niue;NIU;Other
+Netherlands;NLD;"Western Europe (excl_ DE)"
+Norway;NOR;"Western Europe (excl_ DE)"
+Nepal;NPL;Other
+Nauru;NRU;Other
+New Zealand;NZL;Other
+Oman;OMN;Other
+Pakistan;PAK;Pakistan
+Panama;PAN;Other
+Pitcairn;PCN;Other
+Peru;PER;Other
+Philippines;PHL;Other
+Palau;PLW;Other
+Papua New Guinea;PNG;Other
+Poland;POL;Other
+Puerto Rico;PRI;Other
+Korea, Democratic People's Republic of;PRK;Other
+Portugal;PRT;"Western Europe (excl_ DE)"
+Paraguay;PRY;Other
+Palestine, State of;PSE;Other
+French Polynesia;PYF;Other
+Qatar;QAT;Other
+Reunion;REU;Other
+Romania;ROU;Other
+Russian Federation;RUS;Other
+Rwanda;RWA;Other
+Saudi Arabia;SAU;Other
+Sudan;SDN;Other
+Senegal;SEN;Other
+Singapore;SGP;Other
+South Georgia and the South Sandwich Islands;SGS;Other
+Saint Helena, Ascension and Tristan da Cunha;SHN;Other
+Svalbard and Jan Mayen;SJM;Other
+Solomon Islands;SLB;Other
+Sierra Leone;SLE;Other
+El Salvador;SLV;Other
+San Marino;SMR;Other
+Somalia;SOM;Other
+Saint Pierre and Miquelon;SPM;Other
+Serbia;SRB;Other
+South Sudan;SSD;Other
+Sao Tome and Principe;STP;Other
+Suriname;SUR;Other
+Slovakia;SVK;Other
+Slovenia;SVN;Other
+Sweden;SWE;"Western Europe (excl_ DE)"
+Swaziland;SWZ;Other
+Sint Maarten (Dutch part);SXM;Other
+Seychelles;SYC;Other
+Syrian Arab Republic;SYR;Other
+Turks and Caicos Islands;TCA;Other
+Chad;TCD;Other
+Togo;TGO;Other
+Thailand;THA;Other
+Tajikistan;TJK;Other
+Tokelau;TKL;Other
+Turkmenistan;TKM;Other
+Timor-Leste;TLS;Other
+Tonga;TON;Other
+Trinidad and Tobago;TTO;Other
+Tunisia;TUN;Other
+Turkey;TUR;Other
+Tuvalu;TUV;Other
+Taiwan, Province of China;TWN;Taiwan
+Tanzania, United Republic of;TZA;Other
+Uganda;UGA;Other
+Ukraine;UKR;Other
+United States Minor Outlying Islands;UMI;Other
+Uruguay;URY;Other
+United States;USA;USA
+Uzbekistan;UZB;Other
+Holy See (Vatican City State);VAT;Other
+Saint Vincent and the Grenadines;VCT;Other
+Venezuela, Bolivarian Republic of;VEN;Other
+Virgin Islands, British;VGB;Other
+Virgin Islands, U.S.;VIR;Other
+Viet Nam;VNM;Other
+Vanuatu;VUT;Other
+Wallis and Futuna;WLF;Other
+Samoa;WSM;Other
+Yemen;YEM;Other
+South Africa;ZAF;Other
+Zambia;ZMB;Other
+Zimbabwe;ZWE;Other
