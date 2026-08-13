@@ -94,7 +94,7 @@ calcPlRen2025 <- function(subtype) {
     ))
   }
 
-  if (subtype == "consumption") {
+  if (subtype == "consumption" | subtype == "consumption_split") {
     # -------------------------------------------------------------------------
     # Sector-polymer split of apparent consumption (inflow), normalized to sum
     # to 1. Only base plastics (fibres / rubbers untracked in the use stage).
@@ -103,7 +103,22 @@ calcPlRen2025 <- function(subtype) {
       dim = c("stage", "process", "product", "disposal")
     ) # (region, year, polymer.sector)
     cons <- .foldPA(cons)
-    cons <- add_dimension(cons, dim = 3.1, add = "type", nm = "Plastics")
+    cons <- add_dimension(cons, dim = 3.1, add = "type", nm = "Plastics") * 1e4 # 10^4 t -> t
+
+    if (subtype == "consumption"){
+      return(list(
+        x = cons,
+        weight = NULL,
+        unit = "t",
+        description = paste(
+          "Apparent plastic consumption (inflow) in China by polymer and end-use",
+          "sector, from Ren et al. (2025). Fibres and rubbers are not tracked in the",
+          "use stage."
+        ),
+        note = "dimensions: (Time, Region, Type, Material, Good, value)",
+        min = 0
+      ))
+    }
 
     typeTotal <- dimSums(cons, dim = c("polymer", "sector")) # (region, year, type)
     x <- cons / typeTotal
@@ -160,5 +175,5 @@ calcPlRen2025 <- function(subtype) {
     ))
   }
 
-  stop("Invalid subtype '", subtype, "' -- supported: production, consumption, eol")
+  stop("Invalid subtype '", subtype, "' -- supported: production, consumption_split, consumption, eol")
 }

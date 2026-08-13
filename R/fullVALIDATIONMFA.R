@@ -86,10 +86,18 @@ fullVALIDATIONMFA <- function(rev = 0, runSections = NULL) {
 
     # Gao & Cabrera-Serrenho 2025 apparent polymer consumption ----
     calcOutput(
-      type = "PlGaoCabrera", file = valfile,
+      type = "PlGaoCabreraValidation", file = valfile,
       aggregate = columnsForAggregation, append = TRUE,
       warnNA = FALSE, try = FALSE,
       writeArgs = list(scenario = "historical", model = "Gao & Cabrera-Serrenho 2025")
+    )
+
+    # Ren et al. 2025 plastics production & consumption (China) ----
+    calcOutput(
+      type = "PlRen2025Validation", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(scenario = "historical", model = "Ren et al 2025")
     )
 
     # Geyer et al. 2017 global plastics production ----
