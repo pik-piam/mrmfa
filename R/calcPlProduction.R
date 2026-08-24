@@ -58,10 +58,15 @@ calcPlProduction <- function() {
   plastics <- .backcast(plastics)
 
   # ---------------------------------------------------------------------------
-  # subtract fibres included in PlasticsEurope from PlasticsEurope,
-  # then merge into the type dimension.
+  # Subtract the fibres that Plastics Europe already counts as plastics so they
+  # are not double-counted once fibre and plastics are merged, then merge into
+  # the type dimension. Where these included fibres exceed Plastics Europe
+  # production, cap plastics at zero instead of letting it turn negative: the
+  # excess stays counted in the Fibre category (all synthetic fibre - included
+  # and not - is reported under Fibre by the dimSums below regardless).
   # ---------------------------------------------------------------------------
   plastics <- plastics - collapseDim(fibre[, , "TRUE"])
+  plastics[plastics < 0] <- 0
   fibre <- dimSums(fibre, dim = 3)
   .prep <- function(x, typeName) {
     x <- collapseDim(x)
