@@ -21,12 +21,9 @@ member countries (see \code{regionmappingIRSG.csv}) weighted by each country's
 synthetic rubber exports from BACI
 (\code{calcOutput("PlBACI", subtype = "plastics_UNEP", category = "Primary")},
 summed to gross exports per country with \code{\link{toolAggregateBilateralTrade}}
-and restricted to the rubber \code{type}). This is a better proxy for rubber
-production location than total chemical energy use, which over-weights
-ammonia/methanol feedstock producers. Exports are an imperfect proxy: producers
-serving mainly domestic demand are under-weighted and re-export hubs slightly
-over-weighted, but only the within-region country split is affected - regional
-totals are unchanged.
+and restricted to the rubber \code{type}). Note that exports are an imperfect proxy:
+producers serving mainly domestic demand are under-weighted and re-export hubs slightly
+over-weighted.
 }
 \details{
 Only the "regional" subtype is country-resolved. The "global_total" subtype

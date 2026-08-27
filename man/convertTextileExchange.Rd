@@ -37,8 +37,7 @@ their share through unchanged.
 \details{
 The primary trade contains no synthetic fibre (primary fibre exports are always
 0), so the same primary polymer export weight as \code{\link{convertPlasticsEurope}}
-is used: synthetic-fibre production co-locates with polymer/petrochemical
-production, and the weight only splits the two residual groups.
+is used: synthetic-fibre production is assumed to co-locate with polymer production.
 
 Only the \code{"region_share"} subtype is convertible; the
 \code{"timeseries_by_type"} subtype is global and must be read with

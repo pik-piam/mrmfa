@@ -17,12 +17,9 @@ Disaggregates the regional Plastics Europe production to ISO country level,
 weighted by each country's primary polymer exports from BACI
 (\code{calcOutput("PlBACI", subtype = "plastics_UNEP", category = "Primary")},
 summed to gross exports per country with \code{\link{toolAggregateBilateralTrade}}
-and restricted to the plastics \code{type}). This is a better proxy for polymer
-production location than total chemical energy use, which over-weights
-ammonia/methanol feedstock producers such as Trinidad & Tobago. Exports are an
+and restricted to the plastics \code{type}). Note that exports are an
 imperfect proxy: producers serving mainly domestic demand are under-weighted
-and re-export hubs slightly over-weighted, but only the within-region country
-split is affected - regional totals are unchanged.
+and re-export hubs slightly over-weighted.
 }
 \examples{
 \dontrun{
