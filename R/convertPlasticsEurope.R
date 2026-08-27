@@ -37,6 +37,7 @@ convertPlasticsEurope <- function(x) {
   exports <- toolAggregateBilateralTrade(baci, rel = idMap, flow_label = "Exports")
   exports <- dimSums(mselect(exports, type = "Plastics"), dim = 3)
   exports <- toolCountryFill(exports, fill = 0, verbosity = 2)
+  exports[is.na(exports)] <- 0
   weight <- toolInterpolate(exports, union(getYears(exports), getYears(x)), extrapolate = TRUE)
   # epsilon guard: a region whose countries all have zero exports is split evenly
   # instead of producing NaN when toolAggregate normalises the weight.

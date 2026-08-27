@@ -54,6 +54,7 @@ convertTextileExchange <- function(x, subtype) {
   exports <- toolAggregateBilateralTrade(baci, rel = idMap, flow_label = "Exports")
   exports <- dimSums(mselect(exports, type = "Plastics"), dim = 3)
   exports <- toolCountryFill(exports, fill = 0, verbosity = 2)
+  exports[is.na(exports)] <- 0
   weight <- toolInterpolate(exports, union(getYears(exports), getYears(x)), extrapolate = TRUE)
   # epsilon guard against zero-export residual groups (see convertPlasticsEurope)
   weight <- (weight + 1e-9)[, getYears(x), ]
