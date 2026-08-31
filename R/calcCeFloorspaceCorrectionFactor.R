@@ -111,7 +111,7 @@ plot_floorspace_data <- function(plotting) {
 
       plot_ratio_over_x(edgeb_floor_area, eubucco_floor_area, cement_production, "Cement Production (tonnes)")
     } else {
-      stop("Invalid plotting option. Choose either 'floor area comparison' or 'ratio eubucco/edgeb over cement production'.")
+      stop("Invalid plotting option. Choose 'floor area comparison' or 'ratio eubucco/edgeb over cement production'.")
     }
   }
 }
@@ -207,7 +207,7 @@ plot_floor_area_comparison <- function(edgeb_floor_area, eubucco_floor_area, gem
 #' @param title A string to be used as the plot's main title.
 #' @param nrow Number of rows for the facet layout (passed to facet_wrap).
 #' @param ncol Number of columns for the facet layout (passed to facet_wrap).
-#' @param ignore_na Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) before plotting.
+#' @param ignore_na Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) in plotting.
 #' @param show_shares Logical indicating whether stacked bars should display percentage shares for each category.
 #' @param xlab Label for the x axis.
 #' @param ylab Label for the y axis.

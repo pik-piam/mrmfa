@@ -17,7 +17,11 @@ convertPostedBuiltLifespan <- function(x) {
   x_h12 <- toolAggregate(x_h12, h12_regionmapping, from = "RegionCode", to = "CountryCode")
 
   # 2. Fill lifetimes on custom region level
-  custom_regionmapping <- toolGetMapping("regionmapping_postedBuiltLifespan.csv", where = "mappingfolder", type = "regional")
+  custom_regionmapping <- toolGetMapping(
+    name = "regionmapping_postedBuiltLifespan.csv",
+    where = "mappingfolder",
+    type = "regional"
+  )
   custom_regions <- unique(custom_regionmapping$Region)
   x_out <- x[custom_regions, , ]
   x_out <- toolAggregate(x_out, custom_regionmapping, from = "Region", to = "CountryCode")
