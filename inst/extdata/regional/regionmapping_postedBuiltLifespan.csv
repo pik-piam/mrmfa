@@ -1,0 +1,250 @@
+X;CountryCode;Region
+Aruba;ABW;North America
+Afghanistan;AFG;Asia
+Angola;AGO;Africa
+Anguilla;AIA;North America
+Aland Islands;ALA;World
+Albania;ALB;World
+Andorra;AND;World
+United Arab Emirates;ARE;Asia
+Argentina;ARG;South America
+Armenia;ARM;Asia
+American Samoa;ASM;Oceania
+Antarctica;ATA;World
+French Southern Territories;ATF;World
+Antigua and Barbuda;ATG;North America
+Australia;AUS;Oceania
+Austria;AUT;World
+Azerbaijan;AZE;Asia
+Burundi;BDI;Africa
+Belgium;BEL;World
+Benin;BEN;Africa
+Bonaire, Sint Eustatius and Saba;BES;North America
+Burkina Faso;BFA;Africa
+Bangladesh;BGD;Asia
+Bulgaria;BGR;World
+Bahrain;BHR;Asia
+Bahamas;BHS;North America
+Bosnia and Herzegovina;BIH;World
+Saint Barthelemy;BLM;North America
+Belarus;BLR;World
+Belize;BLZ;North America
+Bermuda;BMU;North America
+Bolivia, Plurinational State of;BOL;South America
+Brazil;BRA;South America
+Barbados;BRB;North America
+Brunei Darussalam;BRN;Asia
+Bhutan;BTN;Asia
+Bouvet Island;BVT;World
+Botswana;BWA;Africa
+Central African Republic;CAF;Africa
+Canada;CAN;North America
+Cocos (Keeling) Islands;CCK;Oceania
+China;CHN;Asia
+Switzerland;CHE;World
+Chile;CHL;South America
+Cote d Ivoire;CIV;Africa
+Cameroon;CMR;Africa
+Congo, the Democratic Republic of the;COD;Africa
+Congo;COG;Africa
+Cook Islands;COK;Oceania
+Colombia;COL;South America
+Comoros;COM;Africa
+Cape Verde;CPV;Africa
+Costa Rica;CRI;North America
+Cuba;CUB;North America
+Curacao;CUW;North America
+Christmas Island;CXR;Oceania
+Cayman Islands;CYM;North America
+Cyprus;CYP;Asia
+Czech Republic;CZE;World
+Germany;DEU;World
+Djibouti;DJI;Africa
+Dominica;DMA;North America
+Denmark;DNK;World
+Dominican Republic;DOM;North America
+Algeria;DZA;Africa
+Ecuador;ECU;South America
+Egypt;EGY;Africa
+Eritrea;ERI;Africa
+Western Sahara;ESH;Africa
+Spain;ESP;World
+Estonia;EST;World
+Ethiopia;ETH;Africa
+Finland;FIN;World
+Fiji;FJI;Oceania
+Falkland Islands (Malvinas);FLK;South America
+France;FRA;World
+Faroe Islands;FRO;World
+Micronesia, Federated States of;FSM;Oceania
+Gabon;GAB;Africa
+United Kingdom;GBR;World
+Georgia;GEO;Asia
+Guernsey;GGY;World
+Ghana;GHA;Africa
+Gibraltar;GIB;World
+Guinea;GIN;Africa
+Guadeloupe;GLP;North America
+Gambia;GMB;Africa
+Guinea-Bissau;GNB;Africa
+Equatorial Guinea;GNQ;Africa
+Greece;GRC;World
+Grenada;GRD;North America
+Greenland;GRL;World
+Guatemala;GTM;North America
+French Guiana;GUF;South America
+Guam;GUM;Oceania
+Guyana;GUY;South America
+Hong Kong;HKG;Asia
+Heard Island and McDonald Islands;HMD;Oceania
+Honduras;HND;North America
+Croatia;HRV;World
+Haiti;HTI;North America
+Hungary;HUN;World
+Indonesia;IDN;Asia
+Isle of Man;IMN;World
+India;IND;Asia
+British Indian Ocean Territory;IOT;World
+Ireland;IRL;World
+Iran, Islamic Republic of;IRN;Asia
+Iraq;IRQ;Asia
+Iceland;ISL;World
+Israel;ISR;Asia
+Italy;ITA;World
+Jamaica;JAM;North America
+Jersey;JEY;World
+Jordan;JOR;Asia
+Japan;JPN;Asia
+Kazakhstan;KAZ;Asia
+Kenya;KEN;Africa
+Kyrgyzstan;KGZ;Asia
+Cambodia;KHM;Asia
+Kiribati;KIR;Oceania
+Saint Kitts and Nevis;KNA;North America
+Korea, Republic of;KOR;Asia
+Kuwait;KWT;Asia
+Lao People's Democratic Republic;LAO;Asia
+Lebanon;LBN;Asia
+Liberia;LBR;Africa
+Libya;LBY;Africa
+Saint Lucia;LCA;North America
+Liechtenstein;LIE;World
+Sri Lanka;LKA;Asia
+Lesotho;LSO;Africa
+Lithuania;LTU;World
+Luxembourg;LUX;World
+Latvia;LVA;World
+Macao;MAC;Asia
+Saint Martin (French part);MAF;North America
+Morocco;MAR;Africa
+Monaco;MCO;World
+Moldova, Republic of;MDA;World
+Madagascar;MDG;Africa
+Maldives;MDV;Asia
+Mexico;MEX;North America
+Marshall Islands;MHL;Oceania
+Macedonia, the former Yugoslav Republic of;MKD;World
+Mali;MLI;Africa
+Malta;MLT;World
+Myanmar;MMR;Asia
+Montenegro;MNE;World
+Mongolia;MNG;Asia
+Northern Mariana Islands;MNP;Oceania
+Mozambique;MOZ;Africa
+Mauritania;MRT;Africa
+Montserrat;MSR;North America
+Martinique;MTQ;North America
+Mauritius;MUS;Africa
+Malawi;MWI;Africa
+Malaysia;MYS;Asia
+Mayotte;MYT;Africa
+Namibia;NAM;Africa
+New Caledonia;NCL;Oceania
+Niger;NER;Africa
+Norfolk Island;NFK;Oceania
+Nigeria;NGA;Africa
+Nicaragua;NIC;North America
+Niue;NIU;Oceania
+Netherlands;NLD;World
+Norway;NOR;World
+Nepal;NPL;Asia
+Nauru;NRU;Oceania
+New Zealand;NZL;Oceania
+Oman;OMN;Asia
+Pakistan;PAK;Asia
+Panama;PAN;North America
+Pitcairn;PCN;Oceania
+Peru;PER;South America
+Philippines;PHL;Asia
+Palau;PLW;Oceania
+Papua New Guinea;PNG;Oceania
+Poland;POL;World
+Puerto Rico;PRI;North America
+Korea, Democratic People's Republic of;PRK;Asia
+Portugal;PRT;World
+Paraguay;PRY;South America
+Palestine, State of;PSE;Asia
+French Polynesia;PYF;Oceania
+Qatar;QAT;Asia
+Reunion;REU;Africa
+Romania;ROU;World
+Russian Federation;RUS;World
+Rwanda;RWA;Africa
+Saudi Arabia;SAU;Asia
+Sudan;SDN;Africa
+Senegal;SEN;Africa
+Singapore;SGP;Asia
+South Georgia and the South Sandwich Islands;SGS;World
+Saint Helena, Ascension and Tristan da Cunha;SHN;Africa
+Svalbard and Jan Mayen;SJM;World
+Solomon Islands;SLB;Oceania
+Sierra Leone;SLE;Africa
+El Salvador;SLV;North America
+San Marino;SMR;World
+Somalia;SOM;Africa
+Saint Pierre and Miquelon;SPM;North America
+Serbia;SRB;World
+South Sudan;SSD;Africa
+Sao Tome and Principe;STP;Africa
+Suriname;SUR;South America
+Slovakia;SVK;World
+Slovenia;SVN;World
+Sweden;SWE;World
+Swaziland;SWZ;Africa
+Sint Maarten (Dutch part);SXM;North America
+Seychelles;SYC;Africa
+Syrian Arab Republic;SYR;Asia
+Turks and Caicos Islands;TCA;North America
+Chad;TCD;Africa
+Togo;TGO;Africa
+Thailand;THA;Asia
+Tajikistan;TJK;Asia
+Tokelau;TKL;Oceania
+Turkmenistan;TKM;Asia
+Timor-Leste;TLS;Asia
+Tonga;TON;Oceania
+Trinidad and Tobago;TTO;North America
+Tunisia;TUN;Africa
+Turkey;TUR;Asia
+Tuvalu;TUV;Oceania
+Taiwan, Province of China;TWN;Asia
+Tanzania, United Republic of;TZA;Africa
+Uganda;UGA;Africa
+Ukraine;UKR;World
+United States Minor Outlying Islands;UMI;Oceania
+Uruguay;URY;South America
+United States;USA;North America
+Uzbekistan;UZB;Asia
+Holy See (Vatican City State);VAT;World
+Saint Vincent and the Grenadines;VCT;North America
+Venezuela, Bolivarian Republic of;VEN;South America
+Virgin Islands, British;VGB;North America
+Virgin Islands, U.S.;VIR;North America
+Viet Nam;VNM;Asia
+Vanuatu;VUT;Oceania
+Wallis and Futuna;WLF;Oceania
+Samoa;WSM;Oceania
+Yemen;YEM;Asia
+South Africa;ZAF;Africa
+Zambia;ZMB;Africa
+Zimbabwe;ZWE;Africa
