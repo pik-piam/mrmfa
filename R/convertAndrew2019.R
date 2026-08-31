@@ -13,26 +13,26 @@ convertAndrew2019 <- function(x, subtype) {
       "Sarawak", "Tanganyika", "United Korea", "Zanzibar", "YEM (886)", "SDN (736)",
 
       # ── Only NA/zero entries (mix of NA and zeros, no real values) ──
-      "PCZ",                       # 75 zeros, 70 NA
-      "French Equatorial Africa",  # 75 zeros, 70 NA
-      "Kuwaiti Oil Fires",        # 34 zeros, 111 NA
-      "Leeward Islands",           # 75 zeros, 70 NA
-      "Pacific Islands (Palau)",   # 70 zeros, 75 NA
-      "KNA (659)",                 # 44 zeros, 101 NA
-      "KNA (658)",                 # 68 zeros, 75 NA
+      "PCZ", # 75 zeros, 70 NA
+      "French Equatorial Africa", # 75 zeros, 70 NA
+      "Kuwaiti Oil Fires", # 34 zeros, 111 NA
+      "Leeward Islands", # 75 zeros, 70 NA
+      "Pacific Islands (Palau)", # 70 zeros, 75 NA
+      "KNA (659)", # 44 zeros, 101 NA
+      "KNA (658)", # 68 zeros, 75 NA
 
       # ── Other: removed or mapped to other regions ──
-      "DDR",   # single real value in 1990: German Democratic Republic - already included in DEU
-      "DEW",   # single real value in 1990: West Germany - already included in DEU
-      "KSV",   # values 1965–1972 (8 yrs) + zeros 1952–1964, rest NA
+      "DDR", # single real value in 1990: German Democratic Republic - already included in DEU
+      "DEW", # single real value in 1990: West Germany - already included in DEU
+      "KSV", # values 1965–1972 (8 yrs) + zeros 1952–1964, rest NA
       "Ryukyu Islands" # values 1965–1972 (8 yrs) + zeros 1952–1964, rest NA
     )
 
     # Values 1965–1972 (8 yrs) + zeros 1952–1964, rest NA
-    x["JPN",] = x["JPN",] + toolNAreplace(x["Ryukyu Islands",])$x
+    x["JPN", ] <- x["JPN", ] + toolNAreplace(x["Ryukyu Islands", ])$x
 
     # Values 2004–2024 (21 yrs), rest NA
-    x["SRB",] = x["SRB",] + toolNAreplace(x["KSV",])$x
+    x["SRB", ] <- x["SRB", ] + toolNAreplace(x["KSV", ])$x
 
     # Disaggregate colonial federation of French West Africa (data 1949–1957)
     add_map <- list(
@@ -43,17 +43,16 @@ convertAndrew2019 <- function(x, subtype) {
       c("French West Africa", "CIV", "y1957"), # Côte d'Ivoire
       c("French West Africa", "NER", "y1957"), # Niger
       c("French West Africa", "BFA", "y1957"), # Burkina Faso (Upper Volta)
-      c("French West Africa", "BEN", "y1957")  # Benin (Dahomey)
+      c("French West Africa", "BEN", "y1957") # Benin (Dahomey)
     )
 
     magclass::getItems(x, dim = 1)[which(getItems(x, dim = 1) == "YEM (887)")] <- "YEM"
     magclass::getItems(x, dim = 1)[which(getItems(x, dim = 1) == "SDN (729)")] <- "SDN"
-
   } else if (subtype == "clinker") {
     # clinker data for a lot of countries is missing, those will default to NA
     no_remove_warning <- c("KSV")
 
-    x["SRB",] = x["SRB",] + toolNAreplace(x["KSV",])$x
+    x["SRB", ] <- x["SRB", ] + toolNAreplace(x["KSV", ])$x
 
     add_map <- list()
   } else {
