@@ -14,7 +14,7 @@ convertPostedBuiltLifespan <- function(x) {
   x_h12["EUR", , ] <- x["Europe", , ]
   x_h12["NEU", , ] <- x["Europe", , ]
   x_h12["CHA", , ] <- x["China", , ]
-  x_h12 <- toolAggregate(x_h12, h12_regionmapping, from = "RegionCode", to = "CountryCode")
+  x_h12 <- toolGetMapping("regionmappingH12.csv", where = "madrat")
 
   # 2. Fill lifetimes on custom region level
   custom_regionmapping <- toolGetMapping(
