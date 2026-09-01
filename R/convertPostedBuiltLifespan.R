@@ -3,7 +3,7 @@
 #' @param x Magpie object
 convertPostedBuiltLifespan <- function(x) {
   # 1. Fill lifetimes on H12 level, where available
-  h12_regionmapping <- toolGetMapping("H12.csv", where = "mappingfolder", type = "regional")
+  h12_regionmapping <- toolGetMapping("regionmappingH12.csv", where = "madrat")
   x_h12 <- magclass::new.magpie(
     cells_and_regions = unique(h12_regionmapping$RegionCode),
     years = magclass::getYears(x),
@@ -14,7 +14,7 @@ convertPostedBuiltLifespan <- function(x) {
   x_h12["EUR", , ] <- x["Europe", , ]
   x_h12["NEU", , ] <- x["Europe", , ]
   x_h12["CHA", , ] <- x["China", , ]
-  x_h12 <- toolGetMapping("regionmappingH12.csv", where = "madrat")
+  x_h12 <- toolAggregate(x_h12, h12_regionmapping, from = "RegionCode", to = "CountryCode")
 
   # 2. Fill lifetimes on custom region level
   custom_regionmapping <- toolGetMapping(
