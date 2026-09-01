@@ -1,4 +1,4 @@
-#' Calculates the lifetimes of residential and non-residential buildings, as well as of civil engineering.
+#' Calculates the lifetimes of residential, commercial and industrial buildings, as well as of civil engeneering.
 #' @author Bennet Weiss
 calcCeBuiltLifespan <- function() {
   # Prepare data to have same dimensions as main driver cement production
