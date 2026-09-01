@@ -11,5 +11,7 @@ toolCeCumulativeCementProduction <- function(castto = NULL) {
   if (!is.null(castto)) {
     cumulative_cement_production <- magpie_expand(cumulative_cement_production, castto)
   }
+  # ensure weights are never zero if no further data is available
+  cumulative_cement_production[cumulative_cement_production == 0] <- 1e-10
   return(cumulative_cement_production)
 }

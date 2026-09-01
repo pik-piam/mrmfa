@@ -34,15 +34,11 @@ fullMFA <- function(rev = 0,
     runSections <- validSections
   } else {
     bad <- setdiff(runSections, validSections)
-    if (length(bad)) stop("Invalid sections: ", paste(bad, collapse = ", "))
+    if (length(bad)) warning("Invalid sections: ", paste(bad, collapse = ", "))
+    runSections <- intersect(runSections, validSections)
   }
 
   runSection <- function(name) name %in% runSections
-
-  if (!length(runSections)) {
-    message("fullMFA: no sections selected; nothing done.")
-    return(invisible(NULL))
-  }
 
   # nolint start
 
@@ -66,12 +62,12 @@ fullMFA <- function(rev = 0,
     # calcOutput("StTradeWorldsteel", file = "st_scrap_exports.cs4r", subtype = "scrapExports", years = start_historic:end_historic)
     # calcOutput("StTradeWorldsteel", file = "st_indirect_imports.cs4r", subtype = "indirectImports", years = start_historic:end_historic)
     # calcOutput("StTradeWorldsteel", file = "st_indirect_exports.cs4r", subtype = "indirectExports", years = start_historic:end_historic)
-    calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports", category = "direct", years = start_historic:end_historic)
-    calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports", category = "direct", years = start_historic:end_historic)
-    calcOutput("StTrade", file = "st_scrap_imports.cs4r", subtype = "imports", category = "scrap", years = start_historic:end_historic)
-    calcOutput("StTrade", file = "st_scrap_exports.cs4r", subtype = "exports", category = "scrap", years = start_historic:end_historic)
-    calcOutput("StTrade", file = "st_indirect_imports.cs4r", subtype = "imports", category = "indirect", years = start_historic:end_historic)
-    calcOutput("StTrade", file = "st_indirect_exports.cs4r", subtype = "exports", category = "indirect", years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_steel_imports.cs4r", subtype = "imports", category = "direct", target_years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_steel_exports.cs4r", subtype = "exports", category = "direct", target_years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_scrap_imports.cs4r", subtype = "imports", category = "scrap", target_years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_scrap_exports.cs4r", subtype = "exports", category = "scrap", target_years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_indirect_imports.cs4r", subtype = "imports", category = "indirect", target_years = start_historic:end_historic)
+    calcOutput("StTrade", file = "st_indirect_exports.cs4r", subtype = "exports", category = "indirect", target_years = start_historic:end_historic)
 
     # Parameters
     calcOutput("StCullenFabricationYield", file = "st_fabrication_yield.cs4r", aggregate = FALSE)
@@ -155,38 +151,28 @@ fullMFA <- function(rev = 0,
   #  ------------- PLASTIC -----------
   if (runSection("plastic")) {
     start_historic <- 1950
-    end_historic <- 2019
+    end_historic <- 2024
 
     # common parameters
     calcOutput("CoPopulation", file = "pl_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     calcOutput("CoGDP", file = "pl_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
+    # Production
+    calcOutput("PlProduction", file = "pl_production.cs4r", years = start_historic:end_historic)
     # Consumption
-    calcOutput("PlConsumptionByGood", file = "pl_consumption.cs4r")
-    calcOutput("PlSectorSplit", file = "pl_sector_split.cs4r", aggregate = FALSE)
+    calcOutput("PlSectorPolymerSplit", file = "pl_sector_polymer_split.cs4r", target_years = start_historic:end_historic)
     # Trade
-    # calcOutput("PlTrade", category = "Final", flow_label = "Exports", data_source = "UNCTAD", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
-    # calcOutput("PlTrade", category = "Final", flow_label = "Imports", data_source = "UNCTAD", file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)
-    # calcOutput("PlTrade", category = "Primary", flow_label = "Exports", data_source = "UNCTAD", file = "pl_primary_his_exports.cs4r", years = start_historic:end_historic)
-    # calcOutput("PlTrade", category = "Primary", flow_label = "Imports", data_source = "UNCTAD", file = "pl_primary_his_imports.cs4r", years = start_historic:end_historic)
-    # calcOutput("PlTrade", category = "Intermediate", flow_label = "Exports", data_source = "UNCTAD", file = "pl_intermediate_his_exports.cs4r", years = start_historic:end_historic)
-    # calcOutput("PlTrade", category = "Intermediate", flow_label = "Imports", data_source = "UNCTAD", file = "pl_intermediate_his_imports.cs4r", years = start_historic:end_historic)
-    # calcOutput("PlTrade", category = "Manufactured", flow_label = "Exports", data_source = "UNCTAD", file = "pl_manufactured_his_exports.cs4r", years = start_historic:end_historic)
-    # calcOutput("PlTrade", category = "Manufactured", flow_label = "Imports", data_source = "UNCTAD", file = "pl_manufactured_his_imports.cs4r", years = start_historic:end_historic)
-    # calcOutput("PlWasteTrade", subtype = "export", file = "pl_waste_exports.cs4r", years = start_historic:end_future)
-    # calcOutput("PlWasteTrade", subtype = "import", file = "pl_waste_imports.cs4r", years = start_historic:end_future)
-    calcOutput("PlTrade", category = "Application", flow_label = "Exports", data_source = "BACI_UNEP", file = "pl_final_his_exports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Application", flow_label = "Imports", data_source = "BACI_UNEP", file = "pl_final_his_imports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Primary", flow_label = "Exports", data_source = "BACI_UNEP", file = "pl_primary_his_exports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Primary", flow_label = "Imports", data_source = "BACI_UNEP", file = "pl_primary_his_imports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Waste", flow_label = "Exports", data_source = "BACI_UNEP", file = "pl_waste_his_exports.cs4r", years = start_historic:end_historic)
-    calcOutput("PlTrade", category = "Waste", flow_label = "Imports", data_source = "BACI_UNEP", file = "pl_waste_his_imports.cs4r", years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Application", flow_label = "Exports", data_source = "BACI_UNEP", file = "pl_final_his_exports.cs4r", target_years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Application", flow_label = "Imports", data_source = "BACI_UNEP", file = "pl_final_his_imports.cs4r", target_years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Primary", flow_label = "Exports", data_source = "BACI_UNEP", file = "pl_primary_his_exports.cs4r", target_years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Primary", flow_label = "Imports", data_source = "BACI_UNEP", file = "pl_primary_his_imports.cs4r", target_years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Waste", flow_label = "Exports", data_source = "BACI_UNEP", file = "pl_waste_his_exports.cs4r", target_years = start_historic:end_historic)
+    calcOutput("PlTrade", category = "Waste", flow_label = "Imports", data_source = "BACI_UNEP", file = "pl_waste_his_imports.cs4r", target_years = start_historic:end_historic)
     # Parameters
     calcOutput("PlHVCinput", subtype = "polymerization_yield", aggregate = FALSE, file = "pl_polymerization_yield.cs4r")
     calcOutput("PlHVCinput", subtype = "HVC_input_ratio", aggregate = FALSE, file = "pl_HVC_input_ratio.cs4r")
     calcOutput("PlHVCinput", subtype = "C4_input_ratio", aggregate = FALSE, file = "pl_C4_input_ratio.cs4r")
-    calcOutput("PlOECD_MGshare", file = "pl_material_shares_in_goods.cs4r")
-    calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", years = start_historic:end_future) # fix 0.79
-    calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r", years = start_historic:end_future) # fix 0.05
+    calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", aggregate = FALSE) # fix 0.79
+    calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r", aggregate = FALSE) # fix 0.05
     calcOutput("PlLifetime", subtype = "Lifetime_mean", aggregate = FALSE, file = "pl_lifetime_mean.cs4r")
     calcOutput("PlLifetime", subtype = "Lifetime_std", aggregate = FALSE, file = "pl_lifetime_std.cs4r")
     calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_materials.cs4r")
@@ -195,10 +181,10 @@ fullMFA <- function(rev = 0,
     calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_mechanical_recycling_rate.cs4r", years = start_historic:end_historic)
     calcOutput("PlEoL_shares", subtype = "Incinerated", file = "pl_incineration_rate.cs4r", years = start_historic:end_historic)
     # Rates that are historically zero
-    calcOutput("PlZeroRates", file = "pl_chemical_recycling_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlZeroRates", file = "pl_bio_production_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlZeroRates", file = "pl_daccu_production_rate.cs4r", years = start_historic:end_historic)
-    calcOutput("PlZeroRates", file = "pl_emission_capture_rate.cs4r", years = start_historic:end_historic)
+    calcOutput("PlZeroRates", file = "pl_chemical_recycling_rate.cs4r", aggregate = FALSE)
+    calcOutput("PlZeroRates", file = "pl_bio_production_rate.cs4r", aggregate = FALSE)
+    calcOutput("PlZeroRates", file = "pl_daccu_production_rate.cs4r", aggregate = FALSE)
+    calcOutput("PlZeroRates", file = "pl_emission_capture_rate.cs4r", aggregate = FALSE)
   }
 
   # nolint end

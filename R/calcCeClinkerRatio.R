@@ -39,7 +39,7 @@ calcCeClinkerRatio <- function() {
   ratio[, clinker_years, ] <- consum_clinker / prod_cement[, clinker_years, ]
 
   # restrict clinker ratio to realistic values
-  ratio[ratio < 0.6 | ratio > 0.99] <- NA
+  ratio[ratio < 0.5 | ratio > 0.99] <- NA
   ratio <- replace_non_finite(ratio, NA)
 
   # replace data with GNR values where not at least n_valid values are available.
@@ -53,23 +53,10 @@ calcCeClinkerRatio <- function() {
 
   # Linearly extrapolate till available data (as Andrew 2019)
   # Also extrapolate any other missing data
-  all_regions <- getItems(ratio, dim = 1)
-  all_years <- getYears(ratio)
-  # looping through regions is necessary as each region might have different temporal gaps
-  # optimization for country_mask regions could be possible.
-  for (i in seq_along(all_regions)) {
-    region_ratio <- toolRemoveNA(ratio[all_regions[i], ])
-    years_to_interpolate <- all_years[!all_years %in% getYears(region_ratio[i])]
-    if (length(years_to_interpolate) == 0) next
-    ratio[all_regions[i], ] <- time_interpolate(region_ratio,
-      years_to_interpolate,
-      integrate_interpolated_years = TRUE
-    )
-  }
+  ratio <- toolInterpolate(ratio, type = "linear", extrapolate = TRUE)
 
   weight <- prod_cement
-  # until 1970 clinker ratio is the same everywhere, anyways
-  weight[, getYears(weight, as.integer = TRUE) <= 1970] <- 1
+  weight[weight == 0] <- 1e-9
   unit <- "ratio"
   description <- paste(
     "Annual clinker-to-cement ratio, calculated similiar as by Andrew (2019).",

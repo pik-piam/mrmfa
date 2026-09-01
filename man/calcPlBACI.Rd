@@ -42,7 +42,7 @@ Get BACI Trade data for specific product groups
 \dontrun{
 a <- calcOutput(
   type = "PlBACI", subtype = "plastics_UNCTAD",
-  category = "Plastics in primary forms", HS = "02"
+  category = "Plastics in primary forms", HS = "92"
 )
 }
 }

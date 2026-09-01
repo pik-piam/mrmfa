@@ -13,7 +13,7 @@
 #'        - Collected (share of total plastic waste)
 #'        - All (all shares combined in one magpie object)
 #'
-#' @importFrom dplyr select filter mutate group_by summarise case_when left_join
+#' @importFrom dplyr select filter mutate group_by summarise case_when left_join if_else
 #' @importFrom data.table first
 #'
 calcPlEoL_shares <- function(subtype) {
@@ -52,7 +52,7 @@ calcPlEoL_shares <- function(subtype) {
   # - US data (1960-2018, fill gaps by linear interpolation)
   # - calculate shares
   # ---------------------------------------------------------------------------
-  eu <- readSource("PlasticsEurope", subtype = "PlasticEoL_EU", convert = FALSE) %>%
+  eu <- readSource("PlasticsEurope", subtype = "EoL_EU", convert = FALSE) %>%
     as.data.frame()
   cn_raw <- readSource("China_PlasticEoL", convert = FALSE)
   cn <- time_interpolate(cn_raw, interpolated_year = 1978:2021, integrate_interpolated_years = TRUE) %>%
@@ -126,14 +126,23 @@ calcPlEoL_shares <- function(subtype) {
   )
 
   # ---------------------------------------------------------------------------
+  # Forecast EoL rates to 2024 (keep constant)
+  # ---------------------------------------------------------------------------
+  x_forecast <- time_interpolate(x_backcast,
+    interpolated_year = 2019:2024,
+    integrate_interpolated_years = TRUE,
+    extrapolation_type = "constant"
+  )
+
+  # ---------------------------------------------------------------------------
   # Select data based on subtype
   # ---------------------------------------------------------------------------
   x <- switch(subtype,
-    "Recycled" = mselect(x_backcast, Data1 = "Recycled"),
-    "Landfilled" = mselect(x_backcast, Data1 = "Landfilled"),
-    "Incinerated" = mselect(x_backcast, Data1 = "Incinerated"),
-    "Collected" = mselect(x_backcast, Data1 = "Collected"),
-    "All" = x_backcast,
+    "Recycled" = mselect(x_forecast, Data1 = "Recycled"),
+    "Landfilled" = mselect(x_forecast, Data1 = "Landfilled"),
+    "Incinerated" = mselect(x_forecast, Data1 = "Incinerated"),
+    "Collected" = mselect(x_forecast, Data1 = "Collected"),
+    "All" = x_forecast,
     stop("Unsupported subtype: ", subtype)
   )
   if (subtype != "All") {
@@ -151,6 +160,7 @@ calcPlEoL_shares <- function(subtype) {
   weight[, , ] <- 0
   weight[, seq(2000, 2019, 1)] <- plOECD[, seq(2000, 2019, ), "Total"]
   weight[, seq(1950, 1999, 1)] <- plOECD[, 2000, "Total"]
+  weight[, seq(2020, 2024, 1)] <- plOECD[, 2019, "Total"]
 
   # ---------------------------------------------------------------------------
   # Return results

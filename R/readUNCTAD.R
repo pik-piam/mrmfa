@@ -28,14 +28,15 @@ readUNCTAD <- function() {
     filter(.data$`Partner Label` == "World" | .data$`Economy Label` == "World") %>%
     dplyr::rename(Region = "Economy Label", Partner_Region = "Partner Label", Flow = "Flow Label", Product = "Product Label")
 
-  # due to splitting of Sudan in 2011, there is "Sudan" with NA entries before 2011 and "Sudan (...2011)" with NA entries after 2011; aggregate them into one region
+  # due to splitting of Sudan in 2011, there is "Sudan" with NA entries before 2011 and
+  # "Sudan (...2011)" with NA entries after 2011; aggregate them into one region
   data_clean <- data %>%
     mutate(
       Region = case_when(.data$Region == "Sudan (...2011)" ~ "Sudan", .default = .data$Region),
       Partner_Region = case_when(.data$Partner_Region == "Sudan (...2011)" ~ "Sudan", .default = .data$Partner_Region)
     ) %>%
     group_by(.data$Region, .data$Year, .data$Partner_Region, .data$Flow, .data$Product) %>%
-    summarise(Value = sum(.data$`Metric tons in thousands`, na.rm = T)) %>%
+    summarise(Value = sum(.data$`Metric tons in thousands`, na.rm = TRUE)) %>%
     dplyr::ungroup()
 
   # data of interest: imports&exports from Region X to World
@@ -47,9 +48,13 @@ readUNCTAD <- function() {
     filter(.data$Region == "World") %>%
     select(-"Region") %>%
     mutate(Flow = case_when(.data$Flow == "Imports" ~ "Exports", .data$Flow == "Exports" ~ "Imports"))
-  merged <- merge(data_origin, data_check, by.x = c("Region", "Year", "Flow", "Product"), by.y = c("Partner_Region", "Year", "Flow", "Product"), suffix = c("", ".check"), all.x = T, all.y = T) %>%
+  merged <- merge(data_origin, data_check,
+                  by.x = c("Region", "Year", "Flow", "Product"),
+                  by.y = c("Partner_Region", "Year", "Flow", "Product"),
+                  suffix = c("", ".check"), all.x = TRUE, all.y = TRUE) %>%
     dplyr::mutate(Year = as.integer(as.character(.data$Year)))
-  # some values in the data_check seem to be false, as they are an order of magnitude above the respective data in data_origin and are clear outliers in the whole set
+  # some values in the data_check seem to be false, as they are an order of magnitude above the
+  # respective data in data_origin and are clear outliers in the whole set
   merged_filtered <- merged %>%
     filter(.data$Value < 1e6) %>%
     dplyr::arrange(.data$Region, .data$Flow, .data$Product, .data$Year) %>%
@@ -60,7 +65,8 @@ readUNCTAD <- function() {
       diff_median = abs(.data$diff / stats::median(.data$diff)) > 5,
       # check whether difference is greater than 20%
       diff_rel = is.finite(abs(.data$diff / .data$Value)) & abs(.data$diff / .data$Value) > 0.2,
-      # if both differences are higher than the threshold, the value is considered implausible; implausible values are interpolated
+      # if both differences are higher than the threshold, the value is considered implausible;
+      # implausible values are interpolated
       implausible = .data$diff_median & .data$diff_rel
     ) %>%
     # Replace implausible Value with NA

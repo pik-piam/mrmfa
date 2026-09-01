@@ -16,7 +16,7 @@ readAndrew2019 <- function(subtype) {
   } else {
     stop("Invalid subtype. Choose either 'cement' or 'clinker'.")
   }
-  data <- suppressMessages(read_csv(path))
+  data <- suppressMessages(readr::read_csv(path))
   # clean up data such that the country row becomes a column, too
   data_extracted <- tidyr::pivot_longer(data, -"Year", names_to = "region", values_to = "value")
   data_extracted <- dplyr::rename(data_extracted, "year" = "Year")

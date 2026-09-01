@@ -12,7 +12,7 @@
 #' @seealso \code{\link{readGaoCabrera2025}}, \code{\link{calcPlPottinger}}
 #' @importFrom magclass dimSums getNames<-
 calcPlGaoCabrera <- function() {
-  x <- readSource("GaoCabrera2025")
+  x <- readSource("GaoCabrera2025", subtype = "consumption")
 
   # sum all 14 polymers into a single total and convert kt -> Mt
   x <- dimSums(x, dim = 3) / 1000
@@ -27,8 +27,8 @@ calcPlGaoCabrera <- function() {
       "Apparent polymer consumption 1978-2021 from Gao & Cabrera-Serrenho (2025),",
       "total over all 14 polymer groups (incl. fibres and rubber), in the IAMC",
       "variable Material Demand|Chemicals|Plastics. Years 2020-2021 rely on",
-      "incomplete trade data."
-    ),
-    note = "Disaggregated from 8 Gao regions to ISO3 via population weighting"
+      "incomplete trade data.",
+      "Disaggregated from 8 Gao regions to ISO3 via population weighting."
+    )
   ))
 }

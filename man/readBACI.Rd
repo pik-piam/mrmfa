@@ -47,7 +47,7 @@ Read BACI Trade data
 }
 \examples{
 \dontrun{
-a <- readSource(type = "BACI", subtype = "plastics_UNEP-Primary", subset = "02")
+a <- readSource(type = "BACI", subtype = "plastics_UNEP-Primary", subset = "92")
 }
 }
 \seealso{
