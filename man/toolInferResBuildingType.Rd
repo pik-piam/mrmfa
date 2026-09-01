@@ -7,7 +7,8 @@
 toolInferResBuildingType(data)
 }
 \arguments{
-\item{data}{Dataframe that contains a column OCCUPANCY with building function types and a column TAXONOMY with taxonomy strings.}
+\item{data}{Dataframe that contains a column OCCUPANCY with building function types
+and a column TAXONOMY with taxonomy strings.}
 }
 \description{
 Categorizes res buildings into single family (RS) or multi family (RM) homes based on their number of stories.

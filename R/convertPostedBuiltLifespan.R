@@ -19,7 +19,7 @@ convertPostedBuiltLifespan <- function(x) {
   # 2. Fill lifetimes on custom region level
   custom_regionmapping <- toolGetMapping(
     name = "regionmapping_postedBuiltLifespan.csv",
-    where = "mappingfolder",
+    where = "mrmfa",
     type = "regional"
   )
   custom_regions <- unique(custom_regionmapping$Region)
