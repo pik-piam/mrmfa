@@ -10,20 +10,18 @@ calcCeDwellingSplit <- function() {
 
   # fill countries without residential floor area with their H12 region's share
   h12 <- toolGetMapping("h12.csv", type = "regional", where = "mappingfolder")
-  regional_share <- toolAggregate(
-    x = replace_non_finite(share, replace = 0),
-    rel = h12,
+  share <- replace_non_finite(share, replace = NA)
+  share <- toolFillWithRegionAvg(
+    x = share,
+    valueToReplace = NA,
     weight = res_floorArea,
-    from = "CountryCode",
-    to = "RegionCode"
+    regionmapping = h12
   )
-  region_fill <- toolAggregate(regional_share, h12, from = "RegionCode", to = "CountryCode")
-  share[!is.finite(share)] <- region_fill[!is.finite(share)]
 
-  x <- mbind(setNames(share, "RS"), setNames(1 - share, "RM"))
-  getSets(x)["d3.1"] <- "Dwelling Type"
-  weight <- mbind(setNames(res_floorArea, "RS"), setNames(res_floorArea, "RM"))
-  getSets(weight)["d3.1"] <- "Dwelling Type"
+  x_rs <- add_dimension(share, dim = 3.1, add = "Dwelling Type", nm = "RS")
+  x_rm <- add_dimension(1 - share, dim = 3.1, add = "Dwelling Type", nm = "RM")
+  x <- mbind(x_rs, x_rm)
+  weight <- magpie_expand(x = res_floorArea, ref = x)
 
   unit <- "ratio"
   description <- paste(

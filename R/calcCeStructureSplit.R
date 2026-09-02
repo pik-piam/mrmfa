@@ -10,18 +10,15 @@ calcCeStructureSplit <- function() {
 
   # fill countries lacking floor area for an end use with their H12 region's split
   h12 <- toolGetMapping("h12.csv", type = "regional", where = "mappingfolder")
-  regional_relFloorArea <- toolAggregate(
-    x = replace_non_finite(relFloorArea, replace = 0),
-    rel = h12,
+  relFloorArea <- replace_non_finite(relFloorArea, replace = NA)
+  relFloorArea <- toolFillWithRegionAvg(
+    x = relFloorArea,
+    valueToReplace = NA,
     weight = floorArea_byFunction,
-    from = "CountryCode",
-    to = "RegionCode"
+    regionmapping = h12
   )
-  region_fill <- toolAggregate(regional_relFloorArea, h12, from = "RegionCode", to = "CountryCode")
-  relFloorArea[!is.finite(relFloorArea)] <- region_fill[!is.finite(relFloorArea)]
 
   # output
-  relFloorArea <- replace_non_finite(relFloorArea, replace = 0)
   getSets(relFloorArea)["d3.1"] <- "End Use"
   weight <- floorArea_byFunction # use normalizing floor area as weight
   unit <- "ratio"
