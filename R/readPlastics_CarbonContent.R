@@ -20,16 +20,16 @@ readPlastics_CarbonContent <- function(subtype) {
   switchboard <- list(
     "plastics" = function() {
       df <- read_excel(
-        path  = file.path("v2.0", "Plastics_CarbonContent.xlsx"),
+        path  = file.path("v3.0", "Plastics_CarbonContent.xlsx"),
         sheet = "final",
-        range = "A1:B13"
+        range = "A1:B14"
       )
       x <- as.magpie(df)
       return(x)
     },
     "HVC" = function() {
       df <- read_excel(
-        path  = file.path("v2.0", "Plastics_CarbonContent.xlsx"),
+        path  = file.path("v3.0", "Plastics_CarbonContent.xlsx"),
         sheet = "HVC",
         range = "A1:B8"
       )

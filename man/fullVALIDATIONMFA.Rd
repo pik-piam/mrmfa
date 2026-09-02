@@ -4,10 +4,13 @@
 \alias{fullVALIDATIONMFA}
 \title{Generate validation data for the REMIND MFA}
 \usage{
-fullVALIDATIONMFA(rev = 0)
+fullVALIDATIONMFA(rev = 0, runSections = NULL)
 }
 \arguments{
 \item{rev}{Unused parameter, but required by \code{madrat}.}
+
+\item{runSections}{Character vector or string selecting which parts to run.
+Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.}
 }
 \description{
 Function that assembles a regional dataset from various sources against which

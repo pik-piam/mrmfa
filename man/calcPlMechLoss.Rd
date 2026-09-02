@@ -2,13 +2,12 @@
 % Please edit documentation in R/calcPlMechLoss.R
 \name{calcPlMechLoss}
 \alias{calcPlMechLoss}
-\title{Calculate Country-Level Mechanical Recycling Loss Trajectories}
+\title{Set Country-Level Mechanical Recycling Loss}
 \usage{
 calcPlMechLoss()
 }
 \description{
-Generate time series of mechanical recycling loss trajectories by sector and region,
-then aggregate to countries for 1950-2100.
+Set Country-Level Mechanical Recycling Loss
 }
 \author{
 Qianzhi Zhang

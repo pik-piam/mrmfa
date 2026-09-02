@@ -58,26 +58,16 @@ calcPlHVCinput <- function(subtype) {
 
   # merge with HVC input and calculate total HVC input by element
   HVC_input <- merge(HVC_input, carbon_content, by.x = "input", by.y = "Data1") %>%
-    mutate(input_by_element = .data$tonnes * .data$Value, hvc_type = case_when(.data$input == "butadiene" ~ "C4", .default = "HVC w/o C4")) %>%
+    mutate(
+      input_by_element = .data$tonnes * .data$Value,
+      hvc_type = case_when(.data$input == "butadiene" ~ "C4", .default = "HVC w/o C4")) %>%
     group_by(.data$polymer, .data$element, .data$hvc_type) %>%
     summarize(HVC_input = sum(.data$input_by_element))
   HVC_input_magclass <- as.magpie(HVC_input)
 
   # ---------------------------------------------------------------------------
-  # map polymers to REMIND-MFA polymers using production weights for ABS&SAN mapping to ABS_ASA_SAN
-  # ---------------------------------------------------------------------------
-  polymer_map <- toolGetMapping("polymermappingLeviCullen.csv", type = "sectoral", where = "mrmfa")
-  production_volumes <- readSource("LeviCullen", subtype = "Production", convert = FALSE)
-  weights <- mselect(production_volumes, stage = "total production", type = "plastics", to = polymerization$polymer, collapseNames = TRUE) %>% collapseDim()
-  HVC_input_mapped <- HVC_input_magclass %>%
-    toolAggregate(rel = polymer_map, dim = 3.1, from = "Source", to = "Target", weight = weights, wdim = 3.1)
-  polymerization_mapped <- polymerization_magclass %>%
-    toolAggregate(rel = polymer_map, dim = 3.1, from = "Source", to = "Target", weight = weights, wdim = 3.1)
-
-  # ---------------------------------------------------------------------------
-  # fill data for Fibres, Bioplastics and Other with assumptions:
-  # for Fibres, assume same input as for PET, since 85% of global Fibre production is polyester
-  # for Bioplastics and Other, regress HVC inputs by carbon content and assume typical polymerization yield
+  # fill data for Other thermosets with assumption:
+  # regress HVC inputs by carbon content and assume typical polymerization yield
   # according to Levi and Cullen 2018 (total input = 1.02)
   # ---------------------------------------------------------------------------
 
@@ -86,27 +76,20 @@ calcPlHVCinput <- function(subtype) {
     mselect(Element = "C") %>%
     collapseDim() # keep only C content, result: (polymer)
 
-  # --- Fibres: copy HVC input and polymerization yield from PET ---
-  fibres_HVC <- HVC_input_mapped[, , "PET"]
-  getItems(fibres_HVC, dim = 3.1) <- "Fibres"
-  fibres_polym <- polymerization_mapped[, , "PET"]
-  getItems(fibres_polym, dim = 3.1) <- "Fibres"
-
-  # --- Bioplastics & Others: linear regression of HVC input on carbon content ---
   # build a dataframe of known polymer carbon contents and their HVC inputs per (element, HVC type)
-  known_polymers <- getItems(HVC_input_mapped, dim = 3.1)
+  known_polymers <- getItems(HVC_input_magclass, dim = 3.1)
   cc_known <- as.data.frame(mselect(carbon_content_pl, Polymer = known_polymers)) %>%
     select("Data1", "Value") %>%
     rename(polymer = "Data1", carbon = "Value")
 
-  hvc_known <- as.data.frame(HVC_input_mapped) %>%
+  hvc_known <- as.data.frame(HVC_input_magclass) %>%
     select(-"Cell", -"Region", -"Year") %>%
     rename(polymer = "Data1", element = "Data2", hvc_type = "Data3", hvc_input = "Value")
 
   reg_data <- merge(hvc_known, cc_known, by = "polymer")
 
-  # for each element, fit lm on HVC w/o C4 only and predict; C4 input is assumed zero
-  missing_polymers <- c("BioPlastics", "Others")
+  # fit lm on HVC w/o C4 only and predict; C4 input is assumed zero
+  missing_polymers <- c("Other thermosets")
   cc_missing <- as.data.frame(mselect(carbon_content_pl, Polymer = missing_polymers)) %>%
     select("Data1", "Value") %>%
     rename(polymer = "Data1", carbon = "Value")
@@ -116,8 +99,8 @@ calcPlHVCinput <- function(subtype) {
     group_by(.data$element) %>%
     tidyr::nest() %>%
     mutate(
-      model = purrr::map(.data$data, ~ lm(hvc_input ~ carbon, data = .x)),
-      pred  = purrr::map(.data$model, ~ predict(.x, newdata = cc_missing))
+      model = purrr::map(.data$data, ~ stats::lm(hvc_input ~ carbon, data = .x)),
+      pred  = purrr::map(.data$model, function(m) stats::predict(m, newdata = cc_missing))
     ) %>%
     tidyr::unnest("pred") %>%
     mutate(
@@ -130,16 +113,28 @@ calcPlHVCinput <- function(subtype) {
   missing_HVC <- add_columns(missing_HVC, addnm = "C4", dim = "hvc_type", fill = 0)
   getItems(missing_HVC, dim = 1) <- NULL
 
-  # polymerization yield of 98% for Bioplastics and Others
+  # polymerization yield of 98%
   missing_polym <- new.magpie(
     names = missing_polymers,
     sets = c("region", "year", "polymer"), fill = 1.02
   )
   getItems(missing_polym, dim = 1) <- NULL
 
+  # ---------------------------------------------------------------------------
+  # map polymers to REMIND-MFA polymers using production weights
+  # ---------------------------------------------------------------------------
+  polymer_map <- toolGetMapping("polymermappingLeviCullen.csv", type = "sectoral", where = "mrmfa")
+  production_volumes <- readSource("LeviCullen", subtype = "Production", convert = FALSE)
+  weights <- mselect(production_volumes, stage = "total production", type = "plastics", to = polymerization$polymer,
+                     collapseNames = TRUE) %>% collapseDim()
+  HVC_input_mapped <- HVC_input_magclass %>%
+    toolAggregate(rel = polymer_map, dim = 3.1, from = "Source", to = "Target", weight = weights, wdim = 3.1)
+  polymerization_mapped <- polymerization_magclass %>%
+    toolAggregate(rel = polymer_map, dim = 3.1, from = "Source", to = "Target", weight = weights, wdim = 3.1)
+
   # --- combine all polymers ---
-  HVC_input_full <- mbind(HVC_input_mapped, fibres_HVC, missing_HVC)
-  polymerization_full <- mbind(polymerization_mapped, fibres_polym, missing_polym)
+  HVC_input_full <- mbind(HVC_input_mapped, missing_HVC)
+  polymerization_full <- mbind(polymerization_mapped, missing_polym)
 
   # get HVC input ratio
   HVC_input_ratio <- HVC_input_full / polymerization_full
@@ -164,7 +159,7 @@ calcPlHVCinput <- function(subtype) {
     subtype,
     " of plastics by polymer. ",
     "Data derived from Levi and Cullen 2018 https://doi.org/10.1021/acs.est.7b04573 for available polymers; ",
-    "for PUR, Fibres, Others and Bioplastics based on assumptions regarding their composition."
+    "for 'Other thermosets' based on assumptions regarding their composition."
   )
   output <- list(
     x = x,

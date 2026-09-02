@@ -30,9 +30,9 @@ calcPlGeyer <- function() {
     description = paste(
       "Global annual plastics production 1950-2015 from Geyer et al. (2017),",
       "Table S1, reported at the global level under the IAMC variables",
-      "Production|Chemicals|Plastics and Material Demand|Chemicals|Plastics."
+      "Production|Chemicals|Plastics and Material Demand|Chemicals|Plastics.",
+      "Global only; no regional disaggregation."
     ),
-    isocountries = FALSE,
-    note = "Global only; no regional disaggregation."
+    isocountries = FALSE
   ))
 }

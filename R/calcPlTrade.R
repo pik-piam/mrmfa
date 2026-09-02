@@ -29,12 +29,24 @@
 #'        - 02
 #'        - 17
 #'        - 22
+#' @param target_years integer vector of target years for the output data.
+#' If NULL, all years from reference (plastics production) are included.
+#' Note: the 'years' argument in calcOutput does not work properly for this function,
+#' because backcasting of trade happens in the custom aggregation function (once the
+#' importer + exporter dimension have been aggregated to a single region dimension to
+#' match the reference). Since madrat checks whether the years of the returned object
+#' cover the years parameter before aggregating, it throws a warning when years that
+#' are obtained through backcasting are missing. The target_years parameter is a
+#' workaround to fix these warnings - now the warning is thrown if a period is chosen
+#' by setting target_years that is not covered by the backcasting data (i.e. production data).
+#'
 #' @author Qianzhi Zhang, Leonie Schweiger
 calcPlTrade <- function(
   category,
   flow_label = c("Exports", "Imports"),
   data_source = c("UNCTAD", "BACI_UNCTAD", "BACI_UNEP"),
-  HS = "92"
+  HS = "92",
+  target_years = NULL
 ) {
   # ---------------------------------------------------------------------------
   # validate inputs
@@ -63,13 +75,18 @@ calcPlTrade <- function(
     )
   }
 
+  # ---------------------------------------------------------------------------
   # define a custom aggregation function that filters out all intra-regional trade
   # and returns both imports and exports for each region in the region mapping
-  # in addition, data is backcasted to 1950 based on reference
+  # in addition, data is backcasted to 1950 based on reference (and eventually
+  # forecasted if reference covers more recent years)
+  # ---------------------------------------------------------------------------
+  # backcast trade data to 1950 based on historic plastic production
+  reference <- calcOutput("PlProduction", aggregate = FALSE, years = target_years)
+
   .customAggregate <- function(x, rel, reference, flow_label) {
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
-    # backcast trade data to 1950 based on historic plastic consumption
     ref <- toolAggregate(reference, rel = rel, from = "country", to = "region")
 
     # if some of the regions are missing in x due to the manual aggregation,
@@ -79,17 +96,15 @@ calcPlTrade <- function(
       x <- add_columns(x, addnm = missingRegions, dim = 1, fill = NA)
     }
 
-    if (dimExists("sector", x)) {
-      x <- toolBackcastByReference(x, ref)
-    } else {
-      x <- toolBackcastByReference(x, dimSums(ref, dim = 3))
-    }
+    x <- toolBackcastByReference(x, ref)
+    x <- toolBackcastByReference(x, ref, doForecast = TRUE)
+
+    # cut x to target years
+    target_years <- getYears(reference, as.integer = TRUE)
+    x <- x[, target_years, ]
 
     return(x)
   }
-
-  # reference used for backcasting
-  reference <- calcOutput("PlConsumptionByGood", aggregate = FALSE)
 
   # ---------------------------------------------------------------------------
   # Load data
@@ -98,9 +113,9 @@ calcPlTrade <- function(
     # Load trade data for the selected category and flow label
     trade <- calcOutput("PlUNCTAD", subtype = category, aggregate = FALSE)
     trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
-    # backcast trade data to 1950 based on historic plastic consumption
-    consumption <- collapseNames(dimSums(reference, dim = 3))
-    x <- toolBackcastByReference(trade_filtered, consumption)
+    # backcast trade data to 1950 based on historic plastic production
+    reference <- collapseNames(dimSums(reference, dim = 3))
+    x <- toolBackcastByReference(trade_filtered, reference)
 
     getNames(x) <- NULL
     note <- "dimensions: (Historic Time,Region,value)"
@@ -110,16 +125,21 @@ calcPlTrade <- function(
     # Load trade data for the selected category
     if (data_source == "BACI_UNEP") {
       x <- calcOutput("PlBACI", subtype = "plastics_UNEP", category = category, HS = HS, aggregate = FALSE)
+      # the reference (plastics production) may cover more items than the trade data x
+      # (e.g. the reference has type Plastics, Rubber, Fibre while plastic waste trade only has type Plastics).
+      # Subset the reference to the items present in x, so backcasting can match dimensions.
+      reference <- mselect(reference, type = getItems(x, dim = "type"))
     } else if (data_source == "BACI_UNCTAD") {
       x <- calcOutput("PlBACI", subtype = "plastics_UNCTAD", category = category, HS = HS, aggregate = FALSE)
+      reference <- collapseNames(dimSums(reference, dim = 3))
     }
 
     if (data_source == "BACI_UNEP") {
-      note <- "dimensions: (Historic Time,Region,Material,Good,value)"
+      note <- "dimensions: (Historic Time,Region,Type,Material,Good,value)"
       # remove sector column for Primary and Waste category ("General" for all)
       if (category %in% c("Primary", "Waste")) {
-        x <- collapseNames(x)
-        note <- "dimensions: (Historic Time,Region,Material,value)"
+        x <- collapseNames(x, preservedim = "type")
+        note <- "dimensions: (Historic Time,Region,Type,Material,value)"
       }
     } else if (data_source == "BACI_UNCTAD") {
       note <- "dimensions: (Historic Time,Region,value)"
@@ -135,7 +155,7 @@ calcPlTrade <- function(
   list(
     x = x,
     weight = NULL,
-    unit = "Mt Plastic",
+    unit = "t Plastic",
     aggregationFunction = aggregationFunction,
     aggregationArguments = aggregationArguments,
     description = sprintf(

@@ -9,9 +9,9 @@ readPlasticsEurope(subtype)
 \arguments{
 \item{subtype}{Character string specifying the dataset and scope.
 Valid formats include:
-- "PlasticProduction_region" (plastic production in Mt, dimensions: region, year)
-- "PlasticShare_EU" (plastic demand shares (%) by use category in the EU, dimensions: category, year)
-- "PlasticEoL_EU" (plastic waste treatment in the EU in Mt, dimensions: year, treatment)}
+- "Production_region" (plastic production in Mt, dimensions: region, year)
+- "SectorShare_EU" (plastic demand shares (%) by use category in the EU, dimensions: category, year)
+- "EoL_EU" (plastic waste treatment in the EU in Mt, dimensions: year, treatment)}
 }
 \value{
 magpie object of the Plastics Europe data
@@ -23,7 +23,7 @@ based on a specified subtype, and returns a cleaned magpie object.
 }
 \examples{
 \dontrun{
-a <- readSource(type = "PlasticsEurope", subtype = "PlasticProduction_region")
+a <- readSource(type = "PlasticsEurope", subtype = "Production_region")
 }
 }
 \seealso{

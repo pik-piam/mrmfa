@@ -54,9 +54,7 @@ calcPlStegmann <- function(subtype = "total") {
       unit = "Mt/yr",
       description = paste(
         "Total plastics production and demand 2005-2100 from Stegmann et al.",
-        "(2022, PLAIA/IMAGE), all scenarios; demand = production (no trade)."
-      ),
-      note = paste(
+        "(2022, PLAIA/IMAGE), all scenarios; demand = production (no trade).",
         "Summed over 8 production sectors, PJ/yr converted to Mt/yr via 35 GJ/t;",
         "disaggregated from 26 IMAGE regions to ISO3 via population weighting."
       )
@@ -80,7 +78,6 @@ calcPlStegmann <- function(subtype = "total") {
     description = paste(
       "Per-capita plastics demand 2005-2100 from Stegmann et al. (2022, PLAIA/IMAGE),",
       "all scenarios; population from Stegmann's own reported population."
-    ),
-    note = "Population-weighted; intensive variable aggregated as weighted mean."
+    )
   ))
 }

@@ -40,7 +40,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' a <- readSource(type = "BACI", subtype = "plastics_UNEP-Primary", subset = "02")
+#' a <- readSource(type = "BACI", subtype = "plastics_UNEP-Primary", subset = "92")
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
 #'
@@ -53,7 +53,19 @@ readBACI <- function(subtype, subset) {
       paste0(available, collapse = ", ")
     )
   }
-  data_path <- paste0("BACI_HS", subset, "_V202501")
+  # Determine the data version by subset. The latest release (V202601) has so far
+  # only been downloaded for HS revision "92" (currently the only one in use);
+  # all other subsets still rely on the older V202501 release.
+  version <- if (subset == "92") {
+    "V202601"
+  } else {
+    warning(
+      "Only the older BACI version V202501 is available for subset '", subset,
+      "'. The latest version V202601 has only been downloaded for subset '92'."
+    )
+    "V202501"
+  }
+  data_path <- paste0("BACI_HS", subset, "_", version)
 
   # Parse subtype and validate
   parts <- strsplit(subtype, "-")[[1]]
@@ -103,19 +115,21 @@ readBACI <- function(subtype, subset) {
     UNEP_codes_k6 <- codes %>% filter(.data$code > 10000)
   } else if (key == "steel") {
     # read all BACI product codes
-    product_codes <- utils::read.csv(file.path(data_path, paste0("product_codes_HS", subset, "_V202501.csv"))) %>%
+    product_codes <- utils::read.csv(file.path(data_path, paste0("product_codes_HS", subset, "_", version, ".csv"))) %>%
       mutate(code_2 = as.integer(as.numeric(.data$code) / 10000))
     # read indirect steel trade product codes and respective steel share
     indirect <- read_excel(file.path("Steel_HSCodes", "Steel_HSCodes.xlsx")) %>%
       mutate(steel_share = .data$`Steel Weight Share (%)` / 100) %>%
       select(-"Steel Weight Share (%)")
     codes <- switch(category,
-      "direct" = product_codes %>% filter(
-        grepl("^72", .data$code) & # filter all HS72
+      "direct" = product_codes %>%
+        filter(
+          grepl("^72", .data$code) & # filter all HS72
           !grepl("^7204", .data$code) & # except for HS7204 (steel scrap)
           !grepl("^7202", .data$code) & # except for HS7202 (ferro-alloys, no listed in WSA trade data)
           !grepl("^7205", .data$code)
-      ) %>% select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
+        ) %>%
+        select("code"), # except for HS7205 (granules and powders, not listed in WSA trade data)
       "scrap" = product_codes %>% filter(grepl("^7204", .data$code)) %>% select("code"), # filter all HS7204
       "indirect" = product_codes %>% merge(indirect, by.x = "code_2", by.y = "HS") %>%
         select(-c("Chapter Title", "description", "code_2")),
@@ -138,11 +152,15 @@ readBACI <- function(subtype, subset) {
     full.names = TRUE
   )
   # Read country codes of the dataset
-  country_codes <- utils::read.csv(file.path(data_path, "country_codes_V202501.csv")) %>%
+  country_codes <- utils::read.csv(file.path(data_path, paste0("country_codes_", version, ".csv"))) %>%
     select("country_code", "country_iso3") %>%
     # country code 490 (country_iso3="S19") is used as a proxy for trade statistics for Taiwan
+    # country code 849 (country_iso3="PUS", US Misc. Pacific Islands) is assigned to UMI
+    # (United States Minor Outlying Islands)
     # (see https://www.cepii.fr/DATA_DOWNLOAD/baci/doc/baci_webpage.html)
-    mutate(country_iso3 = case_when(.data$country_iso3 == "S19" ~ "TWN", .default = .data$country_iso3))
+    mutate(country_iso3 = case_when(.data$country_iso3 == "S19" ~ "TWN",
+                                    .data$country_iso3 == "PUS" ~ "UMI",
+                                    .default = .data$country_iso3))
 
   df_all <- NULL
 
@@ -153,7 +171,7 @@ readBACI <- function(subtype, subset) {
     if (key == "plastics_UNCTAD") {
       # merge UNCTAD codes with BACI data
       df_filtered <- merge(df, codes, by.x = "k", by.y = "code") %>%
-        mutate(value = .data$q / 1000000) %>% # report quantity in Mt
+        mutate(value = .data$q) %>% # report quantity in t
         select("t", "i", "j", "k", "value")
     } else if (key == "plastics_UNEP") {
       # UNEP Codes contain 4 digit and 5/6 digit codes;
@@ -164,7 +182,7 @@ readBACI <- function(subtype, subset) {
       # merge filtered data with 4 and 6 digit codes, calculate plastics content
       df_filtered <- rbind(df_plastics_k6, df_plastics_k4) %>%
         rename(k = "code") %>%
-        mutate(q_plastic = .data$plastic_percentage * .data$q / 1000000) %>% # report quantity in Mt
+        mutate(q_plastic = .data$plastic_percentage * .data$q) %>% # report quantity in t
         group_by(.data$t, .data$i, .data$j, .data$k, .data$polymer, .data$sector) %>%
         summarize(value = sum(.data$q_plastic, na.rm = TRUE), .groups = "drop_last") %>%
         ungroup()

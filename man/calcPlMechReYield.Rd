@@ -2,13 +2,12 @@
 % Please edit documentation in R/calcPlMechReYield.R
 \name{calcPlMechReYield}
 \alias{calcPlMechReYield}
-\title{Calculate Country-Level Mechanical Recycling Yield Trajectories}
+\title{Set Country-Level Mechanical Recycling Yield}
 \usage{
 calcPlMechReYield()
 }
 \description{
-Generate time series of mechanical recycling yield (efficiency) trajectories by sector and region,
-then aggregate to countries for 1950-2100.
+Set Country-Level Mechanical Recycling Yield
 }
 \author{
 Qianzhi Zhang

@@ -4,22 +4,16 @@
 #' @author Leonie Schweiger
 #'
 calcPlZeroRates <- function() {
-  x <- new.magpie(
-    cells_and_regions = madrat::getISOlist(),
-    years = 1950:2019,
-    names = NULL,
-    fill = 0,
-  )
 
-  weight <- x
-  weight[, ] <- 1
+  x <- new.magpie(fill = 0)
 
   return(list(
     x           = x,
-    weight      = weight,
+    weight      = NULL,
     unit        = "share",
+    isocountries = FALSE,
     description = glue::glue("Rates that are historically 0, e.g. chemical recycling \\
                              rate, bio-based & DAC production rate and emission capture rate"),
-    note        = "dimensions: (Historic Time,Region,value)"
+    note        = "dimensions: (value)"
   ))
 }

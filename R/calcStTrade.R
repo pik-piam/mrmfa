@@ -16,6 +16,16 @@
 #'        - 17
 #'        - 22
 #' @param include_intra_regional bool if intra-regional trade should be included
+#' @param target_years integer vector of target years for the output data.
+#' If NULL, all years from reference are included.
+#' Note: the 'years' argument in calcOutput does not work properly for this function,
+#' because backcasting of trade happens in the custom aggregation function (once the
+#' importer + exporter dimension have been aggregated to a single region dimension to
+#' match the reference). Since madrat checks whether the years of the returned object
+#' cover the years parameter before aggregating, it throws a warning when years that
+#' are obtained through backcasting are missing. The target_years parameter is a
+#' workaround to fix these warnings - now the warning is thrown if a period is chosen
+#' by setting target_years that is not covered by the backcasting data (i.e. production data).
 #'
 #' @return magpie object of the aggregated trade data
 #'
@@ -33,7 +43,13 @@
 #' @importFrom dplyr select filter rename summarize ungroup
 #' @importFrom magclass as.magpie getComment<-
 #'
-calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = FALSE) {
+calcStTrade <- function(
+  subtype,
+  category,
+  HS = "92",
+  include_intra_regional = FALSE,
+  target_years = NULL
+) {
   if (category == "indirect") {
     note <- "dimensions: (Historic Time,Region,Good,value)"
   } else {
@@ -48,7 +64,7 @@ calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = F
     "direct" = subtype,
     stop("Unsupported category: ", category)
   )
-  WS_trade <- calcOutput("StTradeWorldsteel", subtype = subtype_WS, aggregate = FALSE)
+  WS_trade <- calcOutput("StTradeWorldsteel", subtype = subtype_WS, aggregate = FALSE, years = target_years)
 
   # if intra-regional trade should be included, simply return the Worldsteel trade data
   if (include_intra_regional == TRUE) {
@@ -119,7 +135,8 @@ calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = F
       group_by(across(all_of(setdiff(id_vars, "t")))) %>%
       tidyr::fill(everything(), .direction = "updown") %>%
       ungroup()
-    weights_complete <- weights_wide %>% tidyr::pivot_longer(!all_of(id_vars), names_to = "Region2", values_to = "weight")
+    weights_complete <- weights_wide %>%
+      tidyr::pivot_longer(!all_of(id_vars), names_to = "Region2", values_to = "weight")
 
     # split WS trade data into bilateral trade
     df <- left_join(WS_trade_df %>% filter(t >= min(weights_complete$t)),
@@ -163,6 +180,10 @@ calcStTrade <- function(subtype, category, HS = "92", include_intra_regional = F
       }
 
       x <- toolBackcastByReference(x, ref)
+      # cut x to target years
+      target_years <- getYears(reference, as.integer = TRUE)
+      x <- x[, target_years, ]
+      x <- collapseDim(x)
 
       return(x)
     }

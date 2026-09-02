@@ -2,7 +2,8 @@
 #'
 #' @param scenarios EDGE-B scenarios (character vector or string). Available: "SSP1", "SSP2", "SSP3", "SSP4", "SSP5".
 #' @param collapse Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.
-#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation.
+#' @param smooth Logical. If TRUE, data is smoothed using spline interpolation
+#' (see \link{toolHistoricallyConsistentSmoothing}); smoothed historical values are identical across scenarios.
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' @author Bennet Weiss
 calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = FALSE, dof = 8) {
@@ -12,13 +13,8 @@ calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = 
   # Unit conversion from million m2 to m2
   floorspace <- floorspace * 1e6
 
-  # Remove redundant dimensions (e.g. Scenario, if only one is given)
-  if (collapse) {
-    floorspace <- collapseDim(floorspace)
-  }
-
   # Remove buildings total
-  floorspace <- floorspace[, , (Variable <- "buildings"), invert = TRUE]
+  floorspace <- floorspace[, , "buildings", invert = TRUE]
 
   # enforce MFA naming convention
   getNames(floorspace) <- gsub("commercial", "Com", getNames(floorspace))
@@ -27,10 +23,21 @@ calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = 
   floorspace_years <- getYears(floorspace, as.integer = TRUE)
   # smooth if requested
   if (smooth) {
-    # smooth data and interpolate missing data; ensure pegging of key years
-    # remove data beyond 2100 from smoothing due to low data quality
-    years <- floorspace_years[floorspace_years<=2100]
-    floorspace[, years] <- toolTimeSpline(floorspace[, years], dof = dof)
+    # smooth data while keeping the historical period identical across scenarios
+    # exclude data beyond 2100 from smoothing due to low data quality
+    years <- floorspace_years[floorspace_years <= 2100]
+    scens <- getItems(floorspace, dim = "scenario")
+    refScenario <- if ("SSP2" %in% scens) "SSP2" else scens[1]
+    floorspace[, years] <- toolHistoricallyConsistentSmoothing(
+      floorspace[, years],
+      refScenario = refScenario,
+      dof = dof
+    )
+  }
+
+  # Remove redundant dimensions (e.g. scenario, if only one is given)
+  if (collapse) {
+    floorspace <- collapseDim(floorspace)
   }
 
   # interpolate to yearly data
