@@ -16,7 +16,7 @@
 #' @return List with a MagPIE object of plastics flows (Mt/yr, or kg/cap if
 #' \code{perCapita = TRUE}) in IAMC variables and metadata in calcOutput format.
 #' @seealso \code{\link{readPottinger2024}}
-#' @importFrom magclass getItems getItems<- mbind getYears getNames<-
+#' @importFrom magclass getItems getItems<- mbind getYears getNames<- dimSums add_dimension
 calcPlPottinger <- function(subtype = "businessAsUsual", perCapita = FALSE) {
   x <- readSource("Pottinger2024")
   scenarios <- getNames(x, dim=1)
@@ -50,6 +50,17 @@ calcPlPottinger <- function(subtype = "businessAsUsual", perCapita = FALSE) {
   # subset to keep only mapped variables
   x <- x[, , variables_kept]
   new_names <- iamc[variables_kept]
+  
+  # add total plastics production as the sum of primary + secondary
+  primaryVar <- "Production|Chemicals|Plastics|Primary"
+  secondaryVar <- "Production|Chemicals|Plastics|Secondary"
+  totalVar <- "Production|Chemicals|Plastics"
+  if (all(c(primaryVar, secondaryVar) %in% getItems(x, dim = 3.2))) {
+    total <- dimSums(x[, , c(primaryVar, secondaryVar)], dim = 3.2)
+    total <- add_dimension(total, dim = 3.2, add = "variable", nm = totalVar)
+    x <- mbind(x, total)
+    new_names <- c(new_names, totalVar)
+  }
   getItems(x, dim = 3.2) <- as.vector(new_names)
 
   if (!perCapita) {
