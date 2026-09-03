@@ -81,7 +81,7 @@ calcPlSectorPolymerSplit <- function(target_years = NULL) {
   # Rubber untouched). Ren covers 1978-2022 and is held constant to the
   # production years, matching the Gao extrapolation above.
   # ---------------------------------------------------------------------------
-  renCons <- calcOutput("PlRen2025", subtype = "consumption", aggregate = FALSE)
+  renCons <- calcOutput("PlRen2025", subtype = "consumption_split", aggregate = FALSE)
   renCons <- time_interpolate(renCons,
     interpolated_year = getYears(production),
     integrate_interpolated_years = TRUE,
