@@ -15,7 +15,8 @@ calcCeDwellingSplit <- function() {
     x = share,
     valueToReplace = NA,
     weight = res_floorArea,
-    regionmapping = h12
+    regionmapping = h12,
+    verbose = FALSE
   )
 
   x_rs <- addDim(share, dim = 3.1, dimName = "Dwelling Type", item = "RS")

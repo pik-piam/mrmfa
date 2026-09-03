@@ -8,15 +8,26 @@ calcCeStructureSplit <- function() {
 
   relFloorArea <- floorArea_categorized / floorArea_byFunction
 
-  # fill countries lacking floor area for an end use with their H12 region's split
+  # fill countries lacking floor area for an end use with their H12 region's split.
+  # toolFillWithRegionAvg only accepts a single data dimension element, so loop over end uses and structure
   h12 <- toolGetMapping("h12.csv", type = "regional", where = "mappingfolder")
   relFloorArea <- replace_non_finite(relFloorArea, replace = NA)
-  relFloorArea <- toolFillWithRegionAvg(
-    x = relFloorArea,
-    valueToReplace = NA,
-    weight = floorArea_byFunction,
-    regionmapping = h12
-  )
+  filled <- lapply(getItems(relFloorArea, dim = 3.1), function(endUse) {
+    dataSub <- relFloorArea[, , endUse]
+    weightSub <- collapseDim(floorArea_byFunction[, , endUse])
+    # if one end use is NA, all structures belonging to it are NA, too. Replacing all of them respects norm.
+    slices <- lapply(getItems(dataSub, dim = 3.2), function(structure) {
+      toolFillWithRegionAvg(
+        x = dataSub[, , structure],
+        valueToReplace = NA,
+        weight = weightSub,
+        regionmapping = h12,
+        verbose = FALSE
+      )
+    })
+    mbind(slices)
+  })
+  relFloorArea <- mbind(filled)
 
   # output
   getSets(relFloorArea)["d3.1"] <- "End Use"
@@ -32,8 +43,8 @@ calcCeStructureSplit <- function() {
   )
   note <- "dimensions: (Region,Bottom-up End Use,Structure,value)"
   output <- list(
-    x = complete_magpie(relFloorArea, fill = 0),
-    weight = complete_magpie(weight, fill = 0),
+    x = relFloorArea,
+    weight = weight,
     unit = unit,
     description = description,
     note = note
