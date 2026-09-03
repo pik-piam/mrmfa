@@ -82,8 +82,8 @@ test_that("other third-dimension subdimensions are handled correctly", {
   magclass::getSets(a)[3] <- "scenario"
   b <- a * 2
   x <- magclass::mbind(
-    magclass::add_dimension(a, dim = 3.2, add = "variable", nm = "v1"),
-    magclass::add_dimension(b, dim = 3.2, add = "variable", nm = "v2")
+    magclass::addDim(a, dim = 3.2, dimName = "variable", item = "v1"),
+    magclass::addDim(b, dim = 3.2, dimName = "variable", item = "v2")
   )
   res <- toolHistoricallyConsistentSmoothing(x, lastHistYear = 2020)
   for (v in c("v1", "v2")) {

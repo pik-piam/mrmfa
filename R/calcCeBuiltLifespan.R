@@ -14,8 +14,7 @@ calcCeBuiltLifespan <- function() {
     "Dataset can be found in https://github.com/bennet21/posted/tree/lifetimes.",
     "Documentation can be found in Posted (https://github.com/PhilippVerpoort/posted)."
   )
-  note <- "dimensions: (Historic Time,Region,Stock Type,value)"
-
+  note <- "dimensions: (Historic Time,Region,End Use,value)"
 
   output <- list(
     x = data,

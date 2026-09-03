@@ -5,22 +5,22 @@
 calcCeBuildingsMI <- function(subtype = "concrete") {
   x <- readSource("RASMI", subtype)
   x <- x / 1000 # convert kg to t
-  # dummy MI of 1 for the "N/A" function/structure
-  x <- add_columns(x, addnm = "N/A.N/A", dim = 3, fill = 1)
+  # MI of 0 for U (unspecified) structure
+  x <- add_columns(x, addnm = "U", dim = 3.2, fill = 0)
 
+  getSets(x)["d3.1"] <- "End Use"
   # use floor area for weight
   weight <- calcOutput("CeFloorspaceGEM", subtype = c("Function", "Structure"), aggregate = FALSE)
-  weight <- add_columns(weight, addnm = "N/A.N/A", dim = 3, fill = 1)
   # country without floorspace should still get MI if aggregated on country level
   weight[weight == 0] <- 1e-9
   description <- paste(
-    "Material Intensity of buildings by stock type, function and structure.",
+    "Material Intensity of buildings by end use and structure.",
     "Based on RASMI.",
     "Fishman, T., Mastrucci, A., Peled, Y. et al.",
     "RASMI: Global ranges of building material intensities differentiated by region, structure, and function.",
     "Sci Data 11, 418 (2024). https://doi.org/10.1038/s41597-024-03190-7"
   )
-  note <- "dimensions: (Region,Function,Structure,value)"
+  note <- "dimensions: (Region,Bottom-up End Use,Structure,value)"
   output <- list(
     x = x,
     weight = weight,

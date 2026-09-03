@@ -45,7 +45,7 @@ calcCeFloorspaceGHSOBAT <- function(floor_height = NULL) {
   description <- paste(
     "Floor area calculated from GHS-OBAT."
   )
-  note <- "dimensions: (Region,Stock Type,value)"
+  note <- "dimensions: (Region,Common End Use,value)"
   output <- list(x = floor_area, weight = NULL, unit = "m2", description = description, note = note)
   return(output)
 }
