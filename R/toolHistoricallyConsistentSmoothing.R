@@ -91,7 +91,7 @@ toolHistoricallyConsistentSmoothing <- function(
     if (verbose) message("Detected last historical year: ", lastHistYear)
   }
 
-  if(min(years) > lastHistYear) {
+  if (min(years) > lastHistYear) {
     warning("No years <= lastHistYear (", lastHistYear, ") in data. Returning plainly smoothed object.")
     return(smoothed)
   }

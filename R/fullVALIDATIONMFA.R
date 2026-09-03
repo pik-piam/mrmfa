@@ -21,7 +21,6 @@
 #' }
 #'
 fullVALIDATIONMFA <- function(rev = 0, runSections = NULL) {
-
   # get region mappings for aggregation ----
   # Determines all regions data should be aggregated to by examining the columns
   # of the `regionmapping` and `extramappings` currently configured.
@@ -176,5 +175,4 @@ fullVALIDATIONMFA <- function(rev = 0, runSections = NULL) {
       writeArgs = list(model = "GCAM 5.4")
     )
   }
-
 }

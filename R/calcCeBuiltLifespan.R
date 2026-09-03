@@ -1,25 +1,23 @@
-#' Calculates the lifetimes of residential and non-residential buildings, as well as of civil engineering.
+#' Calculates the lifetimes of residential, commercial and industrial buildings, as well as of civil engeneering.
 #' @author Bennet Weiss
 calcCeBuiltLifespan <- function() {
-  data <- readSource("PostedBuiltLifespan")
-
-  # Split NonRes into Com and Ind and remove NonRes category
-  data_new <- add_columns(data, addnm = c("Com", "Ind"), dim = 3.1)
-  data_new[, , "Com"] <- data[, , "NonRes"]
-  data_new[, , "Ind"] <- data[, , "NonRes"]
-  data_final <- data_new[, , "NonRes", invert = TRUE]
+  # Prepare data to have same dimensions as main driver cement production
+  weight <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
+  data <- readSource("PostedBuiltLifespan")[, getItems(weight, dim = 2), ]
+  weight <- magpie_expand(weight, data)
+  weight[weight == 0] <- 1e-9
 
   unit <- "years (a)"
   description <- paste(
-    "Lifetimes of residential and non-residential buildings, as well as of civil engeneering.",
+    "Lifetimes of residential, commercial and industrial buildings, as well as of civil engeneering.",
     "Aggregated data from literature research.",
-    "Documentation can be found in Posted (https://github.com/PhilippVerpoort/posted)"
+    "Dataset can be found in https://github.com/bennet21/posted/tree/lifetimes.",
+    "Documentation can be found in Posted (https://github.com/PhilippVerpoort/posted)."
   )
   note <- "dimensions: (Historic Time,Region,End Use,value)"
-  weight <- toolCeCumulativeCementProduction(data_final)
 
   output <- list(
-    x = data_final,
+    x = data,
     weight = weight,
     unit = unit,
     description = description,
