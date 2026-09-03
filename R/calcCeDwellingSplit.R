@@ -18,8 +18,8 @@ calcCeDwellingSplit <- function() {
     regionmapping = h12
   )
 
-  x_rs <- add_dimension(share, dim = 3.1, add = "Dwelling Type", nm = "RS")
-  x_rm <- add_dimension(1 - share, dim = 3.1, add = "Dwelling Type", nm = "RM")
+  x_rs <- addDim(share, dim = 3.1, dimName = "Dwelling Type", item = "RS")
+  x_rm <- addDim(1 - share, dim = 3.1, dimName = "Dwelling Type", item = "RM")
   x <- mbind(x_rs, x_rm)
   weight <- magpie_expand(x = res_floorArea, ref = x)
 
