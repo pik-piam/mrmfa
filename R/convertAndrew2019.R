@@ -29,10 +29,10 @@ convertAndrew2019 <- function(x, subtype) {
     )
 
     # Values 1965–1972 (8 yrs) + zeros 1952–1964, rest NA
-    x["JPN", ] <- x["JPN", ] + toolNAreplace(x["Ryukyu Islands", ])$x
+    x["JPN", , ] <- x["JPN", , ] + toolNAreplace(x["Ryukyu Islands", , ])$x
 
     # Values 2004–2024 (21 yrs), rest NA
-    x["SRB", ] <- x["SRB", ] + toolNAreplace(x["KSV", ])$x
+    x["SRB", , ] <- x["SRB", , ] + toolNAreplace(x["KSV", , ])$x
 
     # Disaggregate colonial federation of French West Africa (data 1949–1957)
     add_map <- list(
@@ -52,7 +52,7 @@ convertAndrew2019 <- function(x, subtype) {
     # clinker data for a lot of countries is missing, those will default to NA
     no_remove_warning <- c("KSV")
 
-    x["SRB", ] <- x["SRB", ] + toolNAreplace(x["KSV", ])$x
+    x["SRB", , ] <- x["SRB", , ] + toolNAreplace(x["KSV", , ])$x
 
     add_map <- list()
   } else {
