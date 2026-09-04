@@ -5,9 +5,15 @@
 #' PAK, IND, KOR, TWN, CHN) plus two residual groups, Western Europe (excl. DE)
 #' and Other. The countries belonging to each group are taken from
 #' \code{regionmappingTextileExchange.csv}, and each group's share is distributed
-#' across its countries proportionally to their chemical energy consumption
-#' (\code{calcOutput("ChemicalTotal")}, from mrindustry); named single-country
-#' groups pass their share through unchanged.
+#' across its countries proportionally to their primary polymer exports from BACI
+#' (\code{calcOutput("PlBACI", subtype = "plastics_UNEP", category = "Primary")},
+#' summed to gross exports per country with \code{\link{toolAggregateBilateralTrade}}
+#' and restricted to the plastics \code{type}); named single-country groups pass
+#' their share through unchanged.
+#'
+#' The primary trade contains no synthetic fibre (primary fibre exports are always
+#' 0), so the same primary polymer export weight as \code{\link{convertPlasticsEurope}}
+#' is used: synthetic-fibre production is assumed to co-locate with polymer production.
 #'
 #' Only the \code{"region_share"} subtype is convertible; the
 #' \code{"timeseries_by_type"} subtype is global and must be read with
@@ -29,7 +35,7 @@
 #' \dontrun{
 #' a <- readSource("TextileExchange", subtype = "region_share")
 #' }
-#' @importFrom magclass getComment getYears setYears
+#' @importFrom magclass getComment getYears setYears mselect dimSums
 convertTextileExchange <- function(x, subtype) {
   if (subtype != "region_share") {
     stop("convertTextileExchange only supports the 'region_share' subtype; ",
@@ -39,18 +45,23 @@ convertTextileExchange <- function(x, subtype) {
   # region -> country mapping (named countries only, from the source comment column)
   map <- toolGetMapping("regionmappingTextileExchange.csv", type = "regional", where = "mrmfa")
 
-  # disaggregation weights: country-level chemical energy consumption.
-  # ChemicalTotal does not reach the share year (2024), so use its latest available
-  # year and align it to the share year.
-  chem <- calcOutput("ChemicalTotal", aggregate = FALSE)
-  chem <- toolInterpolate(chem, union(getYears(chem), getYears(x)), extrapolate = TRUE)
-  chem <- chem[, getYears(x), ]
-  getNames(chem) <- NULL
+  # disaggregation weight: per-country primary polymer exports (see @description).
+  baci <- calcOutput("PlBACI", subtype = "plastics_UNEP", category = "Primary",
+                     HS = "92", aggregate = FALSE)
+  iso <- as.character(getISOlist())
+  idMap <- data.frame(country = iso, region = iso)
+  exports <- toolAggregateBilateralTrade(baci, rel = idMap, flow_label = "Exports")
+  exports <- dimSums(mselect(exports, type = "Plastics"), dim = 3)
+  exports <- toolCountryFill(exports, fill = 0, verbosity = 2)
+  exports[is.na(exports)] <- 0
+  weight <- toolInterpolate(exports, union(getYears(exports), getYears(x)), extrapolate = TRUE)
+  # epsilon guard against zero-export residual groups (see convertPlasticsEurope)
+  weight <- (weight + 1e-9)[, getYears(x), ]
 
   x <- toolAggregate(x,
     rel = map, dim = 1,
     from = "TextileExchangeReg", to = "CountryCode",
-    weight = chem
+    weight = weight
   )
 
   x <- toolCountryFill(x, fill = 0)

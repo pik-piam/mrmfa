@@ -28,11 +28,17 @@ ISO country level. The source split has eight named countries (DEU, USA, JPN,
 PAK, IND, KOR, TWN, CHN) plus two residual groups, Western Europe (excl. DE)
 and Other. The countries belonging to each group are taken from
 \code{regionmappingTextileExchange.csv}, and each group's share is distributed
-across its countries proportionally to their chemical energy consumption
-(\code{calcOutput("ChemicalTotal")}, from mrindustry); named single-country
-groups pass their share through unchanged.
+across its countries proportionally to their primary polymer exports from BACI
+(\code{calcOutput("PlBACI", subtype = "plastics_UNEP", category = "Primary")},
+summed to gross exports per country with \code{\link{toolAggregateBilateralTrade}}
+and restricted to the plastics \code{type}); named single-country groups pass
+their share through unchanged.
 }
 \details{
+The primary trade contains no synthetic fibre (primary fibre exports are always
+0), so the same primary polymer export weight as \code{\link{convertPlasticsEurope}}
+is used: synthetic-fibre production is assumed to co-locate with polymer production.
+
 Only the \code{"region_share"} subtype is convertible; the
 \code{"timeseries_by_type"} subtype is global and must be read with
 \code{convert = FALSE}.

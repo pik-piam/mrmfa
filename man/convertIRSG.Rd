@@ -17,8 +17,13 @@ magpie object of the IRSG data disaggregated to country level.
 \description{
 Disaggregates the IRSG regional synthetic rubber production to ISO country
 level. The regions (Asia, Europe, Americas, Africa) are split into their
-member countries (see \code{regionmappingIRSG.csv}) weighted by country-level
-chemical energy consumption from \code{\link[mrindustry]{calcChemicalTotal}}.
+member countries (see \code{regionmappingIRSG.csv}) weighted by each country's
+synthetic rubber exports from BACI
+(\code{calcOutput("PlBACI", subtype = "plastics_UNEP", category = "Primary")},
+summed to gross exports per country with \code{\link{toolAggregateBilateralTrade}}
+and restricted to the rubber \code{type}). Note that exports are an imperfect proxy:
+producers serving mainly domestic demand are under-weighted and re-export hubs slightly
+over-weighted.
 }
 \details{
 Only the "regional" subtype is country-resolved. The "global_total" subtype
