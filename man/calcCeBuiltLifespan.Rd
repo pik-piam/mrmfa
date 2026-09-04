@@ -2,12 +2,12 @@
 % Please edit documentation in R/calcCeBuiltLifespan.R
 \name{calcCeBuiltLifespan}
 \alias{calcCeBuiltLifespan}
-\title{Calculates the lifetimes of residential and non-residential buildings, as well as of civil engineering.}
+\title{Calculates the lifetimes of residential, commercial and industrial buildings, as well as of civil engeneering.}
 \usage{
 calcCeBuiltLifespan()
 }
 \description{
-Calculates the lifetimes of residential and non-residential buildings, as well as of civil engineering.
+Calculates the lifetimes of residential, commercial and industrial buildings, as well as of civil engeneering.
 }
 \author{
 Bennet Weiss

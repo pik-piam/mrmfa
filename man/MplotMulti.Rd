@@ -37,7 +37,7 @@ MplotMulti(
 
 \item{ncol}{Number of columns for the facet layout (passed to facet_wrap).}
 
-\item{ignore_na}{Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) before plotting.}
+\item{ignore_na}{Logical indicating whether NA, NaN, Inf, and -Inf values should be ignored (removed) in plotting.}
 
 \item{show_shares}{Logical indicating whether stacked bars should display percentage shares for each category.}
 }

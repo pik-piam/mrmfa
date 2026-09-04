@@ -8,7 +8,8 @@ Extract residential building type (single RS/multi family RM) from building heig
 readGlobalExposureModel()
 }
 \description{
-Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek, J., Hoyos, M., Martins, L., Paul, N., Rao, A., Silva, V. (2023).
+Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek, J., Hoyos,
+M., Martins, L., Paul, N., Rao, A., Silva, V. (2023).
 Global Building Exposure Model for Earthquake Risk Assessment. Earthquake Spectra. doi:10.1177/87552930231194048
 Repository on: https://zenodo.org/records/8223926
 Available on Github: https://github.com/gem/global_exposure_model

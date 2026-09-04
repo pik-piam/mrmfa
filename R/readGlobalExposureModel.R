@@ -1,7 +1,8 @@
 #' Read structure type, function type, height, and total floor area of buildings from the Global Exposure Model (GEM).
 #' Extract residential building type (single RS/multi family RM) from building height proxy.
 #'
-#' Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek, J., Hoyos, M., Martins, L., Paul, N., Rao, A., Silva, V. (2023).
+#' Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek, J., Hoyos,
+#' M., Martins, L., Paul, N., Rao, A., Silva, V. (2023).
 #' Global Building Exposure Model for Earthquake Risk Assessment. Earthquake Spectra. doi:10.1177/87552930231194048
 #' Repository on: https://zenodo.org/records/8223926
 #' Available on Github: https://github.com/gem/global_exposure_model
@@ -80,7 +81,8 @@ toolExtractNStories <- function(taxonomy) {
   n_stories[has_match] <- sub(remove_pattern, "\\1", matches)
 
   # Fallback: try Res information
-  # implicitly set RES number to storey number. As RES1 is SF and RES2 is mobile home, they can both reasonably be grouped as SF later.
+  # implicitly set RES number to storey number.
+  # As RES1 is SF and RES2 is mobile home, they can both reasonably be grouped as SF later.
   no_match <- !has_match
   if (any(no_match)) {
     # Pattern to match: Res followed by a number
@@ -110,7 +112,8 @@ toolExtractNStories <- function(taxonomy) {
 }
 
 #' Categorizes res buildings into single family (RS) or multi family (RM) homes based on their number of stories.
-#' @param data Dataframe that contains a column OCCUPANCY with building function types and a column TAXONOMY with taxonomy strings.
+#' @param data Dataframe that contains a column OCCUPANCY with building function types
+#' and a column TAXONOMY with taxonomy strings.
 #' @author Bennet Weiss
 toolInferResBuildingType <- function(data) {
   function_type <- data$OCCUPANCY

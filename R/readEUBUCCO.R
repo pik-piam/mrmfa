@@ -25,4 +25,5 @@ readEUBUCCO <- function(subtype = "concrete") {
   df <- df[df$Region != "EU27+3", ]
 
   x <- magclass::as.magpie(df, spatial = 1)
+  return(x)
 }

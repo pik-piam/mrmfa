@@ -37,7 +37,8 @@ calcCeFloorspaceGEM <- function(subtype = NULL, remove_ind = TRUE) {
     "Total buildings floor area by ",
     paste(subtype, collapse = " and "), ".",
     "Data from Global Exposure Model (GEM), categories harmonized with RASMI.",
-    "Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek, J., Hoyos, M., Martins, L., Paul, N., Rao, A., Silva, V. (2023).",
+    "Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek,",
+    "J., Hoyos, M., Martins, L., Paul, N., Rao, A., Silva, V. (2023).",
     "Global Building Exposure Model for Earthquake Risk Assessment. Earthquake Spectra. doi:10.1177/87552930231194048."
   )
   output <- list(
@@ -46,4 +47,5 @@ calcCeFloorspaceGEM <- function(subtype = NULL, remove_ind = TRUE) {
     unit = unit,
     description = description
   )
+  return(output)
 }

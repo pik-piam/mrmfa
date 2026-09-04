@@ -14,12 +14,12 @@ calcCeMaterialApplicationSplit <- function() {
   # concrete: keep concrete app values, zero mortar apps
   x_concrete <- x
   x_concrete[, , mortar_apps] <- 0
-  x_concrete <- add_dimension(x_concrete, dim = 3.1, add = "Product Material", nm = "concrete")
+  x_concrete <- addDim(x_concrete, dim = 3.1, dimName = "Product Material", item = "concrete")
 
   # mortar: keep mortar app values, zero concrete apps
   x_mortar <- x
   x_mortar[, , concrete_apps] <- 0
-  x_mortar <- add_dimension(x_mortar, dim = 3.1, add = "Product Material", nm = "mortar")
+  x_mortar <- addDim(x_mortar, dim = 3.1, dimName = "Product Material", item = "mortar")
 
   x <- mbind(x_concrete, x_mortar)
 
