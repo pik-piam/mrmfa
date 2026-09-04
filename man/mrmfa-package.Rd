@@ -24,6 +24,7 @@ Authors:
   \item Bennet Weiss \email{bennet.weiss@pik-potsdam.de}
   \item Leonie Schweiger \email{leonie.schweiger@pik-potsdam.de}
   \item Falk Benke \email{benke@pik-potsdam.de}
+  \item Tobias Diez \email{tobias.diez@pik-potsdam.de}
   \item Merlin Jo Hosak \email{merlinho@pik-potsdam.de}
   \item Qianzhi Zhang \email{qianzhi.zhang@pik-potsdam.de}
 }
