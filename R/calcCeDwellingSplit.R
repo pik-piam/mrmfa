@@ -23,6 +23,7 @@ calcCeDwellingSplit <- function() {
   x_rm <- addDim(1 - share, dim = 3.1, dimName = "Dwelling Type", item = "RM")
   x <- mbind(x_rs, x_rm)
   weight <- magpie_expand(x = res_floorArea, ref = x)
+  weight[weight == 0] <- 1e-9
 
   unit <- "ratio"
   description <- paste(

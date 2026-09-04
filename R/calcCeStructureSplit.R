@@ -32,6 +32,7 @@ calcCeStructureSplit <- function() {
   # output
   getSets(relFloorArea)["d3.1"] <- "End Use"
   weight <- floorArea_byFunction # use normalizing floor area as weight
+  weight[weight == 0] <- 1e-9
   unit <- "ratio"
   description <- paste0(
     "Relative floor area of buildings by End Use and Structure. ",
