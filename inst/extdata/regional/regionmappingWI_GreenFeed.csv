@@ -1,0 +1,31 @@
+country,CountryCode,GFRegion
+Belgium,BEL,West
+Ireland,IRL,West
+Luxembourg,LUX,West
+Netherlands,NLD,West
+United Kingdom,GBR,West
+Switzerland,CHE,South
+Cyprus,CYP,South
+Spain,ESP,South
+France,FRA,South
+Greece,GRC,South
+Italy,ITA,South
+Malta,MLT,South
+Portugal,PRT,South
+Denmark,DNK,North
+Finland,FIN,North
+Norway,NOR,North
+Sweden,SWE,North
+Austria,AUT,East
+Bulgaria,BGR,East
+Czech Republic,CZE,East
+Estonia,EST,East
+Croatia,HRV,East
+Hungary,HUN,East
+Lithuania,LTU,East
+Latvia,LVA,East
+Poland,POL,East
+Romania,ROU,East
+Slovenia,SVN,East
+Slovakia,SVK,East
+Germany,DEU,Germany
