@@ -33,7 +33,8 @@ calcStScrapConsumption <- function(subtype) {
     scAssumptionsEU <- toolBackcastByReference(scAssumptionsEU, euCurrent,
       doForecast = TRUE, doMakeZeroNA = TRUE
     )
-    scAssumptions[euCountries, , ] <- scAssumptionsEU[euCountries, , ]
+    euYears <- intersect(getYears(scAssumptionsEU), getYears(scAssumptions))
+    scAssumptions[euCountries, euYears, ] <- scAssumptionsEU[euCountries, euYears, ]
 
     return(scAssumptions)
   }
@@ -64,7 +65,7 @@ calcStScrapConsumption <- function(subtype) {
     # complete countries from world consumption
     # FIXME: for some years, the values are negative, which will produce negative steel consumption later on
     # therefore, this forecasting method seems inadequate and should be reworked
-    restWorldSC <- worldSC - sumSCnoNA
+    restWorldSC <- worldSC - sumSCnoNA[, getYears(worldSC), ]
 
     # fore- and backcast countries with missing data with assumptions for rest of the world
     restWorldCountries <- setdiff(getItems(scAssumptions, dim = 1), completeCountries)
@@ -81,8 +82,9 @@ calcStScrapConsumption <- function(subtype) {
       restWorldSC[, seq(1900, 2008, 1), ]
     )
 
-    # update scAssumptions
-    scAssumptions[restWorldCountries, , ] <- scAssumptionsRest
+    # update scAssumptions (only for years present in both objects)
+    restYears <- intersect(getYears(scAssumptionsRest), getYears(scAssumptions))
+    scAssumptions[restWorldCountries, restYears, ] <- scAssumptionsRest[, restYears, ]
     return(scAssumptions)
   }
 
@@ -137,7 +139,7 @@ calcStScrapConsumption <- function(subtype) {
         x = scAssumptions,
         weight = NULL,
         unit = "Tonnes",
-        description = "Worldsteel data on steel scrap consumption with assumptions",
+        description = "Worldsteel and BIR data on steel scrap consumption with assumptions",
         note = "dimensions: (Historic Time,Region,value)"
       )
 
@@ -164,7 +166,9 @@ calcStScrapConsumption <- function(subtype) {
 
         if ("EUR" %in% getItems(out, dim = 1)) {
           eu28 <- eu28[, !is.na(eu28), ] # select only years with data
-          out["EUR", getYears(eu28), ] <- eu28
+          # only overwrite years that are present in both objects
+          euYears <- intersect(getYears(eu28), getYears(out))
+          out["EUR", euYears, ] <- eu28[, euYears, ]
         }
 
         return(out)
@@ -178,7 +182,7 @@ calcStScrapConsumption <- function(subtype) {
         unit = "Tonnes",
         aggregationFunction = .customAggregate,
         aggregationArguments = list(eu28 = birEu28),
-        description = "Worldsteel data on steel scrap consumption with limited assumptions",
+        description = "Worldsteel and BIR data on steel scrap consumption with limited assumptions",
         note = "dimensions: (Historic Time,Region,value)"
       )
 
