@@ -11,7 +11,7 @@
 #' @return Total polymer consumption (Mt/yr)
 #' @seealso \code{\link{readGaoCabrera2025}}, \code{\link{calcPlPottinger}}
 #' @importFrom magclass dimSums getNames<-
-calcPlGaoCabrera <- function() {
+calcPlGaoCabreraValidation <- function() {
   x <- readSource("GaoCabrera2025", subtype = "consumption")
 
   # sum all 14 polymers into a single total and convert kt -> Mt
