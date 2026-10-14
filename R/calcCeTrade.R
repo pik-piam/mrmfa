@@ -1,5 +1,5 @@
 #' Calculate cement/clinker trade data (imports and exports).
-#' Based on bilateral BACI data (1995-2023).
+#' Based on bilateral BACI data (from 1995, excluding the incomplete most recent year).
 #' Intra-regional trade is filtered out during aggregation.
 #' Extended to 'target_years' by backcasting using
 #' cement production, GDP, shipping costs and USGS trade data (for US only) as proxy.
@@ -55,6 +55,10 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   unknown_countries <- c("ZA1", "PUS", "R20")
   df <- df %>% filter(!.data$importer %in% unknown_countries, !.data$exporter %in% unknown_countries)
   df <- df[, c("t", "importer", "exporter", "value")]
+
+  # most recent BACI year is usually incomplete: drop it, the forecast in the aggregation fills it
+  # e.g. clinker exports for Vietnam, UAE and imports for Bangladesh are underestimated
+  df <- df[df$t < max(df$t), ]
 
   # ----------------------------------------------------------------------------
   # Do what usually happens in convert function
@@ -161,7 +165,7 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   # Return results
   # ---------------------------------------------------------------------------
   description <- sprintf(
-    "%s %s (1900-2023) based on BACI data (>=1995),
+    "%s %s based on BACI data (>=1995, excluding the incomplete most recent year),
     backcasted using cement production,gdp, shipping costs and USGS trade data.",
     category, subtype
   )
