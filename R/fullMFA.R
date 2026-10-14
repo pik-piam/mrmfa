@@ -108,7 +108,7 @@ fullMFA <- function(rev = 0,
     calcOutput("CoPopulation", file = "ce_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     calcOutput("CoGDP", file = "ce_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historic:end_future)
     # Production
-    calcOutput("CeBinderProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic, subtype = "cement")
+    calcOutput("CeCementProduction", file = "ce_cement_production.cs4r", years = start_historic:end_historic)
     # Trade [Warning: years argument does not work properly. Set target_years instead.]
     calcOutput("CeTrade", file = "ce_cement_imports.cs4r", subtype = "Imports", category = "cement", target_years = start_historic:end_historic)
     calcOutput("CeTrade", file = "ce_cement_exports.cs4r", subtype = "Exports", category = "cement", target_years = start_historic:end_historic)
