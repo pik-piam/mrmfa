@@ -10,8 +10,8 @@ convertWorldSteelDatabase(x, subtype)
 \item{x}{Magpie object}
 
 \item{subtype}{must be one of "production", "bofProduction", "eafProduction",
-"imports", "exports", "scrapImports",  "scrapExports", "manufacturedProductsImports",
-"manufacturedProductsExports", "pigIronProduction", "pigIronImports", "pigIronExports",
+"imports", "exports", "scrapImports",  "scrapExports", "indirectImports",
+"indirectExports", "pigIronProduction", "pigIronImports", "pigIronExports",
 "driProduction", "driImports", "driExports"}
 }
 \description{
