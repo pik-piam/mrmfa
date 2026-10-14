@@ -1,5 +1,6 @@
-#' Read structure type, function type, height, and total floor area of buildings from the Global Exposure Model (GEM).
-#' Extract residential building type (single RS/multi family RM) from building height proxy.
+#' Read structure type, function type and total floor area of buildings from the Global Exposure Model (GEM).
+#' Residential floor area is split into single (RS) and multi family (RM) homes similar to MaterialCities,
+#' see \code{\link{toolSingleFamilyShare}}.
 #'
 #' Release v2026.0.0 (GEM Taxonomy v4.0, building counts and population of 2025).
 #' Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek, J., Hoyos,
@@ -8,9 +9,6 @@
 #' Available on Github: https://github.com/gem/global_exposure_model
 #' @author Bennet Weiss.
 readGlobalExposureModel <- function() {
-  # issues with this approach:
-  # - I am omitting Mixed or unspecified housing types at the beginning, which may lead to errors.
-
   version <- "v2026.0.0"
   regions <- list.dirs(path = version, full.names = TRUE, recursive = FALSE)
   regions <- regions[basename(regions) != "World"]
@@ -32,20 +30,27 @@ readGlobalExposureModel <- function() {
       data <- readr::read_csv(
         path,
         col_names = TRUE,
-        col_select = c("ID_0", "OCCUPANCY", "TAXONOMY", "TOTAL_AREA_SQM"),
+        col_select = c("ID_0", "OCCUPANCY", "TAXONOMY", "BUILDINGS", "DWELLINGS", "TOTAL_AREA_SQM"),
         show_col_types = FALSE
       )
       stopifnot("Unknown GEM occupancy" = data$OCCUPANCY %in% names(occupancyNames))
       data$OCCUPANCY <- unname(occupancyNames[data$OCCUPANCY])
 
-      # extract building function type from taxonomy
-      data["FUNCTION"] <- toolInferResBuildingType(data)
-
-      # remove rows with unknown function type
-      data <- data[!is.na(data$FUNCTION), ]
-
       # remove rows with unknown area
       data <- data[!is.na(data$TOTAL_AREA_SQM), ]
+
+      # split residential area into single (RS) and multi family (RM) homes, other functions are the occupancy
+      isRes <- data$OCCUPANCY == "Res"
+      rsShare <- toolSingleFamilyShare(data$TAXONOMY[isRes], data$DWELLINGS[isRes], data$BUILDINGS[isRes])
+      singleFamily <- data[isRes, ]
+      singleFamily$FUNCTION <- "RS"
+      singleFamily$TOTAL_AREA_SQM <- singleFamily$TOTAL_AREA_SQM * rsShare
+      multiFamily <- data[isRes, ]
+      multiFamily$FUNCTION <- "RM"
+      multiFamily$TOTAL_AREA_SQM <- multiFamily$TOTAL_AREA_SQM * (1 - rsShare)
+      other <- data[!isRes, ]
+      other$FUNCTION <- other$OCCUPANCY
+      data <- rbind(singleFamily, multiFamily, other)
 
       # structure is the material token of the taxonomy, e.g. MUR+ADO or HYB(W;M). It is mapped in convert.
       data$Structure <- sub("/.*$", "", data$TAXONOMY)
@@ -66,78 +71,31 @@ readGlobalExposureModel <- function() {
   return(x)
 }
 
-#' Extracts the int number of stories for a taxonomy string as used in GEM.
-#' @param taxonomy string or list of strings to check.
+#' Share of single family homes (RS) in residential GEM building classes, similar to MaterialCities.
+#'
+#' Classes with exactly one storey are single family, classes with at least three storeys are multi family.
+#' All other classes (they include two storeys, or have no height) are split by dwellings per building:
+#' up to 1.5 is single family, from 3 on multi family, linear in between (2.25 gives a share of 0.5).
+#' Classes without dwelling or building count get a share of 0.5.
+#'
+#' @param taxonomy GEM taxonomy strings, height codes as in H:1, H:2-3, H:>5 or H:>5+HB:1.
+#' @param dwellings Number of dwellings of each class.
+#' @param buildings Number of buildings of each class.
+#' @return Share of single family homes in the floor area of each class, between 0 and 1.
 #' @author Bennet Weiss
-toolExtractNStories <- function(taxonomy) {
-  # Primary pattern to match:
-  # 1) H + optional non-colon chars + ":" + number or number-range
-  # OR
-  # 2) H + optional non-colon chars immediately followed by number or number-range (no colon)
-  pattern1 <- "H[^:]*:([0-9]+(?:-[0-9]+)?)"
-  pattern2 <- "H[^:]*([0-9]+(?:-[0-9]+)?)"
-  pattern <- paste0(pattern1, "|", pattern2)
+toolSingleFamilyShare <- function(taxonomy, dwellings, buildings) {
+  # height code: "H:1" is one storey, "H:2-3" two to three, "H:>5" more than five (at least 6)
+  heightCode <- ifelse(grepl("(^|/)H[A-Z]*:", taxonomy), sub("^(.*/)?H[A-Z]*:([^/+]*).*$", "\\2", taxonomy), NA)
+  oneStorey <- heightCode %in% "1"
+  hasNumber <- grepl("^>?[0-9]+", heightCode)
+  minStoreys <- rep(NA, length(taxonomy))
+  minStoreys[hasNumber] <- as.integer(sub("^>?([0-9]+).*$", "\\1", heightCode[hasNumber])) +
+    grepl("^>", heightCode[hasNumber])
 
-  m <- regexpr(pattern, taxonomy, perl = TRUE)
-  matches <- regmatches(taxonomy, m)
-  # Extract only the storey number
-  n_stories <- rep(NA_character_, length(taxonomy))
-  has_match <- m != -1
-  remove_pattern <- "^[^0-9]*([0-9][-+0-9]*).*"
-  n_stories[has_match] <- sub(remove_pattern, "\\1", matches)
-
-  # Open-ended height classes (e.g. H:>8) mean more than N stories, use N + 1.
-  open_ended <- grepl("H:>[0-9]+", taxonomy)
-  n_stories[open_ended] <- as.character(as.integer(sub(".*H:>([0-9]+).*", "\\1", taxonomy[open_ended])) + 1L)
-  has_match <- has_match | open_ended
-
-  # Fallback: try Res information
-  # implicitly set RES number to storey number.
-  # As RES1 is SF and RES2 is mobile home, they can both reasonably be grouped as SF later.
-  no_match <- !has_match
-  if (any(no_match)) {
-    # Pattern to match: Res followed by a number
-    pattern_RES <- "RES:?([0-9]+)"
-    m_RES <- regexpr(pattern_RES, taxonomy[no_match], perl = TRUE)
-    matches_RES <- regmatches(taxonomy[no_match], m_RES)
-    has_RES <- m_RES != -1
-    n_stories[no_match][has_RES] <- sub("RES:?", "", matches_RES[has_RES])
-    no_match[no_match][has_RES] <- FALSE
-  }
-
-  # raise warning if still no height found and not in exceptions
-  exceptions <- c("MIX", "UNK", "MATO")
-  if (any(no_match)) {
-    failed <- taxonomy[no_match]
-    # Keep only failed entries that do not contain any exception
-    non_exception <- failed[!sapply(failed, function(f) any(sapply(exceptions, function(e) grepl(e, f))))]
-
-    if (length(non_exception) > 0) {
-      warning(
-        "No height found in the following entries:\n",
-        paste0(" - ", non_exception, collapse = "\n")
-      )
-    }
-  }
-  return(n_stories)
-}
-
-#' Categorizes res buildings into single family (RS) or multi family (RM) homes based on their number of stories.
-#' @param data Dataframe that contains a column OCCUPANCY with building function types
-#' and a column TAXONOMY with taxonomy strings.
-#' @author Bennet Weiss
-toolInferResBuildingType <- function(data) {
-  function_type <- data$OCCUPANCY
-  res_idx <- function_type == "Res"
-  n_stories <- toolExtractNStories(data$TAXONOMY[res_idx])
-  # For storey ranges, get mean.
-  splitted_stories <- strsplit(n_stories, "[+-]")
-  numeric_stories <- lapply(splitted_stories, function(data) as.integer(data))
-  avg_stories <- sapply(numeric_stories, mean)
-  # Classify as single family (RS) if 1 or 2 stories, multi family (RM) otherwise.
-  new_types <- ifelse(avg_stories <= 2, "RS", "RM")
-  new_types[is.na(avg_stories)] <- NA
-
-  function_type[res_idx] <- new_types
-  return(function_type)
+  dwellingsPerBuilding <- ifelse(dwellings > 0 & buildings > 0, dwellings / buildings, NA)
+  share <- pmin(pmax((3 - dwellingsPerBuilding) / 1.5, 0), 1)
+  share[is.na(share)] <- 0.5
+  share[oneStorey] <- 1
+  share[!is.na(minStoreys) & minStoreys >= 3] <- 0
+  return(share)
 }
