@@ -8,6 +8,14 @@ calcCeClinkerProduction <- function() {
 
   x[is.na(x)] <- 0
 
+  # same time range as cement production
+  cement_years <- getYears(calcOutput("CeCementProduction", aggregate = FALSE))
+  missing_years <- setdiff(cement_years, getYears(x))
+  if (length(missing_years) > 0) {
+    stop("Clinker data does not cover all cement production years. Missing: ", paste(missing_years, collapse = ", "))
+  }
+  x <- x[, cement_years, ]
+
   unit <- "tonnes (t)"
   description <- paste(
     "Annual clinker production as from",
