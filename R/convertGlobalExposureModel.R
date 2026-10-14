@@ -5,13 +5,14 @@
 convertGlobalExposureModel <- function(x) {
   x <- replace_non_finite(x, replace = 0)
 
-  # The mapping deviates from RASMI on purpose: adobe, stone and earth (ADO|ST|E) get no material intensity (U)
+  # Map the GEM material token of each class to RASMI structures, following Table 4 of MaterialCities.
+  # Tokens not listed there follow its priority for hybrid classes (C > M > S > T > U).
   structureMapping <- toolGetMapping("CeBuildingStructureMapping.csv", type = "sectoral", where = "mrmfa")
   x <- toolAggregate(
     x,
     rel = structureMapping,
     dim = 3.2,
-    from = "GEM_structure",
+    from = "GEM_material",
     to = "RASMI_structure",
   )
 

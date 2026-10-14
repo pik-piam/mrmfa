@@ -32,7 +32,7 @@ readGlobalExposureModel <- function() {
       data <- readr::read_csv(
         path,
         col_names = TRUE,
-        col_select = c("ID_0", "OCCUPANCY", "MACRO_TAXONOMY", "TAXONOMY", "TOTAL_AREA_SQM"),
+        col_select = c("ID_0", "OCCUPANCY", "TAXONOMY", "TOTAL_AREA_SQM"),
         show_col_types = FALSE
       )
       stopifnot("Unknown GEM occupancy" = data$OCCUPANCY %in% names(occupancyNames))
@@ -47,9 +47,8 @@ readGlobalExposureModel <- function() {
       # remove rows with unknown area
       data <- data[!is.na(data$TOTAL_AREA_SQM), ]
 
-      # structure is the GEM macro taxonomy. Hybrid classes are split into their materials.
-      data$Structure <- data$MACRO_TAXONOMY
-      data <- toolSplitHybridClasses(data)
+      # structure is the material token of the taxonomy, e.g. MUR+ADO or HYB(W;M). It is mapped in convert.
+      data$Structure <- sub("/.*$", "", data$TAXONOMY)
 
       # aggregate floor space
       aggregated_data <- dplyr::group_by(data, .data$ID_0, .data$OCCUPANCY, .data$Structure, .data$FUNCTION) %>%
