@@ -21,6 +21,23 @@ can later split off the polyamide fibre share. The nine end-use sectors are mapp
 remind-mfa end uses (\code{sectormappingRen2025.csv}) and the disposal categories
 are renamed to the mrmfa vocabulary (\code{Recycled}, \code{Incinerated},
 \code{Landfilled}, \code{Untreated}). Countries other than China are filled with 0.
+
+The sector mapping is resolved per (sector, product, polymer), most specific
+match first, so that Ren's \code{Agriculture} and \code{Other sectors} -
+which have no Gao & Cabrera-Serrenho (2025) counterpart - follow Gao's
+categories where the product is identifiable:
+\itemize{
+  \item Agriculture pipes, plates and profiles -> Buildings & Construction
+    (irrigation/greenhouse infrastructure; Gao puts 70\% of PVC there).
+  \item Agriculture woven goods -> Packaging (sacks; Ren puts most woven goods there).
+  \item Other agriculture (mostly film) -> Others (Gao has no agriculture sector).
+  \item Other-sector containers, household plastics, synthetic leather and
+    EPS foam -> Consumer & Institutional (storage boxes, shoes, bags, upholstery).
+  \item Remaining other-sector products, incl. PU foam -> Others (unspecific;
+    Gao puts 23\% of PUR, i.e. furniture/bedding foam, in Others).
+}
+Product-resolved flows exist only for some stages (e.g. use-stage
+\code{domestic}); flows without a product use the sector-level default.
 }
 \seealso{
 \code{\link{readRen2025}}
