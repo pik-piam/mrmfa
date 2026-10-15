@@ -5,7 +5,7 @@
 #' The 20 source polymers are mapped to the base polymer set (\code{polymermappingRen2025.csv}),
 #' keeping \code{PA} (polyamide) as its own category so that \code{\link{calcPlRen2025}}
 #' can later split off the polyamide fibre share. The nine end-use sectors are mapped to the eight
-#' remind-mfa goods (\code{sectormappingRen2025.csv}) and the disposal categories
+#' remind-mfa end uses (\code{sectormappingRen2025.csv}) and the disposal categories
 #' are renamed to the mrmfa vocabulary (\code{Recycled}, \code{Incinerated},
 #' \code{Landfilled}, \code{Untreated}). Countries other than China are filled with 0.
 #'

@@ -111,7 +111,7 @@ calcPlSectorPolymerSplit <- function(target_years = NULL) {
       "China's Plastics split is replaced with Ren et al. (2025) consumption",
       "(1978-2022, held constant to the production years)."
     ),
-    note = "dimensions: (Time, Region, Type, Material, Good, value)",
+    note = "dimensions: (Time, Region, Type, Material, End Use, value)",
     min = 0,
     max = 1
   ))

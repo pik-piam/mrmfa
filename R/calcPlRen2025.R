@@ -126,7 +126,7 @@ calcPlRen2025 <- function(subtype) {
         "consumption (inflow) in China, from Ren et al. (2025). Sums to 1 over",
         "(polymer, sector). Fibres and rubbers are not tracked in the use stage."
       ),
-      note = "dimensions: (Time, Region, Type, Material, Good, value)",
+      note = "dimensions: (Time, Region, Type, Material, End Use, value)",
       min = 0,
       max = 1
     ))
@@ -158,7 +158,7 @@ calcPlRen2025 <- function(subtype) {
         "(Recycled, Incinerated, Landfilled, Untreated) per sector and polymer in",
         "China, from Ren et al. (2025). Sums to 1 over disposal routes."
       ),
-      note = "dimensions: (Time, Region, Good, Material, Disposal, value)",
+      note = "dimensions: (Time, Region, End Use, Material, Disposal, value)",
       min = 0,
       max = 1
     ))

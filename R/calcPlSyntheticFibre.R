@@ -25,7 +25,7 @@ calcPlSyntheticFibre <- function() {
     years = seq(data_years[1], data_years[length(data_years)], 1),
     type = "linear"
   )
-  # backcast missing years by oecd (first historic years differ between fibre types)
+  # backcast missing years by oecd (first historical years differ between fibre types)
   oecdTotal <- dimSums(readSource("OECD_Plastic", subtype = "Use_1990-2019_region"), dim = 1)
   getItems(oecdTotal, dim = 3) <- NULL
   getItems(oecdTotal, dim = 1) <- "GLO"

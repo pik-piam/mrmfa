@@ -11,7 +11,7 @@ convertWorldSteelDigitised(x, subtype)
 
 \item{subtype}{Available subtypes are:
 'worldProduction', 'production', 'productionByProcess', 'imports', 'exports',
-'scrapImports', 'scrapExports', 'scrapConsumption', historicScrapShare',
+'scrapImports', 'scrapExports', 'scrapConsumption', historicalScrapShare',
 'worldScrapConsumption', 'indirectTrade'}
 }
 \description{
