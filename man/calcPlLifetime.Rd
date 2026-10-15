@@ -2,7 +2,7 @@
 % Please edit documentation in R/calcPlLifetime.R
 \name{calcPlLifetime}
 \alias{calcPlLifetime}
-\title{Calculates the mean lifetimes of plastic goods by use sector, or their standard deviations.}
+\title{Calculates the mean lifetimes of plastic final products by end use, or their standard deviations.}
 \usage{
 calcPlLifetime(subtype)
 }
@@ -12,7 +12,7 @@ calcPlLifetime(subtype)
 - "Lifetime_std"}
 }
 \description{
-Calculates the mean lifetimes of plastic goods by use sector, or their standard deviations.
+Calculates the mean lifetimes of plastic final products by end use, or their standard deviations.
 }
 \author{
 Leonie Schweiger
