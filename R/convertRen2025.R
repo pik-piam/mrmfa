@@ -31,7 +31,7 @@
 #' @author Leonie Schweiger
 #' @seealso \code{\link{readRen2025}}
 #' @importFrom magclass getItems getItems<- as.magpie
-#' @importFrom dplyr %>% left_join filter select rename mutate coalesce group_by across all_of summarise
+#' @importFrom dplyr left_join filter select rename mutate coalesce group_by across all_of summarise
 convertRen2025 <- function(x) {
   # ---------------------------------------------------------------------------
   # Map polymers (20 -> base set, PA kept distinct)
