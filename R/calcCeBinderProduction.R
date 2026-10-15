@@ -54,7 +54,7 @@ calcCeBinderProduction <- function(subtype) {
     "Data reported on https://zenodo.org/records/11207133.",
     "Accessed: 24.02.2025."
   )
-  note <- "dimensions: (Historic Time,Region,value)"
+  note <- "dimensions: (Historical Time,Region,value)"
   output <- list(x = x, weight = NULL, unit = unit, description = description, note = note)
   return(output)
 }

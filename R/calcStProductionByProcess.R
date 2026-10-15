@@ -4,7 +4,7 @@
 #' via calcOutput aggregate parameter. Uses
 #' \link{readWorldSteelDigitised} and
 #' \link{readWorldSteelDatabase} datasets, the former for
-#' historic, the latter for current data. Out of this, the shares of BOF,
+#' historical, the latter for current data. Out of this, the shares of BOF,
 #' EAF and Other processes are calculated and interpolated/extrapolated to cover
 #' the full time period from 1900-2022. \link{calcStProduction}
 #' is used to then multiply the percentages as this data is likely more reliable

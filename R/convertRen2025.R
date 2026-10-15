@@ -1,11 +1,11 @@
 #' Convert Ren et al. (2025) China plastic flows to remind-mfa categories
 #'
 #' @description
-#' Map the raw Ren et al. (2025) flows onto the remind-mfa categories. 
-#' The 20 source polymers are mapped to the base polymer set (\code{polymermappingRen2025.csv}), 
-#' keeping \code{PA} (polyamide) as its own category so that \code{\link{calcPlRen2025}} 
+#' Map the raw Ren et al. (2025) flows onto the remind-mfa categories.
+#' The 20 source polymers are mapped to the base polymer set (\code{polymermappingRen2025.csv}),
+#' keeping \code{PA} (polyamide) as its own category so that \code{\link{calcPlRen2025}}
 #' can later split off the polyamide fibre share. The nine end-use sectors are mapped to the eight
-#' remind-mfa goods (\code{sectormappingRen2025.csv}) and the disposal categories
+#' remind-mfa end uses (\code{sectormappingRen2025.csv}) and the disposal categories
 #' are renamed to the mrmfa vocabulary (\code{Recycled}, \code{Incinerated},
 #' \code{Landfilled}, \code{Untreated}). Countries other than China are filled with 0.
 #'
@@ -16,7 +16,7 @@
 #' @importFrom magclass getItems getItems<-
 convertRen2025 <- function(x) {
   # ---------------------------------------------------------------------------
-  # Map polymers (20 -> base set, PA kept distinct) and sectors (9 -> 8 goods)
+  # Map polymers (20 -> base set, PA kept distinct) and sectors (9 -> 8 final products)
   # ---------------------------------------------------------------------------
   polymerMap <- toolGetMapping("polymermappingRen2025.csv", type = "sectoral", where = "mrmfa")
   sectorMap  <- toolGetMapping("sectormappingRen2025.csv", type = "sectoral", where = "mrmfa")

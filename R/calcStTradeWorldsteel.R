@@ -4,8 +4,8 @@
 #' via calcOutput aggregate parameter. Uses
 #' \link{readWorldSteelDigitised} and
 #' \link{readWorldSteelDatabase} datasets, the former for
-#' historic, the latter for current data. Further, uses
-#' \link{calcStProduction} to backcast historic trade data.
+#' historical, the latter for current data. Further, uses
+#' \link{calcStProduction} to backcast historical trade data.
 #' @author Merlin Jo Hosak
 #' @param subtype Type of trade data to retrieve. Options: "imports", "exports",
 #' "scrapImports", "scrapExports", "indirectImports", "indirectExports"
@@ -78,9 +78,9 @@ calcStTradeWorldsteel <- function(subtype = "imports") {
       integrate_interpolated_years = TRUE,
       extrapolation_type = "constant"
     )
-    note <- "dimensions: (Historic Time,Region,Good,value)"
+    note <- "dimensions: (Historical Time,Region,End Use,value)"
   } else {
-    note <- "dimensions: (Historic Time,Region,value)"
+    note <- "dimensions: (Historical Time,Region,value)"
   }
 
   # Finalize
