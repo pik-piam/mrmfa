@@ -3,6 +3,7 @@
 #' @author Bennet Weiss
 calcCeWasteSplit <- function() {
   x <- readSource("Cao2024", subtype = "waste_split")
+  x <- toolCeDistributionMean(x, "Point")
 
   weight <- toolCeCumulativeCementProduction(castto = x)
   unit <- "ratio"

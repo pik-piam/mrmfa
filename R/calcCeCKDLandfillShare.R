@@ -3,6 +3,7 @@
 #' @author Bennet Weiss
 calcCeCKDLandfillShare <- function() {
   x <- readSource("Cao2024", subtype = "CKD_landfill_share", convert = FALSE)
+  x <- dimReduce(toolCeDistributionMean(x, "Triangular"))
 
   unit <- "ratio"
   description <- paste(

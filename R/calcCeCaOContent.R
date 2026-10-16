@@ -5,11 +5,14 @@
 calcCeCaOContent <- function(subtype) {
   if (subtype == "CKD") {
     x <- readSource("Cao2024", subtype = "CKD_cao_content", convert = FALSE)
+    x <- toolCeDistributionMean(x, "Normal")
   } else if (subtype == "clinker") {
     x <- readSource("Cao2024", subtype = "clinker_cao_content", convert = FALSE)
+    x <- toolCeDistributionMean(x, "Triangular")
   } else {
     stop(paste("Subtype ", subtype, " not implemented."))
   }
+  x <- dimReduce(x)
 
   unit <- "ratio"
   description <- paste(
