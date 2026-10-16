@@ -7,7 +7,7 @@
 calcCeProductApplicationSplit()
 }
 \description{
-Calculate strength class distribution of concrete.
+Concrete and mortar applications are each normalized to sum to 1.
 }
 \author{
 Bennet Weiss
