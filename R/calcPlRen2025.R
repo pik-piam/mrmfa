@@ -13,7 +13,8 @@
 #'     and \code{Other fibre}. Leftover polyamide plastics fold into
 #'     \code{Other thermoplastics}.}
 #'   \item{\code{"consumption"}}{Share of each polymer and end-use sector within
-#'     total apparent consumption (stage \code{U}, process \code{inflow}),
+#'     total apparent consumption (stage \code{U}, processes \code{domestic} +
+#'     \code{net_export}, i.e. \code{inflow} but product-resolved),
 #'     normalized to sum to 1, comparable to \code{\link{calcPlSectorPolymerSplit}}.
 #'     Fibres and rubbers are not tracked in the use stage, so only base plastic
 #'     polymers appear (type \code{Plastics}).}
@@ -98,8 +99,11 @@ calcPlRen2025 <- function(subtype) {
     # -------------------------------------------------------------------------
     # Sector-polymer split of apparent consumption (inflow), normalized to sum
     # to 1. Only base plastics (fibres / rubbers untracked in the use stage).
+    # Built as domestic + net_export, which equals Ren's inflow, because only
+    # domestic is product-resolved and the product-aware sector mapping in
+    # convertRen2025 needs it (inflow carries product "/").
     # -------------------------------------------------------------------------
-    cons <- dimSums(mselect(raw, stage = "U", process = "inflow"),
+    cons <- dimSums(mselect(raw, stage = "U", process = c("domestic", "net_export")),
       dim = c("stage", "process", "product", "disposal")
     ) # (region, year, polymer.sector)
     cons <- .foldPA(cons)
@@ -122,7 +126,7 @@ calcPlRen2025 <- function(subtype) {
         "consumption (inflow) in China, from Ren et al. (2025). Sums to 1 over",
         "(polymer, sector). Fibres and rubbers are not tracked in the use stage."
       ),
-      note = "dimensions: (Time, Region, Type, Material, Good, value)",
+      note = "dimensions: (Time, Region, Type, Material, End Use, value)",
       min = 0,
       max = 1
     ))
@@ -154,7 +158,7 @@ calcPlRen2025 <- function(subtype) {
         "(Recycled, Incinerated, Landfilled, Untreated) per sector and polymer in",
         "China, from Ren et al. (2025). Sums to 1 over disposal routes."
       ),
-      note = "dimensions: (Time, Region, Good, Material, Disposal, value)",
+      note = "dimensions: (Time, Region, End Use, Material, Disposal, value)",
       min = 0,
       max = 1
     ))

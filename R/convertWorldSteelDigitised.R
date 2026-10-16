@@ -5,7 +5,7 @@
 #' @author Merlin Jo Hosak, Falk Benke
 convertWorldSteelDigitised <- function(x, subtype) {
   if (subtype %in% c(
-    "worldProduction", "historicScrapShare",
+    "worldProduction", "historicalScrapShare",
     "scrapConsumption", "worldScrapConsumption"
   )) {
     stop("convert not supported for subtype '", subtype, "'")

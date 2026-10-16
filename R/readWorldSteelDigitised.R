@@ -5,7 +5,7 @@
 #' @param subtype
 #' Available subtypes are:
 #' 'worldProduction', 'production', 'productionByProcess', 'imports', 'exports',
-#' 'scrapImports', 'scrapExports', 'scrapConsumption', historicScrapShare',
+#' 'scrapImports', 'scrapExports', 'scrapConsumption', historicalScrapShare',
 #' 'worldScrapConsumption', 'indirectTrade'
 #' @author Merlin Jo Hosak, Falk Benke
 #'
@@ -281,7 +281,7 @@ readWorldSteelDigitised <- function(subtype) {
 
       return(x)
     },
-    "historicScrapShare" = function() {
+    "historicalScrapShare" = function() {
       filenames <- c("specific_scrap_consumption_70s.xlsx")
       x <- .readCommonSourceFormat(filenames, type = "scrap_consumption", version = version)
       x <- x * 1e-3 # convert from kg/t to t/t (actual share)

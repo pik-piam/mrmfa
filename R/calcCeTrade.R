@@ -173,6 +173,6 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     aggregationFunction = .customAggregate,
     aggregationArguments = list(reference = reference, flow_label = subtype, target_years = target_years),
     description = description,
-    note = "dimensions: (Historic Time,Region,value)"
+    note = "dimensions: (Historical Time,Region,value)"
   )
 }

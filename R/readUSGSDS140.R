@@ -1,5 +1,5 @@
 #' Read cement statistic data sheet from USGS.
-#' USGS DS140 combines historic data from USGS sources. Supply-Demand Statistics.
+#' USGS DS140 combines historical data from USGS sources. Supply-Demand Statistics.
 #' Imports pre-1950 include clinker. Export data include hydraulic cement and clinker.
 #'
 #' U.S. Geological Survey, 2020, Cement statistics, in Kelly, T.D., and Matos, G.R., comps.,

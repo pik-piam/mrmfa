@@ -26,7 +26,7 @@ calcStLifetimes <- function(subtype, unit) {
         unit = 1,
         isocountries = FALSE,
         description = "Cooper 2014 Steel Lifetimes Mean & SD",
-        note = "dimensions: (Good,value)"
+        note = "dimensions: (End Use,value)"
       )
 
       return(final)

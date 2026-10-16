@@ -38,7 +38,7 @@ according to specific scenarios.
 for more information). Population data from
 \link[=calcCoPopulation]{calcCoPopulation} is used to
 convert GDP per capita to total GDP.
-GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
+GDP is given in 2005 USD (PPP). It's extrapolated to the past with historical
 GDP datasets that use a different base year, which however does not matter
 as only the relative values are used
 (see \link{toolInterpolate}).

@@ -2,15 +2,15 @@
 #'
 #' @author Falk Benke
 calcStScrapConsumptionWS <- function() {
-  # get historic consumption ----
+  # get historical consumption ----
   prodHist <- readSource("WorldSteelDigitised", subtype = "production", convert = FALSE)
   prodHistGlobal <- readSource("WorldSteelDigitised", subtype = "worldProduction", convert = FALSE)
   prodHist <- toolBackcastByReference(prodHist, prodHistGlobal)
 
-  historicShare <- readSource("WorldSteelDigitised", subtype = "historicScrapShare", convert = FALSE)
+  historicalShare <- readSource("WorldSteelDigitised", subtype = "historicalScrapShare", convert = FALSE)
 
-  # historic scrap production needed to multiply with historic shares as values are needed for former countries
-  historic <- historicShare * prodHist[getItems(historicShare, dim = 1), getItems(historicShare, dim = 2), ]
+  # historical scrap production needed to multiply with historical shares as values are needed for former countries
+  historical <- historicalShare * prodHist[getItems(historicalShare, dim = 1), getItems(historicalShare, dim = 2), ]
 
   # get current consumption ----
   current <- readSource("WorldSteelDigitised", subtype = "scrapConsumption", convert = FALSE)
@@ -18,21 +18,21 @@ calcStScrapConsumptionWS <- function() {
   # merge all world steel digitised sources ----
 
   scrapConsumptionWS <- new.magpie(
-    cells_and_regions = union(getItems(historic, dim = 1), getItems(current, dim = 1)),
+    cells_and_regions = union(getItems(historical, dim = 1), getItems(current, dim = 1)),
     years = seq(1965, 2008, 1),
     names = NULL,
     fill = NA,
-    sets = names(dimnames(historic))
+    sets = names(dimnames(historical))
   )
 
-  scrapConsumptionWS[getItems(historic, dim = 1), getItems(historic, dim = 2), ] <- historic
-  # note that this overwrites some data from historic for the overlapping years 1975 - 1979!
+  scrapConsumptionWS[getItems(historical, dim = 1), getItems(historical, dim = 2), ] <- historical
+  # note that this overwrites some data from historical for the overlapping years 1975 - 1979!
   scrapConsumptionWS[getItems(current, dim = 1), getItems(current, dim = 2), ] <- current
 
   # interpolate missing values ----
   scrapConsumptionWS <- toolInterpolate(scrapConsumptionWS)
 
-  # split historic regions ----
+  # split historical regions ----
   historicalMap <- utils::read.csv2(system.file("extdata", "ISOhistorical.csv", package = "madrat"))
   newCountries <- historicalMap[historicalMap$fromISO %in% getItems(scrapConsumptionWS, dim = 1), "toISO"]
   missingCountries <- setdiff(c(newCountries, "SRB", "MNE"), getItems(scrapConsumptionWS, dim = 1))

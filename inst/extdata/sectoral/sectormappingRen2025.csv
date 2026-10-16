@@ -1,11 +1,18 @@
-Source;Target
-Automobile;Transportation
-B&C;Buildings & Construction
-Electronics;Electrical/Electronics
-Household;Consumer & Institutional
-Machinery;Industrial Machinery
-Packaging;Packaging
-Agriculture;Others
-Medical;Consumer & Institutional
-Other sectors;Others
-/;/
+Source;Product;Polymer;Target
+Automobile;all;all;Transportation
+B&C;all;all;Buildings & Construction
+Electronics;all;all;Electrical/Electronics
+Household;all;all;Consumer & Institutional
+Machinery;all;all;Industrial Machinery
+Packaging;all;all;Packaging
+Agriculture;all;all;Others
+Medical;all;all;Consumer & Institutional
+Other sectors;all;all;Others
+/;all;all;/
+Agriculture;Pipes;all;Buildings & Construction
+Agriculture;Plates and profiles;all;Buildings & Construction
+Agriculture;Woven goods;all;Packaging
+Other sectors;Container;all;Consumer & Institutional
+Other sectors;Household plastics;all;Consumer & Institutional
+Other sectors;Synthetic leather;all;Consumer & Institutional
+Other sectors;Foam plastics;PS;Consumer & Institutional

@@ -7,8 +7,8 @@
 #'        - imports
 #'        - exports
 #' @param category Character string specifying the stage of trade
-#'        - direct
-#'        - indirect
+#'        - steel
+#'        - manufactured
 #'        - scrap
 #' @param HS Character string specifying the year of the HS (Harmonized System) revision of the data
 #'        - 92
@@ -37,7 +37,7 @@
 #' \dontrun{
 #' a <- calcOutput(
 #'   type = "StTrade", subtype = "imports",
-#'   category = "direct", HS = "02"
+#'   category = "steel", HS = "02"
 #' )
 #' }
 #' @importFrom dplyr select filter rename summarize ungroup
@@ -50,18 +50,18 @@ calcStTrade <- function(
   include_intra_regional = FALSE,
   target_years = NULL
 ) {
-  if (category == "indirect") {
-    note <- "dimensions: (Historic Time,Region,Good,value)"
+  if (category == "manufactured") {
+    note <- "dimensions: (Historical Time,Region,End Use,value)"
   } else {
-    note <- "dimensions: (Historic Time,Region,value)"
+    note <- "dimensions: (Historical Time,Region,value)"
   }
 
   # Read World Steel trade data
   # map category
   subtype_WS <- switch(category,
-    "indirect" = paste0(category, stringr::str_to_title(subtype)),
-    "scrap" = paste0(category, stringr::str_to_title(subtype)),
-    "direct" = subtype,
+    "manufactured" = paste0("indirect", stringr::str_to_title(subtype)),
+    "scrap" = paste0("scrap", stringr::str_to_title(subtype)),
+    "steel" = subtype,
     stop("Unsupported category: ", category)
   )
   WS_trade <- calcOutput("StTradeWorldsteel", subtype = subtype_WS, aggregate = FALSE, years = target_years)
@@ -81,7 +81,7 @@ calcStTrade <- function(
       rename("t" = "Year") %>%
       select(-"Cell") %>%
       mutate(t = as.integer(as.character(.data$t)))
-    if (category == "indirect") {
+    if (category == "manufactured") {
       WS_trade_df <- WS_trade_df %>% rename("sector" = "Data1")
     } else {
       WS_trade_df <- WS_trade_df %>% select(-"Data1")
@@ -93,7 +93,13 @@ calcStTrade <- function(
       ungroup()
 
     # Read raw BACI data
-    weights <- readSource("BACI", subtype = paste("steel", category, sep = "-"), subset = HS) %>%
+    subtype_BACI <- switch(category,
+      "manufactured" = "indirect",
+      "scrap" = "scrap",
+      "steel" = "direct",
+      stop("Unsupported category: ", category)
+    )
+    weights <- readSource("BACI", subtype = paste("steel", subtype_BACI, sep = "-"), subset = HS) %>%
       quitte::madrat_mule() %>%
       rename(
         "Region" = case_when(subtype == "imports" ~ "importer", subtype == "exports" ~ "exporter"),
