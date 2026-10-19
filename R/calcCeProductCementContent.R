@@ -7,7 +7,7 @@ calcCeProductCementContent <- function() {
   concrete <- readSource("Cao2024", subtype = "concrete_cement_content", convert = FALSE)
   concrete <- toolCeDistributionMean(concrete, "Uniform")
   # Assumption: Cao2024 gives no cement content for mortar, the one of C15 concrete is used.
-  mortar <- toolCeCopyItem(concrete[, , "C15"], mortar_apps, dim = "Product Application")
+  mortar <- toolCopyItem(x = concrete[, , "C15"], newItems = mortar_apps, newDim = "Product Application")
   x <- dimReduce(mbind(concrete, mortar))
   x <- x * 1e-3 # convert from kg to tonnes
 

@@ -9,7 +9,7 @@ calcCeProductThickness <- function() {
   concrete <- readSource("Cao2024", subtype = "wall_thickness", convert = FALSE)
   concrete <- toolCeDistributionMean(concrete, "Uniform", harmonic = TRUE)
   # Assumption: Cao2024 gives one wall thickness, used for all concrete strength classes.
-  concrete <- toolCeCopyItem(concrete, concrete_apps, dim = "Product Application")
+  concrete <- toolCopyItem(x = concrete, newItems = concrete_apps, newDim = "Product Application")
   mortar <- readSource("Cao2024", subtype = "mortar_thickness", convert = FALSE)
   mortar <- toolCeDistributionMean(mortar, "Weibull", harmonic = TRUE)
   x <- dimReduce(mbind(concrete, mortar))

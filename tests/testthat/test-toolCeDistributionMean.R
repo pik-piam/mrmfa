@@ -37,13 +37,6 @@ test_that("truncated normal mean is shifted towards the remaining interval", {
   expect_equal(as.vector(toolCeDistributionMean(normal, "Normal")), rep(sqrt(2 / pi), 2))
 })
 
-test_that("point values are returned unchanged and items are kept", {
-  x <- makeParameters(c(1, 2), "value", items = c("a", "b"))
-  out <- toolCeDistributionMean(x, "Point")
-  expect_equal(magclass::getItems(out, dim = 3), c("a", "b"))
-  expect_equal(as.vector(out["R1", , ]), c(1, 2))
-})
-
 test_that("mismatching parameters raise an error", {
   x <- makeParameters(c(6, 2), c("max", "min"))
   expect_error(toolCeDistributionMean(x, "Weibull"), "do not match")

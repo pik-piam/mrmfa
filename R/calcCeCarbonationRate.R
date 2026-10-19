@@ -16,14 +16,14 @@ calcCeCarbonationRate <- function(subtype = "base") {
     mortar <- readSource("Cao2024", subtype = "carbonation_rate_mortar")
     mortar <- toolCeDistributionMean(mortar, "Triangular")
     # Assumption: Cao2024 gives one carbonation rate for mortar, used for all mortar applications.
-    mortar <- toolCeCopyItem(mortar, mortar_apps, dim = "Product Application")
+    mortar <- toolCopyItem(x = mortar, newItems = mortar_apps, newDim = "Product Application")
     x <- mbind(concrete, mortar)
   } else if (subtype == "base_buried") {
     concrete <- readSource("Cao2024", subtype = "carbonation_rate_buried_concrete")
-    concrete <- toolCeDistributionMean(concrete, "Point")
+    concrete <- collapseDim(concrete, dim = "parameter")
     # Assumption: Cao2024 gives no buried carbonation rate for mortar, the one of C15 concrete is used.
     # Not important, as mortar is fully carbonated after the in-use phase.
-    mortar <- toolCeCopyItem(concrete[, , "C15"], mortar_apps, dim = "Product Application")
+    mortar <- toolCopyItem(x = concrete[, , "C15"], newItems = mortar_apps, newDim = "Product Application")
     x <- mbind(concrete, mortar)
   } else if (subtype %in% c("additives", "co2", "coating")) {
     x <- readSource("Cao2024", subtype = paste0("carbonation_factor_", subtype), convert = FALSE)

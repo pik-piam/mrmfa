@@ -1,14 +1,13 @@
 #' Parameter names of a distribution, in the column order of the Cao2024 source data.
 #'
 #' @author Bennet Weiss
-#' @param distribution Name of the distribution: "Weibull", "Uniform", "Triangular", "Normal" or "Point".
+#' @param distribution Name of the distribution: "Weibull", "Uniform", "Triangular" or "Normal".
 toolCeDistributionParameters <- function(distribution) {
   layouts <- list(
     Weibull = c("scale", "shape", "min", "max"),
     Uniform = c("max", "min"),
     Triangular = c("mode", "max", "min"),
-    Normal = c("mean", "sd", "min", "max"),
-    Point = "value"
+    Normal = c("mean", "sd", "min", "max")
   )
   if (!distribution %in% names(layouts)) {
     stop("Distribution ", distribution, " not implemented.")
@@ -21,7 +20,7 @@ toolCeDistributionParameters <- function(distribution) {
 #' @author Bennet Weiss
 #' @param x magpie object with a subdimension "parameter" holding the distribution parameters
 #' (see \code{\link{toolCeDistributionParameters}}).
-#' @param distribution Name of the distribution: "Weibull", "Uniform", "Triangular", "Normal" or "Point".
+#' @param distribution Name of the distribution: "Weibull", "Uniform", "Triangular" or "Normal".
 #' @param harmonic Bool if the harmonic mean (1 / E[1/X]) should be calculated instead of the mean.
 #' Only implemented for "Weibull" and "Uniform".
 #' @return magpie object without the "parameter" subdimension.
@@ -31,8 +30,7 @@ toolCeDistributionMean <- function(x, distribution, harmonic = FALSE) {
       Weibull = toolMeanTruncWeibull,
       Uniform = toolMeanUniform,
       Triangular = toolMeanTriangular,
-      Normal = toolMeanTruncNorm,
-      Point = function(parameters) as.numeric(parameters[[1]])
+      Normal = toolMeanTruncNorm
     )
   } else {
     mean_functions <- list(
