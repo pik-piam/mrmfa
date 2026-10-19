@@ -26,7 +26,7 @@ The returned magpie object has the source regions as spatial dimension and the
 variable items plus a "parameter" subdimension in the data dimension.
 The parameter names follow the layout of the distribution:
 Weibull (scale, shape, min, max), Uniform (max, min), Triangular (mode, max, min),
-Normal (mean, sd, min, max), Point (value).
+Normal (mean, sd, min, max). Variables without a distribution have the single parameter "value".
 }
 \author{
 Bennet Weiss

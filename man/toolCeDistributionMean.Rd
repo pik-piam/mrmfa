@@ -10,7 +10,7 @@ toolCeDistributionMean(x, distribution, harmonic = FALSE)
 \item{x}{magpie object with a subdimension "parameter" holding the distribution parameters
 (see \code{\link{toolCeDistributionParameters}}).}
 
-\item{distribution}{Name of the distribution: "Weibull", "Uniform", "Triangular", "Normal" or "Point".}
+\item{distribution}{Name of the distribution: "Weibull", "Uniform", "Triangular" or "Normal".}
 
 \item{harmonic}{Bool if the harmonic mean (1 / E[1/X]) should be calculated instead of the mean.
 Only implemented for "Weibull" and "Uniform".}

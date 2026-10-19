@@ -46,7 +46,7 @@ A BibTeX entry for LaTeX users is
 @Misc{,
   title = {mrmfa: Input data generation for the REMIND MFA},
   author = {Jakob Dürrwächter and Bennet Weiss and Leonie Schweiger and Falk Benke and Tobias Diez and Merlin Jo Hosak and Qianzhi Zhang},
-  date = {2026-10-16},
+  date = {2026-10-19},
   year = {2026},
   url = {https://github.com/pik-piam/mrmfa},
   note = {Version: 2.3.2},

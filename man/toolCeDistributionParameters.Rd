@@ -7,7 +7,7 @@
 toolCeDistributionParameters(distribution)
 }
 \arguments{
-\item{distribution}{Name of the distribution: "Weibull", "Uniform", "Triangular", "Normal" or "Point".}
+\item{distribution}{Name of the distribution: "Weibull", "Uniform", "Triangular" or "Normal".}
 }
 \description{
 Parameter names of a distribution, in the column order of the Cao2024 source data.

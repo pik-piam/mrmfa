@@ -12,7 +12,11 @@
 #' @examples
 #' \dontrun{
 #' # use the value of C15 concrete for all mortar applications
-#' toolCopyItem(x = concrete[, , "C15"], newItems = c("finishing", "masonry"), newDim = "Product Application")
+#' toolCopyItem(
+#'   x = concrete[, , "C15"],
+#'   newItems = c("finishing", "masonry"),
+#'   newDim = "Product Application"
+#' )
 #' }
 toolCopyItem <- function(x, newItems, newDim) {
   if (ndata(x) != 1) {
