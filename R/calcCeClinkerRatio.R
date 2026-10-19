@@ -4,8 +4,8 @@
 calcCeClinkerRatio <- function() {
   ratio_GNR <- readSource("GNR", subtype = "clinker_ratio")
   # Production
-  prod_cement <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
-  prod_clinker <- calcOutput("CeBinderProduction", subtype = "clinker", aggregate = FALSE)
+  prod_cement <- calcOutput("CeCementProduction", aggregate = FALSE)
+  prod_clinker <- calcOutput("CeClinkerProduction", aggregate = FALSE)
 
   # Trade
   # Note that the trade is not balanced, significant especially pre-1995

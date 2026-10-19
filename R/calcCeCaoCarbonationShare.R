@@ -3,6 +3,7 @@
 #' @author Bennet Weiss
 calcCeCaOCarbonationShare <- function() {
   x <- readSource("Cao2024", subtype = "cao_carbonation_share", convert = FALSE)
+  x <- dimReduce(toolCeDistributionMean(x, "Weibull"))
 
   unit <- "ratio"
   description <- paste(

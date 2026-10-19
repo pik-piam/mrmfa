@@ -2,7 +2,9 @@
 #'
 #' @author Bennet Weiss
 calcCeConstructionMaterialSplit <- function() {
-  x <- readSource("Cao2024", subtype = "construction_material_split")
+  x <- readSource("Cao2024", subtype = "material_split")
+  x <- toolCeDistributionMean(x, "Weibull")
+  x <- x / dimSums(x, dim = "Construction Material")
 
   weight <- toolCeCumulativeCementProduction(x)
 

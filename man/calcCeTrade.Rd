@@ -3,7 +3,7 @@
 \name{calcCeTrade}
 \alias{calcCeTrade}
 \title{Calculate cement/clinker trade data (imports and exports).
-Based on bilateral BACI data (1995-2023).
+Based on bilateral BACI data (from 1995, excluding the incomplete most recent year).
 Intra-regional trade is filtered out during aggregation.
 Extended to 'target_years' by backcasting using
 cement production, GDP, shipping costs and USGS trade data (for US only) as proxy.
@@ -42,7 +42,7 @@ magpie object of the aggregated trade data
 }
 \description{
 Calculate cement/clinker trade data (imports and exports).
-Based on bilateral BACI data (1995-2023).
+Based on bilateral BACI data (from 1995, excluding the incomplete most recent year).
 Intra-regional trade is filtered out during aggregation.
 Extended to 'target_years' by backcasting using
 cement production, GDP, shipping costs and USGS trade data (for US only) as proxy.

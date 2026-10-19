@@ -2,16 +2,14 @@
 % Please edit documentation in R/readAndrew2019.R
 \name{readAndrew2019}
 \alias{readAndrew2019}
-\title{Read Data from Andrew's 2019 paper}
+\title{Read clinker production data from Andrew's 2019 paper}
 \usage{
-readAndrew2019(subtype)
-}
-\arguments{
-\item{subtype}{Material subtype. Can be "cement" or "clinker".}
+readAndrew2019()
 }
 \description{
 https://zenodo.org/records/20397304
-Last version update 26.05.2026
+Last version update 31.08.2026
+Since version v260831, this source only contains clinker. Cement is in Andrew2019Cement.
 Dataset update from:
 Andrew, R.M., 2019. Global CO2 emissions from cement production, 1928–2018.
 Earth System Science Data 11, 1675–1710. https://doi.org/10.5194/essd-11-1675-2019.
