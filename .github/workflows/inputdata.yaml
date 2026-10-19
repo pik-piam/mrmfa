@@ -98,13 +98,14 @@ jobs:
       - name: Submit preprocessing
         run: |
           set -euo pipefail
-          job=$(ssh hpc "cd $(printf '%q' "$PREPROCESSING_DIR") && $RSCRIPT submit_preprocessing.R --release config/default.cfg" | tail -n 1)
-          if ! [[ $job =~ ^[0-9]+$ ]]; then
+          job=$(ssh hpc "cd $(printf '%q' "$PREPROCESSING_DIR") && $RSCRIPT submit_preprocessing.R --release config/default.cfg")
+          job_id=$(echo "$job" | tail -n 1)
+          if ! [[ $job_id =~ ^[0-9]+$ ]]; then
             echo "::error::Could not read the job ID from submit_preprocessing.R, got '$job'."
             exit 1
           fi
-          echo "Submitted job $job"
-          echo "JOB_ID=$job" >> "$GITHUB_ENV"
+          echo "Submitted job $job_id"
+          echo "JOB_ID=$job_id" >> "$GITHUB_ENV"
 
       - name: Wait for the preprocessing job
         run: |
