@@ -2,17 +2,15 @@
 % Please edit documentation in R/convertAndrew2019.R
 \name{convertAndrew2019}
 \alias{convertAndrew2019}
-\title{Convert data from Andrew 2019.}
+\title{Convert clinker data from Andrew 2019.}
 \usage{
-convertAndrew2019(x, subtype)
+convertAndrew2019(x)
 }
 \arguments{
 \item{x}{Magpie object}
-
-\item{subtype}{Material subtype. Can be "cement" or "clinker".}
 }
 \description{
-Convert data from Andrew 2019.
+Convert clinker data from Andrew 2019.
 }
 \author{
 Bennet Weiss
