@@ -16,7 +16,7 @@ calcCeCementProduction <- function() {
   # This is necessary as the backcasting uses the oldest n values which may not all be zero.
   years <- getYears(x, as.integer = TRUE)
   for (ctry in getItems(x, dim = 1)) {
-    ctry_x <- x[ctry, ]
+    ctry_x <- x[ctry, ,]
     non_na_years <- years[!is.na(ctry_x)]
     oldest_non_na_year <- if (length(non_na_years) > 0) non_na_years[1] else max(years)
     if (!is.na(ctry_x[, oldest_non_na_year, ]) && ctry_x[, oldest_non_na_year, ] == 0) {
