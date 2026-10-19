@@ -7,7 +7,7 @@ calcCeProductApplicationSplit <- function() {
   weight <- toolCeCumulativeCementProduction(castto = x)
   unit <- "ratio"
   description <- paste(
-    "Split of product materials by application.",
+    "Split of construction materials by application.",
     "Data from Cao2024."
   )
   note <- "dimensions: (Region,Product Application,value)"

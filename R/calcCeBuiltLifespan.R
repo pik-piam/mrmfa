@@ -1,15 +1,16 @@
-#' Calculates the lifetimes of residential, commercial and industrial buildings, as well as of civil engeneering.
+#' Calculates the lifetimes of residential, commercial and industrial buildings, as well as of civil engineering.
 #' @author Bennet Weiss
 calcCeBuiltLifespan <- function() {
   # Prepare data to have same dimensions as main driver cement production
   weight <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
   data <- readSource("PostedBuiltLifespan")[, getItems(weight, dim = 2), ]
+  data <- toolCeRenameBuildingItems(data, dim = 3, type = "End Use")
   weight <- magpie_expand(weight, data)
   weight[weight == 0] <- 1e-9
 
   unit <- "years (a)"
   description <- paste(
-    "Lifetimes of residential, commercial and industrial buildings, as well as of civil engeneering.",
+    "Lifetimes of residential, commercial and industrial buildings, as well as of civil engineering.",
     "Aggregated data from literature research.",
     "Dataset can be found in https://github.com/bennet21/posted/tree/lifetimes.",
     "Documentation can be found in Posted (https://github.com/PhilippVerpoort/posted)."

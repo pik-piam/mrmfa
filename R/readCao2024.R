@@ -7,7 +7,7 @@
 #' @author Bennet Weiss
 #' @param subtype Variable to be read in.
 #' Supported subtypes are:
-#' "product_material_split", "product_application_split", "carbonation_rate", "carbonation_rate_factor_additives",
+#' "construction_material_split", "product_application_split", "carbonation_rate", "carbonation_rate_factor_additives",
 #' "carbonation_rate_factor_co2", "carbonation_rate_factor_coating", "carbonation_rate_buried", "product_thickness",
 #' "product_cement_content", "cao_carbonation_share", "cement_loss_construction", "clinker_loss_production",
 #' "waste_split", "waste_size_split", "CKD_landfill_share", "clinker_cao_content", "CKD_cao_content"
@@ -15,13 +15,13 @@
 # nolint start
 readCao2024 <- function(subtype) {
   cao2024_specs <- list(
-    product_material_split = list(
+    construction_material_split = list(
       long_names = c(
         "cement for concrete (distribution function)",
         "cement for mortar (distribution)"
       ),
-      dim_members = c("concrete", "mortar"),
-      dim = "Product Material",
+      dim_members = c("Concrete", "Mortar"),
+      dim = "Construction Material",
       normalize = TRUE
     ),
     product_application_split = list(
@@ -34,10 +34,10 @@ readCao2024 <- function(subtype) {
         "percentage of mortar cement used for masonry (distribution)",
         "percentage of mortar cement used for maintenance and repairing (distribution)"
       ),
-      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim_members = c("C15", "C20", "C30", "C35", "Finishing", "Masonry", "Maintenance"),
       dim = "Product Application",
       normalize = TRUE,
-      groups = c(rep("concrete", 4), rep("mortar", 3))
+      groups = c(rep("Concrete", 4), rep("Mortar", 3))
     ),
     carbonation_rate = list(
       long_names = c(
@@ -50,7 +50,7 @@ readCao2024 <- function(subtype) {
         "carbonation rate coefficient of cement mortar (km) (distribution)",
         "carbonation rate coefficient of cement mortar (km) (distribution)"
       ),
-      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim_members = c("C15", "C20", "C30", "C35", "Finishing", "Masonry", "Maintenance"),
       dim = "Product Application"
     ),
     carbonation_rate_factor_additives = list(
@@ -74,7 +74,7 @@ readCao2024 <- function(subtype) {
         "carbonation rate coefficient of buried concrete in strength class i (kli) \u2264C15",
         "carbonation rate coefficient of buried concrete in strength class i (kli) \u2264C15"
       ),
-      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim_members = c("C15", "C20", "C30", "C35", "Finishing", "Masonry", "Maintenance"),
       dim = "Product Application"
     ),
     product_thickness = list(
@@ -88,7 +88,7 @@ readCao2024 <- function(subtype) {
         "thickness of mortar cement used for masonry (distribution)",
         "thickness of mortar cement used for maintenance and repairing (distribution)"
       ),
-      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim_members = c("C15", "C20", "C30", "C35", "Finishing", "Masonry", "Maintenance"),
       dim = "Product Application",
       fraction_mean = TRUE
     ),
@@ -103,7 +103,7 @@ readCao2024 <- function(subtype) {
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) \u2264C15 (distribution)",
         "cement content of concrete in different strength classes (kg cement/m3) (Ci) \u2264C15 (distribution)"
       ),
-      dim_members = c("C15", "C20", "C30", "C35", "finishing", "masonry", "maintenance"),
+      dim_members = c("C15", "C20", "C30", "C35", "Finishing", "Masonry", "Maintenance"),
       dim = "Product Application"
     ),
     cao_carbonation_share = list(
@@ -111,8 +111,8 @@ readCao2024 <- function(subtype) {
         "proportion of CaO within fully carbonated cement that converts to CaCO3 for concrete cement (\u03B3) (distribution)",
         "proportion of CaO within fully carbonated cement that converts to CaCO3 for mortar cement (\u03B31) (distribution)"
       ),
-      dim_members = c("concrete", "mortar"),
-      dim = "Product Material"
+      dim_members = c("Concrete", "Mortar"),
+      dim = "Construction Material"
     ),
     cement_loss_construction = list(
       long_names = c("cement wasted during construction (distribution)")
@@ -127,7 +127,7 @@ readCao2024 <- function(subtype) {
         "fate of waste concrete (landfill, dumped and stacking)",
         "fate of waste concrete (asphalt concrete)"
       ),
-      dim_members = c("new concrete", "aggregates", "landfill", "asphalt"),
+      dim_members = c("New Concrete", "Aggregates", "Landfill", "Asphalt"),
       dim = "Concrete Waste Type"
     ),
     waste_size_split = list(
@@ -150,12 +150,12 @@ readCao2024 <- function(subtype) {
         "percentage of waste concrete (asphalt concrete) with particle size 20-40mm (min)"
       ),
       dim_members = list(
-        "Concrete Waste Type" = c("new concrete", "aggregates", "landfill", "asphalt"),
+        "Concrete Waste Type" = c("New Concrete", "Aggregates", "Landfill", "Asphalt"),
         "Particle Size" = c("A", "B", "C", "D")
       ),
       dim = c("Concrete Waste Type", "Particle Size"),
       normalize = TRUE,
-      groups = c(rep("new concrete", 4), rep("aggregates", 4), rep("landfill", 4), rep("asphalt", 4))
+      groups = c(rep("New Concrete", 4), rep("Aggregates", 4), rep("Landfill", 4), rep("Asphalt", 4))
     ),
     CKD_landfill_share = list(
       long_names = c("percentage of CKD sent to landfill (distribution)")
