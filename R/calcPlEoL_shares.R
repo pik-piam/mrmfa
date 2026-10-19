@@ -171,6 +171,6 @@ calcPlEoL_shares <- function(subtype) {
     unit         = "ratio",
     description  = "End-of-life fate ratios of plastic disaggregated to country level from OECD Plastics Outlook;
     EUR, USA and CHA are replaced by region-specific data from Plastics Europa, EPA and Chinese reports",
-    note         = "dimensions: (Historic Time,Region,value)"
+    note         = "dimensions: (Historical Time,Region,value)"
   ))
 }

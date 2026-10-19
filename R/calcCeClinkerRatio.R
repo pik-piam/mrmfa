@@ -4,8 +4,8 @@
 calcCeClinkerRatio <- function() {
   ratio_GNR <- readSource("GNR", subtype = "clinker_ratio")
   # Production
-  prod_cement <- calcOutput("CeBinderProduction", subtype = "cement", aggregate = FALSE)
-  prod_clinker <- calcOutput("CeBinderProduction", subtype = "clinker", aggregate = FALSE)
+  prod_cement <- calcOutput("CeCementProduction", aggregate = FALSE)
+  prod_clinker <- calcOutput("CeClinkerProduction", aggregate = FALSE)
 
   # Trade
   # Note that the trade is not balanced, significant especially pre-1995
@@ -64,7 +64,7 @@ calcCeClinkerRatio <- function() {
     "For data gaps, use GNR data. Before 1970, assume constant clinker ratio of 0.95.",
     "Remaining gaps filled by linear extrapolation."
   )
-  note <- "dimensions: (Historic Time,Region,value)"
+  note <- "dimensions: (Historical Time,Region,value)"
   output <- list(x = ratio, weight = weight, unit = unit, description = description, note = note)
   return(output)
 }

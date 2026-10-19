@@ -19,8 +19,8 @@ Calc steel trade from WorldSteel datasets. Can be aggregated to regions
 via calcOutput aggregate parameter. Uses
 \link{readWorldSteelDigitised} and
 \link{readWorldSteelDatabase} datasets, the former for
-historic, the latter for current data. Further, uses
-\link{calcStProduction} to backcast historic trade data.
+historical, the latter for current data. Further, uses
+\link{calcStProduction} to backcast historical trade data.
 }
 \author{
 Merlin Jo Hosak

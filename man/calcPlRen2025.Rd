@@ -26,7 +26,8 @@ Derive three outputs from the Ren et al. (2025) China material-flow database
     and \code{Other fibre}. Leftover polyamide plastics fold into
     \code{Other thermoplastics}.}
   \item{\code{"consumption"}}{Share of each polymer and end-use sector within
-    total apparent consumption (stage \code{U}, process \code{inflow}),
+    total apparent consumption (stage \code{U}, processes \code{domestic} +
+    \code{net_export}, i.e. \code{inflow} but product-resolved),
     normalized to sum to 1, comparable to \code{\link{calcPlSectorPolymerSplit}}.
     Fibres and rubbers are not tracked in the use stage, so only base plastic
     polymers appear (type \code{Plastics}).}

@@ -14,3 +14,5 @@
 ^_pkgdown\.yml$
 ^\.positai$
 ^\.vscode$
+^CODE_STYLE\.md$
+^CONTRIBUTING\.md$
