@@ -2,12 +2,12 @@
 % Please edit documentation in R/calcCeProductCementContent.R
 \name{calcCeProductCementContent}
 \alias{calcCeProductCementContent}
-\title{Calculate strength class distribution of concrete.}
+\title{Calculate cement content of product applications.}
 \usage{
 calcCeProductCementContent()
 }
 \description{
-Calculate strength class distribution of concrete.
+Calculate cement content of product applications.
 }
 \author{
 Bennet Weiss

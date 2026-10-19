@@ -1,4 +1,4 @@
-#' Calculates the mean lifetimes of plastic goods by use sector, or their standard deviations.
+#' Calculates the mean lifetimes of plastic final products by end use, or their standard deviations.
 #' @author Leonie Schweiger
 #' @param subtype Character string specifying to read means or standard deviations from data
 #'        - "Lifetime_mean"
@@ -16,7 +16,7 @@ calcPlLifetime <- function(subtype) {
   )
   description <- paste(
     subtype,
-    " of plastic goods by use sector. ",
+    " of plastic final products by end use. ",
     "Data from Geyer et al. 2017 https://doi.org/10.1126/sciadv.1700782"
   )
   output <- list(
@@ -25,7 +25,7 @@ calcPlLifetime <- function(subtype) {
     unit = "years (a)",
     description = description,
     isocountries = FALSE,
-    note = "dimensions: (Good,value)"
+    note = "dimensions: (End Use,value)"
   )
   return(output)
 }

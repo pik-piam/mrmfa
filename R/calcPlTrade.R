@@ -81,7 +81,7 @@ calcPlTrade <- function(
   # in addition, data is backcasted to 1950 based on reference (and eventually
   # forecasted if reference covers more recent years)
   # ---------------------------------------------------------------------------
-  # backcast trade data to 1950 based on historic plastic production
+  # backcast trade data to 1950 based on historical plastic production
   reference <- calcOutput("PlProduction", aggregate = FALSE, years = target_years)
 
   .customAggregate <- function(x, rel, reference, flow_label) {
@@ -113,12 +113,12 @@ calcPlTrade <- function(
     # Load trade data for the selected category and flow label
     trade <- calcOutput("PlUNCTAD", subtype = category, aggregate = FALSE)
     trade_filtered <- collapseNames(trade[, , getNames(trade, dim = 1) == flow_label])
-    # backcast trade data to 1950 based on historic plastic production
+    # backcast trade data to 1950 based on historical plastic production
     reference <- collapseNames(dimSums(reference, dim = 3))
     x <- toolBackcastByReference(trade_filtered, reference)
 
     getNames(x) <- NULL
-    note <- "dimensions: (Historic Time,Region,value)"
+    note <- "dimensions: (Historical Time,Region,value)"
     aggregationFunction <- toolAggregate
     aggregationArguments <- NULL
   } else {
@@ -135,14 +135,14 @@ calcPlTrade <- function(
     }
 
     if (data_source == "BACI_UNEP") {
-      note <- "dimensions: (Historic Time,Region,Type,Material,Good,value)"
+      note <- "dimensions: (Historical Time,Region,Type,Material,End Use,value)"
       # remove sector column for Primary and Waste category ("General" for all)
       if (category %in% c("Primary", "Waste")) {
         x <- collapseNames(x, preservedim = "type")
-        note <- "dimensions: (Historic Time,Region,Type,Material,value)"
+        note <- "dimensions: (Historical Time,Region,Type,Material,value)"
       }
     } else if (data_source == "BACI_UNCTAD") {
-      note <- "dimensions: (Historic Time,Region,value)"
+      note <- "dimensions: (Historical Time,Region,value)"
     }
 
     aggregationFunction <- .customAggregate

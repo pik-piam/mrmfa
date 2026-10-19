@@ -3,7 +3,11 @@
 #' @author Bennet Weiss
 #' @param subtype Loss type: can be "cement_loss_construction" or "clinker_loss_production"
 calcCeCementLosses <- function(subtype) {
+  if (!subtype %in% c("cement_loss_construction", "clinker_loss_production")) {
+    stop(paste("Subtype ", subtype, " not implemented."))
+  }
   x <- readSource("Cao2024", subtype = subtype, convert = FALSE)
+  x <- dimReduce(toolCeDistributionMean(x, "Triangular"))
 
   unit <- "ratio"
   description <- paste(

@@ -2,7 +2,7 @@
 #' @description
 #' Calc steel production from WorldSteel datasets. Can be aggregated to regions
 #' via calcOutput aggregate parameter. Uses \link{readWorldSteelDigitised} and
-#' \link{readWorldSteelDatabase} datasets, the former for historic, the latter for current data.
+#' \link{readWorldSteelDatabase} datasets, the former for historical, the latter for current data.
 #' @author Merlin Jo Hosak
 #' @return Steel Production across all regions from 1900-2022 as magpie within
 #' list of metadata (in calcOutput format).
@@ -53,7 +53,7 @@ calcStProduction <- function() {
     weight = NULL,
     unit = "Tonnes",
     description = "Steel production from 1900-2022 yearly",
-    note = "dimensions: (Historic Time,Region,value)"
+    note = "dimensions: (Historical Time,Region,value)"
   )
 
   return(result)
