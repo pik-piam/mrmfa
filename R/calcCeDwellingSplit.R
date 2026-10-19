@@ -2,6 +2,7 @@
 #'
 #' Two-item split (sums to 1): floor area of single-family homes (RS) relative to the
 #' total residential floor area (RS + RM), based on the Global Exposure Model (GEM).
+#' Storeys and dwellings per building decide the split, similar to MaterialCities (see toolSingleFamilyShare).
 #' @author Bennet Weiss
 calcCeDwellingSplit <- function() {
   floorArea <- calcOutput("CeFloorspaceGEM", subtype = "Function", aggregate = FALSE)
@@ -28,7 +29,8 @@ calcCeDwellingSplit <- function() {
   unit <- "ratio"
   description <- paste(
     "Split of residential floor area into single- (RS) and multi-family (RM) homes.",
-    "Data from Global Exposure Model (GEM), categories harmonized with RASMI."
+    "Data from Global Exposure Model (GEM), categories harmonized with RASMI.",
+    "Split by storeys and dwellings per building, similar to MaterialCities."
   )
   note <- "dimensions: (Region,Dwelling Type,value)"
 
