@@ -78,14 +78,21 @@ readGlobalExposureModel <- function() {
 #' up to 1.5 is single family, from 3 on multi family, linear in between (2.25 gives a share of 0.5).
 #' Classes without dwelling or building count get a share of 0.5.
 #'
-#' @param taxonomy GEM taxonomy strings, height codes as in H:1, H:2-3, H:>5 or H:>5+HB:1.
+#' @param taxonomy GEM taxonomy strings, height codes as in H:1, H:2-3, H:>5, H:>5+HB:1 or HAPP:25.
+#'   Only the storey codes H and HAPP are read, other height codes such as HB are ignored.
 #' @param dwellings Number of dwellings of each class.
 #' @param buildings Number of buildings of each class.
 #' @return Share of single family homes in the floor area of each class, between 0 and 1.
 #' @author Bennet Weiss
 toolSingleFamilyShare <- function(taxonomy, dwellings, buildings) {
-  # height code: "H:1" is one storey, "H:2-3" two to three, "H:>5" more than five (at least 6)
-  heightCode <- ifelse(grepl("(^|/)H[A-Z]*:", taxonomy), sub("^(.*/)?H[A-Z]*:([^/+]*).*$", "\\2", taxonomy), NA)
+  # height code: "H:1" is one storey, "H:2-3" two to three, "H:>5" more than five (at least 6).
+  # Only codes for storeys above ground count, not e.g. HB (below ground) or HF (ground floor height).
+  storeyCodes <- paste(c("H", "HAPP"), collapse = "|")
+  heightCode <- ifelse(
+    grepl(paste0("(^|/)(", storeyCodes, "):"), taxonomy),
+    sub(paste0("^(.*/)?(", storeyCodes, "):([^/+]*).*$"), "\\3", taxonomy),
+    NA
+  )
   oneStorey <- heightCode %in% "1"
   hasNumber <- grepl("^>?[0-9]+", heightCode)
   minStoreys <- rep(NA, length(taxonomy))

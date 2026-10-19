@@ -7,7 +7,8 @@
 toolSingleFamilyShare(taxonomy, dwellings, buildings)
 }
 \arguments{
-\item{taxonomy}{GEM taxonomy strings, height codes as in H:1, H:2-3, H:>5 or H:>5+HB:1.}
+\item{taxonomy}{GEM taxonomy strings, height codes as in H:1, H:2-3, H:>5, H:>5+HB:1 or HAPP:25.
+Only the storey codes H and HAPP are read, other height codes such as HB are ignored.}
 
 \item{dwellings}{Number of dwellings of each class.}
 
