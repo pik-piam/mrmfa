@@ -43,7 +43,7 @@ calcCeCementProduction <- function() {
     "Andrew, R. (2026). Annual global cement production data (Version 260831) [Data set]. Zenodo.",
     "https://doi.org/10.5281/zenodo.22207852."
   )
-  note <- "dimensions: (Historic Time,Region,value)"
+  note <- "dimensions: (Historical Time,Region,value)"
   output <- list(x = x, weight = NULL, unit = unit, description = description, note = note)
   return(output)
 }

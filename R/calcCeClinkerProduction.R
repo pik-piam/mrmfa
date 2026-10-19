@@ -23,7 +23,7 @@ calcCeClinkerProduction <- function() {
     "Earth System Science Data 11, 1675-1710. https://doi.org/10.5194/essd-11-1675-2019.",
     "Data reported on https://zenodo.org/records/20397304."
   )
-  note <- "dimensions: (Historic Time,Region,value)"
+  note <- "dimensions: (Historical Time,Region,value)"
   output <- list(x = x, weight = NULL, unit = unit, description = description, note = note)
   return(output)
 }
