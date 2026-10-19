@@ -8,7 +8,7 @@
 #' for more information). Population data from
 #' \link[=calcCoPopulation]{calcCoPopulation} is used to
 #' convert GDP per capita to total GDP.
-#' GDP is given in 2005 USD (PPP). It's extrapolated to the past with historic
+#' GDP is given in 2005 USD (PPP). It's extrapolated to the past with historical
 #' GDP datasets that use a different base year, which however does not matter
 #' as only the relative values are used
 #' (see \link{toolInterpolate}).
@@ -29,12 +29,12 @@ calcCoGDP <- function(perCapita = FALSE, scenarios = "SSP2", collapse = TRUE, sm
   # load population data, used for historical purposes only
   pop <- calcOutput("CoPopulation", aggregate = FALSE)
 
-  # Historic GDP data that goes way back in time, with 1 year timestep
+  # Historical GDP data that goes way back in time, with 1 year timestep
   gdpHistPC <- readSource("OECD_GDP")
   most_recent_hist_year <- tail(getYears(gdpHistPC, as.integer = TRUE), 1)
   gdpHistPC <- toolInterpolate(gdpHistPC, type = "monotone", maxgap = 20)
 
-  # Historic and Future GDP data: 1960-2030 with 1 year timestep, thereafter with 5 year timestep
+  # Historical and Future GDP data: 1960-2030 with 1 year timestep, thereafter with 5 year timestep
   # turn off average2020 to get yearly data where possible (and of course remove covid correction)
   gdpRecent <- calcOutput("GDP", scenario = scenarios, aggregate = FALSE, average2020 = FALSE)
   getSets(gdpRecent)[3] <- "scenario"
@@ -42,7 +42,7 @@ calcCoGDP <- function(perCapita = FALSE, scenarios = "SSP2", collapse = TRUE, sm
   original_years <- getYears(gdpRecent, as.integer = TRUE)
   gdpRecent <- toolInterpolate(gdpRecent, years = seq(original_years[1], endyear, 1), type = "monotone")
 
-  # convert historic data from per capita to total
+  # convert historical data from per capita to total
   # data before startyear irrelevant (not cut off before because it helps for interpolation)
   hist <- pop[, startyear:most_recent_hist_year, ] * gdpHistPC[, startyear:most_recent_hist_year, ]
 

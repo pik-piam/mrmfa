@@ -5,25 +5,28 @@
 \title{Read data received on 04.08.2025, personal communication.
 Data used for Kaufmann et al. (2024), DOI: 10.1088/1748-9326/ad236b
 "Society's material stocks as carbon pool: an economy-wide quantification of global carbon stocks from 1900-2015"
-The data is given as probability density functions.
-For further use, they are translated to means before turned to magclass object.}
+Most variables are given as parameters of probability density functions.
+This function only reads the parameters; means are calculated in the calc functions
+(see \code{\link{toolCeDistributionMean}}).}
 \usage{
 readCao2024(subtype)
 }
 \arguments{
 \item{subtype}{Variable to be read in.
 Supported subtypes are:
-"product_material_split", "product_application_split", "carbonation_rate", "carbonation_rate_factor_additives",
-"carbonation_rate_factor_co2", "carbonation_rate_factor_coating", "carbonation_rate_buried", "product_thickness",
-"product_cement_content", "cao_carbonation_share", "cement_loss_construction", "clinker_loss_production",
-"waste_split", "waste_size_split", "CKD_landfill_share", "clinker_cao_content", "CKD_cao_content"}
+"material_split", "concrete_application_split", "mortar_application_split",
+"carbonation_rate_concrete", "carbonation_rate_mortar", "carbonation_rate_buried_concrete",
+"carbonation_factor_additives", "carbonation_factor_co2", "carbonation_factor_coating",
+"wall_thickness", "mortar_thickness", "concrete_cement_content", "cao_carbonation_share",
+"cement_loss_construction", "clinker_loss_production", "CKD_landfill_share",
+"clinker_cao_content", "CKD_cao_content", "waste_split", "waste_size_split"}
 }
 \description{
-Read data received on 04.08.2025, personal communication.
-Data used for Kaufmann et al. (2024), DOI: 10.1088/1748-9326/ad236b
-"Society's material stocks as carbon pool: an economy-wide quantification of global carbon stocks from 1900-2015"
-The data is given as probability density functions.
-For further use, they are translated to means before turned to magclass object.
+The returned magpie object has the source regions as spatial dimension and the
+variable items plus a "parameter" subdimension in the data dimension.
+The parameter names follow the layout of the distribution:
+Weibull (scale, shape, min, max), Uniform (max, min), Triangular (mode, max, min),
+Normal (mean, sd, min, max). Variables without a distribution have the single parameter "value".
 }
 \author{
 Bennet Weiss

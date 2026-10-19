@@ -21,8 +21,8 @@ calcStTrade(
 - exports}
 
 \item{category}{Character string specifying the stage of trade
-- direct
-- indirect
+- steel
+- manufactured
 - scrap}
 
 \item{HS}{Character string specifying the year of the HS (Harmonized System) revision of the data
@@ -57,7 +57,7 @@ BACI trade data cannot be used directly, since it does not cover the full scope)
 \dontrun{
 a <- calcOutput(
   type = "StTrade", subtype = "imports",
-  category = "direct", HS = "02"
+  category = "steel", HS = "02"
 )
 }
 }
