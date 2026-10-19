@@ -9,6 +9,7 @@ calcCeDwellingSplit()
 \description{
 Two-item split (sums to 1): floor area of single-family homes (RS) relative to the
 total residential floor area (RS + RM), based on the Global Exposure Model (GEM).
+Storeys and dwellings per building decide the split, similar to MaterialCities (see toolSingleFamilyShare).
 }
 \author{
 Bennet Weiss
