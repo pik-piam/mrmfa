@@ -1,5 +1,6 @@
 ValidationKey: '5393700'
 AutocreateReadme: yes
+AddInReadme: inst/README-inputdata.md
 AutocreateCITATION: yes
 AcceptedWarnings:
 - 'Warning: package ''.*'' was built under R version'

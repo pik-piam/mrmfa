@@ -1,0 +1,143 @@
+# Produces the input data release rev<X.Y.Z> on the PIK cluster as soon as a new version of mrmfa is pushed to main.
+name: inputdata
+
+on:
+  push:
+    branches: [main]
+    paths: [DESCRIPTION]
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: Full commit SHA, branch or tag to produce the input data for, by default the head of the selected branch
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  produce:
+    name: Produce input data
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    concurrency:
+      group: inputdata
+      cancel-in-progress: false
+      # Keep all pending runs instead of only the newest one
+      queue: max
+    env:
+      # A preprocessing-mfa checkout on the cluster used only by this workflow
+      PREPROCESSING_DIR: ${{ vars.PREPROCESSING_MFA_DIR }}
+      # R runs in the piam apptainer, which also sets the madrat folders and runs the SLURM job in the apptainer
+      RSCRIPT: /p/projects/rd3mod/piam-apptainer/piam-apptainer-shell -- Rscript
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.commit }}
+
+      - name: Determine version
+        run: |
+          set -euo pipefail
+          echo "VERSION=$(sed -n 's/^Version:[[:space:]]*//p' DESCRIPTION)" >> "$GITHUB_ENV"
+          echo "COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Configure SSH access to the HPC
+        env:
+          HPC_SSH_KEY: ${{ secrets.HPC_SSH_KEY }}
+          HPC_KNOWN_HOSTS: ${{ secrets.HPC_KNOWN_HOSTS }}
+          HPC_HOST: ${{ secrets.HPC_HOST }}
+          HPC_JUMP_HOST: ${{ secrets.HPC_JUMP_HOST }}
+        run: |
+          set -euo pipefail
+          if [ -z "$PREPROCESSING_DIR" ]; then
+            echo "::error::Repository variable PREPROCESSING_MFA_DIR is not set."
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$HPC_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "$HPC_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          # The cluster is only reachable through the PIK login gateway
+          {
+            printf 'Host hpc\n'
+            printf '  HostName %s\n' "${HPC_HOST##*@}"
+            printf '  User %s\n' "${HPC_HOST%@*}"
+            printf '  ProxyJump %s\n' "$HPC_JUMP_HOST"
+            printf '  BatchMode yes\n'
+            printf '  ServerAliveInterval 60\n'
+          } > ~/.ssh/config
+          chmod 600 ~/.ssh/config
+
+      - name: Update preprocessing-mfa and its renv
+        run: |
+          set -euo pipefail
+          ssh hpc "set -euo pipefail
+            cd $(printf '%q' "$PREPROCESSING_DIR")
+            git fetch origin
+            git reset --hard origin/main
+            git log -1 --format='preprocessing-mfa %h %s'
+            $RSCRIPT -e 'piamenv::updateRenv()'"
+
+      - name: Install mrmfa from the commit
+        run: |
+          set -euo pipefail
+          ssh hpc "set -euo pipefail
+            cd $(printf '%q' "$PREPROCESSING_DIR")
+            git -C mrmfa fetch origin $COMMIT
+            git -C mrmfa checkout --force --detach $COMMIT
+            git -C mrmfa log -1 --format='mrmfa %h %s'
+            # the fields remotes::install_github() would add, so that renv records mrmfa as this commit, e.g. in the PUCs
+            printf 'RemoteType: github\nRemoteHost: api.github.com\nRemoteUsername: ${GITHUB_REPOSITORY%/*}\nRemoteRepo: ${GITHUB_REPOSITORY#*/}\nRemoteRef: $COMMIT\nRemoteSha: $COMMIT\n' >> mrmfa/DESCRIPTION
+            $RSCRIPT -e \"renv::install(normalizePath('mrmfa'), rebuild = 'mrmfa', prompt = FALSE)\""
+
+      - name: Submit preprocessing
+        run: |
+          set -euo pipefail
+          job=$(ssh hpc "cd $(printf '%q' "$PREPROCESSING_DIR") && $RSCRIPT submit_preprocessing.R --release config/default.cfg" | tail -n 1)
+          if ! [[ $job =~ ^[0-9]+$ ]]; then
+            echo "::error::Could not read the job ID from submit_preprocessing.R, got '$job'."
+            exit 1
+          fi
+          echo "Submitted job $job"
+          echo "JOB_ID=$job" >> "$GITHUB_ENV"
+
+      - name: Wait for the preprocessing job
+        run: |
+          set -euo pipefail
+          failures=0
+          while :; do
+            sleep 300
+            if ! state=$(ssh hpc "sacct -j $JOB_ID -X -n -P -o JobID,State" |
+                           awk -F '|' -v id="$JOB_ID" '$1 == id { split($2, s, " "); state = s[1] } END { print state }'); then
+              failures=$((failures + 1))
+              if [ "$failures" -ge 6 ]; then
+                echo "::error::Could not query the state of job $JOB_ID $failures times in a row."
+                exit 1
+              fi
+              continue
+            fi
+            failures=0
+            echo "$(date -u +%H:%M) job $JOB_ID: ${state:-unknown}"
+            case "$state" in
+              COMPLETED)
+                break ;;
+              # an empty state means that the job has not reached the accounting database yet
+              "" | PENDING | RUNNING | REQUEUED | RESIZING | SUSPENDED)
+                ;;
+              *)
+                echo "::error::Job $JOB_ID ended with state $state."
+                exit 1 ;;
+            esac
+          done
+          echo "Produced input data rev$VERSION from $COMMIT with job $JOB_ID." | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Show end of the preprocessing log
+        if: (failure() || cancelled()) && env.JOB_ID != ''
+        run: |
+          ssh hpc "tail -n 100 -- $(printf '%q' "$PREPROCESSING_DIR/log-$JOB_ID.out")"
+          echo "::notice::A cancelled workflow does not cancel job $JOB_ID."
