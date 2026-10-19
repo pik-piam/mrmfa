@@ -163,13 +163,13 @@ fullMFA <- function(rev = 0,
     calcOutput("PlTrade", category = "Waste", flow_label = "Imports", data_source = "BACI_UNEP", file = "pl_waste_imports.cs4r", target_years = start_historical:end_historical)
     # Parameters
     calcOutput("PlHVCinput", subtype = "polymerization_yield", aggregate = FALSE, file = "pl_polymerization_yield.cs4r")
-    calcOutput("PlHVCinput", subtype = "HVC_input_ratio", aggregate = FALSE, file = "pl_HVC_input_ratio.cs4r")
-    calcOutput("PlHVCinput", subtype = "C4_input_ratio", aggregate = FALSE, file = "pl_C4_input_ratio.cs4r")
+    calcOutput("PlHVCinput", subtype = "hvc_input_shares", aggregate = FALSE, file = "pl_hvc_input_shares.cs4r")
+    calcOutput("PlHVCinput", subtype = "c4_input_shares", aggregate = FALSE, file = "pl_c4_input_shares.cs4r")
     calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", aggregate = FALSE) # fix 0.79
     calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r", aggregate = FALSE) # fix 0.05
     calcOutput("PlLifetime", subtype = "Lifetime_mean", aggregate = FALSE, file = "pl_lifetime_mean.cs4r")
     calcOutput("PlLifetime", subtype = "Lifetime_std", aggregate = FALSE, file = "pl_lifetime_std.cs4r")
-    calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_materials.cs4r")
+    calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_polymers.cs4r")
     # Historical EoL shares
     calcOutput("PlEoL_shares", subtype = "Collected", file = "pl_collection_rate.cs4r", years = start_historical:end_historical)
     calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_mechanical_recycling_rate.cs4r", years = start_historical:end_historical)

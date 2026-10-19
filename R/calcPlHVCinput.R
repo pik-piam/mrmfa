@@ -3,8 +3,8 @@
 #' @author Leonie Schweiger
 #' @param subtype Character string specifying the parameter to read
 #'        - "polymerization_yield"
-#'        - "HVC_input_ratio"
-#'        - "C4_input_ratio"
+#'        - "hvc_input_shares"
+#'        - "c4_input_shares"
 calcPlHVCinput <- function(subtype) {
   df <- readSource("LeviCullen", subtype = "HVCbyProcess", convert = FALSE) %>%
     as.data.frame() %>%
@@ -145,15 +145,15 @@ calcPlHVCinput <- function(subtype) {
 
   if (subtype == "polymerization_yield") {
     x <- 1 / polymerization_full
-    note <- "dimensions: (Material,value)"
-  } else if (subtype == "HVC_input_ratio") {
+    note <- "dimensions: (Polymer,value)"
+  } else if (subtype == "hvc_input_shares") {
     x <- mselect(HVC_input_ratio, hvc_type = "HVC w/o C4") %>% collapseDim()
-    note <- "dimensions: (Material,Element,value)"
-  } else if (subtype == "C4_input_ratio") {
+    note <- "dimensions: (Polymer,Element,value)"
+  } else if (subtype == "c4_input_shares") {
     x <- mselect(HVC_input_ratio, hvc_type = "C4") %>% collapseDim()
-    note <- "dimensions: (Material,Element,value)"
+    note <- "dimensions: (Polymer,Element,value)"
   } else {
-    stop("Invalid subtype. Choose either 'polymerization_yield' or 'HVC_input_ratio'.")
+    stop("Invalid subtype. Choose either 'polymerization_yield', 'hvc_input_shares' or 'c4_input_shares'.")
   }
   description <- paste(
     subtype,

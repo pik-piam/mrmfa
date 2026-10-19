@@ -26,7 +26,7 @@ calcPlCarbonContent <- function(subtype = "plastics") {
     unit = "ratio",
     description = description,
     isocountries = FALSE,
-    note = "dimensions: (Material,Element,value)"
+    note = "dimensions: (Polymer,Element,value)"
   )
   return(output)
 }
