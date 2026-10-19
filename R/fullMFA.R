@@ -72,7 +72,6 @@ fullMFA <- function(rev = 0,
     calcOutput("StSectorSplits", subtype = "low", file = "st_end_use_split_low_inco.cs4r", aggregate = FALSE)
 
     # Static Parameters
-    # calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
     # calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_bof_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "productionLossRate", file = "st_steel_production_loss_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "formingLossRate", file = "st_forming_loss_rate.cs4r", aggregate = FALSE)
