@@ -56,7 +56,7 @@ calcCeUnoccupiedResidentialStockShare <- function() {
       "Zheng, H., Zhang, R., Yin, X. et al.",
       "Unused housing in urban China and its carbon emission impact.",
       "Nat Commun 16, 1985 (2025). https://doi.org/10.1038/s41467-025-57217-7",
-      "(17.4% unused in 56 major cities, lower bound for whole China).",
+      "(17.4% unused in 56 major cities, lower bound for whole China)."
     ),
     collapse = "\n"
   )
