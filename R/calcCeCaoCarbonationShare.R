@@ -10,7 +10,7 @@ calcCeCaOCarbonationShare <- function() {
     "Share of CaO in End-Use Product available for carbonation.",
     "Data from Cao2024."
   )
-  note <- "dimensions: (value)"
+  note <- "dimensions: (Construction Material,value)"
 
   output <- list(
     x = x,

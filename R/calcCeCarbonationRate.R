@@ -3,7 +3,7 @@
 #' @param subtype Type of carbonation rate. May be "base", "additives", "co2", "coating", "base_buried"
 #' @author Bennet Weiss
 calcCeCarbonationRate <- function(subtype = "base") {
-  mortar_apps <- c("finishing", "masonry", "maintenance")
+  mortar_apps <- c("Finishing", "Masonry", "Maintenance")
 
   unit <- "factor"
   note <- "dimensions: (value)"

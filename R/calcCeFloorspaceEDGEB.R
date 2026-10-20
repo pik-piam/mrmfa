@@ -17,8 +17,8 @@ calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = 
   floorspace <- floorspace[, , "buildings", invert = TRUE]
 
   # enforce MFA naming convention
-  getNames(floorspace) <- gsub("commercial", "Com", getNames(floorspace))
-  getNames(floorspace) <- gsub("residential", "Res", getNames(floorspace))
+  getNames(floorspace) <- gsub("commercial", "Commercial", getNames(floorspace))
+  getNames(floorspace) <- gsub("residential", "Residential", getNames(floorspace))
 
   floorspace_years <- getYears(floorspace, as.integer = TRUE)
   # smooth if requested

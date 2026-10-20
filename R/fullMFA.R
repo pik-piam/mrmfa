@@ -72,7 +72,6 @@ fullMFA <- function(rev = 0,
     calcOutput("StSectorSplits", subtype = "low", file = "st_end_use_split_low_inco.cs4r", aggregate = FALSE)
 
     # Static Parameters
-    # calcOutput("StMaxScrapShare", subtype = "BIR", file = "st_max_scrap_share.cs4r", aggregate = FALSE)
     # calcOutput("StWorldSteelStaticParameters", subtype = "scrapInBOFrate", file = "st_scrap_in_bof_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "productionLossRate", file = "st_steel_production_loss_rate.cs4r", aggregate = FALSE)
     calcOutput("StCullenStaticParameters", subtype = "formingLossRate", file = "st_forming_loss_rate.cs4r", aggregate = FALSE)
@@ -115,7 +114,7 @@ fullMFA <- function(rev = 0,
     calcOutput("CeCementRatio", file = "ce_cement_ratio.cs4r")
     calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction", aggregate = FALSE)
     calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
-    calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")
+    calcOutput("CeConstructionMaterialSplit", file = "ce_construction_material_split.cs4r")
     calcOutput("CeEndUseSplit", file = "ce_end_use_split.cs4r")
     # Carbonation
     calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
@@ -137,7 +136,7 @@ fullMFA <- function(rev = 0,
     # Service demand / bottom-up
     calcOutput("CeFloorspaceEDGEB", file = "ce_floorspace.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = 1990:end_future)
     calcOutput("CeBuildingsMI", file = "ce_concrete_building_mi.cs4r", subtype = "concrete")
-    calcOutput("CeDwellingSplit", file = "ce_dwelling_split.cs4r")
+    calcOutput("CeResidentialTypeSplit", file = "ce_residential_type_split.cs4r")
     calcOutput("CeStructureSplit", file = "ce_structure_split.cs4r")
     calcOutput("CeUnoccupiedResidentialStockShare", file = "ce_unoccupied_residential_stock_share.cs4r", reference_year = end_historical)
   }
@@ -163,13 +162,13 @@ fullMFA <- function(rev = 0,
     calcOutput("PlTrade", category = "Waste", flow_label = "Imports", data_source = "BACI_UNEP", file = "pl_waste_imports.cs4r", target_years = start_historical:end_historical)
     # Parameters
     calcOutput("PlHVCinput", subtype = "polymerization_yield", aggregate = FALSE, file = "pl_polymerization_yield.cs4r")
-    calcOutput("PlHVCinput", subtype = "HVC_input_ratio", aggregate = FALSE, file = "pl_HVC_input_ratio.cs4r")
-    calcOutput("PlHVCinput", subtype = "C4_input_ratio", aggregate = FALSE, file = "pl_C4_input_ratio.cs4r")
+    calcOutput("PlHVCinput", subtype = "hvc_input_shares", aggregate = FALSE, file = "pl_hvc_input_shares.cs4r")
+    calcOutput("PlHVCinput", subtype = "c4_input_shares", aggregate = FALSE, file = "pl_c4_input_shares.cs4r")
     calcOutput("PlMechReYield", round = 2, file = "pl_mechanical_recycling_yield.cs4r", aggregate = FALSE) # fix 0.79
     calcOutput("PlMechLoss", file = "pl_reclmech_loss_uncontrolled_rate.cs4r", aggregate = FALSE) # fix 0.05
     calcOutput("PlLifetime", subtype = "Lifetime_mean", aggregate = FALSE, file = "pl_lifetime_mean.cs4r")
     calcOutput("PlLifetime", subtype = "Lifetime_std", aggregate = FALSE, file = "pl_lifetime_std.cs4r")
-    calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_materials.cs4r")
+    calcOutput("PlCarbonContent", aggregate = FALSE, file = "pl_carbon_content_polymers.cs4r")
     # Historical EoL shares
     calcOutput("PlEoL_shares", subtype = "Collected", file = "pl_collection_rate.cs4r", years = start_historical:end_historical)
     calcOutput("PlEoL_shares", subtype = "Recycled", file = "pl_mechanical_recycling_rate.cs4r", years = start_historical:end_historical)
