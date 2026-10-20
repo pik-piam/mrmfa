@@ -15,7 +15,7 @@ calcCeUnoccupiedResidentialStockShare <- function(reference_year) {
 
   # Odyssee: share of dwellings that are not permanently occupied, latest available year since 2000
   odyssee <- readSource("Odyssee", subtype = "260305")
-  odyssee <- collapseDim(odyssee[, getYears(odyssee, as.integer = TRUE) >= 2000, c("nbrlog", "nbrlpr")])
+  odyssee <- odyssee[, getYears(odyssee, as.integer = TRUE) >= 2000, c("nbrlog", "nbrlpr")]
   share_odyssee_years <- 1 - odyssee[, , "nbrlpr"] / odyssee[, , "nbrlog"]
   # some countries (e.g. LTU) mostly report total stock as permanently occupied stock
   share_odyssee_years[share_odyssee_years < 0.01] <- NA
@@ -28,7 +28,7 @@ calcCeUnoccupiedResidentialStockShare <- function(reference_year) {
   }
 
   # OECD: vacant dwellings plus seasonal/holiday homes
-  share_oecd <- collapseDim(readSource("OECDAffordableHousingDatabase", subtype = "both") / 100)
+  share_oecd <- readSource("OECDAffordableHousingDatabase", subtype = "both") / 100
   share[is.na(share)] <- share_oecd[is.na(share)]
 
   # set rest of world to floorspace-weighted average of available data
