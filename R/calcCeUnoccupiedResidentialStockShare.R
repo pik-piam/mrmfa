@@ -6,9 +6,11 @@
 #' dwellings), OECD Affordable Housing Database (vacant plus holiday homes),
 #' floorspace-weighted average for all remaining countries, manual value for China.
 #'
+#' @param reference_year Year of the residential floorspace used as aggregation weight,
+#' usually the last historical year of the cement model.
 #' @author Bennet Weiss
-calcCeUnoccupiedResidentialStockShare <- function() {
-  floorspace <- calcOutput("CeFloorspaceEDGEB", aggregate = FALSE, smooth = TRUE)[, 2023, "Res"]
+calcCeUnoccupiedResidentialStockShare <- function(reference_year) {
+  floorspace <- calcOutput("CeFloorspaceEDGEB", aggregate = FALSE, smooth = TRUE)[, reference_year, "Res"]
   weight <- collapseDim(floorspace, dim = c(2, 3))
 
   # Odyssee: share of dwellings that are not permanently occupied, latest available year since 2000
