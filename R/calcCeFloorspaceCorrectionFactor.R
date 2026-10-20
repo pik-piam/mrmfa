@@ -103,11 +103,7 @@ plot_floorspace_data <- function(plotting) {
 
       plot_floor_area_comparison(edgeb_floor_area, eubucco_floor_area, gem_floor_area, ghsoobat_floor_area)
     } else if (plotting == "ratio eubucco/edgeb over cement production") {
-      cement_production <- calcOutput(
-        type = "CeBinderProduction",
-        subtype = "cement",
-        aggregate = FALSE
-      )[, 2020] # tonnes
+      cement_production <- calcOutput(type = "CeCementProduction", aggregate = FALSE)[, 2020] # tonnes
 
       plot_ratio_over_x(edgeb_floor_area, eubucco_floor_area, cement_production, "Cement Production (tonnes)")
     } else {

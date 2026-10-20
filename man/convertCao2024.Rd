@@ -10,7 +10,7 @@ convertCao2024(x)
 \item{x}{Magpie object}
 }
 \description{
-Convert data from Cao
+Distribution parameters of the source regions are copied to all countries of a region.
 }
 \author{
 Bennet Weiss

@@ -2,12 +2,12 @@
 % Please edit documentation in R/calcCeProductThickness.R
 \name{calcCeProductThickness}
 \alias{calcCeProductThickness}
-\title{Calculate strength class distribution of concrete.}
+\title{Calculate thickness of product applications.}
 \usage{
 calcCeProductThickness()
 }
 \description{
-Calculate strength class distribution of concrete.
+The harmonic mean is used, as the thickness enters the carbonation calculation as a divisor.
 }
 \author{
 Bennet Weiss

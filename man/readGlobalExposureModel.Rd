@@ -2,16 +2,17 @@
 % Please edit documentation in R/readGlobalExposureModel.R
 \name{readGlobalExposureModel}
 \alias{readGlobalExposureModel}
-\title{Read structure type, function type, height, and total floor area of buildings from the Global Exposure Model (GEM).
-Extract residential building type (single RS/multi family RM) from building height proxy.}
+\title{Read structure type, function type and total floor area of buildings from the Global Exposure Model (GEM).
+Residential floor area is split into single (RS) and multi family (RM) homes similar to MaterialCities,
+see \code{\link{toolSingleFamilyShare}}.}
 \usage{
 readGlobalExposureModel()
 }
 \description{
+Release v2026.0.0 (GEM Taxonomy v4.0, building counts and population of 2025).
 Yepes-Estrada, C., Calderon, A., Costa, C., Crowley, H., Dabbeek, J., Hoyos,
 M., Martins, L., Paul, N., Rao, A., Silva, V. (2023).
 Global Building Exposure Model for Earthquake Risk Assessment. Earthquake Spectra. doi:10.1177/87552930231194048
-Repository on: https://zenodo.org/records/8223926
 Available on Github: https://github.com/gem/global_exposure_model
 }
 \author{

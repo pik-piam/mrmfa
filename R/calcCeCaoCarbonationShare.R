@@ -3,13 +3,14 @@
 #' @author Bennet Weiss
 calcCeCaOCarbonationShare <- function() {
   x <- readSource("Cao2024", subtype = "cao_carbonation_share", convert = FALSE)
+  x <- dimReduce(toolCeDistributionMean(x, "Weibull"))
 
   unit <- "ratio"
   description <- paste(
     "Share of CaO in End-Use Product available for carbonation.",
     "Data from Cao2024."
   )
-  note <- "dimensions: (value)"
+  note <- "dimensions: (Construction Material,value)"
 
   output <- list(
     x = x,
