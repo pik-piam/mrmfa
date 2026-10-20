@@ -31,7 +31,11 @@ calcCeStructureSplit <- function() {
 
   # output
   getSets(relFloorArea)["d3.1"] <- "End Use"
+  # use MFA item names
+  relFloorArea <- toolCeRenameBuildingItems(relFloorArea, dim = 3.1, type = "End Use")
+  relFloorArea <- toolCeRenameBuildingItems(relFloorArea, dim = 3.2, type = "Structure")
   weight <- floorArea_byFunction # use normalizing floor area as weight
+  weight <- toolCeRenameBuildingItems(weight, dim = 3, type = "End Use")
   weight[weight == 0] <- 1e-9
   unit <- "ratio"
   description <- paste0(

@@ -135,11 +135,11 @@ calcPlTrade <- function(
     }
 
     if (data_source == "BACI_UNEP") {
-      note <- "dimensions: (Historical Time,Region,Type,Material,End Use,value)"
+      note <- "dimensions: (Historical Time,Region,Polymer Type,Polymer,End Use,value)"
       # remove sector column for Primary and Waste category ("General" for all)
       if (category %in% c("Primary", "Waste")) {
         x <- collapseNames(x, preservedim = "type")
-        note <- "dimensions: (Historical Time,Region,Type,Material,value)"
+        note <- "dimensions: (Historical Time,Region,Polymer Type,Polymer,value)"
       }
     } else if (data_source == "BACI_UNCTAD") {
       note <- "dimensions: (Historical Time,Region,value)"

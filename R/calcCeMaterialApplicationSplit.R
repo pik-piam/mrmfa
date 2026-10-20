@@ -1,6 +1,6 @@
-#' Calculate the split of product material mass across product applications by region.
+#' Calculate the split of construction material mass across product applications by region.
 #'
-#' Each material (concrete/mortar) is mapped to it's respective product applications.
+#' Each material (concrete/mortar) is mapped to its respective product applications.
 #'
 #' @author Bennet Weiss
 #'
@@ -9,17 +9,17 @@ calcCeMaterialApplicationSplit <- function() {
   x <- calcOutput("CeProductApplicationSplit", aggregate = FALSE)
 
   concrete_apps <- c("C15", "C20", "C30", "C35")
-  mortar_apps <- c("finishing", "masonry", "maintenance")
+  mortar_apps <- c("Finishing", "Masonry", "Maintenance")
 
   # concrete: keep concrete app values, zero mortar apps
   x_concrete <- x
   x_concrete[, , mortar_apps] <- 0
-  x_concrete <- addDim(x_concrete, dim = 3.1, dimName = "Product Material", item = "concrete")
+  x_concrete <- addDim(x_concrete, dim = 3.1, dimName = "Construction Material", item = "Concrete")
 
   # mortar: keep mortar app values, zero concrete apps
   x_mortar <- x
   x_mortar[, , concrete_apps] <- 0
-  x_mortar <- addDim(x_mortar, dim = 3.1, dimName = "Product Material", item = "mortar")
+  x_mortar <- addDim(x_mortar, dim = 3.1, dimName = "Construction Material", item = "Mortar")
 
   x <- mbind(x_concrete, x_mortar)
 
@@ -30,11 +30,11 @@ calcCeMaterialApplicationSplit <- function() {
     weight = weight,
     unit = "fraction",
     description = paste(
-      "Split of product material mass across product applications by region.",
+      "Split of construction material mass across product applications by region.",
       "Within-material application splits from Cao2024.",
       "Each material row sums to 1 per region; applications of the other material are 0."
     ),
-    note = "dimensions: (Region,Product Material,Product Application,value)",
+    note = "dimensions: (Region,Construction Material,Product Application,value)",
     isocountries = TRUE
   )
   return(output)

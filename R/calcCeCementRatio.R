@@ -13,21 +13,21 @@ calcCeCementRatio <- function() {
   density <- calcOutput("CeProductDensity", aggregate = FALSE)
 
   concrete_apps <- c("C15", "C20", "C30", "C35")
-  mortar_apps <- c("finishing", "masonry", "maintenance")
+  mortar_apps <- c("Finishing", "Masonry", "Maintenance")
 
   # cement_ratio(m) = sum_{a in m} (cement_content(a) / density(m)) * application_split(a)
   # application_split is already normalized to sum to 1 within each material group
   concrete_ratio <- dimSums(
-    cement_content[, , concrete_apps] / density[, , "concrete"] * application_split[, , concrete_apps],
+    cement_content[, , concrete_apps] / density[, , "Concrete"] * application_split[, , concrete_apps],
     dim = "Product Application"
   )
   mortar_ratio <- dimSums(
-    cement_content[, , mortar_apps] / density[, , "mortar"] * application_split[, , mortar_apps],
+    cement_content[, , mortar_apps] / density[, , "Mortar"] * application_split[, , mortar_apps],
     dim = "Product Application"
   )
 
-  getNames(concrete_ratio) <- "concrete"
-  getNames(mortar_ratio) <- "mortar"
+  getNames(concrete_ratio) <- "Concrete"
+  getNames(mortar_ratio) <- "Mortar"
   x <- mbind(concrete_ratio, mortar_ratio)
   weight <- toolCeCumulativeCementProduction(castto = x)
 
@@ -41,7 +41,7 @@ calcCeCementRatio <- function() {
       "divided by product density across applications within each material.",
       "Data from Cao2024."
     ),
-    note = "dimensions: (Region,Product Material,value)",
+    note = "dimensions: (Region,Construction Material,value)",
     isocountries = FALSE
   )
   return(output)

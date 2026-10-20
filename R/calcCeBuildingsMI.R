@@ -13,6 +13,13 @@ calcCeBuildingsMI <- function(subtype = "concrete") {
   weight <- calcOutput("CeFloorspaceGEM", subtype = c("Function", "Structure"), aggregate = FALSE)
   # country without floorspace should still get MI if aggregated on country level
   weight[weight == 0] <- 1e-9
+
+  # use MFA item names
+  x <- toolCeRenameBuildingItems(x, dim = 3.1, type = "End Use")
+  x <- toolCeRenameBuildingItems(x, dim = 3.2, type = "Structure")
+  weight <- toolCeRenameBuildingItems(weight, dim = 3.1, type = "End Use")
+  weight <- toolCeRenameBuildingItems(weight, dim = 3.2, type = "Structure")
+
   description <- paste(
     "Material Intensity of buildings by end use and structure.",
     "Based on RASMI.",
