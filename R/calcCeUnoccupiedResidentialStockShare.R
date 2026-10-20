@@ -10,7 +10,7 @@
 #' usually the last historical year of the cement model.
 #' @author Bennet Weiss
 calcCeUnoccupiedResidentialStockShare <- function(reference_year) {
-  floorspace <- calcOutput("CeFloorspaceEDGEB", aggregate = FALSE, smooth = TRUE)[, reference_year, "Res"]
+  floorspace <- calcOutput("CeFloorspaceEDGEB", aggregate = FALSE, smooth = TRUE)[, reference_year, "Residential"]
   weight <- collapseDim(floorspace, dim = c(2, 3))
 
   # Odyssee: share of dwellings that are not permanently occupied, latest available year since 2000
