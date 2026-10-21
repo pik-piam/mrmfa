@@ -94,8 +94,8 @@ fullMFA <- function(rev = 0,
 
   #  ------------- CEMENT -----------
   if (runSection("cement")) {
-    start_historical <- 1900
-    end_historical <- 2023
+    start_historical <- 1880
+    end_historical <- 2025
 
     # common parameters
     calcOutput("CoPopulation", file = "ce_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)

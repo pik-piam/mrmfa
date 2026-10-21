@@ -19,13 +19,11 @@ calcCeUnoccupiedResidentialStockShare <- function(reference_year) {
   share_odyssee_years <- 1 - odyssee[, , "nbrlpr"] / odyssee[, , "nbrlog"]
   # some countries (e.g. LTU) mostly report total stock as permanently occupied stock
   share_odyssee_years[share_odyssee_years < 0.01] <- NA
-  # fill from the latest year backwards so each country gets its latest available value
-  years <- rev(getYears(share_odyssee_years))
-  share <- collapseDim(share_odyssee_years[, years[1], ])
-  for (year in years[-1]) {
-    missing <- is.na(share)
-    share[missing] <- share_odyssee_years[, year, ][missing]
-  }
+  # use the latest available value of each country
+  share <- magpply(share_odyssee_years, function(x) {
+    available <- which(!is.na(x))
+    if (length(available) == 0) NA else x[max(available)]
+  }, MARGIN = 1)
 
   # OECD: vacant dwellings plus seasonal/holiday homes
   share_oecd <- readSource("OECDAffordableHousingDatabase", subtype = "both") / 100

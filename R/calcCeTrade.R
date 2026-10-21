@@ -57,8 +57,7 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   df <- df[, c("t", "importer", "exporter", "value")]
 
   # most recent BACI year is usually incomplete: drop it, the forecast in the aggregation fills it
-  # e.g. clinker exports for Vietnam, UAE and imports for Bangladesh are underestimated
-  df <- df[df$t < max(df$t), ]
+  df <- df[df$t <= toolLastCompleteBACIYear(df$t), ]
 
   # ----------------------------------------------------------------------------
   # Do what usually happens in convert function
