@@ -7,3 +7,5 @@
 .positai
 .github/copilot-instructions.md
 .vscode
+.claude/
+CLAUDE.md

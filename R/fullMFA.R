@@ -138,7 +138,7 @@ fullMFA <- function(rev = 0,
     calcOutput("CeBuildingsMI", file = "ce_concrete_building_mi.cs4r", subtype = "concrete")
     calcOutput("CeResidentialTypeSplit", file = "ce_residential_type_split.cs4r")
     calcOutput("CeStructureSplit", file = "ce_structure_split.cs4r")
-    calcOutput("CeHibernatingStockShare", file = "ce_hibernating_stock_share.cs4r")
+    calcOutput("CeUnoccupiedResidentialStockShare", file = "ce_unoccupied_residential_stock_share.cs4r", reference_year = end_historical)
   }
 
   #  ------------- PLASTIC -----------
