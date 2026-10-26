@@ -1,0 +1,15 @@
+Source;Target
+PE-LD, -LLD;LDPE
+PE-HD, -MD;HDPE
+PP;PP
+PS;PS
+PS-E;PS
+PVC;PVC
+PET;PET
+PUR;PUR
+ABS, SAN;Other thermoplastics
+PMMA;Other thermoplastics
+PA (PA6, PA66);Other thermoplastics
+PC;Other thermoplastics
+Other Thermoplastics;Other thermoplastics
+Other Plastics;Other thermosets
