@@ -2,7 +2,7 @@
 #'
 #' @author Bennet Weiss
 calcCeProductCementContent <- function() {
-  mortar_apps <- c("finishing", "masonry", "maintenance")
+  mortar_apps <- c("Finishing", "Masonry", "Maintenance")
 
   concrete <- readSource("Cao2024", subtype = "concrete_cement_content", convert = FALSE)
   concrete <- toolCeDistributionMean(concrete, "Uniform")

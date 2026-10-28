@@ -1,13 +1,14 @@
 #' Calculates how cement consumption is split into end uses:
-#' Res (residential), Com (commercial), Ind (industrial) and Civ (civil engineering).
+#' Residential, Commercial, Industrial and Civil Engineering.
 #' @author Bennet Weiss
 calcCeEndUseSplit <- function() {
   x <- readSource("Xi2016")
+  x <- toolCeRenameBuildingItems(x, dim = 3, type = "End Use")
 
   weight <- toolCeCumulativeCementProduction(castto = x)
   unit <- "ratio"
   description <- paste(
-    "Split to sort cement consumption into end uses Res, Com, Ind, and Civ.",
+    "Split to sort cement consumption into end uses Residential, Commercial, Industrial, and Civil Engineering.",
     "Data based on Xi 2016."
   )
   note <- "dimensions: (Region,End Use,value)"

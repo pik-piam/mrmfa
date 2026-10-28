@@ -10,8 +10,8 @@ calcPlHVCinput(subtype)
 \arguments{
 \item{subtype}{Character string specifying the parameter to read
 - "polymerization_yield"
-- "HVC_input_ratio"
-- "C4_input_ratio"}
+- "hvc_input_shares"
+- "c4_input_shares"}
 }
 \description{
 Calculates the parameters that determine the HVC input to virgin plastics production

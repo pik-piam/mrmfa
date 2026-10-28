@@ -14,11 +14,11 @@ calcCeProductDensity <- function() {
   rho_concrete <- 2.3 # nolint C20/25
   rho_mortar <- 2.0 # general mortar
 
-  x <- new.magpie(names = c("concrete", "mortar"), fill = c(rho_concrete, rho_mortar))
+  x <- new.magpie(names = c("Concrete", "Mortar"), fill = c(rho_concrete, rho_mortar))
 
   unit <- "t/m^3"
   description <- "Density of cement products concrete and mortar."
-  note <- "dimensions: (Product Material,value)"
+  note <- "dimensions: (Construction Material,value)"
 
   output <- list(
     x = x,

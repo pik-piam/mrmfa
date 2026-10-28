@@ -2,12 +2,12 @@
 % Please edit documentation in R/calcCeMaterialApplicationSplit.R
 \name{calcCeMaterialApplicationSplit}
 \alias{calcCeMaterialApplicationSplit}
-\title{Calculate the split of product material mass across product applications by region.}
+\title{Calculate the split of construction material mass across product applications by region.}
 \usage{
 calcCeMaterialApplicationSplit()
 }
 \description{
-Each material (concrete/mortar) is mapped to it's respective product applications.
+Each material (concrete/mortar) is mapped to its respective product applications.
 }
 \author{
 Bennet Weiss
