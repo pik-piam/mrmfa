@@ -83,18 +83,25 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   # Aggregation to avoid intra-regional trade
   # ----------------------------------------------------------------------------
 
-  # construct reference for backcasting based on production/gdp and shipping costs.
-  # Note: reference has region-specific units.
+  # construct reference for backcasting based on production/gdp and shipping costs,
+  # expressed in tonnes of trade.
 
   # cement production data as base reference
   production_reference <- calcOutput("CeCementProduction", aggregate = FALSE, years = target_years)
   reference <- production_reference
   target_years <- getYears(production_reference, as.integer = TRUE)
 
-  # complement base reference with GDP data where in regions without production
+  # complement base reference with GDP data where in regions without production.
+  # GDP is converted to cement-equivalents with the yearly global cement intensity of GDP.
+  # China is excluded as its construction boom (and potential decline) would dominate the global intensity.
   gdp_reference <- calcOutput("CoGDP", aggregate = FALSE, years = target_years)
   zero_prod_regions <- getItems(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ], dim = 1)
-  reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ]
+  intensity_regions <- setdiff(getItems(production_reference, dim = 1), "CHN")
+  cement_intensity <- (
+    dimSums(production_reference[intensity_regions, , ], dim = c(1, 3))
+    / dimSums(gdp_reference[intensity_regions, , ], dim = c(1, 3))
+  )
+  reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ] * cement_intensity
 
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
   shipping_cost <- readSource("OWID", subtype = "shipping_costs")
@@ -115,10 +122,16 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   shipping_cost <- toolTimeSpline(shipping_cost, dof = 10)
   reference <- reference / shipping_cost
 
+  # transform reference (t production / shipping cost index) to tonnes of trade:
+  # use the global ratio of BACI trade to the reference over BACI years
+  trade_ratio <- dimSums(x, dim = c(1, 2, 3)) / dimSums(reference[, getYears(x), ], dim = c(1, 2, 3))
+  reference <- reference * trade_ratio
+
   # replace US reference with total clinker + cement trade data from USGS
+  # Note: This slightly overweights the US in custom regional aggregations that combine the US with other countries.
   us_reference <- readSource("USGSDS140", subtype = subtype)["USA", ]
-  us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = FALSE)
-  us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = TRUE)
+  us_reference <- toolBackcastByReference(us_reference, reference["USA", ], doForecast = FALSE)
+  us_reference <- toolBackcastByReference(us_reference, reference["USA", ], doForecast = TRUE)
   us_reference <- us_reference[, target_years, ]
   reference["USA", ] <- us_reference
 
