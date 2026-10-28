@@ -92,10 +92,12 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   reference <- production_reference
   target_years <- getYears(production_reference, as.integer = TRUE)
 
-  # complement base reference with GDP data where in regions without production
+  # complement base reference with GDP data where in regions without production.
+  # GDP is converted to cement-equivalents with the yearly global cement intensity of GDP
   gdp_reference <- calcOutput("CoGDP", aggregate = FALSE, years = target_years)
   zero_prod_regions <- getItems(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ], dim = 1)
-  reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ]
+  cement_intensity <- dimSums(production_reference, dim = c(1, 3)) / dimSums(gdp_reference, dim = c(1, 3))
+  reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ] * cement_intensity
 
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
   shipping_cost <- readSource("OWID", subtype = "shipping_costs")
