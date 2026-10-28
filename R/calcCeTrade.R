@@ -83,8 +83,8 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   # Aggregation to avoid intra-regional trade
   # ----------------------------------------------------------------------------
 
-  # construct reference for backcasting based on production/gdp and shipping costs.
-  # Note: reference has region-specific units.
+  # construct reference for backcasting based on production/gdp and shipping costs,
+  # expressed in tonnes of trade.
 
   # cement production data as base reference
   production_reference <- calcOutput("CeCementProduction", aggregate = FALSE, years = target_years)
@@ -117,10 +117,15 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   shipping_cost <- toolTimeSpline(shipping_cost, dof = 10)
   reference <- reference / shipping_cost
 
+  # transform reference (t production / shipping cost index) to tonnes of trade:
+  # use the global ratio of BACI trade to the reference over BACI years
+  trade_ratio <- dimSums(x, dim = c(1, 2, 3)) / dimSums(reference[, getYears(x), ], dim = c(1, 2, 3))
+  reference <- reference * trade_ratio
+
   # replace US reference with total clinker + cement trade data from USGS
   us_reference <- readSource("USGSDS140", subtype = subtype)["USA", ]
-  us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = FALSE)
-  us_reference <- toolBackcastByReference(us_reference, production_reference["USA", ], doForecast = TRUE)
+  us_reference <- toolBackcastByReference(us_reference, reference["USA", ], doForecast = FALSE)
+  us_reference <- toolBackcastByReference(us_reference, reference["USA", ], doForecast = TRUE)
   us_reference <- us_reference[, target_years, ]
   reference["USA", ] <- us_reference
 
