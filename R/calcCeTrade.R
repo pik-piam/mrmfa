@@ -92,10 +92,15 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   target_years <- getYears(production_reference, as.integer = TRUE)
 
   # complement base reference with GDP data where in regions without production.
-  # GDP is converted to cement-equivalents with the yearly global cement intensity of GDP
+  # GDP is converted to cement-equivalents with the yearly global cement intensity of GDP.
+  # China is excluded as its construction boom (and potential decline) would dominate the global intensity.
   gdp_reference <- calcOutput("CoGDP", aggregate = FALSE, years = target_years)
   zero_prod_regions <- getItems(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ], dim = 1)
-  cement_intensity <- dimSums(production_reference, dim = c(1, 3)) / dimSums(gdp_reference, dim = c(1, 3))
+  intensity_regions <- setdiff(getItems(production_reference, dim = 1), "CHN")
+  cement_intensity <- (
+    dimSums(production_reference[intensity_regions, , ], dim = c(1, 3))
+    / dimSums(gdp_reference[intensity_regions, , ], dim = c(1, 3))
+  )
   reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ] * cement_intensity
 
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
@@ -123,6 +128,7 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   reference <- reference * trade_ratio
 
   # replace US reference with total clinker + cement trade data from USGS
+  # Note: This slightly overweights the US in custom regional aggregations that combine the US with other countries.
   us_reference <- readSource("USGSDS140", subtype = subtype)["USA", ]
   us_reference <- toolBackcastByReference(us_reference, reference["USA", ], doForecast = FALSE)
   us_reference <- toolBackcastByReference(us_reference, reference["USA", ], doForecast = TRUE)
