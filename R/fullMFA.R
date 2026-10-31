@@ -113,8 +113,8 @@ fullMFA <- function(rev = 0,
     calcOutput("CeLifetimeRelStd", file = "ce_lifetime_rel_std.cs4r", aggregate = FALSE)
     calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = start_historical:end_historical)
     calcOutput("CeCementRatio", file = "ce_cement_ratio.cs4r")
-    calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction", aggregate = FALSE)
-    calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
+    calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction")
+    calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production")
     calcOutput("CeProductMaterialSplit", file = "ce_product_material_split.cs4r")
     calcOutput("CeEndUseSplit", file = "ce_end_use_split.cs4r")
     # Carbonation
