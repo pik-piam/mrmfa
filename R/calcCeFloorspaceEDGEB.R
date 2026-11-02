@@ -1,5 +1,8 @@
 #' Calculates the buildings floor area from EDGE-B
 #'
+#' The floor space of the EDGE-B regions is disaggregated to countries with weights
+#' from the EDGE-B floor space regression (see \link{calcCeFloorspaceWeightsEDGEB}).
+#'
 #' @param scenarios EDGE-B scenarios (character vector or string). Available: "SSP1", "SSP2", "SSP3", "SSP4", "SSP5".
 #' @param collapse Logical. If TRUE, redundant dimensions (e.g. scenario if only one requested) are removed.
 #' @param smooth Logical. If TRUE, data is smoothed using spline interpolation
@@ -7,14 +10,22 @@
 #' @param dof Integer. Degrees of freedom for spline interpolation.
 #' @author Bennet Weiss
 calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = FALSE, dof = 8) {
-  # Read data from EDGE-Buildings
-  floorspace <- calcOutput("Floorspace", scenario = scenarios, aggregate = FALSE)
-
-  # Unit conversion from million m2 to m2
-  floorspace <- floorspace * 1e6
+  # Read data from EDGE-Buildings on its native regions
+  floorspace <- calcOutput("Floorspace", scenario = scenarios,
+                           regionmapping = "regionmappingEDGE.csv", aggregate = "RegionCodeEUR_ETP")
 
   # Remove buildings total
   floorspace <- floorspace[, , "buildings", invert = TRUE]
+
+  # Disaggregate to countries with weights from the EDGE-B floor space regression
+  mapping <- toolGetMapping("regionmappingEDGE.csv", type = "regional", where = "mappingfolder")
+  weights <- calcOutput("CeFloorspaceWeightsEDGEB", scenarios = getItems(floorspace, dim = "scenario"),
+                        aggregate = FALSE)
+  floorspace <- toolAggregate(floorspace, rel = mapping, weight = weights[, getYears(floorspace)],
+                              from = "RegionCodeEUR_ETP", to = "CountryCode")
+
+  # Unit conversion from million m2 to m2
+  floorspace <- floorspace * 1e6
 
   # enforce MFA naming convention
   getNames(floorspace) <- gsub("commercial", "Commercial", getNames(floorspace))
