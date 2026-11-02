@@ -101,7 +101,8 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     dimSums(production_reference[intensity_regions, , ], dim = c(1, 3))
     / dimSums(gdp_reference[intensity_regions, , ], dim = c(1, 3))
   )
-  reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ] * cement_intensity
+  gdp_cement_reference <- gdp_reference[, target_years, ] * cement_intensity
+  reference[zero_prod_regions, ] <- gdp_cement_reference[zero_prod_regions, ]
 
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
   shipping_cost <- readSource("OWID", subtype = "shipping_costs")
@@ -149,12 +150,18 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     reference <- reference * clinker_trade_factor
   }
 
-  .customAggregate <- function(x, rel, reference, flow_label, target_years) {
+  # separate reference for forecasting: zero production does not mean zero imports
+  forecast_reference <- reference
+  forecast_reference[forecast_reference == 0] <- NA
+  forecast_reference <- toolBackcastByReference(forecast_reference, gdp_cement_reference, doForecast = TRUE)
+
+  .customAggregate <- function(x, rel, reference, forecast_reference, flow_label, target_years) {
     # aggregate to regions filtering out intra-regional trade
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
     # aggregate/disaggregate reference to regions given by regionmapping
     ref <- toolAggregate(reference, rel = rel)
+    forecast_ref <- toolAggregate(forecast_reference, rel = rel)
 
     # if some of the regions are missing in x due to the manual aggregation,
     # fill with NA to match all the ref regions
@@ -188,7 +195,10 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     weight = NULL,
     unit = "t",
     aggregationFunction = .customAggregate,
-    aggregationArguments = list(reference = reference, flow_label = subtype, target_years = target_years),
+    aggregationArguments = list(
+      reference = reference, forecast_reference = forecast_reference,
+      flow_label = subtype, target_years = target_years
+    ),
     description = description,
     note = "dimensions: (Historical Time,Region,value)"
   )
