@@ -5,6 +5,9 @@ convertAndrew2019 <- function(x) {
   # clinker data for a lot of countries is missing, those will default to NA
   no_remove_warning <- c("KSV")
 
+  # pre-1800 data is not needed
+  x <- x[, getYears(x, as.integer = TRUE) >= 1800, ]
+
   x["SRB", , ] <- x["SRB", , ] + toolNAreplace(x["KSV", , ])$x
 
   # Split USA (incl. Puerto Rico) into USA and PRI by GDP share.
