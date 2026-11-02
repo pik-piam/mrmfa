@@ -3,13 +3,13 @@
 \name{calcCeEndUseSplit}
 \alias{calcCeEndUseSplit}
 \title{Calculates how cement consumption is split into end uses:
-Res (residential), Com (commercial), Ind (industrial) and Civ (civil engineering).}
+Residential, Commercial, Industrial and Civil Engineering.}
 \usage{
 calcCeEndUseSplit()
 }
 \description{
 Calculates how cement consumption is split into end uses:
-Res (residential), Com (commercial), Ind (industrial) and Civ (civil engineering).
+Residential, Commercial, Industrial and Civil Engineering.
 }
 \author{
 Bennet Weiss

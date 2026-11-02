@@ -7,10 +7,10 @@
 readBIR(subtype)
 }
 \arguments{
-\item{subtype}{Type of data to read. Options: "scrapShare", "scrapConsumption"}
+\item{subtype}{Type of data to read. Options: "scrapConsumption"}
 }
 \description{
-Reads BIR data on steel scrap shares and consumption.
+Reads BIR data on steel scrap consumption.
 }
 \author{
 Merlin Jo Hosak

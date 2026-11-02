@@ -26,7 +26,7 @@ contains one copy of the single data item of \code{x} per entry of \code{newItem
 # use the value of C15 concrete for all mortar applications
 toolCopyItem(
   x = concrete[, , "C15"],
-  newItems = c("finishing", "masonry"),
+  newItems = c("Finishing", "Masonry"),
   newDim = "Product Application"
 )
 }

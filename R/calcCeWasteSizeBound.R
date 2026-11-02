@@ -3,7 +3,7 @@
 #'
 #' @author Bennet Weiss
 #' @param subtype Type of Bound.
-#' Can be upper (subtype = "max") oder lower (subtype ="min") bound.
+#' Can be upper (subtype = "max") or lower (subtype = "min") bound.
 #'
 calcCeWasteSizeBound <- function(subtype) {
   vals_min <- c(
@@ -21,7 +21,7 @@ calcCeWasteSizeBound <- function(subtype) {
   )
 
   dimnames <- list(
-    c("new concrete", "aggregates", "landfill", "asphalt"),
+    c("New Concrete", "Aggregates", "Landfill", "Asphalt"),
     c("A", "B", "C", "D")
   )
 
@@ -55,7 +55,7 @@ calcCeWasteSizeBound <- function(subtype) {
   x <- x * 1e-3 # convert from mm to m
   unit <- "m"
   description <- paste(subtype, " size of waste particles of a size category for different waste types.")
-  note <- "dimensions: (Waste Type,Size Category,value)"
+  note <- "dimensions: (Waste Type,Waste Size,value)"
 
   output <- list(
     x = x,

@@ -1,19 +1,19 @@
-#' Calculate end use product share of cement.
+#' Calculate the split of cement into construction materials.
 #'
 #' @author Bennet Weiss
-calcCeProductMaterialSplit <- function() {
+calcCeConstructionMaterialSplit <- function() {
   x <- readSource("Cao2024", subtype = "material_split")
   x <- toolCeDistributionMean(x, "Weibull")
-  x <- x / dimSums(x, dim = "Product Material")
+  x <- x / dimSums(x, dim = "Construction Material")
 
   weight <- toolCeCumulativeCementProduction(x)
 
   unit <- "ratio"
   description <- paste(
-    "Split cement into product materials.",
+    "Split cement into construction materials.",
     "Data from Cao2024."
   )
-  note <- "dimensions: (Region,Product Material,value)"
+  note <- "dimensions: (Region,Construction Material,value)"
 
   output <- list(
     x = x,

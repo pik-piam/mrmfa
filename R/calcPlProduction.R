@@ -108,6 +108,6 @@ calcPlProduction <- function() {
       "replaced with Ren et al. (2025) (1978-2022), backcast to 1950 along the",
       "same trend and held constant for 2023-2024."
     ),
-    note = "dimensions: (Time,Region,Type,value)"
+    note = "dimensions: (Time,Region,Polymer Type,value)"
   ))
 }

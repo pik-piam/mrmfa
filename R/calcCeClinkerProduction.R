@@ -6,8 +6,6 @@ calcCeClinkerProduction <- function() {
   # convert to tonnes
   x <- x * 1e3
 
-  x[is.na(x)] <- 0
-
   # same time range as cement production
   cement_years <- getYears(calcOutput("CeCementProduction", aggregate = FALSE))
   missing_years <- setdiff(cement_years, getYears(x))

@@ -5,7 +5,7 @@ calcCeClinkerRatio <- function() {
   ratio_GNR <- readSource("GNR", subtype = "clinker_ratio")
   # Production
   prod_cement <- calcOutput("CeCementProduction", aggregate = FALSE)
-  prod_clinker <- calcOutput("CeClinkerProduction", aggregate = FALSE)
+  prod_clinker <- calcOutput("CeClinkerProduction", aggregate = FALSE, warnNA = FALSE)
 
   # Trade
   # Note that the trade is not balanced, significant especially pre-1995
@@ -38,9 +38,15 @@ calcCeClinkerRatio <- function() {
   )
   ratio[, clinker_years, ] <- consum_clinker / prod_cement[, clinker_years, ]
 
-  # restrict clinker ratio to realistic values
-  ratio[ratio < 0.5 | ratio > 0.99] <- NA
+  # only use years with observed (not forecasted) clinker trade
+  baci <- quitte::madrat_mule(readSource("BACI", subtype = "cement-clinker", subset = "92"))
+  last_trade_year <- toolLastCompleteBACIYear(baci$t)
+  ratio[, getYears(ratio, as.integer = TRUE) > last_trade_year] <- NA
+
+  # restrict clinker ratio to realistic values (0.5-0.97).
+  ratio[ratio < 0.5 | ratio > 1.1] <- NA
   ratio <- replace_non_finite(ratio, NA)
+  ratio[ratio > 0.97] <- 0.97 # max GNR value is 0.967
 
   # replace data with GNR values where not at least n_valid values are available.
   # Andrew (2019) used GNR values where no other data was available.
@@ -51,18 +57,20 @@ calcCeClinkerRatio <- function() {
   # replace data before 1970 with 0.95 (as Andrew 2019)
   ratio[, getYears(ratio, as.integer = TRUE) <= 1970] <- 0.95
 
-  # Linearly extrapolate till available data (as Andrew 2019)
-  # Also extrapolate any other missing data
+  # Linearly interpolate till available data (as Andrew 2019)
+  # Also interpolate any other missing data, last valid value is held constant
   ratio <- toolInterpolate(ratio, type = "linear", extrapolate = TRUE)
 
   weight <- prod_cement
   weight[weight == 0] <- 1e-9
   unit <- "ratio"
   description <- paste(
-    "Annual clinker-to-cement ratio, calculated similiar as by Andrew (2019).",
-    "Calculated by (apparent clinker consumption) / (cement production).",
+    "Annual clinker-to-cement ratio, calculated similar as by Andrew (2019).",
+    "Calculated by (apparent clinker consumption) / (cement production)",
+    "for years with observed clinker trade. Values below 0.5 or above 1.1 are removed,",
+    "values between 0.97 and 1.1 are set to 0.97.",
     "For data gaps, use GNR data. Before 1970, assume constant clinker ratio of 0.95.",
-    "Remaining gaps filled by linear extrapolation."
+    "Remaining gaps filled by linear interpolation, the last valid value is held constant."
   )
   note <- "dimensions: (Historical Time,Region,value)"
   output <- list(x = ratio, weight = weight, unit = unit, description = description, note = note)

@@ -26,8 +26,8 @@ readCao2024 <- function(subtype) {
   # parameters: overrides the parameter layout if the sheet gives no distribution label
   cao2024_specs <- list(
     material_split = list(
-      columns = c(concrete = "B", mortar = "G"),
-      dim = "Product Material",
+      columns = c(Concrete = "B", Mortar = "G"),
+      dim = "Construction Material",
       distribution = "Weibull"
     ),
     concrete_application_split = list(
@@ -36,7 +36,7 @@ readCao2024 <- function(subtype) {
       distribution = "Weibull"
     ),
     mortar_application_split = list(
-      columns = c(finishing = "DY", masonry = "ED", maintenance = "EI"),
+      columns = c(Finishing = "DY", Masonry = "ED", Maintenance = "EI"),
       dim = "Product Application",
       distribution = "Weibull"
     ),
@@ -46,8 +46,8 @@ readCao2024 <- function(subtype) {
       distribution = "Uniform"
     ),
     carbonation_rate_mortar = list(
-      columns = c(mortar = "FC"),
-      dim = "Product Material",
+      columns = c(Mortar = "FC"),
+      dim = "Construction Material",
       distribution = "Triangular"
     ),
     carbonation_rate_buried_concrete = list(
@@ -68,12 +68,12 @@ readCao2024 <- function(subtype) {
       distribution = "Weibull"
     ),
     wall_thickness = list(
-      columns = c(concrete = "BG"),
-      dim = "Product Material",
+      columns = c(Concrete = "BG"),
+      dim = "Construction Material",
       distribution = "Uniform"
     ),
     mortar_thickness = list(
-      columns = c(finishing = "EN", masonry = "ES", maintenance = "EX"),
+      columns = c(Finishing = "EN", Masonry = "ES", Maintenance = "EX"),
       dim = "Product Application",
       distribution = "Weibull"
     ),
@@ -83,8 +83,8 @@ readCao2024 <- function(subtype) {
       distribution = "Uniform"
     ),
     cao_carbonation_share = list(
-      columns = c(concrete = "CE", mortar = "FG"),
-      dim = "Product Material",
+      columns = c(Concrete = "CE", Mortar = "FG"),
+      dim = "Construction Material",
       distribution = "Weibull"
     ),
     cement_loss_construction = list(
@@ -108,17 +108,17 @@ readCao2024 <- function(subtype) {
       distribution = "Normal"
     ),
     waste_split = list(
-      columns = c(`new concrete` = "CK", aggregates = "CL", landfill = "CM", asphalt = "CN"),
+      columns = c(`New Concrete` = "CK", Aggregates = "CL", Landfill = "CM", Asphalt = "CN"),
       dim = "Concrete Waste Type",
       parameters = "value"
     ),
     # Uniform distribution, but the sheet gives no label and the order (min, max)
     waste_size_split = list(
       columns = c(
-        `new concrete.A` = "CO", `new concrete.B` = "CQ", `new concrete.C` = "CS", `new concrete.D` = "CU",
-        aggregates.A = "CW", aggregates.B = "CY", aggregates.C = "DA", aggregates.D = "DC",
-        landfill.A = "DE", landfill.B = "DG", landfill.C = "DI", landfill.D = "DK",
-        asphalt.A = "DM", asphalt.B = "DO", asphalt.C = "DQ", asphalt.D = "DS"
+        `New Concrete.A` = "CO", `New Concrete.B` = "CQ", `New Concrete.C` = "CS", `New Concrete.D` = "CU",
+        Aggregates.A = "CW", Aggregates.B = "CY", Aggregates.C = "DA", Aggregates.D = "DC",
+        Landfill.A = "DE", Landfill.B = "DG", Landfill.C = "DI", Landfill.D = "DK",
+        Asphalt.A = "DM", Asphalt.B = "DO", Asphalt.C = "DQ", Asphalt.D = "DS"
       ),
       dim = c("Concrete Waste Type", "Particle Size"),
       parameters = c("min", "max")
@@ -165,7 +165,7 @@ readCao2024 <- function(subtype) {
       chunks[[length(chunks) + 1]] <- data.frame(region = regions, item = item, parameter = parameters[[i]], value = values)
     }
   }
-  # stack the chunks and split multi-dimensional items ("new concrete.A") into one column per dimension
+  # stack the chunks and split multi-dimensional items ("New Concrete.A") into one column per dimension
   data <- tidyr::separate_wider_delim(do.call(rbind, chunks), "item", delim = ".", names = item_dims)
 
   # regions become the spatial dimension; item(s) and parameter become data subdimensions

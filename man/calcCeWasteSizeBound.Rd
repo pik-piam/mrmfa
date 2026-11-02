@@ -9,7 +9,7 @@ calcCeWasteSizeBound(subtype)
 }
 \arguments{
 \item{subtype}{Type of Bound.
-Can be upper (subtype = "max") oder lower (subtype ="min") bound.}
+Can be upper (subtype = "max") or lower (subtype = "min") bound.}
 }
 \description{
 Calculate the size bounds of waste particles for different waste types.
