@@ -3,6 +3,8 @@
 calcCeClinkerProduction <- function() {
   x <- readSource("Andrew2019")
 
+  x <- x[, getYears(x, as.integer = TRUE) >= 1800, ]
+
   # convert to tonnes
   x <- x * 1e3
 
