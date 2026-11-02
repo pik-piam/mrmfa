@@ -135,6 +135,7 @@ fullMFA <- function(rev = 0,
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_max.cs4r", subtype = "max", aggregate = FALSE)
     # Service demand / bottom-up
     calcOutput("CeFloorspaceEDGEB", file = "ce_floorspace.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = 1990:end_future)
+    calcOutput("CeFloorspaceNetToGross", file = "ce_floorspace_net_to_gross.cs4r")
     calcOutput("CeBuildingsMI", file = "ce_concrete_building_mi.cs4r", subtype = "concrete")
     calcOutput("CeResidentialTypeSplit", file = "ce_residential_type_split.cs4r")
     calcOutput("CeStructureSplit", file = "ce_structure_split.cs4r")
