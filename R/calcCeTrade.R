@@ -164,7 +164,8 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     }
 
     # Forecasting AND backcasting of x.
-    x <- toolBackcastByReference(x, ref, doForecast = FALSE)
+    # Use median ratio for robustness against spikes in trade data (only in backcasting to preserve recent trends)
+    x <- toolBackcastByReference(x, ref, maxN = 15, ratioMethod = "median", doForecast = FALSE)
     x <- toolBackcastByReference(x, ref, doForecast = TRUE)
 
     # cut x to target years
