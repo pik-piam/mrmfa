@@ -100,6 +100,17 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
     return(normalizedWeights)
   }
 
+  # marks missing values before the first year with data (backcasting) or after the
+  # last year with data (forecasting); rows without any data are marked completely
+  .extrapolationMask <- function(x, doForecast = FALSE) {
+    hasData <- !is.na(as.array(x))
+    # number of years with data up to (backcasting) or from (forecasting) each year
+    cumulate <- function(v) if (doForecast) rev(cumsum(rev(v))) else cumsum(v)
+    dataSoFar <- apply(hasData, c(1, 3), cumulate)
+    dim(dataSoFar) <- dim(hasData)[c(2, 1, 3)]
+    return(aperm(dataSoFar, c(2, 1, 3)) == 0)
+  }
+
   # prepare input objects ----
 
   x <- magpiesort(x)
@@ -189,7 +200,9 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
   refExtended[, refYears, ] <- scaledRef[, refYears, ]
 
   # fill gaps with scaled reference values
-  final[is.na(final)] <- refExtended[is.na(final)]
+  # only before the first year (backcasting) or after the last year (forecasting)
+  fillMask <- .extrapolationMask(final, doForecast)
+  final[fillMask] <- refExtended[fillMask]
 
   if (doMakeZeroNA) {
     final[final == 0] <- NA
