@@ -7,16 +7,15 @@ calcCeCementLosses <- function(subtype) {
     stop(paste("Subtype ", subtype, " not implemented."))
   }
   x <- readSource("Cao2024", subtype = subtype)
-  x <- dimReduce(toolCeDistributionMean(x, "Triangular"))
-
-  weight <- toolCeCumulativeCementProduction(castto = x)
+  x <- collapseDim(toolCeDistributionMean(x, "Triangular"), dim = 3)
 
   unit <- "ratio"
   description <- paste(
     "Losses in the cement cycle for subtype ", subtype, ".",
     "Data from Cao2024."
   )
-  note <- "dimensions: (Region,value)"
+  note <- "dimensions: (Region)"
+  weight <- toolCeCumulativeCementProduction(castto = x)
 
   output <- list(
     x = x,
