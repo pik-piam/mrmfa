@@ -2,7 +2,7 @@
 #' Based on bilateral BACI data (from 1995, excluding the incomplete most recent year).
 #' Intra-regional trade is filtered out during aggregation.
 #' Extended to 'target_years' by backcasting using
-#' cement production, GDP, shipping costs and USGS trade data (for US only) as proxy.
+#' cement production, GDP (cement trade only), shipping costs and USGS trade data (for US only) as proxy.
 #' Clinker trade is linearly faded out between 1970 and 1950.
 #'
 #' @param subtype Character string specifying the scope
@@ -94,6 +94,7 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   # complement base reference with GDP data where in regions without production.
   # GDP is converted to cement-equivalents with the yearly global cement intensity of GDP.
   # China is excluded as its construction boom (and potential decline) would dominate the global intensity.
+  # Not for clinker: without cement production, there is no use for imported clinker.
   gdp_reference <- calcOutput("CoGDP", aggregate = FALSE, years = target_years)
   zero_prod_regions <- getItems(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ], dim = 1)
   intensity_regions <- setdiff(getItems(production_reference, dim = 1), "CHN")
@@ -102,7 +103,9 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     / dimSums(gdp_reference[intensity_regions, , ], dim = c(1, 3))
   )
   gdp_cement_reference <- gdp_reference[, target_years, ] * cement_intensity
-  reference[zero_prod_regions, ] <- gdp_cement_reference[zero_prod_regions, ]
+  if (category == "cement") {
+    reference[zero_prod_regions, ] <- gdp_cement_reference[zero_prod_regions, ]
+  }
 
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
   shipping_cost <- readSource("OWID", subtype = "shipping_costs")
