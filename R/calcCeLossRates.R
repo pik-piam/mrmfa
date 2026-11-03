@@ -1,8 +1,8 @@
-#' Calculate Losses in cement cycle.
+#' Calculate loss rates in the cement cycle.
 #'
 #' @author Bennet Weiss
 #' @param subtype Loss type: can be "cement_loss_construction" or "clinker_loss_production"
-calcCeCementLosses <- function(subtype) {
+calcCeLossRates <- function(subtype) {
   if (!subtype %in% c("cement_loss_construction", "clinker_loss_production")) {
     stop(paste("Subtype ", subtype, " not implemented."))
   }
@@ -11,7 +11,7 @@ calcCeCementLosses <- function(subtype) {
 
   unit <- "ratio"
   description <- paste(
-    "Losses in the cement cycle for subtype ", subtype, ".",
+    "Loss rates in the cement cycle for subtype ", subtype, ".",
     "Data from Cao2024."
   )
   note <- "dimensions: (Region)"
