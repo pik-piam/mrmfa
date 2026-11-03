@@ -14,7 +14,7 @@ calcCeLossRates <- function(subtype) {
     "Loss rates in the cement cycle for subtype ", subtype, ".",
     "Data from Cao2024."
   )
-  note <- "dimensions: (Region)"
+  note <- "dimensions: (Region,value)"
   weight <- toolCeCumulativeCementProduction(castto = x)
 
   output <- list(
