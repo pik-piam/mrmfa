@@ -7,7 +7,7 @@ calcCeCementLosses <- function(subtype) {
     stop(paste("Subtype ", subtype, " not implemented."))
   }
   x <- readSource("Cao2024", subtype = subtype)
-  x <- toolCeDistributionMean(x, "Triangular")
+  x <- dimReduce(toolCeDistributionMean(x, "Triangular"))
 
   weight <- toolCeCumulativeCementProduction(castto = x)
 
