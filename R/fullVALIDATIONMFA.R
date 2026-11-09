@@ -82,6 +82,28 @@ fullVALIDATIONMFA <- function(rev = 0, runSections = NULL) {
       warnNA = FALSE, try = FALSE,
       writeArgs = list(model = "Arp et al 2026")
     )
+
+    # IEA World Energy Outlook 2025 global cement production ----
+    calcOutput(
+      type = "CeProductionProjections", subtype = "IEAWEO2025", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "IEA WEO 2025")
+    )
+
+    # WCA 2024 cement demand forecast: global scenarios and regional BAU ----
+    calcOutput(
+      type = "CeProductionProjections", subtype = "WCA2024", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "WCA 2024")
+    )
+    calcOutput(
+      type = "CeProductionProjections", subtype = "WCA2024", regional = TRUE, file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "WCA 2024")
+    )
   }
 
   if (runSection("plastic")) {
