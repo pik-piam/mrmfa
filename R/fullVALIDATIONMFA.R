@@ -64,15 +64,31 @@ fullVALIDATIONMFA <- function(rev = 0, runSections = NULL) {
 
   runSection <- function(name) name %in% runSections
 
-  if (runSection("steel")) {}
+  if (runSection("steel")) {
+    # Arp et al. 2026 (IMAGE) steel consumption ----
+    calcOutput(
+      type = "CoArp2026", subtype = "steel", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "Arp et al 2026")
+    )
+  }
 
-  if (runSection("cement")) {}
+  if (runSection("cement")) {
+    # Arp et al. 2026 (IMAGE) cement consumption ----
+    calcOutput(
+      type = "CoArp2026", subtype = "cement", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "Arp et al 2026")
+    )
+  }
 
   if (runSection("plastic")) {
     # Pottinger 2024 plastics material flows (all scenarios) ----
     calcOutput(
       type = "PlPottinger", subtype = "all", file = valfile,
-      aggregate = columnsForAggregation, append = FALSE,
+      aggregate = columnsForAggregation, append = TRUE,
       warnNA = FALSE, try = FALSE,
       writeArgs = list(model = "Pottinger et al 2024")
     )
