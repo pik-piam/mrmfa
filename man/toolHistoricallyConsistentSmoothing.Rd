@@ -10,6 +10,8 @@ toolHistoricallyConsistentSmoothing(
   refScenario = "SSP2",
   fadeLength = 10,
   dof = 8,
+  lastSmoothedYear = NULL,
+  joinFadeLength = 20,
   verbose = FALSE,
   ...
 )
@@ -32,6 +34,14 @@ dimension of \code{x}. Ignored if x contains a single scenario.}
 1 produces a hard splice, which is generally discontinuous.}
 
 \item{dof}{Degrees of freedom passed to \link[madrat]{toolTimeSpline}.}
+
+\item{lastSmoothedYear}{Integer or NULL. Last year that is smoothed; later
+years are joined continuously (see description). If NULL (default), all
+years are smoothed.}
+
+\item{joinFadeLength}{Integer > 0. Number of years after
+\code{lastSmoothedYear} over which the later years return to the unsmoothed
+data. Ignored if \code{lastSmoothedYear} is NULL.}
 
 \item{verbose}{Logical. If TRUE, print informational messages (e.g. the
 automatically detected last historical year). Default FALSE.}
@@ -57,7 +67,18 @@ faded from the reference trajectory to its own trajectory over
 vanish at both endpoints. The blended curve therefore matches the slope of
 the shared history at the start of the fade window and the slope of the
 scenario-specific spline at its end, yielding a C2-continuous transition.
+
+If \code{lastSmoothedYear} is given, only the years up to it are smoothed,
+e.g. to exclude the low-quality extension of the SSP drivers beyond 2100.
+Splicing the later years unchanged to the smoothed values would leave a
+jump in level and slope at \code{lastSmoothedYear}, since the spline does not
+pass through the data. Therefore, the later years are corrected by the
+deviation of the unsmoothed from the smoothed level and slope in
+\code{lastSmoothedYear}, faded out over \code{joinFadeLength} years with the
+same smootherstep polynomial. The result continues the smoothed trajectory
+and returns to the unsmoothed data after the fade window. Values up to
+\code{lastSmoothedYear} do not depend on the later years.
 }
 \author{
-Bennet Weiss
+Bennet Weiss, Tobias Diez
 }

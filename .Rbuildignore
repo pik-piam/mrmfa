@@ -16,3 +16,4 @@
 ^\.vscode$
 ^CODE_STYLE\.md$
 ^CONTRIBUTING\.md$
+^\.git$

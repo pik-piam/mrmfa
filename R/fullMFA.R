@@ -11,7 +11,7 @@
 #' @param driverScenarios Character vector or string specifying the scenarios to use for GDP and population data.
 #' @param runSections Character vector or string selecting which parts to run.
 #' Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
-#' @param end_future End year for future data (default: 2100).
+#' @param end_future End year for future data (default: 2150, the horizon of REMIND).
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
 #' \code{\link[madrat]{calcOutput}}
@@ -26,7 +26,7 @@ fullMFA <- function(rev = 0,
                     gdpPerCapita = TRUE,
                     driverScenarios = c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5"),
                     runSections = NULL,
-                    end_future = 2100) {
+                    end_future = 2150) {
   # prepare section selector
   validSections <- c("steel", "cement", "plastic")
 
