@@ -36,7 +36,7 @@ dimension of \code{x}. Ignored if x contains a single scenario.}
 \item{dof}{Degrees of freedom passed to \link[madrat]{toolTimeSpline}.}
 
 \item{lastSmoothedYear}{Integer or NULL. Last year that is smoothed; later
-years are joined continuously (see description). If NULL (default), all
+years are joined continuously. If NULL (default), all
 years are smoothed.}
 
 \item{joinFadeLength}{Integer > 0. Number of years after
