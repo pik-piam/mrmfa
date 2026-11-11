@@ -6,7 +6,7 @@ convertGlobalExposureModel <- function(x) {
   x <- replace_non_finite(x, replace = 0)
 
   # Map the GEM material token of each class to RASMI structures, following Table 4 of MaterialCities.
-  # Tokens not listed there follow its priority for hybrid classes (C > M > S > T > U).
+  # Tokens not listed there follow its priority for hybrid classes (C > M > S > T > O).
   structureMapping <- toolGetMapping("CeBuildingStructureMapping.csv", type = "sectoral", where = "mrmfa")
   x <- toolAggregate(
     x,

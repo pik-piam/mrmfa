@@ -21,6 +21,7 @@ toolCeRenameBuildingItems <- function(x, dim, type) {
       "M" = "Masonry Structure",
       "T" = "Timber Structure",
       "S" = "Steel Frame Structure",
+      "O" = "Other Structure",
       "U" = "Unspecified Structure"
     )
   )

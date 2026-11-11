@@ -28,6 +28,9 @@ calcCeStructureSplit <- function() {
     mbind(slices)
   })
   relFloorArea <- mbind(filled)
+  # U (unspecified) structure holds no buildings. It is the placeholder for material without
+  # structure information (industrial and civil engineering concrete, mortar) in the cement MFA.
+  relFloorArea <- add_columns(relFloorArea, addnm = "U", dim = 3.2, fill = 0)
 
   # output
   getSets(relFloorArea)["d3.1"] <- "End Use"

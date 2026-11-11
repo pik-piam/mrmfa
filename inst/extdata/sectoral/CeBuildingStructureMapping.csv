@@ -1,5 +1,5 @@
 * Mapping of GEM material codes (TAXONOMY string up to the first /) to RASMI structures, following Table 4 of MaterialCities.
-* Codes not listed there follow its priority for hybrid classes (C > M > S > T > U) and are marked "by analogy".
+* Codes not listed there follow priority for hybrid classes (C > M > S > T > O) and are marked "by analogy".
 * Descriptions: GEM Building Taxonomy v4.0, json/taxonomy4.0_standard.json in https://github.com/gem/gem_taxonomy
 * (also https://tools.openquake.org/taxonomy/). Codes joined by + give material type and technology, HYB(a,b) a hybrid.
 GEM_material,RASMI_structure,Description
@@ -72,13 +72,13 @@ W+WBB,T,"Wood: bamboo"
 W+WO,T,"Wood: wood, other"
 W+WS,T,"Wood: solid wood"
 HYB(W;EU),T,"Hybrid: wood and earth, unreinforced (MIX(W+EU))"
-E+ETO,U,"Earth, unknown reinforcement: earth technology, other"
-EU,U,"Earth, unreinforced"
-EU+ETR,U,"Earth, unreinforced: rammed earth"
-ER+ETR,U,"Earth, reinforced: rammed earth"
-MATO,U,Other material
-ME,U,Metal (except steel)
-ME+MEO,U,"Metal (except steel): metal, other"
-ME+MEIR,U,"Metal (except steel): iron (by analogy with ME+MEO)"
-INF,U,"Informal materials (not in Table 4, unspecified)"
-MOB,U,"Mobile (manufactured) structure (not in Table 4, unspecified, Table 4 maps HAZUS MH to timber)"
+E+ETO,O,"Earth, unknown reinforcement: earth technology, other"
+EU,O,"Earth, unreinforced"
+EU+ETR,O,"Earth, unreinforced: rammed earth"
+ER+ETR,O,"Earth, reinforced: rammed earth"
+MATO,O,Other material
+ME,O,Metal (except steel)
+ME+MEO,O,"Metal (except steel): metal, other"
+ME+MEIR,O,"Metal (except steel): iron (by analogy with ME+MEO)"
+INF,O,"Informal materials (not in Table 4, unspecified)"
+MOB,T,"Mobile (manufactured) structure (by analogy with HAZUS MH, which Table 4 maps to timber)"
