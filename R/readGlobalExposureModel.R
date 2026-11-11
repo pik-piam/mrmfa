@@ -1,5 +1,5 @@
 #' Read structure type, function type and total floor area of buildings from the Global Exposure Model (GEM).
-#' Residential floor area is split into single and multi family homes similar to MaterialCities,
+#' Residential floor area is split into single and multi family homes by storeys and dwellings per building,
 #' see \code{\link{toolSingleFamilyShare}}.
 #'
 #' Release v2026.0.0 (GEM Taxonomy v4.0, building counts and population of 2025).
@@ -72,12 +72,21 @@ readGlobalExposureModel <- function() {
   return(x)
 }
 
-#' Share of single family homes in residential GEM building classes, similar to MaterialCities.
+#' Share of single family homes in the floor area of residential GEM building classes.
 #'
-#' Classes with exactly one storey are single family, classes with at least three storeys are multi family.
-#' All other classes (they include two storeys, or have no height) are split by dwellings per building:
-#' up to 1.5 is single family, from 3 on multi family, linear in between (2.25 gives a share of 0.5).
-#' Classes without dwelling or building count get a share of 0.5.
+#' Definition: single family homes are detached and row houses, multi family homes are
+#' apartment buildings. The share depends on the number of storeys h (midpoint of the GEM height range)
+#' and the mean number of dwellings per building d:
+#' \itemize{
+#'   \item h = 1: single family. Low buildings with several dwellings are mostly row houses.
+#'   \item h >= 4: multi family. Almost all such classes in GEM have more than 3 dwellings per building.
+#'   \item 1 < h < 4: a mix of single family buildings and apartment buildings. Single family buildings
+#'     have on average s = 1.5 dwellings (semi-detached and row houses), apartment buildings k = 2 h
+#'     (2 flats per floor). The share of apartment buildings is f = (d - s) / (k - s), between 0 and 1.
+#'     Single family dwellings are (assumed) alpha = 2 times larger than flats, so the single family share
+#'     of floor area is alpha s (1 - f) / (alpha s (1 - f) + k f).
+#'   \item no storey code, or no dwelling or building count: 0.5. These classes have almost no floor area.
+#' }
 #'
 #' @param taxonomy GEM taxonomy strings, height codes as in H:1, H:2-3, H:>5, H:>5+HB:1 or HAPP:25.
 #'   Only the storey codes H and HAPP are read, other height codes such as HB are ignored.
@@ -86,24 +95,50 @@ readGlobalExposureModel <- function() {
 #' @return Share of single family homes in the floor area of each class, between 0 and 1.
 #' @author Bennet Weiss
 toolSingleFamilyShare <- function(taxonomy, dwellings, buildings) {
-  # height code: "H:1" is one storey, "H:2-3" two to three, "H:>5" more than five (at least 6).
-  # Only codes for storeys above ground count, not e.g. HB (below ground) or HF (ground floor height).
-  storeyCodes <- paste(c("H", "HAPP"), collapse = "|")
+  dwellingsSingleFamily <- 1.5 # dwellings per single family building (semi-detached and row houses)
+  flatsPerFloor <- 2 # dwellings per floor of an apartment building
+  dwellingSizeRatio <- 2 # floor area of a single family dwelling relative to a flat
+
+  storeys <- toolGemStoreys(taxonomy)
+  dwellingsPerBuilding <- ifelse(dwellings > 0 & buildings > 0, dwellings / buildings, NA)
+
+  # mix of single family and apartment buildings that gives the mean dwellings per building
+  dwellingsApartment <- flatsPerFloor * storeys
+  apartmentBuildingShare <- (dwellingsPerBuilding - dwellingsSingleFamily) / (dwellingsApartment - dwellingsSingleFamily)
+  apartmentBuildingShare <- pmin(pmax(apartmentBuildingShare, 0), 1)
+  singleFamilyArea <- (1 - apartmentBuildingShare) * dwellingsSingleFamily * dwellingSizeRatio
+  apartmentArea <- apartmentBuildingShare * dwellingsApartment
+  share <- singleFamilyArea / (singleFamilyArea + apartmentArea)
+
+  share[is.na(share)] <- 0.5
+  share[storeys %in% 1] <- 1
+  share[!is.na(storeys) & storeys >= 4] <- 0
+  return(share)
+}
+
+#' Number of storeys of GEM building classes.
+#'
+#' Ranges such as H:2-3 give their midpoint, open ranges such as H:>5 give the smallest value (6).
+#'
+#' @param taxonomy GEM taxonomy strings, see \code{\link{toolSingleFamilyShare}}.
+#' @return Number of storeys, NA if the taxonomy has no storey code H or HAPP.
+#' @author Bennet Weiss
+toolGemStoreys <- function(taxonomy) {
+  # only codes for storeys above ground count, not e.g. HB (below ground) or HF (ground floor height)
+  storeyCodes <- "H|HAPP"
   heightCode <- ifelse(
     grepl(paste0("(^|/)(", storeyCodes, "):"), taxonomy),
     sub(paste0("^(.*/)?(", storeyCodes, "):([^/+]*).*$"), "\\3", taxonomy),
     NA
   )
-  oneStorey <- heightCode %in% "1"
-  hasNumber <- grepl("^>?[0-9]+", heightCode)
-  minStoreys <- rep(NA, length(taxonomy))
-  minStoreys[hasNumber] <- as.integer(sub("^>?([0-9]+).*$", "\\1", heightCode[hasNumber])) +
-    grepl("^>", heightCode[hasNumber])
-
-  dwellingsPerBuilding <- ifelse(dwellings > 0 & buildings > 0, dwellings / buildings, NA)
-  share <- pmin(pmax((3 - dwellingsPerBuilding) / 1.5, 0), 1)
-  share[is.na(share)] <- 0.5
-  share[oneStorey] <- 1
-  share[!is.na(minStoreys) & minStoreys >= 3] <- 0
-  return(share)
+  lower <- rep(NA_real_, length(taxonomy))
+  upper <- rep(NA_real_, length(taxonomy))
+  single <- grepl("^[0-9]+$", heightCode)
+  range <- grepl("^[0-9]+-[0-9]+$", heightCode)
+  open <- grepl("^>[0-9]+$", heightCode)
+  lower[single] <- upper[single] <- as.numeric(heightCode[single])
+  lower[range] <- as.numeric(sub("-.*$", "", heightCode[range]))
+  upper[range] <- as.numeric(sub("^.*-", "", heightCode[range]))
+  lower[open] <- upper[open] <- as.numeric(sub(">", "", heightCode[open])) + 1
+  return((lower + upper) / 2)
 }
