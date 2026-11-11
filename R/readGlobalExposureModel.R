@@ -1,5 +1,5 @@
 #' Read structure type, function type and total floor area of buildings from the Global Exposure Model (GEM).
-#' Residential floor area is split into single (RS) and multi family (RM) homes similar to MaterialCities,
+#' Residential floor area is split into single and multi family homes similar to MaterialCities,
 #' see \code{\link{toolSingleFamilyShare}}.
 #'
 #' Release v2026.0.0 (GEM Taxonomy v4.0, building counts and population of 2025).
@@ -39,17 +39,18 @@ readGlobalExposureModel <- function() {
       # remove rows with unknown area
       data <- data[!is.na(data$TOTAL_AREA_SQM), ]
 
-      # split residential area into single (RS) and multi family (RM) homes, other functions are the occupancy
+      # split residential area into single and multi family homes, other functions are the occupancy
       isRes <- data$OCCUPANCY == "Res"
       rsShare <- toolSingleFamilyShare(data$TAXONOMY[isRes], data$DWELLINGS[isRes], data$BUILDINGS[isRes])
       singleFamily <- data[isRes, ]
-      singleFamily$FUNCTION <- "RS"
+      singleFamily$FUNCTION <- "Residential Single-Family"
       singleFamily$TOTAL_AREA_SQM <- singleFamily$TOTAL_AREA_SQM * rsShare
       multiFamily <- data[isRes, ]
-      multiFamily$FUNCTION <- "RM"
+      multiFamily$FUNCTION <- "Residential Multi-Family"
       multiFamily$TOTAL_AREA_SQM <- multiFamily$TOTAL_AREA_SQM * (1 - rsShare)
       other <- data[!isRes, ]
-      other$FUNCTION <- other$OCCUPANCY
+      functionNames <- c(Com = "Commercial", Ind = "Industrial")
+      other$FUNCTION <- unname(functionNames[other$OCCUPANCY])
       data <- rbind(singleFamily, multiFamily, other)
 
       # structure is the material token of the taxonomy, e.g. MUR+ADO or HYB(W;M). It is mapped in convert.
@@ -71,7 +72,7 @@ readGlobalExposureModel <- function() {
   return(x)
 }
 
-#' Share of single family homes (RS) in residential GEM building classes, similar to MaterialCities.
+#' Share of single family homes in residential GEM building classes, similar to MaterialCities.
 #'
 #' Classes with exactly one storey are single family, classes with at least three storeys are multi family.
 #' All other classes (they include two storeys, or have no height) are split by dwellings per building:

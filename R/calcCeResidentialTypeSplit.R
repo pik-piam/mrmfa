@@ -6,8 +6,8 @@
 #' @author Bennet Weiss
 calcCeResidentialTypeSplit <- function() {
   floorArea <- calcOutput("CeFloorspaceGEM", subtype = "Function", aggregate = FALSE)
-  res_floorArea <- dimSums(mselect(floorArea, Function = c("RS", "RM")), dim = 3)
-  share <- collapseDim(mselect(floorArea, Function = "RS")) / res_floorArea
+  res_floorArea <- dimSums(mselect(floorArea, Function = c("Residential Single-Family", "Residential Multi-Family")), dim = 3)
+  share <- collapseDim(mselect(floorArea, Function = "Residential Single-Family")) / res_floorArea
 
   # fill countries without residential floor area with their H12 region's share
   h12 <- toolGetMapping("h12.csv", type = "regional", where = "mappingfolder")

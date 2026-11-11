@@ -3,7 +3,6 @@
 #' @author Bennet Weiss
 calcCeEndUseSplit <- function() {
   x <- readSource("Xi2016")
-  x <- toolCeRenameBuildingItems(x, dim = 3, type = "End Use")
 
   weight <- toolCeCumulativeCementProduction(castto = x)
   unit <- "ratio"

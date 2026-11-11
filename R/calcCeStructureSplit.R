@@ -28,17 +28,13 @@ calcCeStructureSplit <- function() {
     mbind(slices)
   })
   relFloorArea <- mbind(filled)
-  # U (unspecified) structure holds no buildings. It is the placeholder for material without
+  # The unspecified structure holds no buildings. It is the placeholder for material without
   # structure information (industrial and civil engineering concrete, mortar) in the cement MFA.
-  relFloorArea <- add_columns(relFloorArea, addnm = "U", dim = 3.2, fill = 0)
+  relFloorArea <- add_columns(relFloorArea, addnm = "Unspecified Structure", dim = 3.2, fill = 0)
 
   # output
   getSets(relFloorArea)["d3.1"] <- "End Use"
-  # use MFA item names
-  relFloorArea <- toolCeRenameBuildingItems(relFloorArea, dim = 3.1, type = "End Use")
-  relFloorArea <- toolCeRenameBuildingItems(relFloorArea, dim = 3.2, type = "Structure")
   weight <- floorArea_byFunction # use normalizing floor area as weight
-  weight <- toolCeRenameBuildingItems(weight, dim = 3, type = "End Use")
   weight[weight == 0] <- 1e-9
   unit <- "ratio"
   description <- paste0(

@@ -15,16 +15,16 @@ readXi2016 <- function(subtype) {
 
   # prepare China data
   stock_type_mapping_china <- c(
-    "Residential building" = "Res",
-    "Office building" = "Com",
-    "Commercial building" = "Com",
-    "Hospital" = "Com",
-    "Education, culture and research building" = "Com",
-    "Industrial building" = "Ind",
-    "Railway, Road, tunnel, and bridge" = "Civ",
-    "Other Civil Engineering" = "Civ",
-    "Dam, power station, and dock" = "Civ",
-    "Other building" = "Com"
+    "Residential building" = "Residential",
+    "Office building" = "Commercial",
+    "Commercial building" = "Commercial",
+    "Hospital" = "Commercial",
+    "Education, culture and research building" = "Commercial",
+    "Industrial building" = "Industrial",
+    "Railway, Road, tunnel, and bridge" = "Civil Engineering",
+    "Other Civil Engineering" = "Civil Engineering",
+    "Dam, power station, and dock" = "Civil Engineering",
+    "Other building" = "Commercial"
   )
 
   # cut out unnecessary aggregation of buildings (1st row)
@@ -38,14 +38,14 @@ readXi2016 <- function(subtype) {
 
   # prepare USA data
   stock_type_mapping_usa <- c(
-    "Residential buildings" = "Res",
-    "Commercial and Industrial buildings" = "Com/Ind", # also Ind, but proportion Civ/Ind taken from China
-    "Water and waste management" = "Civ",
-    "Streets and highway" = "Civ",
-    "Public buildings" = "Com/Ind",
-    "Farm" = "Com/Ind", # Actually Ind, but proportion Civ/Ind taken from China
-    "Other" = "Com/Ind",
-    "Utilities" = "Civ"
+    "Residential buildings" = "Residential",
+    "Commercial and Industrial buildings" = "Commercial/Industrial", # also Ind, but proportion Civ/Ind taken from China
+    "Water and waste management" = "Civil Engineering",
+    "Streets and highway" = "Civil Engineering",
+    "Public buildings" = "Commercial/Industrial",
+    "Farm" = "Commercial/Industrial", # Actually Ind, but proportion Civ/Ind taken from China
+    "Other" = "Commercial/Industrial",
+    "Utilities" = "Civil Engineering"
   )
 
   # cut out temporal data and keep only first and last column
@@ -56,17 +56,17 @@ readXi2016 <- function(subtype) {
   names(data_usa) <- c("value", "stock_type")
   data_usa <- stats::aggregate(`value` ~ stock_type, data = data_usa, sum)
 
-  # split Com/Ind row
+  # split Commercial/Industrial row
   # get split from China
-  ind_share_china <- data_china[data_china$stock_type == "Ind", "value"]
-  com_share_china <- data_china[data_china$stock_type == "Com", "value"]
+  ind_share_china <- data_china[data_china$stock_type == "Industrial", "value"]
+  com_share_china <- data_china[data_china$stock_type == "Commercial", "value"]
   com_share <- com_share_china / (com_share_china + ind_share_china)
 
   # apply split from China
-  comind_value <- data_usa$value[data_usa$stock_type == "Com/Ind"] # extract com value
-  data_usa <- data_usa[data_usa$stock_type != "Com/Ind", ] # remove com value
+  comind_value <- data_usa$value[data_usa$stock_type == "Commercial/Industrial"] # extract com value
+  data_usa <- data_usa[data_usa$stock_type != "Commercial/Industrial", ] # remove com value
   new_rows <- data.frame(
-    stock_type = c("Ind", "Com"),
+    stock_type = c("Industrial", "Commercial"),
     value = c(comind_value * com_share, comind_value * (1 - com_share))
   )
   data_usa <- rbind(data_usa, new_rows)
