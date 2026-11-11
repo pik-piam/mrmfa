@@ -63,10 +63,44 @@ toolHistoricallyConsistentSmoothing <- function(
   verbose = FALSE,
   ...
 ) {
-  .checkFadeLength(fadeLength, "fadeLength")
+  checkFadeLength <- function(value, name) {
+    if (!isTRUE(all(is.numeric(value), length(value) == 1, value > 0))) {
+      stop(name, " must be a single positive number (larger than 0).")
+    }
+  }
+
+  # C2-continuous transition from 0 to 1 on [0, 1]
+  smootherstep <- function(t) {
+    6 * t^5 - 15 * t^4 + 10 * t^3
+  }
+
+  # replace the years after smoothedYears in smoothed by the unsmoothed data, corrected by the
+  # deviation of smoothed from unsmoothed level and slope (backward difference) in the last smoothed year
+  joinContinuously <- function(smoothed, raw, smoothedYears, fadeLength) {
+    years <- getYears(raw, as.integer = TRUE)
+    laterYears <- years[years > max(smoothedYears)]
+    if (length(laterYears) == 0) {
+      return(smoothed)
+    }
+
+    joinYears <- utils::tail(smoothedYears, 2)
+    levelCorrection <- setYears(smoothed[, joinYears[2], ] - raw[, joinYears[2], ], NULL)
+    slopeCorrection <- setYears(
+      (smoothed[, joinYears[2], ] - smoothed[, joinYears[1], ]) - (raw[, joinYears[2], ] - raw[, joinYears[1], ]),
+      NULL
+    ) / (joinYears[2] - joinYears[1])
+
+    elapsed <- laterYears - joinYears[2]
+    elapsedYears <- new.magpie(years = laterYears, fill = elapsed)
+    remaining <- new.magpie(years = laterYears, fill = 1 - smootherstep(pmin(1, elapsed / fadeLength)))
+    smoothed[, laterYears, ] <- raw[, laterYears, ] + (levelCorrection + slopeCorrection * elapsedYears) * remaining
+    return(smoothed)
+  }
+
+  checkFadeLength(fadeLength, "fadeLength")
 
   if (!is.null(lastSmoothedYear)) {
-    .checkFadeLength(joinFadeLength, "joinFadeLength")
+    checkFadeLength(joinFadeLength, "joinFadeLength")
     years <- getYears(x, as.integer = TRUE)
     smoothedYears <- years[years <= lastSmoothedYear]
     if (length(smoothedYears) < 2) {
@@ -79,7 +113,7 @@ toolHistoricallyConsistentSmoothing <- function(
       lastHistYear = lastHistYear, refScenario = refScenario, fadeLength = fadeLength, dof = dof,
       verbose = verbose, ...
     )
-    return(.joinContinuously(smoothed, x, smoothedYears, joinFadeLength))
+    return(joinContinuously(smoothed, x, smoothedYears, joinFadeLength))
   }
 
   smoothed <- toolTimeSpline(x, dof = dof, ...)
@@ -135,47 +169,11 @@ toolHistoricallyConsistentSmoothing <- function(
 
   # prepare the fade weights: use C2-continuous smootherstep polynomial (see description) to transition from 0 to 1
   tNorm <- pmax(0, pmin(1, (years - lastHistYear) / fadeLength))
-  w <- new.magpie(years = years, fill = .smootherstep(tNorm))
+  w <- new.magpie(years = years, fill = smootherstep(tNorm))
 
   for (s in otherScens) {
     # overwrite hist period with refScen, then fade from reference to scenario-specific spline
     smoothed[, , s] <- (1 - w) * smoothed[, , sel_refScen] + w * smoothed[, , s]
   }
   return(smoothed)
-}
-
-# replace the years after smoothedYears in smoothed by the unsmoothed data, corrected by the
-# deviation of smoothed from unsmoothed level and slope (backward difference) in the last smoothed year
-.joinContinuously <- function(smoothed, raw, smoothedYears, fadeLength) {
-  years <- getYears(raw, as.integer = TRUE)
-  laterYears <- years[years > max(smoothedYears)]
-  if (length(laterYears) == 0) {
-    return(smoothed)
-  }
-
-  joinYears <- utils::tail(smoothedYears, 2)
-  levelCorrection <- setYears(smoothed[, joinYears[2], ] - raw[, joinYears[2], ], NULL)
-  slopeCorrection <- setYears(
-    (smoothed[, joinYears[2], ] - smoothed[, joinYears[1], ]) - (raw[, joinYears[2], ] - raw[, joinYears[1], ]),
-    NULL
-  ) / (joinYears[2] - joinYears[1])
-
-  elapsed <- laterYears - joinYears[2]
-  remaining <- 1 - .smootherstep(pmin(1, elapsed / fadeLength))
-  for (i in seq_along(laterYears)) {
-    correction <- (levelCorrection + slopeCorrection * elapsed[i]) * remaining[i]
-    smoothed[, laterYears[i], ] <- raw[, laterYears[i], ] + setYears(correction, laterYears[i])
-  }
-  return(smoothed)
-}
-
-.checkFadeLength <- function(value, name) {
-  if (!is.numeric(value) || length(value) != 1 || value <= 0) {
-    stop(name, " must be a single positive number (larger than 0).")
-  }
-}
-
-# C2-continuous transition from 0 to 1 on [0, 1]
-.smootherstep <- function(t) {
-  6 * t^5 - 15 * t^4 + 10 * t^3
 }

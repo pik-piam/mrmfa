@@ -16,4 +16,5 @@
 ^\.vscode$
 ^CODE_STYLE\.md$
 ^CONTRIBUTING\.md$
+^AGENTS\.md$
 ^\.git$
