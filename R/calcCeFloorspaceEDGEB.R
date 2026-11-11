@@ -24,14 +24,14 @@ calcCeFloorspaceEDGEB <- function(scenarios = "SSP2", collapse = TRUE, smooth = 
   # smooth if requested
   if (smooth) {
     # smooth data while keeping the historical period identical across scenarios
-    # exclude data beyond 2100 from smoothing due to low data quality
-    years <- floorspace_years[floorspace_years <= 2100]
     scens <- getItems(floorspace, dim = "scenario")
     refScenario <- if ("SSP2" %in% scens) "SSP2" else scens[1]
-    floorspace[, years] <- toolHistoricallyConsistentSmoothing(
-      floorspace[, years],
+    floorspace <- toolHistoricallyConsistentSmoothing(
+      floorspace,
       refScenario = refScenario,
-      dof = dof
+      dof = dof,
+      # data beyond 2100 is not smoothed due to low data quality, but joined continuously
+      lastSmoothedYear = 2100
     )
   }
 
