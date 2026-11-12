@@ -2,19 +2,20 @@
 #' "Substantial global carbon uptake by cement carbonation"
 #' DOI: 10.1038/ngeo2840
 #'
+#' Only the average split of cement use in China is read (sheet "SI data 5", A18:B29). The yearly
+#' building/civil shares are available for three years only (1998, 2000, 2001), so the average is used.
+#' Note: the split within buildings is based on shares of completed floor area (note **** of the sheet).
+#'
 #' @author Bennet Weiss
-#' @param subtype Variable to be read in.
-readXi2016 <- function(subtype) {
+readXi2016 <- function() {
   path <- file.path("v1", "Supplement.xlsx")
   # sheet SI data 2: split of mortar share across different use types (only relevant for china)
   # sheet SI data 5: split of cement across these same use types
   # China: clear differentiation between Res/Com/Ind/Civ possible
-  # USA: Com/Ind differentiation not possible, Res/Civ possible
-  # split could be inferred from China
   # Sheet SI data 6: concrete strength split, for China also as function of use type
 
   # prepare China data
-  stock_type_mapping_china <- c(
+  end_use_mapping_china <- c(
     "Residential building" = "Residential",
     "Office building" = "Commercial",
     "Commercial building" = "Commercial",
@@ -29,53 +30,14 @@ readXi2016 <- function(subtype) {
 
   # cut out unnecessary aggregation of buildings (1st row)
   data_china <- readxl::read_xlsx(path, sheet = "SI data 5", range = "A18:B29")[-1, ]
-  data_china$stock_type <- stock_type_mapping_china[data_china[["Cement consumption types"]]]
+  data_china$end_use <- end_use_mapping_china[data_china[["Cement consumption types"]]]
   data_china <- data_china[, -1]
-  names(data_china) <- c("value", "stock_type")
-  data_china <- stats::aggregate(`value` ~ stock_type, data = data_china, sum)
+  names(data_china) <- c("value", "End Use")
+  data_china <- stats::aggregate(`value` ~ `End Use`, data = data_china, sum)
 
   data_china$region <- "CHN"
 
-  # prepare USA data
-  stock_type_mapping_usa <- c(
-    "Residential buildings" = "Residential",
-    "Commercial and Industrial buildings" = "Commercial/Industrial", # also Ind, but proportion Civ/Ind taken from China
-    "Water and waste management" = "Civil Engineering",
-    "Streets and highway" = "Civil Engineering",
-    "Public buildings" = "Commercial/Industrial",
-    "Farm" = "Commercial/Industrial", # Actually Ind, but proportion Civ/Ind taken from China
-    "Other" = "Commercial/Industrial",
-    "Utilities" = "Civil Engineering"
-  )
-
-  # cut out temporal data and keep only first and last column
-  data_usa <- readxl::read_xlsx(path, sheet = "SI data 5", range = "A5:H13")
-  data_usa <- data_usa[, c(1, ncol(data_usa))]
-  data_usa$stock_type <- stock_type_mapping_usa[data_usa[["Concrete utilization category"]]]
-  data_usa <- data_usa[, -1]
-  names(data_usa) <- c("value", "stock_type")
-  data_usa <- stats::aggregate(`value` ~ stock_type, data = data_usa, sum)
-
-  # split Commercial/Industrial row
-  # get split from China
-  ind_share_china <- data_china[data_china$stock_type == "Industrial", "value"]
-  com_share_china <- data_china[data_china$stock_type == "Commercial", "value"]
-  com_share <- com_share_china / (com_share_china + ind_share_china)
-
-  # apply split from China
-  comind_value <- data_usa$value[data_usa$stock_type == "Commercial/Industrial"] # extract com value
-  data_usa <- data_usa[data_usa$stock_type != "Commercial/Industrial", ] # remove com value
-  new_rows <- data.frame(
-    stock_type = c("Industrial", "Commercial"),
-    value = c(comind_value * com_share, comind_value * (1 - com_share))
-  )
-  data_usa <- rbind(data_usa, new_rows)
-
-  data_usa$region <- "USA"
-
-  # combine china and USA
-  data <- rbind(data_usa, data_china)
-  data <- data[, c("region", "stock_type", "value")]
+  data <- data_china[, c("region", "End Use", "value")]
   x <- as.magpie(data, spatial = 1)
   return(x)
 }
