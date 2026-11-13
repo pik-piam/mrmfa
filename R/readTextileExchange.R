@@ -22,7 +22,7 @@
 #' \dontrun{
 #' a <- readSource(type = "TextileExchange", subtype = "timeseries_by_type", convert = FALSE)
 #' }
-#' @importFrom magclass as.magpie getComment<-
+#' @importFrom magclass as.magpie
 #'
 readTextileExchange <- function(subtype) {
   # ---------------------------------------------------------------------------

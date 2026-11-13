@@ -50,6 +50,7 @@ importFrom(magclass,
   setItems,
   setNames,
   setYears,
+  time_interpolate,
   where
 )
 importFrom(magpiesets,findset)
