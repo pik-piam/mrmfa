@@ -6,7 +6,7 @@
 #' \enumerate{
 #'   \item Country data, in order of priority: CEMBUREAU 2023 (EU27 members except Germany),
 #'     VDZ 2021 (Germany), CRISIL FY21 and FY25 (India), SNIC 2010 (Brazil), Xi et al. (2016)
-#'     (China, average, constant over time) and Cao et al. (2017) for all digitised country series (incl. USA).
+#'     (China, average, constant over time) and Cao et al. (2017) for all digitised country series.
 #'   \item For countries with data, the years in between are interpolated linearly. Outside the data
 #'     range, the first (last) value is held constant.
 #'   \item Countries without data get a split that is linear in GDP per capita between India (mean of FY21 and FY25)
@@ -66,9 +66,8 @@ calcCeEndUseSplit <- function() {
     dimSums(xiChina[, , c("Commercial", "Industrial")], dim = 3), chinaSplit[, , "Non-Residential"]
   )
   data["CHN", , ] <- chinaSplit
-  # Cao et al. (2017): all digitised country series are used (incl. USA). Some have unusually low
-  # residential shares (BGR, CZE, HUN, SWE: <= 11 %), which likely reflects national building
-  # classifications; no other source contradicts them.
+  # Cao et al. (2017): all digitised region series are used (excl. ROW).
+  # Note: Some series have unusually low residential shares (BGR, CZE, HUN, SWE, FSU: <= 14 %)
   data <- fillIfMissing(data, cao, getItems(cao, dim = 1))
 
   # 2. interpolate between data years; outside the data range, hold the first (last) value constant

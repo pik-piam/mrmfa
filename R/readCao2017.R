@@ -7,11 +7,11 @@
 #' (CE) from Fig. S1 of the supporting information (pp. S6-S10), based on statistics of cement
 #' industry associations (e.g. PCA, Cembureau).
 #'
-#' The values are not tabulated in the source; they were digitised by eye from the charts
-#' (accuracy about +-3 percentage points, up to +-5 in steep sections) and are stored in
-#' \code{values.csv}. Only the country panels were digitised, not the aggregates (Former Soviet
-#' Union, Other European Countries, The Rest of World). The series are flat (back-cast) before
-#' about 2000; the first year of each country carries this flat level. See \code{SOURCE_INFO.txt}.
+#' The values are not tabulated in the source; they were extracted from the vector paths of the
+#' charts (precision about +-0.1 percentage points) and are stored in \code{values.csv}. All 26
+#' panels are included; the aggregate panels use the codes FSU (Former Soviet Union), OEU (Other
+#' European Countries) and ROW (The Rest of World). The series are flat (back-cast) before
+#' about 2000; the first year of each panel carries this flat level. See \code{SOURCE_INFO.txt}.
 #'
 #' @author Bennet Weiss
 #' @return magpie object of end-use shares in percent, not normalised.
