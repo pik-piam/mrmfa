@@ -5,20 +5,16 @@
 calcCeBuildingsMI <- function(subtype = "concrete") {
   x <- readSource("RASMI", subtype)
   x <- x / 1000 # convert kg to t
-  # MI of 0 for U (unspecified) structure
-  x <- add_columns(x, addnm = "U", dim = 3.2, fill = 0)
+  # MI of 0 for O (other) structure: earth, metal (except steel), informal and other materials
+  # and for U (unspecified) structure, which holds no buildings (see calcCeStructureSplit)
+  x <- add_columns(x, addnm = c("Other Structure", "Unspecified Structure"), dim = 3.2, fill = 0)
 
   getSets(x)["d3.1"] <- "End Use"
   # use floor area for weight
   weight <- calcOutput("CeFloorspaceGEM", subtype = c("Function", "Structure"), aggregate = FALSE)
+  weight <- add_columns(weight, addnm = "Unspecified Structure", dim = 3.2, fill = 0)
   # country without floorspace should still get MI if aggregated on country level
   weight[weight == 0] <- 1e-9
-
-  # use MFA item names
-  x <- toolCeRenameBuildingItems(x, dim = 3.1, type = "End Use")
-  x <- toolCeRenameBuildingItems(x, dim = 3.2, type = "Structure")
-  weight <- toolCeRenameBuildingItems(weight, dim = 3.1, type = "End Use")
-  weight <- toolCeRenameBuildingItems(weight, dim = 3.2, type = "Structure")
 
   description <- paste(
     "Material Intensity of buildings by end use and structure.",

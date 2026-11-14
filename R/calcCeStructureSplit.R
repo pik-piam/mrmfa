@@ -12,6 +12,11 @@ calcCeStructureSplit <- function() {
   # toolFillWithRegionAvg only accepts a single data dimension element, so loop over end uses and structure
   h12 <- toolGetMapping("h12.csv", type = "regional", where = "mappingfolder")
   relFloorArea <- replace_non_finite(relFloorArea, replace = NA)
+  # end uses consisting only of other structures are assumed to miss data (e.g. Singapore single-family homes)
+  # We set all of the structure shares to NA, they will subsequently be filled with the H12 region average.
+  onlyOther <- collapseDim(relFloorArea[, , "Other Structure"] > 1 - 1e-9, dim = 3.2)
+  relFloorArea[magpie_expand(onlyOther, relFloorArea)] <- NA
+
   filled <- lapply(getItems(relFloorArea, dim = 3.1), function(endUse) {
     dataSub <- relFloorArea[, , endUse]
     weightSub <- collapseDim(floorArea_byFunction[, , endUse])
@@ -28,14 +33,13 @@ calcCeStructureSplit <- function() {
     mbind(slices)
   })
   relFloorArea <- mbind(filled)
+  # The unspecified structure holds no buildings. It is the placeholder for material without
+  # structure information (industrial and civil engineering concrete, mortar) in the cement MFA.
+  relFloorArea <- add_columns(relFloorArea, addnm = "Unspecified Structure", dim = 3.2, fill = 0)
 
   # output
   getSets(relFloorArea)["d3.1"] <- "End Use"
-  # use MFA item names
-  relFloorArea <- toolCeRenameBuildingItems(relFloorArea, dim = 3.1, type = "End Use")
-  relFloorArea <- toolCeRenameBuildingItems(relFloorArea, dim = 3.2, type = "Structure")
   weight <- floorArea_byFunction # use normalizing floor area as weight
-  weight <- toolCeRenameBuildingItems(weight, dim = 3, type = "End Use")
   weight[weight == 0] <- 1e-9
   unit <- "ratio"
   description <- paste0(

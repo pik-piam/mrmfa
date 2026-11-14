@@ -118,10 +118,10 @@ fullMFA <- function(rev = 0,
     calcOutput("CeLifetimeRelStd", file = "ce_lifetime_rel_std.cs4r", aggregate = FALSE)
     calcOutput("CeClinkerRatio", file = "ce_clinker_ratio.cs4r", years = start_historical:end_historical)
     calcOutput("CeCementRatio", file = "ce_cement_ratio.cs4r")
-    calcOutput("CeCementLosses", file = "ce_cement_losses.cs4r", subtype = "cement_loss_construction", aggregate = FALSE)
-    calcOutput("CeCementLosses", file = "ce_clinker_losses.cs4r", subtype = "clinker_loss_production", aggregate = FALSE)
+    calcOutput("CeLossRates", file = "ce_cement_loss_rate.cs4r", subtype = "cement_loss_construction")
+    calcOutput("CeLossRates", file = "ce_clinker_loss_rate.cs4r", subtype = "clinker_loss_production")
     calcOutput("CeConstructionMaterialSplit", file = "ce_construction_material_split.cs4r")
-    calcOutput("CeEndUseSplit", file = "ce_end_use_split.cs4r")
+    calcOutput("CeEndUseSplit", file = "ce_end_use_split.cs4r", years = start_historical:end_historical)
     # Carbonation
     calcOutput("CeCaOCarbonationShare", file = "ce_cao_carbonation_share.cs4r", aggregate = FALSE)
     calcOutput("CeCaOContent", file = "ce_ckd_cao_ratio.cs4r", subtype = "CKD", aggregate = FALSE)
@@ -140,7 +140,8 @@ fullMFA <- function(rev = 0,
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_min.cs4r", subtype = "min", aggregate = FALSE)
     calcOutput("CeWasteSizeBound", file = "ce_waste_size_max.cs4r", subtype = "max", aggregate = FALSE)
     # Service demand / bottom-up
-    calcOutput("CeFloorspaceEDGEB", file = "ce_floorspace.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = 1990:end_future)
+    calcOutput("CeFloorspace", file = "ce_floorspace_pc.cs4r", perCapita = TRUE, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = 1990:end_future)
+    calcOutput("CeFloorspaceNetToGross", file = "ce_floorspace_net_to_gross.cs4r")
     calcOutput("CeBuildingsMI", file = "ce_concrete_building_mi.cs4r", subtype = "concrete")
     calcOutput("CeResidentialTypeSplit", file = "ce_residential_type_split.cs4r")
     calcOutput("CeStructureSplit", file = "ce_structure_split.cs4r")

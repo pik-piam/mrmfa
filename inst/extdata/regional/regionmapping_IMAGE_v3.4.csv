@@ -1,0 +1,250 @@
+X;CountryCode;RegionCode;RegionName
+Aruba;ABW;RCAM;Central America
+Afghanistan;AFG;RSAS;Rest of South Asia
+Angola;AGO;RSAF;Rest of Southern Africa
+Anguilla;AIA;RCAM;Central America
+Aland Islands;ALA;WEU;Western Europe
+Albania;ALB;CEU;Central Europe
+Andorra;AND;WEU;Western Europe
+United Arab Emirates;ARE;ME;Middle East
+Argentina;ARG;RSAM;Rest of South America
+Armenia;ARM;RUS;Russia Region
+American Samoa;ASM;OCE;Oceania
+Antarctica;ATA;RSAM;Rest of South America
+French Southern Territories;ATF;OCE;Oceania
+Antigua and Barbuda;ATG;RCAM;Central America
+Australia;AUS;OCE;Oceania
+Austria;AUT;WEU;Western Europe
+Azerbaijan;AZE;RUS;Russia Region
+Burundi;BDI;EAF;Eastern Africa
+Belgium;BEL;WEU;Western Europe
+Benin;BEN;WAF;Western Africa
+Bonaire, Sint Eustatius and Saba;BES;RCAM;Central America
+Burkina Faso;BFA;WAF;Western Africa
+Bangladesh;BGD;RSAS;Rest of South Asia
+Bulgaria;BGR;CEU;Central Europe
+Bahrain;BHR;ME;Middle East
+Bahamas;BHS;RCAM;Central America
+Bosnia and Herzegovina;BIH;CEU;Central Europe
+Saint Barthelemy;BLM;RCAM;Central America
+Belarus;BLR;UKR;Ukraine Region
+Belize;BLZ;RCAM;Central America
+Bermuda;BMU;RCAM;Central America
+Bolivia, Plurinational State of;BOL;RSAM;Rest of South America
+Brazil;BRA;BRA;Brazil
+Barbados;BRB;RCAM;Central America
+Brunei Darussalam;BRN;SEAS;Southeastern Asia
+Bhutan;BTN;RSAS;Rest of South Asia
+Bouvet Island;BVT;RSAM;Rest of South America
+Botswana;BWA;RSAF;Rest of Southern Africa
+Central African Republic;CAF;WAF;Western Africa
+Canada;CAN;CAN;Canada
+Cocos (Keeling) Islands;CCK;OCE;Oceania
+Switzerland;CHE;WEU;Western Europe
+Chile;CHL;RSAM;Rest of South America
+China;CHN;CHN;China Region
+Cote d Ivoire;CIV;WAF;Western Africa
+Cameroon;CMR;WAF;Western Africa
+Congo, the Democratic Republic of the;COD;WAF;Western Africa
+Congo;COG;WAF;Western Africa
+Cook Islands;COK;OCE;Oceania
+Colombia;COL;RSAM;Rest of South America
+Comoros;COM;EAF;Eastern Africa
+Cape Verde;CPV;WAF;Western Africa
+Costa Rica;CRI;RCAM;Central America
+Cuba;CUB;RCAM;Central America
+Curacao;CUW;RCAM;Central America
+Christmas Island;CXR;OCE;Oceania
+Cayman Islands;CYM;RCAM;Central America
+Cyprus;CYP;CEU;Central Europe
+Czech Republic;CZE;CEU;Central Europe
+Germany;DEU;WEU;Western Europe
+Djibouti;DJI;EAF;Eastern Africa
+Dominica;DMA;RCAM;Central America
+Denmark;DNK;WEU;Western Europe
+Dominican Republic;DOM;RCAM;Central America
+Algeria;DZA;NAF;Northern Africa
+Ecuador;ECU;RSAM;Rest of South America
+Egypt;EGY;NAF;Northern Africa
+Eritrea;ERI;EAF;Eastern Africa
+Western Sahara;ESH;NAF;Northern Africa
+Spain;ESP;WEU;Western Europe
+Estonia;EST;CEU;Central Europe
+Ethiopia;ETH;EAF;Eastern Africa
+Finland;FIN;WEU;Western Europe
+Fiji;FJI;OCE;Oceania
+Falkland Islands (Malvinas);FLK;RSAM;Rest of South America
+France;FRA;WEU;Western Europe
+Faroe Islands;FRO;WEU;Western Europe
+Micronesia, Federated States of;FSM;OCE;Oceania
+Gabon;GAB;WAF;Western Africa
+United Kingdom;GBR;WEU;Western Europe
+Georgia;GEO;RUS;Russia Region
+Guernsey;GGY;WEU;Western Europe
+Ghana;GHA;WAF;Western Africa
+Gibraltar;GIB;WEU;Western Europe
+Guinea;GIN;WAF;Western Africa
+Guadeloupe;GLP;RCAM;Central America
+Gambia;GMB;WAF;Western Africa
+Guinea-Bissau;GNB;WAF;Western Africa
+Equatorial Guinea;GNQ;WAF;Western Africa
+Greece;GRC;WEU;Western Europe
+Grenada;GRD;RCAM;Central America
+Greenland;GRL;WEU;Western Europe
+Guatemala;GTM;RCAM;Central America
+French Guiana;GUF;RSAM;Rest of South America
+Guam;GUM;OCE;Oceania
+Guyana;GUY;RSAM;Rest of South America
+Hong Kong;HKG;CHN;China Region
+Heard Island and McDonald Islands;HMD;OCE;Oceania
+Honduras;HND;RCAM;Central America
+Croatia;HRV;CEU;Central Europe
+Haiti;HTI;RCAM;Central America
+Hungary;HUN;CEU;Central Europe
+Indonesia;IDN;INDO;Indonesia Region
+Isle of Man;IMN;WEU;Western Europe
+India;IND;INDIA;India
+British Indian Ocean Territory;IOT;RSAS;Rest of South Asia
+Ireland;IRL;WEU;Western Europe
+Iran, Islamic Republic of;IRN;ME;Middle East
+Iraq;IRQ;ME;Middle East
+Iceland;ISL;WEU;Western Europe
+Israel;ISR;ME;Middle East
+Italy;ITA;WEU;Western Europe
+Jamaica;JAM;RCAM;Central America
+Jersey;JEY;WEU;Western Europe
+Jordan;JOR;ME;Middle East
+Japan;JPN;JAP;Japan
+Kazakhstan;KAZ;STAN;Central Asia
+Kenya;KEN;EAF;Eastern Africa
+Kyrgyzstan;KGZ;STAN;Central Asia
+Cambodia;KHM;SEAS;Southeastern Asia
+Kiribati;KIR;OCE;Oceania
+Saint Kitts and Nevis;KNA;RCAM;Central America
+Korea, Republic of;KOR;KOR;Korea Region
+Kuwait;KWT;ME;Middle East
+Lao People's Democratic Republic;LAO;SEAS;Southeastern Asia
+Lebanon;LBN;ME;Middle East
+Liberia;LBR;WAF;Western Africa
+Libya;LBY;NAF;Northern Africa
+Saint Lucia;LCA;RCAM;Central America
+Liechtenstein;LIE;WEU;Western Europe
+Sri Lanka;LKA;RSAS;Rest of South Asia
+Lesotho;LSO;RSAF;Rest of Southern Africa
+Lithuania;LTU;CEU;Central Europe
+Luxembourg;LUX;WEU;Western Europe
+Latvia;LVA;CEU;Central Europe
+Macao;MAC;CHN;China Region
+Saint Martin (French part);MAF;RCAM;Central America
+Morocco;MAR;NAF;Northern Africa
+Monaco;MCO;WEU;Western Europe
+Moldova, Republic of;MDA;UKR;Ukraine Region
+Madagascar;MDG;EAF;Eastern Africa
+Maldives;MDV;RSAS;Rest of South Asia
+Mexico;MEX;MEX;Mexico
+Marshall Islands;MHL;OCE;Oceania
+Macedonia, the former Yugoslav Republic of;MKD;CEU;Central Europe
+Mali;MLI;WAF;Western Africa
+Malta;MLT;WEU;Western Europe
+Myanmar;MMR;SEAS;Southeastern Asia
+Montenegro;MNE;CEU;Central Europe
+Mongolia;MNG;CHN;China Region
+Northern Mariana Islands;MNP;OCE;Oceania
+Mozambique;MOZ;RSAF;Rest of Southern Africa
+Mauritania;MRT;WAF;Western Africa
+Montserrat;MSR;RCAM;Central America
+Martinique;MTQ;RCAM;Central America
+Mauritius;MUS;EAF;Eastern Africa
+Malawi;MWI;RSAF;Rest of Southern Africa
+Malaysia;MYS;SEAS;Southeastern Asia
+Mayotte;MYT;EAF;Eastern Africa
+Namibia;NAM;RSAF;Rest of Southern Africa
+New Caledonia;NCL;OCE;Oceania
+Niger;NER;WAF;Western Africa
+Norfolk Island;NFK;OCE;Oceania
+Nigeria;NGA;WAF;Western Africa
+Nicaragua;NIC;RCAM;Central America
+Niue;NIU;OCE;Oceania
+Netherlands;NLD;WEU;Western Europe
+Norway;NOR;WEU;Western Europe
+Nepal;NPL;RSAS;Rest of South Asia
+Nauru;NRU;OCE;Oceania
+New Zealand;NZL;OCE;Oceania
+Oman;OMN;ME;Middle East
+Pakistan;PAK;RSAS;Rest of South Asia
+Panama;PAN;RCAM;Central America
+Pitcairn;PCN;OCE;Oceania
+Peru;PER;RSAM;Rest of South America
+Philippines;PHL;SEAS;Southeastern Asia
+Palau;PLW;OCE;Oceania
+Papua New Guinea;PNG;INDO;Indonesia Region
+Poland;POL;CEU;Central Europe
+Puerto Rico;PRI;RCAM;Central America
+Korea, Democratic People's Republic of;PRK;KOR;Korea Region
+Portugal;PRT;WEU;Western Europe
+Paraguay;PRY;RSAM;Rest of South America
+Palestine, State of;PSE;ME;Middle East
+French Polynesia;PYF;OCE;Oceania
+Qatar;QAT;ME;Middle East
+Reunion;REU;EAF;Eastern Africa
+Romania;ROU;CEU;Central Europe
+Russian Federation;RUS;RUS;Russia Region
+Rwanda;RWA;EAF;Eastern Africa
+Saudi Arabia;SAU;ME;Middle East
+Sudan;SDN;EAF;Eastern Africa
+Senegal;SEN;WAF;Western Africa
+Singapore;SGP;SEAS;Southeastern Asia
+South Georgia and the South Sandwich Islands;SGS;RSAM;Rest of South America
+Saint Helena, Ascension and Tristan da Cunha;SHN;WAF;Western Africa
+Svalbard and Jan Mayen;SJM;WEU;Western Europe
+Solomon Islands;SLB;OCE;Oceania
+Sierra Leone;SLE;WAF;Western Africa
+El Salvador;SLV;RCAM;Central America
+San Marino;SMR;WEU;Western Europe
+Somalia;SOM;EAF;Eastern Africa
+Saint Pierre and Miquelon;SPM;USA;United States
+Serbia;SRB;CEU;Central Europe
+South Sudan;SSD;EAF;Eastern Africa
+Sao Tome and Principe;STP;WAF;Western Africa
+Suriname;SUR;RSAM;Rest of South America
+Slovakia;SVK;CEU;Central Europe
+Slovenia;SVN;CEU;Central Europe
+Sweden;SWE;WEU;Western Europe
+Swaziland;SWZ;RSAF;Rest of Southern Africa
+Sint Maarten (Dutch part);SXM;RCAM;Central America
+Seychelles;SYC;EAF;Eastern Africa
+Syrian Arab Republic;SYR;ME;Middle East
+Turks and Caicos Islands;TCA;RCAM;Central America
+Chad;TCD;WAF;Western Africa
+Togo;TGO;WAF;Western Africa
+Thailand;THA;SEAS;Southeastern Asia
+Tajikistan;TJK;STAN;Central Asia
+Tokelau;TKL;OCE;Oceania
+Turkmenistan;TKM;STAN;Central Asia
+Timor-Leste;TLS;INDO;Indonesia Region
+Tonga;TON;OCE;Oceania
+Trinidad and Tobago;TTO;RCAM;Central America
+Tunisia;TUN;NAF;Northern Africa
+Turkey;TUR;TUR;Turkey
+Tuvalu;TUV;OCE;Oceania
+Taiwan, Province of China;TWN;CHN;China Region
+Tanzania, United Republic of;TZA;RSAF;Rest of Southern Africa
+Uganda;UGA;EAF;Eastern Africa
+Ukraine;UKR;UKR;Ukraine Region
+United States Minor Outlying Islands;UMI;OCE;Oceania
+Uruguay;URY;RSAM;Rest of South America
+United States;USA;USA;United States
+Uzbekistan;UZB;STAN;Central Asia
+Holy See (Vatican City State);VAT;WEU;Western Europe
+Saint Vincent and the Grenadines;VCT;RCAM;Central America
+Venezuela, Bolivarian Republic of;VEN;RSAM;Rest of South America
+Virgin Islands, British;VGB;RCAM;Central America
+Virgin Islands, U.S.;VIR;RCAM;Central America
+Viet Nam;VNM;SEAS;Southeastern Asia
+Vanuatu;VUT;OCE;Oceania
+Wallis and Futuna;WLF;OCE;Oceania
+Samoa;WSM;OCE;Oceania
+Yemen;YEM;ME;Middle East
+South Africa;ZAF;SAF;South Africa
+Zambia;ZMB;RSAF;Rest of Southern Africa
+Zimbabwe;ZWE;RSAF;Rest of Southern Africa

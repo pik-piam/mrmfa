@@ -30,6 +30,13 @@ readPostedBuiltLifespan <- function() {
   expanded_data$start_year <- NULL
   expanded_data$end_year <- NULL
 
+  # use MFA item names
+  endUseNames <- c(
+    Res = "Residential", Com = "Commercial", Ind = "Industrial", Civ = "Civil Engineering"
+  )
+  stopifnot("Unknown end use in PostedBuiltLifespan" = expanded_data$end_use %in% names(endUseNames))
+  expanded_data$end_use <- unname(endUseNames[expanded_data$end_use])
+
   ordered_data <- expanded_data[, c("region", "time", "end_use", "value")]
 
   x <- magclass::as.magpie(ordered_data, spatial = 1, temporal = 2)

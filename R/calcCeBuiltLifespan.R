@@ -4,7 +4,6 @@ calcCeBuiltLifespan <- function() {
   # Prepare data to have same dimensions as main driver cement production
   weight <- calcOutput("CeCementProduction", aggregate = FALSE)
   data <- readSource("PostedBuiltLifespan")
-  data <- toolCeRenameBuildingItems(data, dim = 3, type = "End Use")
 
   # Extend constantly into the past and future to cover the full time range of cement production
   data <- toolInterpolate(data, years = getYears(weight), type = "linear", extrapolate = TRUE)

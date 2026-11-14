@@ -2,7 +2,6 @@
 #' @author Bennet Weiss
 #' @param x Magpie object
 convertAndrew2019Cement <- function(x) {
-  # Puerto Rico (PRI) data is missing
   no_remove_warning <- c(
     # ── Only NA entries (all 145 years NA) ──
     "VDR", "East & West Pakistan", "Federation of Malaya-Singapore", "YMD",
@@ -46,7 +45,13 @@ convertAndrew2019Cement <- function(x) {
   magclass::getItems(x, dim = 1)[which(getItems(x, dim = 1) == "YEM (887)")] <- "YEM"
   magclass::getItems(x, dim = 1)[which(getItems(x, dim = 1) == "SDN (729)")] <- "SDN"
 
+  # Split USA (incl. Puerto Rico) into USA and PRI by GDP share.
+  # USA includes PRI since version 210505, see changelog at https://zenodo.org/records/4738593 (accessed 2026-11-02).
+  gdp <- calcOutput("CoGDP", years = getYears(x), aggregate = FALSE)[c("USA", "PRI"), , ]
+  usa_pri <- toolAggregate(x["USA", , ], rel = data.frame(from = "USA", to = c("USA", "PRI")), weight = gdp)
+  x <- mbind(x[getItems(x, dim = 1) != "USA", , ], usa_pri)
+
   x <- suppressWarnings(madrat::toolISOhistorical(x, additional_mapping = add_map))
-  x <- madrat::toolCountryFill(x, fill = NA, verbosity = 2, no_remove_warning = no_remove_warning)
+  x <- madrat::toolCountryFill(x, fill = NA, no_remove_warning = no_remove_warning)
   return(x)
 }

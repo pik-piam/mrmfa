@@ -64,15 +64,53 @@ fullVALIDATIONMFA <- function(rev = 0, runSections = NULL) {
 
   runSection <- function(name) name %in% runSections
 
-  if (runSection("steel")) {}
+  if (runSection("steel")) {
+    # Arp et al. 2026 (IMAGE) steel consumption ----
+    calcOutput(
+      type = "CoArp2026", subtype = "steel", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "Arp et al 2026")
+    )
+  }
 
-  if (runSection("cement")) {}
+  if (runSection("cement")) {
+    # Arp et al. 2026 (IMAGE) cement consumption ----
+    calcOutput(
+      type = "CoArp2026", subtype = "cement", file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "Arp et al 2026")
+    )
+
+    # IEA World Energy Outlook 2025 global cement production ----
+    calcOutput(
+      type = "CeProductionProjections", subtype = "IEAWEO2025", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "IEA WEO 2025")
+    )
+
+    # WCA 2024 cement demand forecast: global scenarios and regional BAU ----
+    calcOutput(
+      type = "CeProductionProjections", subtype = "WCA2024", file = valfile,
+      aggregate = FALSE, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "WCA 2024")
+    )
+    calcOutput(
+      type = "CeProductionProjections", subtype = "WCA2024", regional = TRUE, file = valfile,
+      aggregate = columnsForAggregation, append = TRUE,
+      warnNA = FALSE, try = FALSE,
+      writeArgs = list(model = "WCA 2024")
+    )
+  }
 
   if (runSection("plastic")) {
     # Pottinger 2024 plastics material flows (all scenarios) ----
     calcOutput(
       type = "PlPottinger", subtype = "all", file = valfile,
-      aggregate = columnsForAggregation, append = FALSE,
+      aggregate = columnsForAggregation, append = TRUE,
       warnNA = FALSE, try = FALSE,
       writeArgs = list(model = "Pottinger et al 2024")
     )

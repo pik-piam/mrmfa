@@ -1,0 +1,53 @@
+X;CountryCode;RegionCode
+United States;USA;USA
+Austria;AUT;AUT
+Belgium;BEL;BEL
+Bulgaria;BGR;BGR
+Germany;DEU;DEU
+Greece;GRC;GRC
+Czech Republic;CZE;CZE
+Denmark;DNK;DNK
+Hungary;HUN;HUN
+Italy;ITA;ITA
+Finland;FIN;FIN
+France;FRA;FRA
+Ireland;IRL;IRL
+Netherlands;NLD;NLD
+Poland;POL;POL
+Portugal;PRT;PRT
+Romania;ROU;ROU
+Spain;ESP;ESP
+Sweden;SWE;SWE
+United Kingdom;GBR;GBR
+Norway;NOR;NOR
+Switzerland;CHE;CHE
+Turkey;TUR;TUR
+Armenia;ARM;FSU
+Azerbaijan;AZE;FSU
+Belarus;BLR;FSU
+Estonia;EST;FSU
+Georgia;GEO;FSU
+Kazakhstan;KAZ;FSU
+Kyrgyzstan;KGZ;FSU
+Latvia;LVA;FSU
+Lithuania;LTU;FSU
+Moldova;MDA;FSU
+Russia;RUS;FSU
+Tajikistan;TJK;FSU
+Turkmenistan;TKM;FSU
+Ukraine;UKR;FSU
+Uzbekistan;UZB;FSU
+Albania;ALB;OEU
+Andorra;AND;OEU
+Cyprus;CYP;OEU
+Faroe Islands;FRO;OEU
+Iceland;ISL;OEU
+Luxembourg;LUX;OEU
+Malta;MLT;OEU
+Slovakia;SVK;OEU
+Bosnia and Herzegovina;BIH;OEU
+Croatia;HRV;OEU
+North Macedonia;MKD;OEU
+Montenegro;MNE;OEU
+Serbia;SRB;OEU
+Slovenia;SVN;OEU
