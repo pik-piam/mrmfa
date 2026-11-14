@@ -38,13 +38,13 @@ calcCeFloorspace <- function(perCapita = FALSE, scenarios = "SSP2", collapse = T
   # smooth if requested
   if (smooth) {
     # smooth data while keeping the historical period identical across scenarios
-    # exclude data beyond 2100 from smoothing due to low data quality
-    years <- floorspace_years[floorspace_years <= 2100]
     refScenario <- if ("SSP2" %in% scens) "SSP2" else scens[1]
-    floorspace_pc[, years] <- toolHistoricallyConsistentSmoothing(
-      floorspace_pc[, years],
+    floorspace_pc <- toolHistoricallyConsistentSmoothing(
+      floorspace_pc,
       refScenario = refScenario,
-      dof = dof
+      dof = dof,
+      # data beyond 2100 is not smoothed due to low data quality, but joined continuously
+      lastSmoothedYear = 2100
     )
   }
 

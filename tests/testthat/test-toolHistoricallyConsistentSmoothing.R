@@ -149,3 +149,80 @@ test_that("fade window truncated by end of data works", {
     toolHistoricallyConsistentSmoothing(x, lastHistYear = 2045, fadeLength = 20)
   )
 })
+
+# synthetic data: shared history, scenario-specific growth after 2020 and a wiggle from 2080 on, which the
+# smoothing spline does not follow, so that its value and slope in 2100 differ from the data
+makeExtendedData <- function(scenarios = c("SSP1", "SSP2")) {
+  years <- 1950:2150
+  x <- magclass::new.magpie(
+    cells_and_regions = c("DEU", "FRA"),
+    years = years,
+    names = scenarios,
+    fill = 0,
+    sets = c("region", "year", "scenario")
+  )
+  growthRates <- c(SSP1 = 0.5, SSP2 = 1)
+  wiggle <- 15 * sin((years - 2080) / 4) * (years >= 2080)
+  for (r in magclass::getItems(x, dim = 1)) {
+    for (s in scenarios) {
+      x[r, , s] <- 100 + (years - 1950)^1.2 + growthRates[[s]] * pmax(0, years - 2020) + wiggle
+    }
+  }
+  x
+}
+
+stepChange <- function(obj, year) {
+  values <- as.vector(obj["DEU", , "SSP1"])
+  years <- magclass::getYears(obj, as.integer = TRUE)
+  i <- which(years == year)
+  (values[i + 1] - values[i]) - (values[i] - values[i - 1])
+}
+
+test_that("values until lastSmoothedYear equal the smoothing of these years only", {
+  x <- makeExtendedData()
+  res <- toolHistoricallyConsistentSmoothing(x, lastSmoothedYear = 2100)
+  expected <- toolHistoricallyConsistentSmoothing(x[, 1950:2100, ])
+  expect_equal(as.vector(res[, 1950:2100, ]), as.vector(expected))
+})
+
+test_that("values until lastSmoothedYear do not depend on later years", {
+  x <- makeExtendedData()
+  y <- x
+  y[, 2101:2150, ] <- 2 * y[, 2101:2150, ]
+  expect_equal(
+    as.vector(toolHistoricallyConsistentSmoothing(x, lastSmoothedYear = 2100)[, 1950:2100, ]),
+    as.vector(toolHistoricallyConsistentSmoothing(y, lastSmoothedYear = 2100)[, 1950:2100, ])
+  )
+})
+
+test_that("later years join the smoothed trajectory without a jump in level or slope", {
+  x <- makeExtendedData()
+  res <- toolHistoricallyConsistentSmoothing(x, lastSmoothedYear = 2100, joinFadeLength = 20)
+  spliced <- x
+  spliced[, 1950:2100, ] <- toolHistoricallyConsistentSmoothing(x[, 1950:2100, ])
+
+  # at the join, the yearly step changes like in the unsmoothed data; the plain splice jumps
+  expect_lt(abs(stepChange(res, 2100) - stepChange(x, 2100)), 0.1)
+  expect_gt(abs(stepChange(spliced, 2100) - stepChange(x, 2100)), 3)
+})
+
+test_that("later years return to the unsmoothed data after the join fade window", {
+  x <- makeExtendedData()
+  res <- toolHistoricallyConsistentSmoothing(x, lastSmoothedYear = 2100, joinFadeLength = 20)
+  expect_equal(as.vector(res[, 2120:2150, ]), as.vector(x[, 2120:2150, ]))
+  expect_false(isTRUE(all.equal(as.vector(res[, 2101:2119, ]), as.vector(x[, 2101:2119, ]))))
+})
+
+test_that("lastSmoothedYear beyond the data only smooths", {
+  x <- makeExtendedData()[, 1950:2100, ]
+  expect_equal(
+    as.vector(toolHistoricallyConsistentSmoothing(x, lastSmoothedYear = 2100)),
+    as.vector(toolHistoricallyConsistentSmoothing(x))
+  )
+})
+
+test_that("invalid lastSmoothedYear and joinFadeLength raise errors", {
+  x <- makeExtendedData()
+  expect_error(toolHistoricallyConsistentSmoothing(x, lastSmoothedYear = 2100, joinFadeLength = 0), "joinFadeLength")
+  expect_error(toolHistoricallyConsistentSmoothing(x, lastSmoothedYear = 1950), "At least two years")
+})

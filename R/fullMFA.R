@@ -11,7 +11,7 @@
 #' @param driverScenarios Character vector or string specifying the scenarios to use for GDP and population data.
 #' @param runSections Character vector or string selecting which parts to run.
 #' Allowed values (see validSections): c("steel", "cement", "plastic"). NULL (default) runs all.
-#' @param end_future End year for future data (default: 2100).
+#' @param end_future End year for future data (default: 2150, the horizon of REMIND).
 #' @seealso
 #' \code{\link[madrat]{readSource}}, \code{\link[madrat]{getCalculations}},
 #' \code{\link[madrat]{calcOutput}}
@@ -26,7 +26,7 @@ fullMFA <- function(rev = 0,
                     gdpPerCapita = TRUE,
                     driverScenarios = c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5"),
                     runSections = NULL,
-                    end_future = 2100) {
+                    end_future = 2150) {
   # prepare section selector
   validSections <- c("steel", "cement", "plastic")
 
@@ -46,6 +46,9 @@ fullMFA <- function(rev = 0,
   if (runSection("steel")) {
     start_historical <- 1900
     end_historical <- 2022
+
+    calcOutput("CoScalars", file = "st_time_range.cs4r", aggregate = FALSE, unit = "year",
+               scalars = c(start_historical = start_historical, end_historical = end_historical, end_future = end_future))
 
     # common parameters
     calcOutput("CoPopulation", file = "st_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)
@@ -97,6 +100,9 @@ fullMFA <- function(rev = 0,
     start_historical <- 1880
     end_historical <- 2025
 
+    calcOutput("CoScalars", file = "ce_time_range.cs4r", aggregate = FALSE, unit = "year",
+               scalars = c(start_historical = start_historical, end_historical = end_historical, end_future = end_future))
+
     # common parameters
     calcOutput("CoPopulation", file = "ce_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)
     calcOutput("CoGDP", file = "ce_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)
@@ -146,6 +152,9 @@ fullMFA <- function(rev = 0,
   if (runSection("plastic")) {
     start_historical <- 1950
     end_historical <- 2024
+
+    calcOutput("CoScalars", file = "pl_time_range.cs4r", aggregate = FALSE, unit = "year",
+               scalars = c(start_historical = start_historical, end_historical = end_historical, end_future = end_future))
 
     # common parameters
     calcOutput("CoPopulation", file = "pl_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)
