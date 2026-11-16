@@ -17,7 +17,7 @@ calcCeFloorspaceNetToGross <- function() {
     c(
       "Conversion factor from net to gross floorspace, equal for all regions and common end uses.",
       "Based on:",
-      "Röck, M., Saade, M. R. M., Balouktsi, M. et al.",
+      "R\u00f6ck, M., Saade, M. R. M., Balouktsi, M. et al.",
       "Embodied GHG emissions of buildings - The hidden challenge for effective climate change mitigation.",
       "Applied Energy 258, 114107 (2020). https://doi.org/10.1016/j.apenergy.2019.114107"
     ),

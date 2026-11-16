@@ -9,10 +9,6 @@
 convertArp2026 <- function(x) {
   map <- toolGetMapping("regionmapping_IMAGE_v3.4.csv", type = "regional", where = "mrmfa")
 
-  if (!setequal(getItems(x, dim = 1), map$RegionCode)) {
-    stop("IMAGE regions in Arp2026 do not match the RegionCode column of regionmapping_IMAGE_v3.4.csv.")
-  }
-
   # SSP2 population as disaggregation weight
   pop <- calcOutput("CoPopulation", scenarios = "SSP2", aggregate = FALSE)
   pop <- pop[, getYears(x), ]

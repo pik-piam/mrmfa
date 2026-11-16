@@ -15,8 +15,7 @@ Crisil Intelligence (2025): "Market review of Indian cement sector. For JSW Ceme
 The shares of Figure 10 "Sectoral mix of cement demand" (PDF p. 26, title on p. 25) are
 transcribed in \code{values.csv}; see \code{SOURCE_INFO.txt} for the exact locations.
 Only FY21 and FY25 are used (FY30 is a projection). The source gives ranges; their midpoints
-are used. Fiscal years (April-March) are assigned to the calendar year of their start:
-FY21 to 2020 and FY25 to 2024.
+are used. Fiscal years are assigned to the calendar year of their start: FY21 to 2020 and FY25 to 2024.
 }
 \author{
 Bennet Weiss

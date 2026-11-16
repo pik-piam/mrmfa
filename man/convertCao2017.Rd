@@ -17,7 +17,6 @@ European Countries (OEU) as the countries of the region Europe in Table S2 witho
 their own (Albania, Andorra, Cyprus, Faroe Islands, Iceland, Malta, former Yugoslavia, and Slovakia and
 Luxembourg from the former Czechoslovakia and Belgium-Luxembourg). The panel "The Rest of World"
 (ROW) is dropped. Countries without data are filled with NA.
-Which country series are trusted is decided in \code{\link{calcCeEndUseSplit}}.
 }
 \author{
 Bennet Weiss

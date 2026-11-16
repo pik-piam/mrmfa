@@ -6,7 +6,7 @@
 #'          "exporter", but since madrat does not support regional aggregation for two spatial
 #'          dimensions with iso countries well (as in trade data), we just use one spatial dimension
 #'          for the importer
-#' @param rel A dataframe with the regional aggregation mapping with columns "country" and "region".
+#' @param rel A dataframe with the regional aggregation mapping with columns "country" and "region"
 #' @param flow_label The trade type: either "Exports" or "Imports"
 #' @return An aggregated magpie object
 #' @author Leonie Schweiger
@@ -16,12 +16,10 @@ toolAggregateBilateralTrade <- function(x, rel, flow_label) {
   # get grouping variables
   group_vars <- setdiff(colnames(df), c("t", "importer", "exporter", "value"))
 
-  rel <- rel[, c("country", "region")]
-
   # make sure that exporter_region != importer_region for every entry
   df <- df %>%
-    left_join(rel, by = c("importer" = "country")) %>%
-    left_join(rel, by = c("exporter" = "country")) %>%
+    left_join(rel[, c("country", "region")], by = c("importer" = "country")) %>%
+    left_join(rel[, c("country", "region")], by = c("exporter" = "country")) %>%
     select("t", "importer" = "region.x", "exporter" = "region.y", all_of(group_vars), "value") %>%
     filter(.data$importer != .data$exporter)
 
