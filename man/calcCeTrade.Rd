@@ -6,8 +6,9 @@
 Based on bilateral BACI data (from 1995, excluding the incomplete most recent year).
 Intra-regional trade is filtered out during aggregation.
 Extended to 'target_years' by backcasting using
-cement production, GDP, shipping costs and USGS trade data (for US only) as proxy.
-Clinker trade is linearly faded out between 1970 and 1950.}
+cement production, GDP (cement trade only), shipping costs and USGS trade data (for US only) as proxy.
+Clinker trade is linearly faded out between 1970 and 1950.
+Clinker trade of China is forecasted with the ratio to the reference of the last BACI year only.}
 \usage{
 calcCeTrade(subtype, category, HS = "92", target_years = NULL)
 }
@@ -45,8 +46,9 @@ Calculate cement/clinker trade data (imports and exports).
 Based on bilateral BACI data (from 1995, excluding the incomplete most recent year).
 Intra-regional trade is filtered out during aggregation.
 Extended to 'target_years' by backcasting using
-cement production, GDP, shipping costs and USGS trade data (for US only) as proxy.
+cement production, GDP (cement trade only), shipping costs and USGS trade data (for US only) as proxy.
 Clinker trade is linearly faded out between 1970 and 1950.
+Clinker trade of China is forecasted with the ratio to the reference of the last BACI year only.
 }
 \examples{
 \dontrun{

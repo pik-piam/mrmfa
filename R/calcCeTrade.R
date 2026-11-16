@@ -2,8 +2,9 @@
 #' Based on bilateral BACI data (from 1995, excluding the incomplete most recent year).
 #' Intra-regional trade is filtered out during aggregation.
 #' Extended to 'target_years' by backcasting using
-#' cement production, GDP, shipping costs and USGS trade data (for US only) as proxy.
+#' cement production, GDP (cement trade only), shipping costs and USGS trade data (for US only) as proxy.
 #' Clinker trade is linearly faded out between 1970 and 1950.
+#' Clinker trade of China is forecasted with the ratio to the reference of the last BACI year only.
 #'
 #' @param subtype Character string specifying the scope
 #'        - Imports
@@ -94,6 +95,7 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
   # complement base reference with GDP data where in regions without production.
   # GDP is converted to cement-equivalents with the yearly global cement intensity of GDP.
   # China is excluded as its construction boom (and potential decline) would dominate the global intensity.
+  # Not for clinker: without cement production, there is no use for imported clinker.
   gdp_reference <- calcOutput("CoGDP", aggregate = FALSE, years = target_years)
   zero_prod_regions <- getItems(production_reference[dimSums(production_reference, dim = c(2, 3)) == 0, , ], dim = 1)
   intensity_regions <- setdiff(getItems(production_reference, dim = 1), "CHN")
@@ -101,7 +103,10 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     dimSums(production_reference[intensity_regions, , ], dim = c(1, 3))
     / dimSums(gdp_reference[intensity_regions, , ], dim = c(1, 3))
   )
-  reference[zero_prod_regions, ] <- gdp_reference[zero_prod_regions, ] * cement_intensity
+  gdp_cement_reference <- gdp_reference[, target_years, ] * cement_intensity
+  if (category == "cement") {
+    reference[zero_prod_regions, ] <- gdp_cement_reference[zero_prod_regions, ]
+  }
 
   # add global shipping cost to base reference as bulk trade generally got cheaper over time
   shipping_cost <- readSource("OWID", subtype = "shipping_costs")
@@ -149,12 +154,24 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     reference <- reference * clinker_trade_factor
   }
 
-  .customAggregate <- function(x, rel, reference, flow_label, target_years) {
+  # separate reference for forecasting: zero production does not mean zero cement imports.
+  # Not for clinker: without cement production, there is no use for imported clinker.
+  forecast_reference <- reference
+  if (category == "cement") {
+    forecast_reference[forecast_reference == 0] <- NA
+    forecast_reference <- toolBackcastByReference(forecast_reference, gdp_cement_reference, doForecast = TRUE)
+  }
+
+  # Forecast regions with last ratio where we have confidence in the trend.
+  last_ratio_regions <- if (category == "clinker") "CHN" else NULL
+
+  .customAggregate <- function(x, rel, reference, forecast_reference, flow_label, target_years, last_ratio_regions) {
     # aggregate to regions filtering out intra-regional trade
     x <- toolAggregateBilateralTrade(x, rel, flow_label)
 
     # aggregate/disaggregate reference to regions given by regionmapping
     ref <- toolAggregate(reference, rel = rel)
+    forecast_ref <- toolAggregate(forecast_reference, rel = rel)
 
     # if some of the regions are missing in x due to the manual aggregation,
     # fill with NA to match all the ref regions
@@ -164,8 +181,16 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     }
 
     # Forecasting AND backcasting of x.
-    x <- toolBackcastByReference(x, ref, doForecast = FALSE)
-    x <- toolBackcastByReference(x, ref, doForecast = TRUE)
+    # Use median ratio for robustness against spikes in trade data to preserve recent trends)
+    x <- toolBackcastByReference(x, ref, maxN = 10, ratioMethod = "median", doForecast = FALSE)
+    last_ratio_regions <- intersect(last_ratio_regions, getItems(x, dim = 1))
+    forecast <- toolBackcastByReference(x, maxN = 5, forecast_ref, ratioMethod = "median", doForecast = TRUE)
+    if (length(last_ratio_regions) > 0) {
+      forecast[last_ratio_regions, , ] <- toolBackcastByReference(
+        x[last_ratio_regions, , ], forecast_ref[last_ratio_regions, , ], maxN = 1, doForecast = TRUE
+      )
+    }
+    x <- forecast
 
     # cut x to target years
     x <- x[, target_years, ]
@@ -187,7 +212,11 @@ calcCeTrade <- function(subtype, category, HS = "92", target_years = NULL) {
     weight = NULL,
     unit = "t",
     aggregationFunction = .customAggregate,
-    aggregationArguments = list(reference = reference, flow_label = subtype, target_years = target_years),
+    aggregationArguments = list(
+      reference = reference, forecast_reference = forecast_reference,
+      flow_label = subtype, target_years = target_years,
+      last_ratio_regions = last_ratio_regions
+    ),
     description = description,
     note = "dimensions: (Historical Time,Region,value)"
   )

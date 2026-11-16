@@ -99,7 +99,7 @@ toolInterpolateSliceNa <- function(x, type, extrapolate, ...) {
   # turn into data frame with same index
   df <- magclass::as.data.frame(x)
   df <- df[, c("Region", "Year", "Value")]
-  df <- tidyr::pivot_wider(df, names_from = .data$Year, values_from = .data$Value)
+  df <- tidyr::pivot_wider(df, names_from = "Year", values_from = "Value")
   df <- tibble::column_to_rownames(df, "Region")
 
   # transpose and use zoo methods to interpolate missing values

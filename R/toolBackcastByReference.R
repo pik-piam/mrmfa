@@ -14,14 +14,19 @@
 #' @param doInterpolate Logical, whether to interpolate missing values in x and ref
 #' before calculating weights. Recommended to ensure more stable weight calculation.
 #' @param maxN Maximum number of years to consider for weight calculation (defaults to 5).
+#' @param ratioMethod Method to aggregate the ratios of the considered years:
+#' "weighted" (linearly weighted mean, dafault) or "median" (robust against outliers).
 #' @param doForecast Logical, whether to do forecasting instead of backcasting.
 #' @param doMakeZeroNA Logical, whether to convert 0 values in final output to NA.
 #' As sometimes 0 is wrongly implicitly assumed.
 #'
-#' @author Merlin Jo Hosak, Falk Benke
+#' @author Merlin Jo Hosak, Falk Benke, Bennet Weiss
 #'
 toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
+                                    ratioMethod = c("weighted", "median"),
                                     doForecast = FALSE, doMakeZeroNA = FALSE) {
+  ratioMethod <- match.arg(ratioMethod)
+
   # internal functions ----
 
   # matches reference regions to regions of x
@@ -95,6 +100,17 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
     return(normalizedWeights)
   }
 
+  # marks missing values before the first year with data (backcasting) or after the
+  # last year with data (forecasting); rows without any data are marked completely
+  .extrapolationMask <- function(x, doForecast = FALSE) {
+    hasData <- !is.na(as.array(x))
+    # number of years with data up to (backcasting) or from (forecasting) each year
+    cumulate <- function(v) if (doForecast) rev(cumsum(rev(v))) else cumsum(v)
+    dataSoFar <- apply(hasData, c(1, 3), cumulate)
+    dim(dataSoFar) <- dim(hasData)[c(2, 1, 3)]
+    return(aperm(dataSoFar, c(2, 1, 3)) == 0)
+  }
+
   # prepare input objects ----
 
   x <- magpiesort(x)
@@ -154,8 +170,17 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
   # at most maxN overlapping years are considered, summing up to 1
   weights <- .calcBackcastWeights(ratios, maxN = maxN, doForecast = doForecast)
 
-  # calculate weighted average of ratios
-  finalRatio <- dimSums(ratios * weights, dim = 2, na.rm = TRUE)
+  if (ratioMethod == "median") {
+    # median of the ratios of the (at most maxN) years with non-NA weights
+    selectedRatios <- ratios
+    selectedRatios[is.na(weights)] <- NA
+    finalRatio <- magpply(selectedRatios, function(y) {
+      if (all(is.na(y))) 0 else stats::median(y, na.rm = TRUE)
+    }, MARGIN = c(1, 3))
+  } else {
+    # calculate weighted average of ratios
+    finalRatio <- dimSums(ratios * weights, dim = 2, na.rm = TRUE)
+  }
 
   # scale reference values according to weighted average ratio
   scaledRef <- ref * finalRatio
@@ -175,7 +200,9 @@ toolBackcastByReference <- function(x, ref, doInterpolate = TRUE, maxN = 5,
   refExtended[, refYears, ] <- scaledRef[, refYears, ]
 
   # fill gaps with scaled reference values
-  final[is.na(final)] <- refExtended[is.na(final)]
+  # only before the first year (backcasting) or after the last year (forecasting)
+  fillMask <- .extrapolationMask(final, doForecast)
+  final[fillMask] <- refExtended[fillMask]
 
   if (doMakeZeroNA) {
     final[final == 0] <- NA

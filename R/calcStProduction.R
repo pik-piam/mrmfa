@@ -46,7 +46,7 @@ calcStProduction <- function() {
 
   # use constant (last observation carried forward) interpolation for
   # remaining NaN values in the future
-  prod <- toolInterpolate(prod, type = "constant")
+  prod <- toolInterpolate(prod, type = "constant", extrapolate = TRUE)
 
   result <- list(
     x = prod,

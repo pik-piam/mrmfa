@@ -9,7 +9,7 @@ calcCeFloorspaceCorrectionFactor <- function() {
   # TODO check if 2020 data is scenario agnostic (as it should be)
   edgeb_floorspace <- dimSums(
     calcOutput(
-      type = "CeFloorspaceEDGEB",
+      type = "CeFloorspace",
       aggregate = FALSE
     )[, 2020, ],
     dim = 3
@@ -82,7 +82,7 @@ calcCeFloorspaceCorrectionFactor <- function() {
 #'                 Options are "floor area comparison" and "ratio eubucco/edgeb over cement production".
 plot_floorspace_data <- function(plotting) {
   edgeb_floor_area <- calcOutput(
-    type = "CeFloorspaceEDGEB",
+    type = "CeFloorspace",
     aggregate = FALSE
   )[, 2020]
   edgeb_floor_area <- dimReduce(edgeb_floor_area) # remove year 2020 dimension

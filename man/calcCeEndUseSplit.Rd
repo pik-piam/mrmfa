@@ -2,14 +2,30 @@
 % Please edit documentation in R/calcCeEndUseSplit.R
 \name{calcCeEndUseSplit}
 \alias{calcCeEndUseSplit}
-\title{Calculates how cement consumption is split into end uses:
-Residential, Commercial, Industrial and Civil Engineering.}
+\title{Calculates how cement consumption is split into end uses}
 \usage{
 calcCeEndUseSplit()
 }
+\value{
+List with magpie object of the split (region x year x end use) and metadata.
+}
 \description{
-Calculates how cement consumption is split into end uses:
-Residential, Commercial, Industrial and Civil Engineering.
+Splits cement consumption into the end uses Residential, Commercial, Industrial and
+Civil Engineering for each country and historical year.
+}
+\details{
+\enumerate{
+  \item Country data, in order of priority: CEMBUREAU 2023 (EU27 members except Germany),
+    VDZ 2021 (Germany), CRISIL FY21 and FY25 (India), SNIC 2010 (Brazil), Xi et al. (2016)
+    (China, average, constant over time) and Cao et al. (2017) for all digitised country series.
+  \item For countries with data, the years in between are interpolated linearly. Outside the data
+    range, the first (last) value is held constant.
+  \item Countries without data get a split that is linear in GDP per capita between India (mean of FY21 and FY25)
+    and the EU27 (2023). It is evaluated at the mean GDP per capita of 2006-2025 and held
+    constant over time. Above the EU27 GDP per capita, the EU27 split is kept.
+  \item Non-Residential is split into Commercial and Industrial with the industrial share of
+    Xi et al. (2016) for China (average), for all countries.
+}
 }
 \author{
 Bennet Weiss

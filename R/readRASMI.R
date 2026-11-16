@@ -1,5 +1,5 @@
 #' Read material intensity (MI) from RASMI.
-#' MI is a function of use/function type (RS, RM, NR) and structure type (S, T, C, M)
+#' MI is a function of use/function type (RS, RM, NR) and structure type (S, T, C, M), renamed to the MFA dim items
 #'
 #' Fishman, T., Mastrucci, A., Peled, Y. et al.
 #' RASMI: Global ranges of building material intensities differentiated by region, structure, and function.
@@ -14,7 +14,18 @@ readRASMI <- function(subtype = "concrete") {
   df <- readxl::read_xlsx(path, sheet = subtype)
   data <- select(df, "R5_32", "function", "structure", "p_50")
   data <- setNames(data, c("region", "Function", "Structure", "value"))
-  data$Function[data$Function == "NR"] <- "Com"
+  # use MFA dimension item names
+  functionNames <- c(
+    RS = "Residential Single-Family", RM = "Residential Multi-Family", NR = "Commercial"
+  )
+  structureNames <- c(
+    C = "Reinforced Concrete Structure", M = "Masonry Structure",
+    T = "Timber Structure", S = "Steel Frame Structure"
+  )
+  stopifnot("Unknown RASMI function" = data$Function %in% names(functionNames))
+  stopifnot("Unknown RASMI structure" = data$Structure %in% names(structureNames))
+  data$Function <- unname(functionNames[data$Function])
+  data$Structure <- unname(structureNames[data$Structure])
   x <- magclass::as.magpie(data, spatial = 1)
   return(x)
 }

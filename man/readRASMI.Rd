@@ -3,7 +3,7 @@
 \name{readRASMI}
 \alias{readRASMI}
 \title{Read material intensity (MI) from RASMI.
-MI is a function of use/function type (RS, RM, NR) and structure type (S, T, C, M)}
+MI is a function of use/function type (RS, RM, NR) and structure type (S, T, C, M), renamed to the MFA dim items}
 \usage{
 readRASMI(subtype = "concrete")
 }

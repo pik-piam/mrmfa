@@ -6,15 +6,12 @@
 "Substantial global carbon uptake by cement carbonation"
 DOI: 10.1038/ngeo2840}
 \usage{
-readXi2016(subtype)
-}
-\arguments{
-\item{subtype}{Variable to be read in.}
+readXi2016()
 }
 \description{
-Read data from Supplementary Material in Xi et al. (2016)
-"Substantial global carbon uptake by cement carbonation"
-DOI: 10.1038/ngeo2840
+Only the average split of cement use in China is read (sheet "SI data 5", A18:B29). The yearly
+building/civil shares are available for three years only (1998, 2000, 2001), so the average is used.
+Note: the split within buildings is based on shares of completed floor area (note **** of the sheet).
 }
 \author{
 Bennet Weiss

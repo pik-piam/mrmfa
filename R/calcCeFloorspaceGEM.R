@@ -10,8 +10,7 @@ calcCeFloorspaceGEM <- function(subtype = NULL, remove_ind = TRUE) {
   floorArea <- readSource("GlobalExposureModel")
 
   if (remove_ind) {
-    floorArea <- mselect(floorArea, "Stock_Type" = c("Res", "Com"))
-    floorArea <- mselect(floorArea, "Function" = c("Com", "RM", "RS"))
+    floorArea <- mselect(floorArea, "Function" = c("Commercial", "Residential Multi-Family", "Residential Single-Family"))
   }
 
   if (is.null(subtype)) {

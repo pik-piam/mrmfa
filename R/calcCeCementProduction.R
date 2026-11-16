@@ -25,7 +25,8 @@ calcCeCementProduction <- function() {
     }
   }
 
-  # Backcast missing data in the early historical period using global cement intensity (cement production per GDP)
+  # Backcast missing data in the early historical period and forecast missing recent data
+  # using global cement intensity (cement production per GDP)
   gdp <- calcOutput("CoGDP", years = getYears(x), aggregate = FALSE)
   gdp_with_data <- gdp
   gdp_with_data[is.na(x)] <- 0
@@ -33,8 +34,9 @@ calcCeCementProduction <- function() {
   getItems(global_cement_intensity, dim = 1) <- "GLO"
   reference_cement_production <- global_cement_intensity * gdp
   x <- toolBackcastByReference(x, reference_cement_production)
+  x <- toolBackcastByReference(x, reference_cement_production, doForecast = TRUE)
 
-  # Apply threshold again after backcasting
+  # Apply threshold again after backcasting and forecasting
   x[!is.na(x) & x < threshold] <- 0
 
   unit <- "tonnes (t)"
