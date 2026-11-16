@@ -28,7 +28,7 @@
 #' @author Bennet Weiss
 #' @return List with a MagPIE object of cement production (Mt/yr) in IAMC variables
 #' and metadata in calcOutput format.
-calcCeProductionProjections <- function(subtype, regional = FALSE) {
+calcCeProductionLiterature <- function(subtype, regional = FALSE) {
   # cement production in Mt/yr, one row per scenario or region
   if (subtype == "IEAWEO2025") {
     if (regional) {

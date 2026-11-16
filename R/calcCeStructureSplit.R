@@ -13,7 +13,7 @@ calcCeStructureSplit <- function() {
   h12 <- toolGetMapping("h12.csv", type = "regional", where = "mappingfolder")
   relFloorArea <- replace_non_finite(relFloorArea, replace = NA)
   # end uses consisting only of other structures are assumed to miss data (e.g. Singapore single-family homes)
-  # We set all of the structure shares to NA, they will subsequently be filled with the H12 region average.
+  # We set their structure shares to NA, they will subsequently be filled with the H12 region average.
   onlyOther <- collapseDim(relFloorArea[, , "Other Structure"] > 1 - 1e-9, dim = 3.2)
   relFloorArea[magpie_expand(onlyOther, relFloorArea)] <- NA
 
@@ -34,7 +34,7 @@ calcCeStructureSplit <- function() {
   })
   relFloorArea <- mbind(filled)
   # The unspecified structure holds no buildings. It is the placeholder for material without
-  # structure information (industrial and civil engineering concrete, mortar) in the cement MFA.
+  # structure information (top-down end uses) in the cement MFA.
   relFloorArea <- add_columns(relFloorArea, addnm = "Unspecified Structure", dim = 3.2, fill = 0)
 
   # output

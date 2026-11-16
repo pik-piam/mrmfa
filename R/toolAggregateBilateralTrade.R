@@ -7,7 +7,6 @@
 #'          dimensions with iso countries well (as in trade data), we just use one spatial dimension
 #'          for the importer
 #' @param rel A dataframe with the regional aggregation mapping with columns "country" and "region".
-#'          If "region" is missing, the column after "country" is used (as in toolAggregate)
 #' @param flow_label The trade type: either "Exports" or "Imports"
 #' @return An aggregated magpie object
 #' @author Leonie Schweiger
@@ -17,12 +16,6 @@ toolAggregateBilateralTrade <- function(x, rel, flow_label) {
   # get grouping variables
   group_vars <- setdiff(colnames(df), c("t", "importer", "exporter", "value"))
 
-  # If region column do not exist, use the column after "country" (or before, if "country" is last), as in toolAggregate
-  if (!"region" %in% names(rel)) {
-    from <- which(names(rel) == "country")
-    to <- if (from == length(rel)) from - 1 else from + 1
-    names(rel)[to] <- "region"
-  }
   rel <- rel[, c("country", "region")]
 
   # make sure that exporter_region != importer_region for every entry

@@ -30,7 +30,7 @@ readPostedBuiltLifespan <- function() {
   expanded_data$start_year <- NULL
   expanded_data$end_year <- NULL
 
-  # use MFA item names
+  # use MFA item names. TODO: update the dimensions in POSTED
   endUseNames <- c(
     Res = "Residential", Com = "Commercial", Ind = "Industrial", Civ = "Civil Engineering"
   )

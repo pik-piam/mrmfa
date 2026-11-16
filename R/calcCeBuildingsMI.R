@@ -5,8 +5,8 @@
 calcCeBuildingsMI <- function(subtype = "concrete") {
   x <- readSource("RASMI", subtype)
   x <- x / 1000 # convert kg to t
-  # MI of 0 for O (other) structure: earth, metal (except steel), informal and other materials
-  # and for U (unspecified) structure, which holds no buildings (see calcCeStructureSplit)
+  # MI of 0 for Other Structure: earth, metal (except steel), informal and other materials
+  # and for Unspecified Structure (used for top-down end uses)
   x <- add_columns(x, addnm = c("Other Structure", "Unspecified Structure"), dim = 3.2, fill = 0)
 
   getSets(x)["d3.1"] <- "End Use"
