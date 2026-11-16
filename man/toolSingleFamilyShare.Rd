@@ -2,7 +2,7 @@
 % Please edit documentation in R/readGlobalExposureModel.R
 \name{toolSingleFamilyShare}
 \alias{toolSingleFamilyShare}
-\title{Share of single family homes (RS) in residential GEM building classes, similar to MaterialCities.}
+\title{Share of single family homes in the floor area of residential GEM building classes.}
 \usage{
 toolSingleFamilyShare(taxonomy, dwellings, buildings)
 }
@@ -18,10 +18,19 @@ Only the storey codes H and HAPP are read, other height codes such as HB are ign
 Share of single family homes in the floor area of each class, between 0 and 1.
 }
 \description{
-Classes with exactly one storey are single family, classes with at least three storeys are multi family.
-All other classes (they include two storeys, or have no height) are split by dwellings per building:
-up to 1.5 is single family, from 3 on multi family, linear in between (2.25 gives a share of 0.5).
-Classes without dwelling or building count get a share of 0.5.
+Definition: single family homes are detached and row houses, multi family homes are
+apartment buildings. The share depends on the number of storeys h (midpoint of the GEM height range)
+and the mean number of dwellings per building d:
+\itemize{
+  \item h = 1: single family. Low buildings with several dwellings are mostly row houses.
+  \item h >= 4: multi family. Almost all such classes in GEM have more than 3 dwellings per building.
+  \item 1 < h < 4: a mix of single family buildings and apartment buildings. Single family buildings
+    have on average s = 1.5 dwellings (semi-detached and row houses), apartment buildings k = 2 h
+    (2 flats per floor). The share of apartment buildings is f = (d - s) / (k - s), between 0 and 1.
+    Single family dwellings are (assumed) alpha = 2 times larger than flats, so the single family share
+    of floor area is alpha s (1 - f) / (alpha s (1 - f) + k f).
+  \item no storey code, or no dwelling or building count: 0.5. These classes have almost no floor area.
+}
 }
 \author{
 Bennet Weiss

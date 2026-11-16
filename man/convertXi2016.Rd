@@ -10,7 +10,8 @@ convertXi2016(x)
 \item{x}{Magpie object}
 }
 \description{
-Convert data from Xi2016
+Normalises the split of China. No values are assigned to other countries; they are filled with NA.
+Filling of countries without data happens in \code{\link{calcCeEndUseSplit}}.
 }
 \author{
 Bennet Weiss

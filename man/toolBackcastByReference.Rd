@@ -9,6 +9,7 @@ toolBackcastByReference(
   ref,
   doInterpolate = TRUE,
   maxN = 5,
+  ratioMethod = c("weighted", "median"),
   doForecast = FALSE,
   doMakeZeroNA = FALSE
 )
@@ -24,6 +25,9 @@ before calculating weights. Recommended to ensure more stable weight calculation
 
 \item{maxN}{Maximum number of years to consider for weight calculation (defaults to 5).}
 
+\item{ratioMethod}{Method to aggregate the ratios of the considered years:
+"weighted" (linearly weighted mean, dafault) or "median" (robust against outliers).}
+
 \item{doForecast}{Logical, whether to do forecasting instead of backcasting.}
 
 \item{doMakeZeroNA}{Logical, whether to convert 0 values in final output to NA.
@@ -37,5 +41,5 @@ on their recency (linearly weighted), and applying these weights to scale ref
 for missing years in x.
 }
 \author{
-Merlin Jo Hosak, Falk Benke
+Merlin Jo Hosak, Falk Benke, Bennet Weiss
 }

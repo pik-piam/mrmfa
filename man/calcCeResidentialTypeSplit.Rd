@@ -9,7 +9,9 @@ calcCeResidentialTypeSplit()
 \description{
 Two-item split (sums to 1): floor area of single-family homes relative to the
 total residential floor area, based on the Global Exposure Model (GEM).
-Storeys and dwellings per building decide the split, similar to MaterialCities (see toolSingleFamilyShare).
+Storeys and dwellings per building decide the split (see toolSingleFamilyShare).
+Both types get at least 2% of the floor area, because the GEM data show no multi family homes
+in some countries (e.g. Costa Rica).
 }
 \author{
 Bennet Weiss

@@ -3,7 +3,7 @@
 \name{readGlobalExposureModel}
 \alias{readGlobalExposureModel}
 \title{Read structure type, function type and total floor area of buildings from the Global Exposure Model (GEM).
-Residential floor area is split into single (RS) and multi family (RM) homes similar to MaterialCities,
+Residential floor area is split into single and multi family homes by storeys and dwellings per building,
 see \code{\link{toolSingleFamilyShare}}.}
 \usage{
 readGlobalExposureModel()
