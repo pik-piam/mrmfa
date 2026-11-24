@@ -47,6 +47,9 @@ fullMFA <- function(rev = 0,
     start_historical <- 1900
     end_historical <- 2022
 
+    calcOutput("CoScalars", file = "st_time_range.cs4r", aggregate = FALSE, unit = "year",
+               scalars = c(start_historical = start_historical, end_historical = end_historical, end_future = end_future))
+
     # common parameters
     calcOutput("CoPopulation", file = "st_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)
     calcOutput("CoGDP", file = "st_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)
@@ -97,6 +100,9 @@ fullMFA <- function(rev = 0,
     start_historical <- 1880
     end_historical <- 2025
 
+    calcOutput("CoScalars", file = "ce_time_range.cs4r", aggregate = FALSE, unit = "year",
+               scalars = c(start_historical = start_historical, end_historical = end_historical, end_future = end_future))
+
     # common parameters
     calcOutput("CoPopulation", file = "ce_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)
     calcOutput("CoGDP", file = "ce_gdppc.cs4r", perCapita = gdpPerCapita, scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)
@@ -145,6 +151,9 @@ fullMFA <- function(rev = 0,
   if (runSection("plastic")) {
     start_historical <- 1950
     end_historical <- 2024
+
+    calcOutput("CoScalars", file = "pl_time_range.cs4r", aggregate = FALSE, unit = "year",
+               scalars = c(start_historical = start_historical, end_historical = end_historical, end_future = end_future))
 
     # common parameters
     calcOutput("CoPopulation", file = "pl_population.cs4r", scenarios = driverScenarios, collapse = FALSE, smooth = TRUE, years = start_historical:end_future)
